@@ -71,9 +71,9 @@ void UMS_StateMachine::GetActiveStateId(TArray<int8>& aActiveState) const
 	return EntireState.GenerateKeyArray(aActiveState);
 }
 
-void UMS_StateMachine::SetState(int32 aIndex, bool abInstant)
+void UMS_StateMachine::SetState(int32 aIndex, bool bInstant)
 {
-	if(abInstant)
+	if(bInstant)
 	{
 		SetState_Internal(aIndex);
 	}

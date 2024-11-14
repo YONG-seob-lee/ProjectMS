@@ -25,7 +25,7 @@ public:
 
 	void GetActiveStateId(TArray<int8>& aActiveState) const;
 
-	void SetState(int32 aIndex, bool abInstant = true);
+	void SetState(int32 aIndex, bool bInstant = true);
 
 	TObjectPtr<UMS_StateBase> GetState(int32 aIndex) const;
 private:

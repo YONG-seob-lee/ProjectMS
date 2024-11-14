@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Management/MS_TableManager.h"
+#include "Management/TableManager/MS_TableManager.h"
 //#include "MS_Define.generated.h"
 
 /**
@@ -30,15 +30,15 @@ Object->ConditionalBeginDestroy();	\
 };
 
 template<typename TEnum>
-static FString ConvertEnumToString(const FString& EnumString, TEnum EnumType)
+static FString ConvertEnumToString(const FString& aEnumString, TEnum aEnumType)
 {
- const UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, *EnumString);
+ const UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, *aEnumString);
  if (!pEnum)
  {
   return FString("");
  }
 
- const int32 Index = pEnum->GetIndexByValue(static_cast<int32>(EnumType));
+ const int32 Index = pEnum->GetIndexByValue(static_cast<int32>(aEnumType));
  return pEnum->GetNameStringByIndex(Index);
 }
 
@@ -52,5 +52,17 @@ static TObjectPtr<UDataTable> LoadTableObjectFromFile(const FString& aResourcePa
   aDelegate.Execute(aTableName, ResultObject);
  }
 	
+ return ResultObject;
+}
+
+static TObjectPtr<UObject> LoadObjectFromFile(FStreamableManager& aAssetLoader, const FString& aResourcePath, const FMS_LoadResourceDelegate& aDelegate = nullptr, const FString& aSubName = TEXT("SubName"), int32 aIndex = 0, bool aSubBool = false)
+{
+ const FSoftObjectPath Reference = FSoftObjectPath(aResourcePath);
+	
+ UObject* ResultObject = aAssetLoader.LoadSynchronous(Reference);
+ if(aDelegate.IsBound())
+ {
+  aDelegate.Execute(aResourcePath, ResultObject);
+ }
  return ResultObject;
 }

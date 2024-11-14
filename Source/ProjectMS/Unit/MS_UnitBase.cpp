@@ -3,6 +3,8 @@
 
 #include "MS_UnitBase.h"
 
+#include "BasicClass/StateMachine/MS_StateMachine.h"
+
 void UMS_UnitBase::Initialize()
 {
 }
@@ -47,4 +49,14 @@ bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, const FVector& aPos, const FRo
 
 void UMS_UnitBase::DestroyUnit()
 {
+}
+
+void UMS_UnitBase::ChangeActionState(EMS_UnitActionState aActionType) const
+{
+	if(ActionStateMachine == nullptr)
+	{
+		return;
+	}
+	
+	ActionStateMachine->SetState(static_cast<uint8>(aActionType));
 }

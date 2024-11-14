@@ -19,9 +19,16 @@ public:
 	virtual void PostInitialize();
 	virtual void Tick(float aDeltaTime);
 
+	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
 private:
 	void InitManager();
 
+	// Manager Property
+	UPROPERTY()
 	TObjectPtr<class UMS_TableManager> TableManager = nullptr;
-	TObjectPtr<class UMS_CameraManager> CameraManager = nullptr;
+	
+	TWeakObjectPtr<class APlayerCameraManager> CameraManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_WidgetManager> WidgetManager = nullptr;
 };

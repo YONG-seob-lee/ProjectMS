@@ -14,8 +14,9 @@ class PROJECTMS_API UMS_ManagerBase : public UObject
 {
 	GENERATED_BODY()
 	
+public:
 	virtual ~UMS_ManagerBase() {}
-
+	
 	virtual void BuiltInInitialize() {}
 	virtual void Initialize() {}
 	virtual void PostInitialize() {}
@@ -24,4 +25,6 @@ class PROJECTMS_API UMS_ManagerBase : public UObject
 	virtual void BuiltInFinalize() {}
 
 	virtual void Tick(float aDeltaTime) {}
+
+	virtual TWeakObjectPtr<class AMS_PlayerController> GetController();
 };

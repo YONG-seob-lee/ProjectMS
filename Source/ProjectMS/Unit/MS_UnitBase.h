@@ -9,6 +9,14 @@
 #include "UObject/Object.h"
 #include "MS_UnitBase.generated.h"
 
+// 플레이어 인풋 스테이트를 관리하기 위한 열거형
+UENUM(BlueprintType)
+enum class EMS_UnitActionState : uint8
+{
+	None = 0					UMETA(DisplayName = "None"),
+	Player_Normal				UMETA(DisplayName = "Player_Normal"),
+};
+
 /**
  * 
  */
@@ -28,7 +36,9 @@ public:
 	FORCEINLINE void SetUnitHandle(MS_Handle aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
 
-private:
+protected:
+	virtual void ChangeActionState(EMS_UnitActionState aActionType) const;
+	
 	MS_Handle UnitHandle = InvalidUnitHandle;
 	
 	FMS_ResourceUnit* UnitData = nullptr;

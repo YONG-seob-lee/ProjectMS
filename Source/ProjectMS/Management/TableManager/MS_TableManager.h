@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/StreamableManager.h"
-#include "UObject/Object.h"
+#include "Management/MS_ManagerBase.h"
 #include "MS_TableManager.generated.h"
 
 DECLARE_DELEGATE_TwoParams(FMS_LoadResourceDelegate, const FString&, TObjectPtr<UObject>);
@@ -53,47 +53,53 @@ private:
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_TableManager : public UObject
+class PROJECTMS_API UMS_TableManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 
 public:
 	UMS_TableManager();
-	~UMS_TableManager();
+	virtual ~UMS_TableManager() override;
 
-	virtual void Initialize();
-	virtual void Finalize();
-	virtual void Tick(float aDeltaTime);
+public:
+	virtual void BuiltInInitialize() override;
+	virtual void Initialize() override;
+	virtual void PostInitialize() override;
+	virtual void PreFinalize() override;
+	virtual void Finalize() override;
+	virtual void BuiltInFinalize() override;
 
-	virtual void GetRowDataMap(EMS_TableDataType TableType, TMap<FName, uint8*>& OutCache);
+	virtual void Tick(float aDeltaTime) override;
 
-	FMS_CacheTableData* GetCacheTableData(EMS_TableDataType TableType);
-	FString GetPath(EMS_TableDataType TableType, int32 Key, bool bResourcePath = false);
-	FString GetDirectory(int32 DirectoryTableId);
+	virtual void GetRowDataMap(EMS_TableDataType aTableType, TMap<FName, uint8*>& aOutCache);
+
+	FMS_CacheTableData* GetCacheTableData(EMS_TableDataType aTableType);
+	FString GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath = false);
+	FString GetDirectory(int32 aDirectoryTableId);
 	
-	TObjectPtr<UDataTable> GetTableData(EMS_TableDataType TableType);
+	TObjectPtr<UDataTable> GetTableData(EMS_TableDataType aTableType);
 
 	
-	TObjectPtr<UMS_CacheTable> GetCacheTable(EMS_TableDataType TableType);
+	TObjectPtr<UMS_CacheTable> GetCacheTable(EMS_TableDataType aTableType);
 	
 	template<typename FRowData>
-	FRowData* GetTableRowData(EMS_TableDataType TableType, int32 Key)
+	FRowData* GetTableRowData(EMS_TableDataType aTableType, int32 aKey)
 	{
-		const FMS_CacheTableData* CacheTable = GetCacheTableData(TableType);
+		const FMS_CacheTableData* CacheTable = GetCacheTableData(aTableType);
 		if (CacheTable == nullptr)  
 		{
 			return nullptr;
 		}
 
 		const TObjectPtr<UDataTable> TableData = CacheTable->GetTableData();
-		const FName KeyName = FName(FString::FromInt(Key));
+		const FName KeyName = FName(FString::FromInt(aKey));
 		const FString Context = TEXT("GENERAL");
 		return TableData->FindRow<FRowData>(KeyName, Context);
 	}
 
-	int32 GetTableRowNum(EMS_TableDataType TableType)
+	int32 GetTableRowNum(EMS_TableDataType aTableType)
 	{
-		const FMS_CacheTableData* CacheTable = GetCacheTableData(TableType);
+		const FMS_CacheTableData* CacheTable = GetCacheTableData(aTableType);
 		if (CacheTable == nullptr)
 		{
 			return 0;
@@ -113,10 +119,10 @@ public:
 	
 private:
 	void ResetData();
-	void CreateTableData(EMS_TableDataType TableType, const FString& Path, TSubclassOf<UMS_CacheTable> CacheType = nullptr);
+	void CreateTableData(EMS_TableDataType aTableType, const FString& aPath, TSubclassOf<UMS_CacheTable> aCacheType = nullptr);
 	void MakeTableStructData();
 
-	void LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData);
+	void LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData);
 	
 	UPROPERTY()
 	TMap<EMS_TableDataType, FMS_CacheTableData> CacheTables;

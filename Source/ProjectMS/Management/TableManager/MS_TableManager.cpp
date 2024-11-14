@@ -28,6 +28,26 @@ UMS_TableManager::~UMS_TableManager()
 {
 }
 
+void UMS_TableManager::BuiltInInitialize()
+{
+	Super::BuiltInInitialize();
+}
+
+void UMS_TableManager::PostInitialize()
+{
+	Super::PostInitialize();
+}
+
+void UMS_TableManager::PreFinalize()
+{
+	Super::PreFinalize();
+}
+
+void UMS_TableManager::BuiltInFinalize()
+{
+	Super::BuiltInFinalize();
+}
+
 void UMS_TableManager::Initialize()
 {
 	if(bInitialize)
@@ -54,11 +74,11 @@ void UMS_TableManager::Tick(float aDeltaTime)
 	
 }
 
-void UMS_TableManager::GetRowDataMap(EMS_TableDataType TableType, TMap<FName, uint8*>& OutCacher)
+void UMS_TableManager::GetRowDataMap(EMS_TableDataType aTableType, TMap<FName, uint8*>& OutCacher)
 {
-	const FString& Name = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", TableType);
+	const FString& Name = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", aTableType);
 
-	const FMS_CacheTableData* CacheTableData = CacheTables.Find(TableType);
+	const FMS_CacheTableData* CacheTableData = CacheTables.Find(aTableType);
 	if (CacheTableData == nullptr)
 	{
 		return;
@@ -73,12 +93,12 @@ void UMS_TableManager::GetRowDataMap(EMS_TableDataType TableType, TMap<FName, ui
 	OutCacher = TableData->GetRowMap();
 }
 
-FMS_CacheTableData* UMS_TableManager::GetCacheTableData(EMS_TableDataType TableType)
+FMS_CacheTableData* UMS_TableManager::GetCacheTableData(EMS_TableDataType aTableType)
 {
-	FMS_CacheTableData* CacheTableData = CacheTables.Find(TableType);
+	FMS_CacheTableData* CacheTableData = CacheTables.Find(aTableType);
 	if (CacheTableData == nullptr)
 	{
-		const FString& TableName = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", TableType);
+		const FString& TableName = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", aTableType);
 		MS_LOG(TEXT("Wrong Table Type. Please Check (%s) Table Type"), *TableName);
 		return nullptr;
 	}
@@ -86,13 +106,13 @@ FMS_CacheTableData* UMS_TableManager::GetCacheTableData(EMS_TableDataType TableT
 	return CacheTableData;
 }
 
-FString UMS_TableManager::GetPath(EMS_TableDataType TableType, int32 Key, bool bResourcePath)
+FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath)
 {
-	switch(TableType)
+	switch(aTableType)
 	{
 	case EMS_TableDataType::BasePath_BP_File:
 		{
-			const FMS_BasePathBPFile* RowData = GetTableRowData<FMS_BasePathBPFile>(TableType, Key);
+			const FMS_BasePathBPFile* RowData = GetTableRowData<FMS_BasePathBPFile>(aTableType, aKey);
 
 			if(RowData == nullptr)
 			{
@@ -122,14 +142,14 @@ FString UMS_TableManager::GetPath(EMS_TableDataType TableType, int32 Key, bool b
 	return FString();
 }
 
-FString UMS_TableManager::GetDirectory(int32 DirectoryTableId)
+FString UMS_TableManager::GetDirectory(int32 aDirectoryTableId)
 {
-	if(DirectoryTableId == 0 || DirectoryTableId == INDEX_NONE)
+	if(aDirectoryTableId == 0 || aDirectoryTableId == INDEX_NONE)
 	{
 		return FString();
 	}
 
-	const FMS_BasePathDirectory* RowData = GetTableRowData<FMS_BasePathDirectory>(EMS_TableDataType::BasePath_Directory, DirectoryTableId);
+	const FMS_BasePathDirectory* RowData = GetTableRowData<FMS_BasePathDirectory>(EMS_TableDataType::BasePath_Directory, aDirectoryTableId);
 	if(RowData == nullptr)
 	{
 		return FString();
@@ -140,9 +160,9 @@ FString UMS_TableManager::GetDirectory(int32 DirectoryTableId)
 	return ResultDirectory[ResultDirectory.Len() - 1] != '/' ? ResultDirectory + "/" : ResultDirectory;
 }
 
-TObjectPtr<UDataTable> UMS_TableManager::GetTableData(EMS_TableDataType TableType)
+TObjectPtr<UDataTable> UMS_TableManager::GetTableData(EMS_TableDataType aTableType)
 {
-	const FMS_CacheTableData* CacheTableData = GetCacheTableData(TableType);
+	const FMS_CacheTableData* CacheTableData = GetCacheTableData(aTableType);
 	if (CacheTableData == nullptr)
 	{
 		return nullptr;
@@ -151,9 +171,9 @@ TObjectPtr<UDataTable> UMS_TableManager::GetTableData(EMS_TableDataType TableTyp
 	return CacheTableData->GetTableData();
 }
 
-TObjectPtr<UMS_CacheTable> UMS_TableManager::GetCacheTable(EMS_TableDataType TableType)
+TObjectPtr<UMS_CacheTable> UMS_TableManager::GetCacheTable(EMS_TableDataType aTableType)
 {
-	const FMS_CacheTableData* CacheTableData = GetCacheTableData(TableType);
+	const FMS_CacheTableData* CacheTableData = GetCacheTableData(aTableType);
 	if (CacheTableData == nullptr)
 	{
 		return nullptr;
@@ -180,17 +200,17 @@ void UMS_TableManager::ResetData()
 	CacheTables.Empty();
 }
 
-void UMS_TableManager::CreateTableData(EMS_TableDataType TableType, const FString& Path, TSubclassOf<UMS_CacheTable> CacherType)
+void UMS_TableManager::CreateTableData(EMS_TableDataType aTableType, const FString& aPath, TSubclassOf<UMS_CacheTable> CacherType)
 {
-	const FString& TableName = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", TableType);
+	const FString& TableName = ConvertEnumToString<EMS_TableDataType>("EMS_TableDataType", aTableType);
 
-	if (CacheTables.Find(TableType))
+	if (CacheTables.Find(aTableType))
 	{
 		return;
 	}
 
 	// 테이블 데이터 오브젝트 생성
-	const TObjectPtr<UDataTable> TableObject = LoadTableObjectFromFile(Path, TableName, FMS_LoadResourceDelegate::CreateUObject(this, &UMS_TableManager::LoadComplete));
+	const TObjectPtr<UDataTable> TableObject = LoadTableObjectFromFile(aPath, TableName, FMS_LoadResourceDelegate::CreateUObject(this, &UMS_TableManager::LoadComplete));
 	if (TableObject == nullptr)
 	{
 		return;
@@ -205,13 +225,13 @@ void UMS_TableManager::CreateTableData(EMS_TableDataType TableType, const FStrin
 			return;
 		}
 		// 추가.
-		CacheTables.Emplace(TableType, FMS_CacheTableData(Path, TableObject, CacheTable));
+		CacheTables.Emplace(aTableType, FMS_CacheTableData(aPath, TableObject, CacheTable));
 		
 		CacheTable->Initialize(this);
 	}
 	else
 	{
-		CacheTables.Emplace(TableType, FMS_CacheTableData(Path, TableObject, nullptr));
+		CacheTables.Emplace(aTableType, FMS_CacheTableData(aPath, TableObject, nullptr));
 	}
 }
 
@@ -222,6 +242,6 @@ void UMS_TableManager::MakeTableStructData()
 	// [Add TableData] CreateTableData(EnumType, RowDataPath);
 }
 
-void UMS_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)
+void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)
 {
 }
