@@ -8,9 +8,15 @@ public class ProjectMS : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput"
+			, "Slate", "SlateCore", "GameplayCameras", "AIModule", "NavigationSystem"
+			, "ProceduralMeshComponent", "AssetRegistry", "UMG"
+		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PublicIncludePaths.AddRange(new string[] { "ProjectMS" });
+		PrivateIncludePaths.AddRange(new string[] { "ProjectMS" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
