@@ -29,6 +29,4 @@ protected:
 	bool bSelfPlayer = false;
 
 private:
-	UPROPERTY()
-	TObjectPtr<UMS_StateMachine> PlayerStateMachine = nullptr;
 };

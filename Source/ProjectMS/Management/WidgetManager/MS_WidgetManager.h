@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
+#include "Management/SceneManager/MS_SceneManager.h"
 #include "MS_WidgetManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_CreateWidget, const FName&);
@@ -34,6 +35,9 @@ public:
 	bool DestroyWidget(const FName& aTypeName);
 	void PostDestroyWidget(const FName& aTypeName);
 	
+	TObjectPtr<UMS_Widget> GetCurrentWidget();
+	void SetCurrentWidget(const TObjectPtr<UMS_Widget>& aCurrentWidget);
+
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 

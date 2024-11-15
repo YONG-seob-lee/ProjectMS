@@ -4,7 +4,7 @@
 #include "MS_WidgetManager.h"
 
 #include "BasicClass/Controller/MS_PlayerController.h"
-#include "Data/Table/Cachers/MS_ResourceWidgetCache.h"
+#include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Data/Table/RowBase/MS_ResourceWidget.h"
 #include "Engine/AssetManager.h"
 #include "UI/Widget/MS_Widget.h"
@@ -129,19 +129,24 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
+TObjectPtr<UMS_Widget> UMS_WidgetManager::GetCurrentWidget()
+{
+	return nullptr;
+}
+
+void UMS_WidgetManager::SetCurrentWidget(const TObjectPtr<UMS_Widget>& aCurrentWidget)
+{
+}
+
 TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged)
 {
 	const TWeakObjectPtr<AMS_PlayerController> PlayerController = GetController();
-	if(PlayerController.IsValid())
-	{
-		MS_CHECK(false);
-	}
+	MS_CHECK(PlayerController.IsValid());
+	
 	const TWeakObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
-	if(TableManager.IsValid() == false)
-	{
-		MS_CHECK(false);
-	}
-	const TObjectPtr<UMS_ResourceWidgetCache> ResourceWidgetCache = Cast<UMS_ResourceWidgetCache>(TableManager.Get()->GetCacheTable(EMS_TableDataType::Resource_Widget));
+	MS_CHECK(TableManager.IsValid());
+	
+	const TObjectPtr<UMS_ResourceWidgetCacheTable> ResourceWidgetCache = Cast<UMS_ResourceWidgetCacheTable>(TableManager.Get()->GetCacheTable(EMS_TableDataType::ResourceWidget));
 	if(ResourceWidgetCache == nullptr)
 	{
 		return nullptr;
@@ -154,7 +159,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTy
 		return nullptr;
 	}
 
-	const FString ResourcePath = TableManager.Get()->GetPath(EMS_TableDataType::BasePath_BP_File, ResourceWidgetData->Path_File, true);
+	const FString ResourcePath = TableManager.Get()->GetPath(EMS_TableDataType::BasePathBPFile, ResourceWidgetData->Path_File, true);
 
 	const TObjectPtr<UMS_Widget> ResultWidget = bManaged ? CreateWidget_Internal_Managing(ResourcePath) : CreateWidget_Internal_NotManaging(ResourcePath);
 
@@ -222,4 +227,5 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal_NotManaging(cons
 
 void UMS_WidgetManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aWidgetData)
 {
+	
 }

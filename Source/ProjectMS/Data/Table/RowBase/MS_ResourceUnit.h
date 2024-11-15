@@ -9,7 +9,7 @@
  * 
  */
 USTRUCT()
-struct PROJECTMS_API FMS_ResourceUnit : public FTableRowBase
+struct FMS_ResourceUnit : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 };

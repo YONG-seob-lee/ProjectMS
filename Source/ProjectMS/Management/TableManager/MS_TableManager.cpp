@@ -110,7 +110,7 @@ FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool
 {
 	switch(aTableType)
 	{
-	case EMS_TableDataType::BasePath_BP_File:
+	case EMS_TableDataType::BasePathBPFile:
 		{
 			const FMS_BasePathBPFile* RowData = GetTableRowData<FMS_BasePathBPFile>(aTableType, aKey);
 
@@ -125,7 +125,7 @@ FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool
 				: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->BP_File_Name.ToString()});
 		}
 		break;
-	case EMS_TableDataType::BasePath_Img_File:
+	case EMS_TableDataType::BasePathImgFile:
 		{
 			// const FBasePath_Img_File* RowData = GetTableRowData<FBasePath_Img_File>(TableType, Key);
 			//
@@ -149,7 +149,7 @@ FString UMS_TableManager::GetDirectory(int32 aDirectoryTableId)
 		return FString();
 	}
 
-	const FMS_BasePathDirectory* RowData = GetTableRowData<FMS_BasePathDirectory>(EMS_TableDataType::BasePath_Directory, aDirectoryTableId);
+	const FMS_BasePathDirectory* RowData = GetTableRowData<FMS_BasePathDirectory>(EMS_TableDataType::BasePathDirectory, aDirectoryTableId);
 	if(RowData == nullptr)
 	{
 		return FString();

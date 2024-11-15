@@ -13,13 +13,14 @@ UENUM()
 enum class EMS_TableDataType : uint8
 {
 	Common = 0						UMETA(DisplayName = "Common"),
-	Resource_Widget					UMETA(DisplayName = "Resource_Widget"),
-	Resource_Unit					UMETA(DisplayName = "Resource_Unit"),
+	ResourceWidget					UMETA(DisplayName = "ResourceWidget"),
+	ResourceUnit					UMETA(DisplayName = "ResourceUnit"),
 
-	BasePath_Directory				UMETA(DisplayName = "BasePath_Directory"),
-	BasePath_BP_File				UMETA(DisplayName = "BasePath_BP_File"),
-	BasePath_Img_File				UMETA(DisplayName = "BasePath_Img_File"),
+	BasePathDirectory				UMETA(DisplayName = "BasePathDirectory"),
+	BasePathBPFile				UMETA(DisplayName = "BasePathBP_File"),
+	BasePathImgFile				UMETA(DisplayName = "BasePathImgFile"),
 
+	Level							UMETA(DisplayName = "Level"),
 	PlayerStatus					UMETA(DisplayName = "PlayerStatus"),
 	Enemy							UMETA(DisplayName = "Enemy"),
 };
@@ -53,7 +54,7 @@ private:
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_TableManager : public UMS_ManagerBase
+class PROJECTMS_API  UMS_TableManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 

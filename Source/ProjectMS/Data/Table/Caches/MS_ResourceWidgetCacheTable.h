@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "ProjectMS/Data/Table/MS_CacheTable.h"
-#include "MS_ResourceWidgetCache.generated.h"
+#include "MS_ResourceWidgetCacheTable.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_ResourceWidgetCache : public UMS_CacheTable
+class PROJECTMS_API UMS_ResourceWidgetCacheTable : public UMS_CacheTable
 {
 	GENERATED_BODY()
 	

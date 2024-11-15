@@ -5,6 +5,7 @@
 
 #include "MovieScene.h"
 #include "Animation/WidgetAnimation.h"
+#include "WidgetComponent/MS_CanvasPanel.h"
 
 UMS_Widget::UMS_Widget(const FObjectInitializer& aObjectInitializer) : Super(aObjectInitializer)
 {
@@ -49,6 +50,8 @@ void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
 
 void UMS_Widget::OnRuntimeInitialize()
 {
+	CutoutFrameSize = CutoutFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
+	ContentFrameSize = ContentFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
 }
 
 void UMS_Widget::Active(bool bActive)

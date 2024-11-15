@@ -6,6 +6,7 @@
 #include "BasicClass/Controller/MS_PlayerController.h"
 #include "CameraManager/MS_PlayerCameraManager.h"
 #include "ProjectMS/Utility/MS_Define.h"
+#include "SceneManager/MS_SceneManager.h"
 #include "TableManager/MS_TableManager.h"
 #include "WidgetManager/MS_WidgetManager.h"
 
@@ -32,10 +33,18 @@ void UMS_Management::InitManager()
 	TableManager = MS_NewObject<UMS_TableManager>(this);
 	MS_CHECK(TableManager);
 
-	const AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(GetOuter());
+	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(GetOuter());
 	MS_CHECK(PlayerController);
-	CameraManager = PlayerController->PlayerCameraManager;
+	
+	FActorSpawnParameters ManagerActorSpawnParameters = {};
+	ManagerActorSpawnParameters.Owner = PlayerController;
+	ManagerActorSpawnParameters.Instigator = PlayerController->GetInstigator();
+	ManagerActorSpawnParameters.ObjectFlags |= RF_Transient;
+	
+	SceneManager = GetWorld()->SpawnActor<AMS_SceneManager>(AMS_SceneManager::StaticClass(), ManagerActorSpawnParameters);
 
 	WidgetManager = MS_NewObject<UMS_WidgetManager>(this);
 	MS_CHECK(WidgetManager);
+	
+	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
 }

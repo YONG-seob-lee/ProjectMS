@@ -1,18 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_ResourceWidgetCache.h"
+#include "MS_ResourceWidgetCacheTable.h"
 
 #include "..\RowBase\MS_ResourceWidget.h"
 
-void UMS_ResourceWidgetCache::Initialize(TObjectPtr<UMS_TableManager> aMng)
+void UMS_ResourceWidgetCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
 	Super::Initialize(aMng);
 
 	TMap<int32, FMS_ResourceWidget*> PrimitiveResourceWidget;
 	PrimitiveResourceWidget.Empty();
 	
-	BuildTable(aMng, EMS_TableDataType::Resource_Widget, PrimitiveResourceWidget);
+	BuildTable(aMng, EMS_TableDataType::ResourceWidget, PrimitiveResourceWidget);
 
 	for(const auto& ResourceWidgetData : PrimitiveResourceWidget)
 	{
@@ -20,14 +20,14 @@ void UMS_ResourceWidgetCache::Initialize(TObjectPtr<UMS_TableManager> aMng)
 	}
 }
 
-void UMS_ResourceWidgetCache::Finalize()
+void UMS_ResourceWidgetCacheTable::Finalize()
 {
 	ResourceWidgetDatas.Empty();
 
 	Super::Finalize();
 }
 
-FMS_ResourceWidget* UMS_ResourceWidgetCache::GetResourceWidgetData(const FName& aTypeName)
+FMS_ResourceWidget* UMS_ResourceWidgetCacheTable::GetResourceWidgetData(const FName& aTypeName)
 {
 	if(FMS_ResourceWidget** pResourceWidgetData = ResourceWidgetDatas.Find(aTypeName))
 	{

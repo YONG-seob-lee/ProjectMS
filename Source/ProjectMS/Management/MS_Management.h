@@ -20,15 +20,19 @@ public:
 	virtual void Tick(float aDeltaTime);
 
 	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
+	FORCEINLINE TObjectPtr<class UMS_WidgetManager> GetWidgetManager() { return WidgetManager; }
 private:
 	void InitManager();
 
 	// Manager Property
 	UPROPERTY()
 	TObjectPtr<class UMS_TableManager> TableManager = nullptr;
-	
-	TWeakObjectPtr<class APlayerCameraManager> CameraManager = nullptr;
 
 	UPROPERTY()
+	TObjectPtr<class AMS_SceneManager> SceneManager = nullptr;
+	
+	UPROPERTY()
 	TObjectPtr<class UMS_WidgetManager> WidgetManager = nullptr;
+	
+	TObjectPtr<class AMS_PlayerCameraManager> CameraManager = nullptr;
 };
