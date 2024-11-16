@@ -21,6 +21,7 @@ public:
 
 	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
 	FORCEINLINE TObjectPtr<class UMS_WidgetManager> GetWidgetManager() { return WidgetManager; }
+
 private:
 	void InitManager();
 

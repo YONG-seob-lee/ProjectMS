@@ -14,6 +14,11 @@ public class ProjectMS : ModuleRules
 			, "Slate", "SlateCore", "GameplayCameras", "AIModule", "NavigationSystem"
 			, "ProceduralMeshComponent", "AssetRegistry", "UMG"
 		});
+		
+		PrivateDependencyModuleNames.AddRange(new string[]
+		{
+			"CommonInput", "CommonUI", "EnhancedInput"
+		});
 
 		PublicIncludePaths.AddRange(new string[] { "ProjectMS" });
 		PrivateIncludePaths.AddRange(new string[] { "ProjectMS" });

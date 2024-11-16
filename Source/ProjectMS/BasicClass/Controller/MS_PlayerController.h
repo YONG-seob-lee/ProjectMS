@@ -19,8 +19,8 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	virtual void PostLoad() override;
 
+	TObjectPtr<AMS_CharacterBase> GetCharacterBase() const;
 	TWeakObjectPtr<UMS_TableManager> GetTableManager() const;
-	
 protected:
 	virtual void BeginPlay() override;
 	

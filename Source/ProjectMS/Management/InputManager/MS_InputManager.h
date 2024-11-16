@@ -22,4 +22,21 @@ public:
 	virtual void BuiltInFinalize() override;
 
 	virtual void Tick(float aDeltaTime) override;
+	
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+
+private:
+	// -- Move-- //
+	void InputMove(const struct FInputActionValue& Value);
+
+	
+	TWeakObjectPtr<class AMS_CharacterBase> CharacterBase = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* DefaultMappingContext;
+
+	
+	// -- Move-- //
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveAction;
 };

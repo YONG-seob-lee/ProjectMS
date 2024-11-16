@@ -27,6 +27,13 @@ void AMS_PlayerController::PostLoad()
 	Management = NewObject<UMS_Management>(this);
 }
 
+TObjectPtr<AMS_CharacterBase> AMS_PlayerController::GetCharacterBase() const
+{
+	MS_CHECK(UnitBase);
+
+	return UnitBase->GetCharacterBase();
+}
+
 TWeakObjectPtr<UMS_TableManager> AMS_PlayerController::GetTableManager() const
 {
 	if(!Management)

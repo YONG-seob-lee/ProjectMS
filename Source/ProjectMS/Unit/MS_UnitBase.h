@@ -35,7 +35,7 @@ public:
 	
 	FORCEINLINE void SetUnitHandle(MS_Handle aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
-
+	FORCEINLINE TObjectPtr<AMS_CharacterBase> GetCharacterBase() const { return Character; }
 protected:
 	virtual void ChangeActionState(EMS_UnitActionState aActionType) const;
 	
