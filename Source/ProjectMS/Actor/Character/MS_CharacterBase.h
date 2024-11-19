@@ -10,19 +10,16 @@ UCLASS()
 class PROJECTMS_API AMS_CharacterBase : public ACharacter
 {
 	GENERATED_BODY()
-
 public:
-	// Sets default values for this character's properties
 	AMS_CharacterBase();
 
-protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
 	virtual void Tick(float aDeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent) override;
+	
+	FORCEINLINE TObjectPtr<class UInputMappingContext> GetInputMappingContext() { return DefaultMappingContext; }
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 };

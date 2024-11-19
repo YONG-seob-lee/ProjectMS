@@ -59,7 +59,6 @@ private:
 	EMS_FadeStep LevelChangeStep= EMS_FadeStep::Undefined;
 	
 	// UUID(Universally Unique IDentifier)란 네트워크 상에서 중복되지 않는 ID를 만들기 위한 표준 규약이다.
-	// TODO:: 용섭  근데 왜 쓰는지 모름;; 알려주셈
 	int32 LatentActionInfoUUIDCounter = 0;
 	
 	FTimerHandle FadeTimerHandle = {};
