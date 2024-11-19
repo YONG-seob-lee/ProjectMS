@@ -3,7 +3,7 @@
 
 #include "MS_Management.h"
 
-#include "BasicClass/Controller/MS_PlayerController.h"
+#include "CoreClass/Controller/MS_PlayerController.h"
 #include "CameraManager/MS_PlayerCameraManager.h"
 #include "ProjectMS/Utility/MS_Define.h"
 #include "SceneManager/MS_SceneManager.h"

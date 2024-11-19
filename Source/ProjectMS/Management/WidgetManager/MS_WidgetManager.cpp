@@ -3,7 +3,7 @@
 
 #include "MS_WidgetManager.h"
 
-#include "BasicClass/Controller/MS_PlayerController.h"
+#include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Data/Table/RowBase/MS_ResourceWidget.h"
 #include "Engine/AssetManager.h"

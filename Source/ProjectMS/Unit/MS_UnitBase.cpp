@@ -3,7 +3,9 @@
 
 #include "MS_UnitBase.h"
 
-#include "BasicClass/StateMachine/MS_StateMachine.h"
+#include "MS_UnitStateBase.h"
+#include "CoreClass/Controller/MS_PlayerController.h"
+#include "CoreClass/StateMachine/MS_StateMachine.h"
 
 void UMS_UnitBase::Initialize()
 {
@@ -51,12 +53,40 @@ void UMS_UnitBase::DestroyUnit()
 {
 }
 
-void UMS_UnitBase::ChangeActionState(EMS_UnitActionState aActionType) const
+void UMS_UnitBase::CreateUnitStateMachine()
 {
-	if(ActionStateMachine == nullptr)
+	UnitStateMachine = MS_NewObject<UMS_StateMachine>(this, UMS_StateMachine::StaticClass());
+	MS_CHECK(UnitStateMachine);
+	UnitStateMachine->AddToRoot();
+	UnitStateMachine->Create();
+}
+
+void UMS_UnitBase::RegisterUnitState(EMS_UnitState aState, const FName& aName, TSubclassOf<UMS_StateBase> aClassType)
+{
+	MS_CHECK(UnitStateMachine);
+	
+	UnitStateMachine->RegisterState(static_cast<int8>(aState), aName, aClassType);
+	TObjectPtr<UMS_UnitStateBase> State = Cast<UMS_UnitStateBase>(UnitStateMachine->GetState(static_cast<int8>(aState)));
+	MS_CHECK(State);
+	
+	const TObjectPtr<AMS_PlayerController> Controller = Cast<AMS_PlayerController>(GetOuter());
+	MS_CHECK(Controller);
+	State->WeakBindController(Controller);
+}
+
+TObjectPtr<UMS_StateBase> UMS_UnitBase::GetCurrentUnitState() const
+{
+	MS_CHECK(UnitStateMachine);
+
+	return UnitStateMachine->GetCurrentState();
+}
+
+void UMS_UnitBase::ChangeActionState(EMS_UnitState aActionType) const
+{
+	if(UnitStateMachine == nullptr)
 	{
 		return;
 	}
 	
-	ActionStateMachine->SetState(static_cast<uint8>(aActionType));
+	UnitStateMachine->SetState(static_cast<uint8>(aActionType));
 }

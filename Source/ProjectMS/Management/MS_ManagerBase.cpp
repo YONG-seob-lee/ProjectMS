@@ -3,7 +3,7 @@
 
 #include "MS_ManagerBase.h"
 
-#include "BasicClass/Controller/MS_PlayerController.h"
+#include "CoreClass/Controller/MS_PlayerController.h"
 
 TWeakObjectPtr<AMS_PlayerController> UMS_ManagerBase::GetController()
 {

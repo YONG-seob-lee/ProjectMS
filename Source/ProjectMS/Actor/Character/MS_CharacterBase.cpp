@@ -3,6 +3,9 @@
 
 #include "MS_CharacterBase.h"
 
+#include "Unit/MS_UnitBase.h"
+#include "Unit/MS_UnitStateBase.h"
+
 
 // Sets default values
 AMS_CharacterBase::AMS_CharacterBase()
@@ -15,7 +18,6 @@ AMS_CharacterBase::AMS_CharacterBase()
 void AMS_CharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -28,5 +30,13 @@ void AMS_CharacterBase::Tick(float aDeltaTime)
 void AMS_CharacterBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(aPlayerInputComponent);
+
+	const TObjectPtr<UMS_UnitBase> Unit = Cast<UMS_UnitBase>(GetOuter());
+	MS_CHECK(Unit);
+
+	const TObjectPtr<UMS_UnitStateBase> UnitStateBase = Cast<UMS_UnitStateBase>(Unit->GetCurrentUnitState());
+	MS_CHECK(UnitStateBase);
+
+	UnitStateBase->SetupPlayerInputComponent(aPlayerInputComponent);
 }
 

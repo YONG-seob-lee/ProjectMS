@@ -3,7 +3,7 @@
 
 #include "MS_BasePlayer.h"
 
-#include "BasicClass/Controller/MS_PlayerController.h"
+#include "CoreClass/Controller/MS_PlayerController.h"
 
 void UMS_BasePlayer::Initialize()
 {
@@ -35,7 +35,7 @@ void UMS_BasePlayer::DestroyUnit()
 	Super::DestroyUnit();
 }
 
-void UMS_BasePlayer::ChangeActionState(EMS_UnitActionState aActionType) const
+void UMS_BasePlayer::ChangeActionState(EMS_UnitState aActionType) const
 {
 	if(APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
 	{

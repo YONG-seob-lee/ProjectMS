@@ -24,7 +24,7 @@ public:
 	virtual void DestroyUnit() override;
 	
 protected:
-	virtual void ChangeActionState(EMS_UnitActionState aActionType) const override;
+	virtual void ChangeActionState(EMS_UnitState aActionType) const override;
 	
 	bool bSelfPlayer = false;
 
