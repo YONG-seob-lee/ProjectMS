@@ -6,6 +6,34 @@
 #include "GameFramework/Character.h"
 #include "MS_CharacterBase.generated.h"
 
+USTRUCT(BlueprintType)
+struct FMS_CharacterLodValues
+{
+	GENERATED_BODY()
+	FMS_CharacterLodValues() {}
+
+public:
+	UPROPERTY(Category = "FMS_CharacterLodValues", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 CullDistance = 0;
+
+	UPROPERTY(Category = "FMS_CharacterLodValues", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 OutLineCullDistance = 0;
+
+	// not used
+	UPROPERTY(Category = "FMS_CharacterLodValues", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true")) 
+	int32 AnimMaxDistanceFactor = 0;
+
+	UPROPERTY(Category = "FMS_CharacterLodValues", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<float> AnimThresholdTable;
+
+	UPROPERTY(Category = "FMS_CharacterLodValues", EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 BaseNonRenderedUpdateRate = 0;
+
+	float CullDistanceScale = 1.0f;
+	float OutLineCullDistanceScale = 1.0f;
+	bool  bVisibleOutLine = true;
+};
+
 UCLASS()
 class PROJECTMS_API AMS_CharacterBase : public ACharacter
 {
@@ -18,8 +46,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent) override;
 	
 	FORCEINLINE TObjectPtr<class UInputMappingContext> GetInputMappingContext() { return DefaultMappingContext; }
+	FORCEINLINE TObjectPtr<USceneComponent> GetCharacterRootComponent() const { return RootComponent; }
+	
+	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+	
+	UPROPERTY(Category = AITT_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	FMS_CharacterLodValues LodValues = FMS_CharacterLodValues();
 };

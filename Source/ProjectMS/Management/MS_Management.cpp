@@ -8,6 +8,7 @@
 #include "ProjectMS/Utility/MS_Define.h"
 #include "SceneManager/MS_SceneManager.h"
 #include "TableManager/MS_TableManager.h"
+#include "UnitManager/MS_UnitManager.h"
 #include "WidgetManager/MS_WidgetManager.h"
 
 void UMS_Management::Initialize()
@@ -43,6 +44,9 @@ void UMS_Management::InitManager()
 	
 	SceneManager = GetWorld()->SpawnActor<AMS_SceneManager>(AMS_SceneManager::StaticClass(), ManagerActorSpawnParameters);
 
+	UnitManager = MS_NewObject<UMS_UnitManager>(this);
+	MS_CHECK(UnitManager);
+	
 	WidgetManager = MS_NewObject<UMS_WidgetManager>(this);
 	MS_CHECK(WidgetManager);
 	

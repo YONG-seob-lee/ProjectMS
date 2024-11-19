@@ -40,3 +40,10 @@ void AMS_CharacterBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 	UnitStateBase->SetupPlayerInputComponent(aPlayerInputComponent);
 }
 
+void AMS_CharacterBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine)
+{
+	LodValues.CullDistanceScale = aCullDistanceScale;
+	LodValues.OutLineCullDistanceScale = aOutLineCullDistanceScale;
+	LodValues.bVisibleOutLine = bVisibleOutLine;
+}
+

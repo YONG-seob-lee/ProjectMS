@@ -81,6 +81,14 @@ TObjectPtr<UMS_StateBase> UMS_UnitBase::GetCurrentUnitState() const
 	return UnitStateMachine->GetCurrentState();
 }
 
+void UMS_UnitBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const
+{
+	if(Character)
+	{
+		Character->SetLodScaleValues(aCullDistanceScale, aOutLineCullDistanceScale, bVisibleOutLine);
+	}
+}
+
 void UMS_UnitBase::ChangeActionState(EMS_UnitState aActionType) const
 {
 	if(UnitStateMachine == nullptr)

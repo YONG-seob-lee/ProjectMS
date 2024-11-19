@@ -40,6 +40,9 @@ public:
 	void CreateUnitStateMachine();
 	void RegisterUnitState(EMS_UnitState aState, const FName& aName, TSubclassOf<class UMS_StateBase> aClassType);
 	TObjectPtr<UMS_StateBase> GetCurrentUnitState() const;
+
+	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
+	
 protected:
 	virtual void ChangeActionState(EMS_UnitState aActionType) const;
 	

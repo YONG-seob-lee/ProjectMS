@@ -47,8 +47,11 @@ private:
 	void HandleUnloadLevel(const FName& aLevelName);
 	void HandleLoadLevel(const FName& aLevelName);
 
+	void ChangeSceneState(int8 aSceneId) const;
 	void HandleLoadingLevel();
 	void HandleLevelLoad();
+
+	void RegisterSceneState(uint8 aSceneId, const FName& aName, const TSubclassOf<class UMS_StateBase>& aSceneType) const;
 	
 	UPROPERTY()
 	TObjectPtr<UWorld> PersistentLevelWorld = nullptr;
@@ -70,4 +73,7 @@ private:
 	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
 	
 	TWeakObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<class UMS_StateMachine> SceneStateMachine = nullptr;
 };

@@ -21,6 +21,7 @@ public:
 
 	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
 	FORCEINLINE TObjectPtr<class UMS_WidgetManager> GetWidgetManager() { return WidgetManager; }
+	FORCEINLINE TObjectPtr<class UMS_UnitManager> GetUnitManager() { return UnitManager; }
 
 private:
 	void InitManager();
@@ -31,6 +32,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class AMS_SceneManager> SceneManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_UnitManager> UnitManager = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_WidgetManager> WidgetManager = nullptr;

@@ -22,7 +22,8 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	
+
+	FORCEINLINE FName GetSpawnName() const { return SpawnName; }
 private:
 	UPROPERTY(EditAnywhere, Category = SpawnInfo, meta = (AllowPrivateAccess = "true"))
 	FName SpawnName = FName();

@@ -5,9 +5,11 @@
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Components/CanvasPanelSlot.h"
+#include "CoreClass/StateMachine/MS_StateMachine.h"
 #include "Data/Table/Caches/MS_LevelCacheTable.h"
 #include "Kismet/GameplayStatics.h"
 #include "Management/WidgetManager/MS_WidgetManager.h"
+#include "Scene/MS_SceneStateBase.h"
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
@@ -204,6 +206,14 @@ void AMS_SceneManager::HandleLoadLevel(const FName& aLevelName)
 	UGameplayStatics::LoadStreamLevel(PersistentLevelWorld, aLevelName, true, false, LatentActionInfo);
 }
 
+void AMS_SceneManager::ChangeSceneState(int8 aSceneId) const
+{
+	if(SceneStateMachine)
+	{
+		SceneStateMachine->SetState(aSceneId);
+	}
+}
+
 void AMS_SceneManager::HandleLoadingLevel()
 {
 	MS_CHECK(NewCommand);
@@ -216,6 +226,10 @@ void AMS_SceneManager::HandleLoadingLevel()
 	{
 		OnLevelLoadedDelegate.Broadcast();
 	}
+
+	// TODO:: 용섭 나중에 수정할 예정 (테이블화)
+	constexpr int8 Temp = 1;
+	ChangeSceneState(Temp);
 	
 	// Fade In
 	StartFade(false);
@@ -228,4 +242,16 @@ void AMS_SceneManager::HandleLevelLoad()
 	
 	const FName LevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
 	HandleLoadLevel(LevelName);
+}
+
+void AMS_SceneManager::RegisterSceneState(uint8 aSceneId, const FName& aName, const TSubclassOf<UMS_StateBase>& aSceneType) const
+{
+	SceneStateMachine->RegisterState(aSceneId, aName, aSceneType);
+	const TObjectPtr<UMS_SceneStateBase> State = Cast<UMS_SceneStateBase>(SceneStateMachine->GetState(static_cast<int8>(aSceneId)));
+	MS_CHECK(State);
+	
+	const TObjectPtr<UMS_Management> Management = Cast<UMS_Management>(GetOuter());
+	MS_CHECK(Management);
+	
+	State->WeakBindUnitManager(Management->GetUnitManager());
 }
