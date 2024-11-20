@@ -41,10 +41,11 @@ AMS_SpawnPoint::AMS_SpawnPoint(const FObjectInitializer& ObjectInitializer) : Su
 			aArrowComponent->ArrowSize = 1.5f;
 		}
 	}
-#endif
-
+	
 	const TObjectPtr<UCapsuleComponent> Capsule = GetCapsuleComponent();
 	Capsule->SetCapsuleSize(20.f, 40.f, false);
+#endif
+
 }
 
 // Called when the game starts or when spawned

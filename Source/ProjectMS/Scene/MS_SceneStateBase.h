@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CoreClass/StateMachine/MS_StateBase.h"
-#include "Management/UnitManager/MS_UnitManager.h"
+#include "Management/Public/MS_UnitManager.h"
 #include "MS_SceneStateBase.generated.h"
 
 DECLARE_DELEGATE_RetVal_OneParam(bool, FMS_LoadingProcessDelegate, float);

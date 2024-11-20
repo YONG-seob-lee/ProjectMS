@@ -1,14 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SceneManager.h"
+#include "../Public/MS_SceneManager.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Components/CanvasPanelSlot.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
 #include "Data/Table/Caches/MS_LevelCacheTable.h"
 #include "Kismet/GameplayStatics.h"
-#include "Management/WidgetManager/MS_WidgetManager.h"
+#include "../Public/MS_WidgetManager.h"
 #include "Scene/MS_SceneStateBase.h"
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"

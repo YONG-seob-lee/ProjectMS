@@ -4,7 +4,7 @@
 #include "MS_CharacterBase.h"
 
 #include "Unit/MS_UnitBase.h"
-#include "Unit/MS_UnitStateBase.h"
+#include "Unit/Public/UnitState/MS_UnitStateBase.h"
 
 
 // Sets default values

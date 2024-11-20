@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Management/TableManager/MS_TableManager.h"
+#include "Management/Public/MS_TableManager.h"
 //#include "MS_Define.generated.h"
 
 /**

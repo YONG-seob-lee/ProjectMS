@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
-#include "Management/SceneManager/MS_SceneManager.h"
+#include "Management/Public/MS_SceneManager.h"
 #include "MS_WidgetManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_CreateWidget, const FName&);
