@@ -19,8 +19,9 @@ public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
 	
-	static FName GetLevelName(EMS_LevelType LevelType);
-
+	FName GetLevelName(EMS_LevelType aLevelType);
+	FMS_Level* GetLevelData(EMS_LevelType aLevelType);
+	FName GetPrimitiveWidgetName(EMS_LevelType aLevelType);
 private:
-	TMap<FName, FMS_Level*> LevelDatas; 
+	TMap<int32, FMS_Level*> LevelDatas; 
 };

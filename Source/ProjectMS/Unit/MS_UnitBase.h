@@ -44,7 +44,7 @@ public:
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
 	
 protected:
-	virtual void ChangeActionState(EMS_UnitState aActionType) const;
+	virtual void ChangeState(EMS_UnitState aUnitState) const;
 	
 	MS_Handle UnitHandle = InvalidUnitHandle;
 	

@@ -7,6 +7,8 @@
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathBPFile.h"
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathDirectory.h"
 #include "ProjectMS/Utility/MS_Define.h"
+#include "Table/Caches/MS_LevelCacheTable.h"
+#include "Table/Caches/MS_ResourceWidgetCacheTable.h"
 
 void FMS_CacheTableData::Finalize()
 {
@@ -240,6 +242,11 @@ void UMS_TableManager::MakeTableStructData()
 	ResetData();
 
 	// [Add TableData] CreateTableData(EnumType, RowDataPath);
+	CreateTableData(EMS_TableDataType::BasePathDirectory, TEXT("/Game/TableData/BasePath_Directory"));
+	CreateTableData(EMS_TableDataType::BasePathBPFile, TEXT("/Game/TableData/BasePath_BP_File"));
+	
+	CreateTableData(EMS_TableDataType::Level, TEXT("/Game/TableData/Level.Level"), UMS_LevelCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());
 }
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)

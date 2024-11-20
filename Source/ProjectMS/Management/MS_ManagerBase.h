@@ -25,6 +25,4 @@ public:
 	virtual void BuiltInFinalize() {}
 
 	virtual void Tick(float aDeltaTime) {}
-
-	virtual TWeakObjectPtr<class AMS_PlayerController> GetController();
 };

@@ -13,6 +13,13 @@ AMS_PlayerController::AMS_PlayerController()
 	PlayerCameraManagerClass = AMS_PlayerController::StaticClass();
 }
 
+void AMS_PlayerController::RegisterManagement()
+{
+	Management = NewObject<UMS_Management>(this);
+	MS_CHECK(Management);
+	Management->InitManager();
+}
+
 // Called when the game starts or when spawned
 void AMS_PlayerController::BeginPlay()
 {
@@ -23,8 +30,6 @@ void AMS_PlayerController::BeginPlay()
 void AMS_PlayerController::PostLoad()
 {
 	Super::PostLoad();
-
-	Management = NewObject<UMS_Management>(this);
 }
 
 TObjectPtr<AMS_CharacterBase> AMS_PlayerController::GetCharacterBase() const
@@ -34,14 +39,32 @@ TObjectPtr<AMS_CharacterBase> AMS_PlayerController::GetCharacterBase() const
 	return UnitBase->GetCharacterBase();
 }
 
-TWeakObjectPtr<UMS_TableManager> AMS_PlayerController::GetTableManager() const
+TObjectPtr<UMS_TableManager> AMS_PlayerController::GetTableManager() const
 {
-	if(!Management)
-	{
-		return nullptr;
-	}
+	MS_CHECK(Management);
 
 	return Management->GetTableManager();
+}
+
+TObjectPtr<UMS_UnitManager> AMS_PlayerController::GetUnitManager() const
+{
+	MS_CHECK(Management);
+
+	return Management->GetUnitManager();
+}
+
+TObjectPtr<AMS_SceneManager> AMS_PlayerController::GetSceneManager() const
+{
+	MS_CHECK(Management);
+
+	return Management->GetSceneManager();
+}
+
+TObjectPtr<UMS_WidgetManager> AMS_PlayerController::GetWidgetManager() const
+{
+	MS_CHECK(Management);
+
+	return Management->GetWidgetManager();
 }
 
 // Called every frame

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Command/SceneCommand/MS_SceneCommand.h"
 #include "Management/Public/MS_TableManager.h"
 //#include "MS_Define.generated.h"
 
@@ -67,7 +68,25 @@ static TObjectPtr<UObject> LoadObjectFromFile(FStreamableManager& aAssetLoader, 
  return ResultObject;
 }
 
-// Scene
+// Widget
+
+static double ConvertFadeAnimationCurveValue(double aProgressRate, EMS_FadeAnimationCurveType aFadeAnimationCurveType)
+{
+ if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::Linear)
+ {
+  return aProgressRate;
+ }
+ if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::EaseIn)
+ {
+  return -FMath::Sqrt(1 - FMath::Pow(aProgressRate, 2)) + 1;
+ }
+ if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::EaseOut)
+ {
+  return FMath::Sqrt(1 - FMath::Pow(aProgressRate - 1, 2));
+ }
+	
+ return 0.0;
+}
 
 #define CREATE_SCENE_COMMAND(CommandName) \
 TObjectPtr<class UMS_SceneCommand> CommandName = MS_NewObject<UMS_SceneCommand>(); \

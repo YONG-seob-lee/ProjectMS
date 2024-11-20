@@ -20,7 +20,9 @@ public class ProjectMS : ModuleRules
 			"CommonInput", "CommonUI", "EnhancedInput"
 		});
 
-		PublicIncludePaths.AddRange(new string[] { "ProjectMS" });
+		PublicIncludePaths.AddRange(new string[] { "ProjectMS", "ProjectMS/Actor", "ProjectMS/CoreClass",
+			"ProjectMS/Data", "ProjectMS/Level", "ProjectMS/Management", "ProjectMS/UI", "ProjectMS/Unit", 
+			"ProjectMS/Utility" });
 		PrivateIncludePaths.AddRange(new string[] { "ProjectMS" });
 
 		// Uncomment if you are using Slate UI

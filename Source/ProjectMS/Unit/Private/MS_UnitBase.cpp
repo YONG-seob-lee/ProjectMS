@@ -89,12 +89,12 @@ void UMS_UnitBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCul
 	}
 }
 
-void UMS_UnitBase::ChangeActionState(EMS_UnitState aActionType) const
+void UMS_UnitBase::ChangeState(EMS_UnitState aUnitState) const
 {
 	if(UnitStateMachine == nullptr)
 	{
 		return;
 	}
 	
-	UnitStateMachine->SetState(static_cast<uint8>(aActionType));
+	UnitStateMachine->SetState(static_cast<uint8>(aUnitState));
 }

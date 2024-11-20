@@ -63,11 +63,11 @@ public:
 	bool IsExistAnim(FName aAnimName) const;
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<class UMS_CanvasPanel> RootCanvasPanel = nullptr;
+	TObjectPtr<class UMS_CanvasPanel> CPP_RootCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<UMS_CanvasPanel> CutoutFrameCanvasPanel = nullptr;
+	TObjectPtr<UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<UMS_CanvasPanel> ContentFrameCanvasPanel = nullptr;
+	TObjectPtr<UMS_CanvasPanel> CPP_ContentFrameCanvasPanel = nullptr;
 	
 private:
 	bool IsManaged = false;

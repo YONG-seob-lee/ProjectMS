@@ -33,7 +33,8 @@ void UMS_Management::InitManager()
 	
 	TableManager = MS_NewObject<UMS_TableManager>(this);
 	MS_CHECK(TableManager);
-
+	TableManager->Initialize();
+	
 	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(GetOuter());
 	MS_CHECK(PlayerController);
 	
@@ -41,14 +42,15 @@ void UMS_Management::InitManager()
 	ManagerActorSpawnParameters.Owner = PlayerController;
 	ManagerActorSpawnParameters.Instigator = PlayerController->GetInstigator();
 	ManagerActorSpawnParameters.ObjectFlags |= RF_Transient;
-	
 	SceneManager = GetWorld()->SpawnActor<AMS_SceneManager>(AMS_SceneManager::StaticClass(), ManagerActorSpawnParameters);
-
+	
 	UnitManager = MS_NewObject<UMS_UnitManager>(this);
 	MS_CHECK(UnitManager);
+	UnitManager->Initialize();
 	
 	WidgetManager = MS_NewObject<UMS_WidgetManager>(this);
 	MS_CHECK(WidgetManager);
+	WidgetManager->Initialize();
 	
 	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
 }

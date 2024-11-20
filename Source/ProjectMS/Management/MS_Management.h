@@ -19,12 +19,13 @@ public:
 	virtual void PostInitialize();
 	virtual void Tick(float aDeltaTime);
 
+	void InitManager();
+	
 	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
 	FORCEINLINE TObjectPtr<class UMS_WidgetManager> GetWidgetManager() { return WidgetManager; }
 	FORCEINLINE TObjectPtr<class UMS_UnitManager> GetUnitManager() { return UnitManager; }
-
+	FORCEINLINE TObjectPtr<class AMS_SceneManager> GetSceneManager() { return SceneManager; }
 private:
-	void InitManager();
 
 	// Manager Property
 	UPROPERTY()

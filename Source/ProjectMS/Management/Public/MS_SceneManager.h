@@ -37,9 +37,9 @@ public:
 	virtual void PostInitializeComponents() override;
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
-
+	void LoadLevel(const FName& aLevelName);
 private:
-	void StartFade(bool bStartFadeOut);
+	void StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget);
 	void ProcessFade();
 	void EndFade();
 	
@@ -47,12 +47,9 @@ private:
 	void HandleUnloadLevel(const FName& aLevelName);
 	void HandleLoadLevel(const FName& aLevelName);
 
-	void ChangeSceneState(int8 aSceneId) const;
 	void HandleLoadingLevel();
 	void HandleLevelLoad();
 
-	void RegisterSceneState(uint8 aSceneId, const FName& aName, const TSubclassOf<class UMS_StateBase>& aSceneType) const;
-	
 	UPROPERTY()
 	TObjectPtr<UWorld> PersistentLevelWorld = nullptr;
 	UPROPERTY()
@@ -67,13 +64,9 @@ private:
 	FTimerHandle FadeTimerHandle = {};
 	float FadeProgressRate = 0.0f;
 
-	TObjectPtr<UMS_Widget> LeavingWidget = nullptr;
-	TObjectPtr<UMS_Widget> EnterWidget = nullptr;
+	TObjectPtr<UMS_Widget> FadeWidget = nullptr;
 	
 	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
 	
 	TWeakObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
-	
-	UPROPERTY()
-	TObjectPtr<class UMS_StateMachine> SceneStateMachine = nullptr;
 };

@@ -14,4 +14,6 @@ public:
 	FName LevelName = FName();
 	UPROPERTY(EditAnywhere)
 	int32 LevelKey = 0;
+	UPROPERTY(EditAnywhere)
+	FName PrimitiveWidgetName = FName();
 };

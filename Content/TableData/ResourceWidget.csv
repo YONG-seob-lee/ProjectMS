@@ -1,0 +1,6 @@
+Index,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
+1,Persistent,100,1,FALSE,0
+2,Practice_01,100,2,FALSE,0
+3,Practice_02,100,3,FALSE,0
+4,Logo,100,0,FALSE,0
+5,Title,100,0,FALSE,0

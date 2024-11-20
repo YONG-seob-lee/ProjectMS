@@ -140,8 +140,11 @@ void UMS_WidgetManager::SetCurrentWidget(const TObjectPtr<UMS_Widget>& aCurrentW
 
 TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged)
 {
-	const TWeakObjectPtr<AMS_PlayerController> PlayerController = GetController();
-	MS_CHECK(PlayerController.IsValid());
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
+	MS_CHECK(PlayerController);
 	
 	const TWeakObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
 	MS_CHECK(TableManager.IsValid());
@@ -185,20 +188,14 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal_Managing(const F
 {
 	static FString SubName = TEXT("Create Widget");
 
-	const TWeakObjectPtr<AMS_PlayerController> PlayerController = GetController();
-	if(PlayerController.IsValid())
-	{
-		MS_CHECK(false);
-	}
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
+	MS_CHECK(PlayerController);
 	
 	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(LoadObjectFromFile(GEngine->AssetManager.Get()->GetStreamableManager(), aPath, FMS_LoadResourceDelegate::CreateUObject(this, &UMS_WidgetManager::LoadComplete)));
 	if(WidgetClass == nullptr)
-	{
-		return nullptr;
-	}
-
-	const TObjectPtr<UWorld> World = GetWorld();
-	if(World == nullptr)
 	{
 		return nullptr;
 	}

@@ -35,12 +35,12 @@ void UMS_BasePlayer::DestroyUnit()
 	Super::DestroyUnit();
 }
 
-void UMS_BasePlayer::ChangeActionState(EMS_UnitState aActionType) const
+void UMS_BasePlayer::ChangeState(EMS_UnitState aActionType) const
 {
 	if(APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
 	{
 		PlayerController->FlushPressedKeys();
 	}
 	
-	Super::ChangeActionState(aActionType);
+	Super::ChangeState(aActionType);
 }
