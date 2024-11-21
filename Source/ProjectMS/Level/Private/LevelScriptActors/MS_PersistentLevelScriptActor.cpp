@@ -7,7 +7,6 @@
 #include "Controller/MS_PlayerController.h"
 #include "Public/MS_SceneManager.h"
 #include "Public/MS_WidgetManager.h"
-#include "Table/Caches/MS_LevelCacheTable.h"
 #include "Widget/Persistent/MS_PersistentWidget.h"
 
 // Sets default values
@@ -37,17 +36,14 @@ void AMS_PersistentLevelScriptActor::BeginPlay()
 	MS_CHECK(WidgetManager);
 	WidgetManager->Create_Widget(UMS_PersistentWidget::GetWidgetName());
 	
-	// CREATE_SCENE_COMMAND(Command);
-	// Command->SetLevelType(EMS_LevelType::Practice_01);
-	// Command->SetPreviousLevelType(EMS_LevelType::Persistence);
-	// Command->SetFadeInTransitionType(EMS_TransitionStyle::FadeFromLeavingPage);
-	// Command->SetFadeOutTransitionType(EMS_TransitionStyle::FadeFromEnteringPage);
-	// Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
+	CREATE_SCENE_COMMAND(Command);
+	Command->SetLevelType(EMS_LevelType::Practice_01);
+	Command->SetPreviousLevelType(EMS_LevelType::Persistence);
+	Command->SetFadeInTransitionType(EMS_TransitionStyle::FadeFromLeavingPage);
+	Command->SetFadeOutTransitionType(EMS_TransitionStyle::FadeFromEnteringPage);
+	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
-	const TObjectPtr<UMS_LevelCacheTable> LevelTable = Cast<UMS_LevelCacheTable>(TableManager->GetCacheTable(EMS_TableDataType::Level));
-	MS_CHECK(LevelTable);
-
-	SceneManager->LoadLevel(LevelTable->GetPrimitiveWidgetName(EMS_LevelType::Practice_01));
+	SceneManager->RequestChangeScene(Command);
 }
 
 // Called every frame

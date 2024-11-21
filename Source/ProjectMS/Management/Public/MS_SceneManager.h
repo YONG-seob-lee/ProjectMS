@@ -24,6 +24,7 @@ enum class EMS_FadeStep
 	Loading,
 	EnterFadeIn,
 	ExitFadeIn,
+	Finished,
 };
 
 /**
@@ -37,18 +38,19 @@ public:
 	virtual void PostInitializeComponents() override;
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
-	void LoadLevel(const FName& aLevelName);
 private:
 	void StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget);
 	void ProcessFade();
 	void EndFade();
 	
 	void RequestLevel();
+	UFUNCTION()
 	void HandleUnloadLevel(const FName& aLevelName);
-	void HandleLoadLevel(const FName& aLevelName);
+	UFUNCTION()
+	void HandleLoadLevel();
 
+	UFUNCTION()
 	void HandleLoadingLevel();
-	void HandleLevelLoad();
 
 	UPROPERTY()
 	TObjectPtr<UWorld> PersistentLevelWorld = nullptr;
