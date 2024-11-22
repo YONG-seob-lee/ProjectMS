@@ -9,6 +9,7 @@
 #include "Engine/AssetManager.h"
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"
+#include "Widget/MS_RootWidget.h"
 
 void UMS_WidgetManager::BuiltInInitialize()
 {
@@ -18,6 +19,8 @@ void UMS_WidgetManager::BuiltInInitialize()
 void UMS_WidgetManager::Initialize()
 {
 	Super::Initialize();
+
+	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
 }
 
 void UMS_WidgetManager::PostInitialize()
@@ -56,7 +59,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::GetWidget(const FName& aTypeName)
 	return nullptr;
 }
 
-TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName)
+TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName, bool bAttachToRoot /* = true */)
 {
 	GEngine->ForceGarbageCollection(true);
 
@@ -75,6 +78,11 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName)
 
 	ManagedWidgets.Emplace(aTypeName, Widget);
 
+	if(bAttachToRoot)
+	{
+		RootWidget->AttachContentWidget(Widget);
+	}
+	
 	if(OnCreateWidget.IsBound())
 	{
 		OnCreateWidget.Broadcast(aTypeName);
@@ -129,13 +137,10 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
-TObjectPtr<UMS_Widget> UMS_WidgetManager::GetCurrentWidget()
+void UMS_WidgetManager::RefreshContentWidget() const
 {
-	return nullptr;
-}
-
-void UMS_WidgetManager::SetCurrentWidget(const TObjectPtr<UMS_Widget>& aCurrentWidget)
-{
+	MS_CHECK(RootWidget);
+	RootWidget->RefreshContentCanvas();
 }
 
 TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged)

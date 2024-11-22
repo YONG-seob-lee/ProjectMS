@@ -39,7 +39,7 @@ public:
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 private:
-	void StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget);
+	void StartFade();
 	void ProcessFade();
 	void EndFade();
 	
@@ -66,7 +66,7 @@ private:
 	FTimerHandle FadeTimerHandle = {};
 	float FadeProgressRate = 0.0f;
 
-	TObjectPtr<UMS_Widget> FadeWidget = nullptr;
+	TWeakObjectPtr<class UMS_RootWidget> RootWidget = nullptr;
 	
 	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
 	

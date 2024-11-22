@@ -38,6 +38,10 @@ void UMS_Management::InitManager()
 	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(GetOuter());
 	MS_CHECK(PlayerController);
 	
+	WidgetManager = MS_NewObject<UMS_WidgetManager>(this);
+	MS_CHECK(WidgetManager);
+	WidgetManager->Initialize();
+	
 	FActorSpawnParameters ManagerActorSpawnParameters = {};
 	ManagerActorSpawnParameters.Owner = PlayerController;
 	ManagerActorSpawnParameters.Instigator = PlayerController->GetInstigator();
@@ -47,10 +51,6 @@ void UMS_Management::InitManager()
 	UnitManager = MS_NewObject<UMS_UnitManager>(this);
 	MS_CHECK(UnitManager);
 	UnitManager->Initialize();
-	
-	WidgetManager = MS_NewObject<UMS_WidgetManager>(this);
-	MS_CHECK(WidgetManager);
-	WidgetManager->Initialize();
 	
 	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
 }

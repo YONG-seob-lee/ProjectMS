@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "WidgetComponent/MS_CanvasPanel.h"
 #include "MS_Widget.generated.h"
 
 namespace DefaultWidgetAnimation
@@ -54,25 +55,14 @@ public:
 
 	FORCEINLINE FMS_ResourceWidgetInfo GetResourceWidgetInfo() const { return ResourceWidgetInfo; }
 	FORCEINLINE void SetResourceWidgetInfo(const FMS_ResourceWidgetInfo& Info) { ResourceWidgetInfo = Info; }
-	FORCEINLINE FVector2D GetCutoutFrameSize() const { return CutoutFrameSize; }
-	FORCEINLINE FVector2D GetContentFrameSize() const { return ContentFrameSize; }
 	void FillDefaultAnimations();
 
 	TObjectPtr<UWidgetAnimation> GetAnimationByName(FName aAnimName) const;
 	void PlayAnimationByName(FName aName, float aStartTime = 0.f, int32 aLoopCount = 1, EUMGSequencePlayMode::Type aPlayType = EUMGSequencePlayMode::Forward, float aSpeed = 1.f);
 	bool IsExistAnim(FName aAnimName) const;
 	
-	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<class UMS_CanvasPanel> CPP_RootCanvasPanel = nullptr;
-	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
-	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<UMS_CanvasPanel> CPP_ContentFrameCanvasPanel = nullptr;
-	
 private:
 	bool IsManaged = false;
-	FVector2D CutoutFrameSize = {};
-	FVector2D ContentFrameSize = {};
 	
 	FMS_ResourceWidgetInfo ResourceWidgetInfo;
 	

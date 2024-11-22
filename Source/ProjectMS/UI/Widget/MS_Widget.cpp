@@ -50,8 +50,6 @@ void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
 
 void UMS_Widget::OnRuntimeInitialize()
 {
-	CutoutFrameSize = CPP_CutoutFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
-	ContentFrameSize = CPP_ContentFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
 }
 
 void UMS_Widget::Active(bool bActive)

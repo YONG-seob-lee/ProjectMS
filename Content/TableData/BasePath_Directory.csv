@@ -6,3 +6,5 @@ Id,Directory
 301,TableData
 401,UI
 402,UI/Widget
+403,UI/Widget/LoadingWidget
+404,UI/Widget/Practice

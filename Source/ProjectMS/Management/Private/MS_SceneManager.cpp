@@ -10,6 +10,7 @@
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
+#include "Widget/MS_RootWidget.h"
 
 void AMS_SceneManager::PostInitializeComponents()
 {
@@ -23,39 +24,33 @@ void AMS_SceneManager::PostInitializeComponents()
 	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
 	MS_CHECK(PlayerController);
 	
-	const TWeakObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
-	MS_CHECK(TableManager.IsValid());
+	const TObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
+	MS_CHECK(TableManager);
 
 	LevelTable = Cast<UMS_LevelCacheTable>(TableManager->GetCacheTable(EMS_TableDataType::Level));
 	MS_CHECK(LevelTable.IsValid());
+
+	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
+	RootWidget = WidgetManager->GetRootWidget();
+	RootWidget->SetShowLoadingWidget(false);
 }
 
 void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
 {
-	MS_CHECK(LevelChangeStep == EMS_FadeStep::Undefined || LevelChangeStep == EMS_FadeStep::Finished);
-	
 	MS_CHECK(aCommand);
 	NewCommand = aCommand;
 
 	const TObjectPtr<UWorld> World = Cast<UWorld>(GetWorld());
 	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
-	MS_CHECK(PlayerController);
 	
-	const TWeakObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-	MS_CHECK(WidgetManager.IsValid());
-
-	const FName WidgetName = LevelTable->GetPrimitiveWidgetName(NewCommand->GetPreviousLevelType());
-	
-	FadeWidget = WidgetManager->GetWidget(WidgetName);
-	// Fade Out
-	
+	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
-	StartFade(FadeWidget);
+
+	RootWidget->SetShowLoadingWidget(true);
+	StartFade();
 }
 
-void AMS_SceneManager::StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget)
+void AMS_SceneManager::StartFade()
 {
 	MS_CHECK(NewCommand);
 
@@ -63,32 +58,32 @@ void AMS_SceneManager::StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget)
 	{
 	case EMS_TransitionStyle::FadeFromLeavingPage :
 		{
-			aFadeWidget->SetRenderOpacity(1.f);
+			RootWidget->SetRenderOpacity(1.f);
 			break;
 		}
 	case EMS_TransitionStyle::FadeFromEnteringPage :
 		{
-			aFadeWidget->SetRenderOpacity(0.f);
+			RootWidget->SetRenderOpacity(0.f);
 			break;
 		}
 	case EMS_TransitionStyle::FloatFromTop :
 		{
-			aFadeWidget->SetRenderTranslation(FVector2D(0.f, -aFadeWidget->GetContentFrameSize().Y));
+			RootWidget->SetRenderTranslation(FVector2D(0.f, -RootWidget->GetContentFrameSize().Y));
 			break;
 		}
 	case EMS_TransitionStyle::FloatFromBottom :
 		{
-			aFadeWidget->SetRenderTranslation(FVector2D { 0.0f, aFadeWidget->GetContentFrameSize().Y });
+			RootWidget->SetRenderTranslation(FVector2D { 0.0f, RootWidget->GetContentFrameSize().Y });
 			break;
 		}
 	case EMS_TransitionStyle::FloatFromLeft :
 		{
-			aFadeWidget->SetRenderTranslation(FVector2D { -aFadeWidget->GetContentFrameSize().X, 0.0f });
+			RootWidget->SetRenderTranslation(FVector2D { -RootWidget->GetContentFrameSize().X, 0.0f });
 			break;
 		}
 	case EMS_TransitionStyle::FloatFromRight :
 		{
-			aFadeWidget->SetRenderTranslation(FVector2D { aFadeWidget->GetContentFrameSize().X, 0.0f });
+			RootWidget->SetRenderTranslation(FVector2D { RootWidget->GetContentFrameSize().X, 0.0f });
 			break;
 		}
 	default:
@@ -97,7 +92,7 @@ void AMS_SceneManager::StartFade(const TObjectPtr<UMS_Widget>& aFadeWidget)
 		}
 	}
 	
-	aFadeWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	RootWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	//ActivatePreventionCover();
 
 	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &AMS_SceneManager::ProcessFade, 0.01f, true);
@@ -107,45 +102,45 @@ void AMS_SceneManager::ProcessFade()
 {
 	FadeProgressRate += 0.01f;
 
-	const EMS_FadeAnimationCurveType FadeAnimationCurveType = NewCommand->GetFadeAnimationCurveType();
-	
-	switch(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle())
-	{
-	case EMS_TransitionStyle::FadeFromLeavingPage :
-		{
-			FadeWidget->SetRenderOpacity(ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType));
-			break;
-		}
-	case EMS_TransitionStyle::FadeFromEnteringPage :
-		{
-			FadeWidget->SetRenderOpacity(ConvertFadeAnimationCurveValue(FadeProgressRate, FadeAnimationCurveType));
-			break;
-		}
-	case EMS_TransitionStyle::FloatFromTop :
-		{
-			FadeWidget->SetRenderTranslation(FVector2D { 0.0f, ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * -FadeWidget->GetContentFrameSize().Y });
-			break;
-		}
-	case EMS_TransitionStyle::FloatFromBottom :
-		{
-			FadeWidget->SetRenderTranslation(FVector2D { 0.0f, ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * FadeWidget->GetContentFrameSize().Y });
-			break;
-		}
-	case EMS_TransitionStyle::FloatFromLeft :
-		{
-			FadeWidget->SetRenderTranslation(FVector2D { ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * -FadeWidget->GetContentFrameSize().X, 0.0f });
-			break;
-		}
-	case EMS_TransitionStyle::FloatFromRight :
-		{
-			FadeWidget->SetRenderTranslation(FVector2D { ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * FadeWidget->GetContentFrameSize().X, 0.0f });
-			break;
-		}
-	default:
-		{
-			
-		}
-	}
+	// const EMS_FadeAnimationCurveType FadeAnimationCurveType = NewCommand->GetFadeAnimationCurveType();
+	//
+	// switch(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle())
+	// {
+	// case EMS_TransitionStyle::FadeFromLeavingPage :
+	// 	{
+	// 		RootWidget->SetRenderOpacity(ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType));
+	// 		break;
+	// 	}
+	// case EMS_TransitionStyle::FadeFromEnteringPage :
+	// 	{
+	// 		RootWidget->SetRenderOpacity(ConvertFadeAnimationCurveValue(FadeProgressRate, FadeAnimationCurveType));
+	// 		break;
+	// 	}
+	// case EMS_TransitionStyle::FloatFromTop :
+	// 	{
+	// 		RootWidget->SetRenderTranslation(FVector2D { 0.0f, ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * -RootWidget->GetContentFrameSize().Y });
+	// 		break;
+	// 	}
+	// case EMS_TransitionStyle::FloatFromBottom :
+	// 	{
+	// 		RootWidget->SetRenderTranslation(FVector2D { 0.0f, ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * RootWidget->GetContentFrameSize().Y });
+	// 		break;
+	// 	}
+	// case EMS_TransitionStyle::FloatFromLeft :
+	// 	{
+	// 		RootWidget->SetRenderTranslation(FVector2D { ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * -RootWidget->GetContentFrameSize().X, 0.0f });
+	// 		break;
+	// 	}
+	// case EMS_TransitionStyle::FloatFromRight :
+	// 	{
+	// 		RootWidget->SetRenderTranslation(FVector2D { ConvertFadeAnimationCurveValue(1.0 - FadeProgressRate, FadeAnimationCurveType) * RootWidget->GetContentFrameSize().X, 0.0f });
+	// 		break;
+	// 	}
+	// default:
+	// 	{
+	// 		
+	// 	}
+	// }
 	
 	if (FadeProgressRate > 1.0)
 	{
@@ -178,6 +173,7 @@ void AMS_SceneManager::EndFade()
 		}
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
 		{
+			RootWidget->SetShowLoadingWidget(false);
 			LevelChangeStep = EMS_FadeStep::Finished;
 		}
 	}
@@ -242,8 +238,9 @@ void AMS_SceneManager::HandleLoadingLevel()
 	const TWeakObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
 	MS_CHECK(WidgetManager.IsValid());
 	
-	const TObjectPtr<UMS_Widget> Widget = WidgetManager->Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	WidgetManager->RefreshContentWidget();
+	WidgetManager->Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;
-	StartFade(Widget);
+	StartFade();
 }

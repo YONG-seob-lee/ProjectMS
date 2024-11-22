@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
 #include "Management/Public/MS_SceneManager.h"
+#include "Widget/MS_RootWidget.h"
 #include "MS_WidgetManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_CreateWidget, const FName&);
@@ -28,19 +29,18 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	
 	TObjectPtr<class UMS_Widget> GetWidget(const FName& aTypeName);
-	TObjectPtr<class UMS_Widget> Create_Widget(const FName& aTypeName);
+	TObjectPtr<class UMS_Widget> Create_Widget(const FName& aTypeName, bool bAttachToRoot = true);
 	TObjectPtr<class UMS_Widget> Create_Widget_NotManaging(const FSoftObjectPath& aSoftObjectPath);
 
 	void PreDestroyWidget(TObjectPtr<class UMS_Widget> aWidget);
 	bool DestroyWidget(const FName& aTypeName);
 	void PostDestroyWidget(const FName& aTypeName);
 	
-	TObjectPtr<UMS_Widget> GetCurrentWidget();
-	void SetCurrentWidget(const TObjectPtr<UMS_Widget>& aCurrentWidget);
-
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
+	void RefreshContentWidget() const;
+	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }
 private:
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal(const FName& aTypeName, bool bManaged);
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal_Managing(const FString& aPath);
@@ -50,4 +50,7 @@ private:
 	
 	UPROPERTY()
 	TMap<FName, TWeakObjectPtr<class UMS_Widget>> ManagedWidgets;
+
+	UPROPERTY()
+	TObjectPtr<UMS_RootWidget> RootWidget = nullptr;
 };
