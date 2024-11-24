@@ -35,7 +35,7 @@ enum class EMS_LoadingWidgetType : uint8
 };
 
 UENUM()
-enum EMS_FadeAnimationCurveType
+enum class EMS_FadeAnimationCurveType : uint8
 {
 	Undefined,
 	Linear,

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Widget.h"
+#include "Public/MS_SceneManager.h"
 #include "MS_RootWidget.generated.h"
 
 /**
@@ -25,7 +26,10 @@ public:
 
 	void AttachContentWidget(const TObjectPtr<UMS_Widget>& aContentWidget) const;
 	void RefreshContentCanvas() const;
-	void SetShowLoadingWidget(bool bShow) const;
+	void ActivatePreventionCover(bool bShow) const;
+	void SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle) const;
+	void SetContentWidgetTransition(EMS_TransitionStyle aTransitionStyle, EMS_FadeAnimationCurveType aFadeAnimationCurveType, float aFadeProgressRate) const;
+	void ResetCanvasZOrder() const;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
@@ -34,7 +38,10 @@ public:
 	
 private:
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_DefaultLoadingWidget> CPP_LoadingWidget = nullptr;
+	TObjectPtr<UMS_CanvasPanel> CPP_LoadingPanel = nullptr;
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UImage> CPP_PreventionCoverImage = nullptr;
+	
 	FVector2D CutoutFrameSize = {};
 	FVector2D ContentFrameSize = {};
 };

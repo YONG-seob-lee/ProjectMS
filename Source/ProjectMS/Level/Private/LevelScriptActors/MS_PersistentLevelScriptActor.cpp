@@ -39,8 +39,8 @@ void AMS_PersistentLevelScriptActor::BeginPlay()
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::Practice_01);
 	Command->SetPreviousLevelType(EMS_LevelType::Persistence);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::FadeFromLeavingPage);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::FadeFromEnteringPage);
+	Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
+	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
 	SceneManager->RequestChangeScene(Command);
