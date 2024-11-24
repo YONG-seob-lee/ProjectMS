@@ -23,10 +23,12 @@ void UMS_Button::NativeOnCurrentTextStyleChanged()
 	Super::NativeOnCurrentTextStyleChanged();
 }
 
+#if WITH_EDITOR
 const FText UMS_Button::GetPaletteCategory()
 {
 	return FText::FromString("MS Custom");
 }
+#endif
 
 void UMS_Button::OnHoverJoyStick()
 {

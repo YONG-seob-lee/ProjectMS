@@ -19,7 +19,9 @@ public:
 	virtual void NativeConstruct() override;
 	
 	virtual void NativeOnCurrentTextStyleChanged() override;
+#if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override;
+#endif
 
 	FCommonButtonEvent& GetOnClickedDelegate() { SetDelegates(); return MS_OnClickedDelegate; }
 	FORCEINLINE void UnbindClickedDelegate() { MS_OnClickedDelegate.Clear(); }

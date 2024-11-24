@@ -22,6 +22,7 @@ AMS_LevelScriptActorBase::AMS_LevelScriptActorBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+#if WITH_EDITOR
 void AMS_LevelScriptActorBase::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -37,6 +38,7 @@ void AMS_LevelScriptActorBase::PostEditChangeProperty(FPropertyChangedEvent& Pro
 		}
 	}
 }
+#endif
 
 void AMS_LevelScriptActorBase::PostInitializeComponents()
 {
@@ -158,6 +160,7 @@ void AMS_LevelScriptActorBase::OnBaseLayerLevelCollectionSwitchClick()
 		}
 	}
 }
+#endif
 
 TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& aCharacterName) const
 {
@@ -192,4 +195,3 @@ TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr
 
 	return Player;
 }
-#endif
