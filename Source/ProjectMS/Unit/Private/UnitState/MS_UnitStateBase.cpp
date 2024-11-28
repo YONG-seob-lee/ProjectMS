@@ -11,10 +11,7 @@ void UMS_UnitStateBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 	// Add Input Mapping Context
 	MS_CHECK(PlayerController.IsValid());
 
-	const TObjectPtr<AMS_CharacterBase> CharacterBase = PlayerController->GetCharacterBase();
-	MS_CHECK(CharacterBase);
-
-	const TObjectPtr<class UInputMappingContext> MappingContext = CharacterBase->GetInputMappingContext();
+	const TObjectPtr<class UInputMappingContext> MappingContext = PlayerController->GetInputMappingContext();
 	MS_CHECK(MappingContext);
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{

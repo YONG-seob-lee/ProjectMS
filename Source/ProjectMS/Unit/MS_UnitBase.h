@@ -52,7 +52,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<AMS_CharacterBase> Character = nullptr;
-
+	
 	UPROPERTY()
 	TObjectPtr<class UMS_StateMachine> UnitStateMachine = nullptr;
 };

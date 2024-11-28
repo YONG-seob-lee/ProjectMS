@@ -26,6 +26,7 @@ public:
 	TObjectPtr<UMS_UnitManager> GetUnitManager() const;
 	TObjectPtr<AMS_SceneManager> GetSceneManager() const;
 	TObjectPtr<UMS_WidgetManager> GetWidgetManager() const;
+	FORCEINLINE TObjectPtr<class UInputMappingContext> GetInputMappingContext() { return DefaultMappingContext; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,6 +35,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+	
 	UPROPERTY()
 	TObjectPtr<UMS_Management> Management = nullptr;
 };

@@ -11,6 +11,11 @@
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
 #include "Widget/MS_RootWidget.h"
 
+AMS_SceneManager::AMS_SceneManager()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void AMS_SceneManager::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -31,6 +36,16 @@ void AMS_SceneManager::PostInitializeComponents()
 
 	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
 	RootWidget = WidgetManager->GetRootWidget();
+}
+
+void AMS_SceneManager::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(NewCommand->OnCheckLoadComplete.IsBound())
+	{
+		LevelChangeStep = EMS_FadeStep::Loading;
+	}
 }
 
 void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
@@ -170,6 +185,7 @@ void AMS_SceneManager::HandleLoadingLevel()
 	
 	WidgetManager->RefreshContentWidget();
 	WidgetManager->Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;
 	StartFade();

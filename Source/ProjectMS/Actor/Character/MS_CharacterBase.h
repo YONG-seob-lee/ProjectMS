@@ -45,14 +45,11 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent) override;
 	
-	FORCEINLINE TObjectPtr<class UInputMappingContext> GetInputMappingContext() { return DefaultMappingContext; }
 	FORCEINLINE TObjectPtr<USceneComponent> GetCharacterRootComponent() const { return RootComponent; }
 	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine);
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 	
 	UPROPERTY(Category = AITT_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FMS_CharacterLodValues LodValues = FMS_CharacterLodValues();

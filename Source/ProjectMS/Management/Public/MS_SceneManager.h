@@ -35,7 +35,10 @@ class PROJECTMS_API AMS_SceneManager : public AActor
 {
 	GENERATED_BODY()
 public:
+	AMS_SceneManager();
+	
 	virtual void PostInitializeComponents() override;
+	virtual void Tick(float DeltaSeconds) override;
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 private:
