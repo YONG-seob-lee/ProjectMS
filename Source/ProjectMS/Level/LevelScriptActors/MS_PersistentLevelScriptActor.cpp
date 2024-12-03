@@ -37,7 +37,7 @@ void AMS_PersistentLevelScriptActor::BeginPlay()
 	WidgetManager->Create_Widget(UMS_PersistentWidget::GetWidgetName());
 	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::Practice_01);
+	Command->SetLevelType(EMS_LevelType::Account);
 	Command->SetPreviousLevelType(EMS_LevelType::Persistence);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);

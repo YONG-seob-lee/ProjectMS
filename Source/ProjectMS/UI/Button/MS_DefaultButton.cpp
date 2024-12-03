@@ -27,8 +27,8 @@ void UMS_DefaultButton::OnClickDefaultButton()
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::Practice_02);
 	Command->SetPreviousLevelType(EMS_LevelType::Practice_01);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::FadeFromEnteringPage);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::FadeFromLeavingPage);
+	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
+	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 	

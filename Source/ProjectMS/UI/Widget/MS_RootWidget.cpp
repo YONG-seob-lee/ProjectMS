@@ -59,13 +59,13 @@ void UMS_RootWidget::SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle
 {
 	switch(aTransitionStyle)
 	{
-	case EMS_TransitionStyle::FadeFromLeavingPage :
+	case EMS_TransitionStyle::GradationIn :
 		{
 			CPP_LoadingPanel->SetRenderOpacity(1.f);
 		Cast<UCanvasPanelSlot>(CPP_LoadingPanel->Slot)->SetZOrder(1);
 			break;
 		}
-	case EMS_TransitionStyle::FadeFromEnteringPage :
+	case EMS_TransitionStyle::GradationOut :
 		{
 			CPP_LoadingPanel->SetRenderOpacity(0.f);
 		Cast<UCanvasPanelSlot>(CPP_LoadingPanel->Slot)->SetZOrder(1);
@@ -110,12 +110,12 @@ void UMS_RootWidget::SetContentWidgetTransition(EMS_TransitionStyle aTransitionS
 	
 	switch(aTransitionStyle)
 	{
-	case EMS_TransitionStyle::FadeFromLeavingPage :
+	case EMS_TransitionStyle::GradationIn :
 		{
 			CPP_LoadingPanel->SetRenderOpacity(ConvertFadeAnimationCurveValue(1.f - aFadeProgressRate, aFadeAnimationCurveType));
 			break;
 		}
-	case EMS_TransitionStyle::FadeFromEnteringPage :
+	case EMS_TransitionStyle::GradationOut :
 		{
 			CPP_LoadingPanel->SetRenderOpacity(ConvertFadeAnimationCurveValue(aFadeProgressRate, aFadeAnimationCurveType));
 			break;

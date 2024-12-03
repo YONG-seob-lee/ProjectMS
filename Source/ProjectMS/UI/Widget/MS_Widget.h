@@ -47,6 +47,8 @@ public:
 	
 	virtual void NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime) override;
 	
+	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+	
 	UFUNCTION()
 	virtual void OnRuntimeInitialize();
 
@@ -55,6 +57,8 @@ public:
 	FORCEINLINE FMS_ResourceWidgetInfo GetResourceWidgetInfo() const { return ResourceWidgetInfo; }
 	FORCEINLINE void SetResourceWidgetInfo(const FMS_ResourceWidgetInfo& Info) { ResourceWidgetInfo = Info; }
 	void FillDefaultAnimations();
+
+	virtual void OnAnimFinished(const FName& aAnimName);
 
 	TObjectPtr<UWidgetAnimation> GetAnimationByName(FName aAnimName) const;
 	void PlayAnimationByName(FName aName, float aStartTime = 0.f, int32 aLoopCount = 1, EUMGSequencePlayMode::Type aPlayType = EUMGSequencePlayMode::Forward, float aSpeed = 1.f);

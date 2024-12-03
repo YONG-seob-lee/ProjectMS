@@ -47,9 +47,6 @@ void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 {
 	MS_CHECK(aCommand);
 	NewCommand = aCommand;
-
-	const TObjectPtr<UWorld> World = Cast<UWorld>(GetWorld());
-	MS_CHECK(World);
 	
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
@@ -102,6 +99,17 @@ void AMS_SceneManager::EndFade()
 	if(NewCommand->GetLevelType() == EMS_LevelType::None)
 	{
 		// 위젯 변경만
+		const TObjectPtr<UWorld> World = Cast<UWorld>(GetWorld());
+		MS_CHECK(World);
+
+		const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
+		MS_CHECK(PlayerController);
+		
+		const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
+		MS_CHECK(WidgetManager);
+	
+		WidgetManager->RefreshContentWidget();
+		WidgetManager->Create_Widget(NewCommand->GetNextWidgetName());
 	}
 	else
 	{
@@ -175,8 +183,8 @@ void AMS_SceneManager::HandleLoadingLevel()
 	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
 	MS_CHECK(PlayerController);
 	
-	const TWeakObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-	MS_CHECK(WidgetManager.IsValid());
+	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
+	MS_CHECK(WidgetManager);
 	
 	WidgetManager->RefreshContentWidget();
 	WidgetManager->Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));

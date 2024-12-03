@@ -48,6 +48,13 @@ void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
 	Super::NativeTick(aMyGeometry, aInDeltaTime);
 }
 
+void UMS_Widget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+	Super::OnAnimationFinished_Implementation(Animation);
+	
+	OnAnimFinished(FName(Animation->GetMovieScene()->GetName()));
+}
+
 void UMS_Widget::OnRuntimeInitialize()
 {
 }
@@ -93,6 +100,17 @@ void UMS_Widget::FillDefaultAnimations()
 			}
 		}
 		Property = Property->PropertyLinkNext;
+	}
+}
+
+void UMS_Widget::OnAnimFinished(const FName& aAnimName)
+{
+	if(aAnimName == DefaultWidgetAnimation::Appearance)
+	{
+		if(GetAnimationByName(DefaultWidgetAnimation::Idle))
+		{
+			PlayAnimationByName(DefaultWidgetAnimation::Idle, 0.f, 0);
+		}
 	}
 }
 

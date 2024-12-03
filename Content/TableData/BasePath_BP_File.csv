@@ -4,3 +4,8 @@ Id,Directory_Table_Id,BP_File_Name
 3,404,PracticeWidget_01
 4,404,PracticeWidget_02
 5,403,LoadingWidget
+6,405,LogoWidget
+7,406,AccountWidget
+8,407,LobbyWidget
+9,408,TownWidget
+10,409,MarketWidget

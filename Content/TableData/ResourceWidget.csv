@@ -3,5 +3,9 @@ Index,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 2,Persistent,100,2,FALSE,0
 3,Practice_01,100,3,FALSE,0
 4,Practice_02,100,4,FALSE,0
-5,Logo,100,0,FALSE,0
-,Title,100,0,FALSE,0
+5,Logo,100,6,FALSE,0
+6,Title,100,0,FALSE,0
+7,Account,100,7,FALSE,0
+8,Lobby,100,8,FALSE,0
+9,Town,100,9,FALSE,0
+10,Market,100,10,FALSE,0

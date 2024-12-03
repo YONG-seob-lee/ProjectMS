@@ -12,17 +12,21 @@ enum class EMS_LevelType
 {
 	None = 0,
 	Persistence = 1,
-	Practice_01 = 2,
-	Practice_02 = 3,
-	Lobby = 4,
+	Account = 2,
+	Town = 3,
+	Market = 4,
+
+	
+	Practice_01 = 1000,
+	Practice_02 = 1001,
 };
 
 UENUM()
 enum class EMS_TransitionStyle : uint8
 {
 	Undefined = 0,
-	FadeFromLeavingPage,
-	FadeFromEnteringPage,
+	GradationIn,
+	GradationOut,
 	FloatFromTop,
 	FloatFromBottom,
 	FloatFromLeft,
@@ -32,7 +36,8 @@ enum class EMS_TransitionStyle : uint8
 UENUM()
 enum class EMS_LoadingWidgetType : uint8
 {
-	Default = 0,
+	Undefined = 0,
+	Default = 1,
 };
 
 UENUM()
@@ -57,7 +62,7 @@ public:
 	FORCEINLINE void SetFadeInTransitionType(EMS_TransitionStyle aStyle) { FadeInTransitionStyle = aStyle; }
 	FORCEINLINE void SetLoadingWidgetType(EMS_LoadingWidgetType aType) { LoadingWidgetType = aType; }
 	// If do not Reload Level. Use this Function.
-	FORCEINLINE void SetNextWidget(const TSubclassOf<class UMS_Widget>& aNextWidget) { NextWidget = aNextWidget; }
+	FORCEINLINE void SetNextWidget(const FName& aWidgetName) { WidgetName = aWidgetName; }
 	FORCEINLINE void SetFadeAnimationType(EMS_FadeAnimationCurveType aFadeAnimationCurveType) { FadeAnimationCurveType = aFadeAnimationCurveType; } 
 	
 	FORCEINLINE EMS_LevelType GetLevelType() const { return LevelType; }
@@ -66,13 +71,13 @@ public:
 	FORCEINLINE EMS_TransitionStyle GetFadeInTransitionStyle() const { return FadeInTransitionStyle; }
 	FORCEINLINE EMS_LoadingWidgetType GetLoadingPageType() const { return LoadingWidgetType; }
 	FORCEINLINE TSubclassOf<class UMS_Widget> GetLoadingWidget() { return LoadingWidget; }
-	FORCEINLINE TSubclassOf<class UMS_Widget> GetNextWidget() { return NextWidget; }
+	FORCEINLINE FName GetNextWidgetName() const { return WidgetName; }
 	FORCEINLINE EMS_FadeAnimationCurveType GetFadeAnimationCurveType() const { return FadeAnimationCurveType; }
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 
 private:
 	TSubclassOf<UMS_Widget> LoadingWidget = nullptr;
-	TSubclassOf<UMS_Widget> NextWidget = nullptr;
+	FName WidgetName = FName();
 
 	EMS_LevelType LevelType = EMS_LevelType::None;
 	EMS_LevelType PreviousLevelType = EMS_LevelType::None;
