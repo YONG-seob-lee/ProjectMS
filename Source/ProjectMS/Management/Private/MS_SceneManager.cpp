@@ -41,11 +41,6 @@ void AMS_SceneManager::PostInitializeComponents()
 void AMS_SceneManager::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	if(NewCommand->OnCheckLoadComplete.IsBound())
-	{
-		LevelChangeStep = EMS_FadeStep::Loading;
-	}
 }
 
 void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)

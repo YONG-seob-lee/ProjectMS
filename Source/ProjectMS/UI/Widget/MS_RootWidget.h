@@ -32,7 +32,7 @@ public:
 	void ResetCanvasZOrder() const;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
-	TObjectPtr<UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
+	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<UMS_CanvasPanel> CPP_ContentFrameCanvasPanel = nullptr;
 	

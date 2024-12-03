@@ -7,6 +7,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
+#include "WidgetComponent/MS_CanvasPanel.h"
 
 UMS_RootWidget::UMS_RootWidget(const FObjectInitializer& aObjectInitializer) :Super(aObjectInitializer)
 {

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
-#include "Management/Public/MS_SceneManager.h"
 #include "Widget/MS_RootWidget.h"
 #include "MS_WidgetManager.generated.h"
 

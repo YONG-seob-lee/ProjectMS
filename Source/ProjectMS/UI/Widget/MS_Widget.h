@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "WidgetComponent/MS_CanvasPanel.h"
 #include "MS_Widget.generated.h"
 
 namespace DefaultWidgetAnimation

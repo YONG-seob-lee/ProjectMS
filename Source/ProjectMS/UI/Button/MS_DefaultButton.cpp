@@ -31,10 +31,6 @@ void UMS_DefaultButton::OnClickDefaultButton()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::FadeFromLeavingPage);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-	Command->OnCheckLoadComplete = FMS_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
-		{
-			return false;// 특정 오브젝트가 완료되는 시점 ;
-		});
 	
 	SceneManager->RequestChangeScene(Command);
 }

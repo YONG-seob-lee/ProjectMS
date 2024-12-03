@@ -129,6 +129,4 @@ private:
 	TMap<EMS_TableDataType, FMS_CacheTableData> CacheTables;
 
 	bool bInitialize = false;
-	
-#define	gTableMng (*UMS_TableManager::GetInstance())
 };
