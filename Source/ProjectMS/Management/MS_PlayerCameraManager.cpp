@@ -28,7 +28,7 @@ void AMS_PlayerCameraManager::BeginPlay()
 	Super::BeginPlay();
 
 	SwitchViewCamera(EMS_ViewCameraType::QuarterView);
-	SwitchCameraMode(EMS_CameraModeType::FollowingInputCameraMode);
+	SwitchCameraMode(EMS_CameraModeType::ImmobileCameraMode);
 
 	AdjustPostProcessEffect(CameraEffect->GetCameraPostProcessEffect());
 }
