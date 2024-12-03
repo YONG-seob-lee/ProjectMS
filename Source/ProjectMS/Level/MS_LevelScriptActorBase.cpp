@@ -1,18 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../MS_LevelScriptActorBase.h"
+#include "MS_LevelScriptActorBase.h"
 
 #include "EngineUtils.h"
 #include "Actor/SpawnPoint/MS_SpawnPoint.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "LevelInstance/LevelInstanceActor.h"
-#include "Management/Public/MS_UnitManager.h"
-#include "Public/MS_WidgetManager.h"
+#include "Management/MS_UnitManager.h"
 #include "Unit/MS_BasePlayer.h"
 #include "Utility/MS_Define.h"
-#include "Widget/Persistent/MS_PersistentWidget.h"
 
 
 // Sets default values

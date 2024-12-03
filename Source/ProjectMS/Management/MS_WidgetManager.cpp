@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../Public/MS_WidgetManager.h"
+#include "MS_WidgetManager.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"

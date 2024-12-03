@@ -1,9 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../MS_UnitBase.h"
+#include "MS_UnitBase.h"
 
-#include "../Public/UnitState/MS_UnitStateBase.h"
+#include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
 

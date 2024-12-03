@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../Public/MS_TableManager.h"
+#include "MS_TableManager.h"
 
 #include "ProjectMS/Data/Table/MS_CacheTable.h"
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathBPFile.h"

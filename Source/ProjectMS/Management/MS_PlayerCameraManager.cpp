@@ -1,16 +1,12 @@
-﻿#include "Management/Public/MS_PlayerCameraManager.h"
+﻿#include "Management/MS_PlayerCameraManager.h"
 
 #include "Utility/MS_Define.h"
 #include "Camera/CameraModifier_CameraShake.h"
 
-#include "CoreClass/Controller/MS_PlayerController.h"
-
 #include "Camera/Public/ViewCamera/QuarterViewCamera/MS_QuarterViewCamera.h"
-
 #include "Camera/Public/CameraMode/FollowingInputCameraMode/MS_FollowingInputCameraMode.h"
 #include "Camera/Public/CameraMode/FollowingPlayerCameraMode/MS_FollowingPlayerCameraMode.h"
 #include "Camera/Public/CameraMode/ImmobileCameraMode/MS_ImmobileCameraMode.h"
-
 #include "Camera/Public/CameraEffect/MS_CameraEffect.h"
 #include "Camera/Public/CameraEffect/CameraShake/MS_CameraShake.h"
 

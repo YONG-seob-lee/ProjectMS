@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Level/Public/LevelScriptActors/MS_PracticeLevelScriptActor.h"
+#include "Level/LevelScriptActors/MS_PracticeLevelScriptActor.h"
 
 void AMS_PracticeLevelScriptActor::PostInitializeComponents()
 {

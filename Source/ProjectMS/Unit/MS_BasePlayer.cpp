@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../MS_BasePlayer.h"
+#include "MS_BasePlayer.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 

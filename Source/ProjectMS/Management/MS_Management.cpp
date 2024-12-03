@@ -1,15 +1,15 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../MS_Management.h"
+#include "MS_Management.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
-#include "../Public/MS_PlayerCameraManager.h"
+#include "MS_PlayerCameraManager.h"
 #include "ProjectMS/Utility/MS_Define.h"
-#include "../Public/MS_SceneManager.h"
-#include "../Public/MS_TableManager.h"
-#include "../Public/MS_UnitManager.h"
-#include "../Public/MS_WidgetManager.h"
+#include "MS_SceneManager.h"
+#include "MS_TableManager.h"
+#include "MS_UnitManager.h"
+#include "MS_WidgetManager.h"
 
 void UMS_Management::Initialize()
 {

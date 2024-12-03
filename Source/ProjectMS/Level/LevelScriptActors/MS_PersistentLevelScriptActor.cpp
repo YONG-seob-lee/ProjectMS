@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Level/Public/LevelScriptActors/MS_PersistentLevelScriptActor.h"
+#include "Level/LevelScriptActors/MS_PersistentLevelScriptActor.h"
 
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
-#include "Public/MS_SceneManager.h"
-#include "Public/MS_WidgetManager.h"
+#include "MS_SceneManager.h"
+#include "MS_WidgetManager.h"
 #include "Widget/Persistent/MS_PersistentWidget.h"
 
 // Sets default values

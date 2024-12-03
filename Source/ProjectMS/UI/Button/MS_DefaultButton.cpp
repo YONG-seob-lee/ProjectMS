@@ -5,7 +5,7 @@
 
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
-#include "Public/MS_SceneManager.h"
+#include "MS_SceneManager.h"
 
 void UMS_DefaultButton::NativeConstruct()
 {
