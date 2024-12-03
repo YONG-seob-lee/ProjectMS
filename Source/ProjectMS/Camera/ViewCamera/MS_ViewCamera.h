@@ -16,17 +16,15 @@ public:
 
 	virtual void AdjustCameraDistance(const float& aDistance);
 
-	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
+	virtual void Activate();
+	virtual void Deactivate();
 
-	// Ãß°¡
-	// virtual void ActivatCamera() override;
+	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
 
 	// Component
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	TObjectPtr<class USceneComponent> SceneComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
 
 	// Property
 public:

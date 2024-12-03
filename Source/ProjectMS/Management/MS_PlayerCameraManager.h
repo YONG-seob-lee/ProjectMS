@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
+#include "InputActionValue.h"
 #include "Utility/MathUtility/MS_MathUtility.h"
 #include "MS_PlayerCameraManager.generated.h"
 
@@ -41,19 +42,19 @@ public:
 	UFUNCTION(BlueprintCallable) void LocateCamera(FVector aLocation);
 	UFUNCTION(BlueprintCallable) void RotateCamera(FRotator aRotation);
 
-	UFUNCTION() void DollyIn(float aAxis);
-	UFUNCTION() void DollyOut(float aAxis);
-	UFUNCTION() void TruckLeft(float aAxis);
-	UFUNCTION() void TruckRight(float aAxis);
+	UFUNCTION() void DollyIn(const FInputActionValue& aValue);
+	UFUNCTION() void DollyOut(const FInputActionValue& aValue);
+	UFUNCTION() void TruckLeft(const FInputActionValue& aValue);
+	UFUNCTION() void TruckRight(const FInputActionValue& aValue);
 	UFUNCTION() void DollyAndTruckOnMobile(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
-	UFUNCTION() void PedestalUp(float aAxis);
-	UFUNCTION() void PedestalDown(float aAxis);
-	UFUNCTION() void RollCounterclockwise(float aAxis);
-	UFUNCTION() void RollClockwise(float aAxis);
-	UFUNCTION() void TiltUp(float aAxis);
-	UFUNCTION() void TiltDown(float aAxis);
-	UFUNCTION() void PanLeft(float aAxis);
-	UFUNCTION() void PanRight(float aAxis);
+	UFUNCTION() void PedestalUp(const FInputActionValue& aValue);
+	UFUNCTION() void PedestalDown(const FInputActionValue& aValue);
+	UFUNCTION() void RollCounterclockwise(const FInputActionValue& aValue);
+	UFUNCTION() void RollClockwise(const FInputActionValue& aValue);
+	UFUNCTION() void TiltUp(const FInputActionValue& aValue);
+	UFUNCTION() void TiltDown(const FInputActionValue& aValue);
+	UFUNCTION() void PanLeft(const FInputActionValue& aValue);
+	UFUNCTION() void PanRight(const FInputActionValue& aValue);
 
 	UFUNCTION(BlueprintCallable) void GenerateInertiaForce(FVector aMagnitude);
 

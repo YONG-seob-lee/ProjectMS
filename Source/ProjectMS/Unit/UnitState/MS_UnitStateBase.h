@@ -13,7 +13,7 @@ public:
 	UMS_UnitStateBase();
 
 	void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent);
-	void WeakBindController(const TObjectPtr<class AMS_PlayerController>& aPlayerController);
+	virtual void WeakBindController(const TObjectPtr<class AMS_PlayerController>& aPlayerController);
 
 	// Instance
 protected:

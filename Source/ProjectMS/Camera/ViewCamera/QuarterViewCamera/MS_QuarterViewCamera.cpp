@@ -23,3 +23,13 @@ void AMS_QuarterViewCamera::AdjustCameraDistance(const float& aDistance)
 
 	CameraComponent->SetRelativeLocationAndRotation(FVector(-aDistance, 0.0f, aDistance), FRotator(-45.0f, 0.0f, 0.0f));
 }
+
+void AMS_QuarterViewCamera::Activate()
+{
+	Super::Activate();
+}
+
+void AMS_QuarterViewCamera::Deactivate()
+{
+	Super::Deactivate();
+}

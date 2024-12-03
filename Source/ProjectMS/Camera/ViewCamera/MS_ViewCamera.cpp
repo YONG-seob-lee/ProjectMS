@@ -24,6 +24,14 @@ void AMS_ViewCamera::AdjustCameraDistance(const float& aDistance)
 {
 }
 
+void AMS_ViewCamera::Activate()
+{
+}
+
+void AMS_ViewCamera::Deactivate()
+{
+}
+
 void AMS_ViewCamera::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCameraPostProcessEffect)
 {
 	CameraComponent->PostProcessSettings.AddBlendable(aCameraPostProcessEffect->PostProcessMaterial, 1.0f);

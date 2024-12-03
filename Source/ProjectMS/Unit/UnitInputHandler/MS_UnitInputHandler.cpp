@@ -6,10 +6,64 @@
 #include "IAssetViewport.h"
 #endif
 
+#include "InputAction.h"
+
 #include "CoreClass/Controller/MS_PlayerController.h"
 
 UMS_UnitInputHandler::UMS_UnitInputHandler()
 {
+	static ConstructorHelpers::FObjectFinder<UInputAction> MOVE_FORWARD_FINDER(TEXT("/Game/Input/InputAction/MoveInputAction/InputAction_MoveForward"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> MOVE_REAR_FINDER(TEXT("/Game/Input/InputAction/MoveInputAction/InputAction_MoveRear"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> MOVE_LEFT_FINDER(TEXT("/Game/Input/InputAction/MoveInputAction/InputAction_MoveLeft"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> MOVE_RIGHT_FINDER(TEXT("/Game/Input/InputAction/MoveInputAction/InputAction_MoveRight"));
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_DOLLYIN_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_DollyIn"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_DOLLYOUT_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_DollyOut"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_PANLEFT_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_PanLeft"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_PANRIGHT_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_PanRight"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_PEDESTALUP_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_PedestalUp"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_PEDESTALDOWN_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_PedestalDown"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_ROLLClOCKWISE_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_RollClockwise"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_ROLLCOUNTERCLOCKWISE_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_RollCounterclockwise"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_TILTUP_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_TiltUp"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_TILTDOWN_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_TiltDown"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_TRUCKLEFT_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_TruckLeft"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ROTATION_TRUCKRIGHT_FINDER(TEXT("/Game/Input/InputAction/RotationInputAction/InputAction_TruckRight"));
+
+	MoveForwardInputAction = MOVE_FORWARD_FINDER.Object;
+	MoveRearInputAction = MOVE_REAR_FINDER.Object;
+	MoveLeftInputAction = MOVE_LEFT_FINDER.Object;
+	MoveRightInputAction = MOVE_RIGHT_FINDER.Object;
+
+	DollyInInputAction = ROTATION_DOLLYIN_FINDER.Object;
+	DollyOutInputAction = ROTATION_DOLLYOUT_FINDER.Object;
+	PanLeftInputAction = ROTATION_PANLEFT_FINDER.Object;
+	PanRightInputAction = ROTATION_PANRIGHT_FINDER.Object;
+	PedestaUpInputAction = ROTATION_PEDESTALUP_FINDER.Object;
+	PedestaDownInputAction = ROTATION_PEDESTALDOWN_FINDER.Object;
+	RollClockwiseInputAction = ROTATION_ROLLClOCKWISE_FINDER.Object;
+	RollCounterclockwiseInputAction = ROTATION_ROLLCOUNTERCLOCKWISE_FINDER.Object;
+	TillUpInputAction = ROTATION_TILTUP_FINDER.Object;
+	TillDownInputAction = ROTATION_TILTDOWN_FINDER.Object;
+	TruckLeftInputAction = ROTATION_TRUCKLEFT_FINDER.Object;
+	TruckRightInputAction = ROTATION_TRUCKRIGHT_FINDER.Object;
+
+	MS_CHECK(MoveForwardInputAction);
+	MS_CHECK(MoveRearInputAction);
+	MS_CHECK(MoveLeftInputAction);
+	MS_CHECK(MoveRightInputAction);
+	MS_CHECK(DollyInInputAction);
+	MS_CHECK(DollyOutInputAction);
+	MS_CHECK(PanLeftInputAction);
+	MS_CHECK(PanRightInputAction);
+	MS_CHECK(PedestaUpInputAction);
+	MS_CHECK(PedestaDownInputAction);
+	MS_CHECK(RollClockwiseInputAction);
+	MS_CHECK(RollCounterclockwiseInputAction);
+	MS_CHECK(TillUpInputAction);
+	MS_CHECK(TillDownInputAction);
+	MS_CHECK(TruckLeftInputAction);
+	MS_CHECK(TruckRightInputAction);
 }
 
 void UMS_UnitInputHandler::BindController(AMS_PlayerController* aPlayerController)

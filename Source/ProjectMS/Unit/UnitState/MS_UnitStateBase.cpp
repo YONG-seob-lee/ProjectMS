@@ -11,18 +11,18 @@ void UMS_UnitStateBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 {
 	MS_CHECK(PlayerController.IsValid());
 
-	const TObjectPtr<class UInputMappingContext> MappingContext = PlayerController->GetInputMappingContext();
-	MS_CHECK(MappingContext);
+	//const TObjectPtr<class UInputMappingContext> MappingContext = PlayerController->GetInputMappingContext();
+	//MS_CHECK(MappingContext);
 
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(MappingContext, 0);
-	}
+	//if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	//{
+	//	Subsystem->AddMappingContext(MappingContext, 0);
+	//}
 
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(aPlayerInputComponent))
-	{
-		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UMS_PlayerUnitState::InputMove);
-	}
+	//if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(aPlayerInputComponent))
+	//{
+	//	// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UMS_PlayerUnitState::InputMove);
+	//}
 }
 
 void UMS_UnitStateBase::WeakBindController(const TObjectPtr<AMS_PlayerController>& aPlayerController)

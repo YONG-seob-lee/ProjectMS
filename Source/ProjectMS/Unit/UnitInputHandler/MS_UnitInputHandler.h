@@ -98,6 +98,24 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TObjectPtr<class AMS_PlayerController> PlayerControllerInst = nullptr;
 
+	UPROPERTY() class UInputAction* MoveForwardInputAction = nullptr;
+	UPROPERTY() class UInputAction* MoveRearInputAction = nullptr;
+	UPROPERTY() class UInputAction* MoveLeftInputAction = nullptr;
+	UPROPERTY() class UInputAction* MoveRightInputAction = nullptr;
+
+	UPROPERTY() class UInputAction* DollyInInputAction = nullptr;
+	UPROPERTY() class UInputAction* DollyOutInputAction = nullptr;
+	UPROPERTY() class UInputAction* TruckLeftInputAction = nullptr;
+	UPROPERTY() class UInputAction* TruckRightInputAction = nullptr;
+	UPROPERTY() class UInputAction* PedestaUpInputAction = nullptr;
+	UPROPERTY() class UInputAction* PedestaDownInputAction = nullptr;
+	UPROPERTY() class UInputAction* RollCounterclockwiseInputAction = nullptr;
+	UPROPERTY() class UInputAction* RollClockwiseInputAction = nullptr;
+	UPROPERTY() class UInputAction* TillUpInputAction = nullptr;
+	UPROPERTY() class UInputAction* TillDownInputAction = nullptr;
+	UPROPERTY() class UInputAction* PanLeftInputAction = nullptr;
+	UPROPERTY() class UInputAction* PanRightInputAction = nullptr;
+
 	// Delegate
 public:
 	FXOnPointerDownDelegate OnPointerDownDelegate = {};

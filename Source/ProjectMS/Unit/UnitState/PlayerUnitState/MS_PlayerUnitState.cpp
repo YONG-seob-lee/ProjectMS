@@ -10,3 +10,12 @@ UMS_PlayerUnitState::UMS_PlayerUnitState()
 {
 	UnitInputHandler = CreateDefaultSubobject<UMS_UnitInputHandler>(TEXT("UnitInputHandler"));
 }
+
+void UMS_PlayerUnitState::WeakBindController(const TObjectPtr<class AMS_PlayerController>& aPlayerController)
+{
+	Super::WeakBindController(aPlayerController);
+
+	MS_CHECK(aPlayerController->InputComponent);
+
+	UnitInputHandler->BindController(aPlayerController);
+}

@@ -11,9 +11,9 @@ UCLASS() class PROJECTMS_API UMS_PlayerUnitState : public UMS_UnitStateBase
 public:
 	UMS_PlayerUnitState();
 
-	// Instance
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true")) TObjectPtr<class UInputAction> MoveAction;
+	virtual void WeakBindController(const TObjectPtr<class AMS_PlayerController>& aPlayerController) override;
 
+	// Instance
+public:
 	UPROPERTY() TObjectPtr<class UMS_UnitInputHandler> UnitInputHandler = nullptr;
 };

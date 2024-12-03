@@ -6,6 +6,10 @@
 #include "IAssetViewport.h"
 #endif
 
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
+
 #include "Management/MS_UnitManager.h"
 #include "Management/MS_PlayerCameraManager.h"
 
@@ -15,8 +19,15 @@
 AMS_PlayerController::AMS_PlayerController()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	PlayerCameraManagerClass = AMS_PlayerCameraManager::StaticClass();
+
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> MAPPINGCONTEXTFINDER(TEXT("/Game/Input/MappingContext/CameraInputMappingContext"));
+	MS_CHECK(MAPPINGCONTEXTFINDER.Object);
+
+	MappingContext = MAPPINGCONTEXTFINDER.Object;
+
+	bShowMouseCursor = true;
 }
 
 void AMS_PlayerController::RegisterManagement()
@@ -31,6 +42,10 @@ void AMS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		EnhancedInputLocalPlayerSubSystem->AddMappingContext(MappingContext, 0);
+	}
 }
 
 void AMS_PlayerController::PostLoad()
@@ -73,7 +88,6 @@ TObjectPtr<UMS_WidgetManager> AMS_PlayerController::GetWidgetManager() const
 	return Management->GetWidgetManager();
 }
 
-
 inline FIntVector2 AMS_PlayerController::AcquireViewportSize()
 {
 	int ViewportSizeX = 0, ViewportSizeY = 0;
@@ -85,13 +99,18 @@ inline FVector2D AMS_PlayerController::AcquireMousePositionOnViewport()
 {
 	static FVector2D CachedRelativeCursorPosition = {};
 	TSharedPtr<SWindow> ActiveTopLevelWindow = FSlateApplication::Get().GetActiveTopLevelWindow();
+
 #if WITH_EDITOR
 	TSharedPtr<IAssetViewport> GetFirstActiveViewport = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor").GetFirstActiveViewport();
 #endif
+
 	if (ActiveTopLevelWindow.IsValid() == false)
+	{
 		return CachedRelativeCursorPosition;
+	}
 
 	FVector2D ClientPositionErrorMargin = {};
+
 #if WITH_EDITOR
 	if (GetFirstActiveViewport->HasPlayInEditorViewport() == true)
 	{
@@ -117,11 +136,17 @@ inline FVector2D AMS_PlayerController::AcquireMousePositionOnViewport()
 #endif
 
 	FVector2D ClientPositionInScreen = {};
+
 #if WITH_EDITOR
 	if (GetFirstActiveViewport->HasPlayInEditorViewport() == false)
+	{
 		ClientPositionInScreen = FVector2D(ActiveTopLevelWindow->GetClientRectInScreen().Left, ActiveTopLevelWindow->GetClientRectInScreen().Top);
+	}
 	else
+	{
 		ClientPositionInScreen = FVector2D(FMath::CeilToFloat(GetFirstActiveViewport->AsWidget()->GetCachedGeometry().GetAbsolutePosition().X), FMath::CeilToFloat(GetFirstActiveViewport->AsWidget()->GetCachedGeometry().GetAbsolutePosition().Y));
+	}
+
 #else
 	ClientPositionInScreen = FVector2D(ActiveTopLevelWindow->GetClientRectInScreen().Left, ActiveTopLevelWindow->GetClientRectInScreen().Top);
 #endif
