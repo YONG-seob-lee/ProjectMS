@@ -43,7 +43,8 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent) override;
+
+	virtual void SetupPlayerInputComponent(UInputComponent* aPlayerInputComponent);
 	
 	FORCEINLINE TObjectPtr<USceneComponent> GetCharacterRootComponent() const { return RootComponent; }
 	

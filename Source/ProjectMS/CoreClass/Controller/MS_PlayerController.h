@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "ProjectMS/Management/MS_Management.h"
@@ -13,7 +11,6 @@ class PROJECTMS_API AMS_PlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AMS_PlayerController();
 
 	void RegisterManagement();
@@ -28,6 +25,10 @@ public:
 	TObjectPtr<UMS_WidgetManager> GetWidgetManager() const;
 	FORCEINLINE TObjectPtr<class UInputMappingContext> GetInputMappingContext() { return DefaultMappingContext; }
 
+	inline FIntVector2 AcquireViewportSize();
+	inline FVector2D AcquireMousePositionOnViewport();
+	inline FVector2D AcquireTouchPositionOnViewport(ETouchIndex::Type aFingerIndex);
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -35,7 +36,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = ITTInput, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 	
 	UPROPERTY()
