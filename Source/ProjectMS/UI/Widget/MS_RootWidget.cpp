@@ -46,7 +46,6 @@ void UMS_RootWidget::AttachContentWidget(const TObjectPtr<UMS_Widget>& aContentW
 void UMS_RootWidget::RefreshContentCanvas() const
 {
 	MS_CHECK(CPP_ContentFrameCanvasPanel);
-
 	CPP_ContentFrameCanvasPanel->ClearChildren();
 }
 

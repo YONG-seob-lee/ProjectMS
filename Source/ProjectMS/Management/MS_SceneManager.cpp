@@ -32,7 +32,7 @@ void AMS_SceneManager::PostInitializeComponents()
 	MS_CHECK(TableManager);
 
 	LevelTable = Cast<UMS_LevelCacheTable>(TableManager->GetCacheTable(EMS_TableDataType::Level));
-	MS_CHECK(LevelTable.IsValid());
+	MS_CHECK(LevelTable);
 
 	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
 	RootWidget = WidgetManager->GetRootWidget();
@@ -131,7 +131,7 @@ void AMS_SceneManager::RequestLevel()
 {
 	MS_CHECK(NewCommand);
 
-	if(LevelTable.IsValid())
+	if(LevelTable)
 	{
 		const FName LevelName = LevelTable->GetLevelName(NewCommand->GetPreviousLevelType());
 		HandleUnloadLevel(LevelName);
@@ -149,28 +149,54 @@ void AMS_SceneManager::HandleUnloadLevel(const FName& aLevelName)
 	UGameplayStatics::UnloadStreamLevel(PersistentLevelWorld, aLevelName, LatentActionInfo, false);
 }
 
+void AMS_SceneManager::HandleLevelInstanceLoading()
+{
+}
+
+void AMS_SceneManager::HandleLevelInstanceUnLoading()
+{
+}
+
 void AMS_SceneManager::HandleLoadLevel()
 {
+	MS_CHECK(LevelTable);
+
+	const FName LevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
+
+	// const TObjectPtr<ULevelStreaming> LevelStreaming = UGameplayStatics::GetStreamingLevel(PersistentLevelWorld, LevelName);
+	// TArray<TSoftObjectPtr<UWorld>>& BaseLayerLevelArray = Cast<AMS_LevelScriptActorBase>(LevelStreaming->GetLevelScriptActor())->BaseLayerLevelArray;
+	//
+	// const int32 NeedLevelInstanceLoadingCount = BaseLayerLevelArray.Num();
+	// for(int32 i = 0 ; i < NeedLevelInstanceLoadingCount; i++)
+	// {
+	// 	bool Result = false;
+	// 	const TObjectPtr<ULevelStreamingDynamic> LevelStreamingDynamic = ULevelStreamingDynamic::LoadLevelInstance(LevelStreaming->GetLoadedLevel(), BaseLayerLevelArray[i].GetLongPackageName(), FVector::ZeroVector, FRotator::ZeroRotator, Result);
+	// 	if(LevelStreamingDynamic && Result)
+	// 	{
+	// 		LevelStreamingDynamic->OnLevelLoaded.AddDynamic(this, &AMS_SceneManager::HandleLevelInstanceLoading);
+	// 		LevelStreamingDynamic->OnLevelUnloaded.AddDynamic(this, &AMS_SceneManager::HandleLevelInstanceUnLoading);
+	// 	}
+	// }
+	
 	FLatentActionInfo LatentActionInfo = {};
 	LatentActionInfo.CallbackTarget = this;
 	LatentActionInfo.ExecutionFunction = FName(TEXT("HandleLoadingLevel"));
 	LatentActionInfo.UUID = LatentActionInfoUUIDCounter++;
 	LatentActionInfo.Linkage = 0;
 
-	if(LevelTable.IsValid())
-	{
-		const FName LevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
-		UGameplayStatics::LoadStreamLevel(PersistentLevelWorld, LevelName, true, false, LatentActionInfo);
-	}
+	UGameplayStatics::LoadStreamLevel(PersistentLevelWorld, LevelName, true, false, LatentActionInfo);
 }
 
 void AMS_SceneManager::HandleLoadingLevel()
 {
 	MS_CHECK(NewCommand);
-	MS_CHECK(LevelTable.IsValid());
+	
+	if(LevelTable)
+	{
+		const FName LevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
+		LevelStreamingInst = UGameplayStatics::GetStreamingLevel(PersistentLevelWorld, LevelName);
+	}
 
-	const FName LevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
-	LevelStreamingInst = UGameplayStatics::GetStreamingLevel(PersistentLevelWorld, LevelName);
 
 	if(OnLevelLoadedDelegate.IsBound())
 	{

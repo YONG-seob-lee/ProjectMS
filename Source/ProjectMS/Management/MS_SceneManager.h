@@ -50,6 +50,10 @@ private:
 	UFUNCTION()
 	void HandleUnloadLevel(const FName& aLevelName);
 	UFUNCTION()
+	void HandleLevelInstanceLoading();
+	UFUNCTION()
+	void HandleLevelInstanceUnLoading();
+	UFUNCTION()
 	void HandleLoadLevel();
 
 	UFUNCTION()
@@ -72,6 +76,7 @@ private:
 	TWeakObjectPtr<class UMS_RootWidget> RootWidget = nullptr;
 	
 	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
-	
-	TWeakObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
 };

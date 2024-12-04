@@ -38,7 +38,7 @@ public:
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
-	void RefreshContentWidget() const;
+	void RefreshContentWidget();
 	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }
 private:
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal(const FName& aTypeName, bool bManaged);

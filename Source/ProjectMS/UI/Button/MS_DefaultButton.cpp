@@ -25,8 +25,8 @@ void UMS_DefaultButton::OnClickDefaultButton()
 	MS_CHECK(SceneManager);
 	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::Practice_02);
-	Command->SetPreviousLevelType(EMS_LevelType::Practice_01);
+	Command->SetLevelType(EMS_LevelType::PracticeLevel_02);
+	Command->SetPreviousLevelType(EMS_LevelType::PracticeLevel_01);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);

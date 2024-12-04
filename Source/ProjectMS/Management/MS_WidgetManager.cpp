@@ -137,10 +137,12 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
-void UMS_WidgetManager::RefreshContentWidget() const
+void UMS_WidgetManager::RefreshContentWidget() 
 {
 	MS_CHECK(RootWidget);
 	RootWidget->RefreshContentCanvas();
+
+	ManagedWidgets.Empty();
 }
 
 TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged)

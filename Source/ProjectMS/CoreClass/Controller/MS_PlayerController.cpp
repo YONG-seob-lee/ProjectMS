@@ -33,6 +33,11 @@ AMS_PlayerController::AMS_PlayerController()
 void AMS_PlayerController::RegisterManagement()
 {
 	// BeginPlay
+	if(Management)
+	{
+		return;
+	}
+	
 	Management = NewObject<UMS_Management>(this);
 	MS_CHECK(Management);
 	Management->InitManager();

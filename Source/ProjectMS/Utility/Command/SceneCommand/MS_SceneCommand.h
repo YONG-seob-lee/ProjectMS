@@ -11,14 +11,14 @@ UENUM()
 enum class EMS_LevelType
 {
 	None = 0,
-	Persistence = 1,
-	Account = 2,
-	Town = 3,
-	Market = 4,
+	PersistenceLevel = 1,
+	AccountLevel = 2,
+	TownLevel = 3,
+	MarketLevel = 4,
 
 	
-	Practice_01 = 1000,
-	Practice_02 = 1001,
+	PracticeLevel_01 = 1000,
+	PracticeLevel_02 = 1001,
 };
 
 UENUM()

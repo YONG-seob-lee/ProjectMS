@@ -55,8 +55,8 @@ void UMS_AccountWidget::OnClickStartButton()
 	const TObjectPtr<AMS_SceneManager> SceneManager = PlayerController->GetSceneManager();
 	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::Town);
-	Command->SetPreviousLevelType(EMS_LevelType::Account);
+	Command->SetLevelType(EMS_LevelType::TownLevel);
+	Command->SetPreviousLevelType(EMS_LevelType::AccountLevel);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
