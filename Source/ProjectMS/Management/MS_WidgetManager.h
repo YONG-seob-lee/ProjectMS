@@ -35,6 +35,8 @@ public:
 	bool DestroyWidget(const FName& aTypeName);
 	void PostDestroyWidget(const FName& aTypeName);
 	
+	void ShowToastMessage(const FString& aMessage) const;
+
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 

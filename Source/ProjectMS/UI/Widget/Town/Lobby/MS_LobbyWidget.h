@@ -13,4 +13,8 @@ UCLASS()
 class PROJECTMS_API UMS_LobbyWidget : public UMS_Widget
 {
 	GENERATED_BODY()
+public:
+
+private:
+	
 };

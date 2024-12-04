@@ -7,7 +7,14 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
+#include "System/MS_ToastWidget.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
+#include "WidgetComponent/MS_WidgetSwitcher.h"
+
+namespace MessageType
+{
+	constexpr int32 Toast  = 0;
+}
 
 UMS_RootWidget::UMS_RootWidget(const FObjectInitializer& aObjectInitializer) :Super(aObjectInitializer)
 {
@@ -22,6 +29,7 @@ void UMS_RootWidget::NativeOnInitialized()
 	CanvasPanelSlot->SetZOrder(1000);
 	
 	CPP_LoadingPanel->SetVisibility(ESlateVisibility::Hidden);
+	CPP_MessagePanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMS_RootWidget::OnRuntimeInitialize()
@@ -155,4 +163,26 @@ void UMS_RootWidget::ResetCanvasZOrder() const
 	const TObjectPtr<UCanvasPanelSlot> LoadingSlot = Cast<UCanvasPanelSlot>(CPP_LoadingPanel->Slot);
 	MS_CHECK(LoadingSlot);
 	LoadingSlot->SetZOrder(0);
+}
+
+void UMS_RootWidget::ResetToastPanel() const
+{
+	if(CPP_MessagePanel)
+	{
+		CPP_MessagePanel->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UMS_RootWidget::ShowToastMessage(const FString& Message) const
+{
+	if(CPP_ToastWidget->IsPlayingAnimation())
+	{
+		return;
+	}
+	
+	CPP_MessagePanel->SetVisibility(ESlateVisibility::HitTestInvisible);
+	CPP_MessageWidgetSwitcher->SetActiveWidgetIndex(MessageType::Toast);
+		
+	// 추후 인수를 토스트위젯에 추가하여 대입
+	CPP_ToastWidget->PlayAnimationByName(DefaultWidgetAnimation::Appearance);
 }

@@ -5,7 +5,7 @@
 
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
-#include "MS_SceneManager.h"
+#include "MS_WidgetManager.h"
 
 void UMS_DefaultButton::NativeConstruct()
 {
@@ -20,17 +20,8 @@ void UMS_DefaultButton::OnClickDefaultButton()
 	MS_CHECK(World);
 	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
 	MS_CHECK(PlayerController);
+	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
+	MS_CHECK(WidgetManager);
 
-	const TObjectPtr<AMS_SceneManager> SceneManager = PlayerController->GetSceneManager();
-	MS_CHECK(SceneManager);
-	
-	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::PracticeLevel_02);
-	Command->SetPreviousLevelType(EMS_LevelType::PracticeLevel_01);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
-	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
-	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-	
-	SceneManager->RequestChangeScene(Command);
+	WidgetManager->ShowToastMessage(TEXT(""));
 }

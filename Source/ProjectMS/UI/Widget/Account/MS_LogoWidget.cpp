@@ -6,11 +6,14 @@
 #include "MS_AccountWidget.h"
 #include "MS_Define.h"
 #include "MS_SceneManager.h"
+#include "Button/MS_Button.h"
 #include "Controller/MS_PlayerController.h"
 
 void UMS_LogoWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
 {
 	Super::InitWidget(aTypeName, bManaged, bActivate);
+
+	CPP_SkipButton->GetOnClickedDelegate().AddUObject(this, &UMS_LogoWidget::OnClickSkipButton);
 }
 
 void UMS_LogoWidget::FinishWidget()
@@ -29,6 +32,7 @@ void UMS_LogoWidget::OnAnimFinished(const FName& aAnimName)
 	else if(aAnimName == DefaultWidgetAnimation::Idle)
 	{
 		PlayAnimationByName(DefaultWidgetAnimation::DisAppearance);
+		CPP_SkipButton->GetOnClickedDelegate().RemoveAll(this);
 	}
 	else if(aAnimName == DefaultWidgetAnimation::DisAppearance)
 	{
@@ -45,5 +49,13 @@ void UMS_LogoWidget::OnAnimFinished(const FName& aAnimName)
 		Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
 		Command->SetNextWidget(UMS_AccountWidget::GetWidgetName());
 		SceneManager->RequestChangeScene(Command);
+	}
+}
+
+void UMS_LogoWidget::OnClickSkipButton()
+{
+	if(IsPlayingAnimation())
+	{
+		StopAllAnimations();
 	}
 }

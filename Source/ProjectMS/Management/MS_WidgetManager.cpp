@@ -137,6 +137,14 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
+void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
+{
+	if(RootWidget)
+	{
+		RootWidget->ShowToastMessage(aMessage);
+	}
+}
+
 void UMS_WidgetManager::RefreshContentWidget() 
 {
 	MS_CHECK(RootWidget);

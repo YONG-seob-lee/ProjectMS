@@ -18,4 +18,10 @@ public:
 	virtual void FinishWidget() override;
 
 	virtual void OnAnimFinished(const FName& aAnimName) override;
+
+private:
+	void OnClickSkipButton();
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
 };
