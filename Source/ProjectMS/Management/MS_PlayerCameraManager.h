@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
+#include "Utility/MS_Define.h"
 #include "InputActionValue.h"
 #include "Utility/MathUtility/MS_MathUtility.h"
 #include "MS_PlayerCameraManager.generated.h"
@@ -9,7 +10,8 @@
 UENUM() enum class EMS_ViewCameraType
 {
 	Undefined,
-	QuarterView
+	QuarterView,
+	SideView
 };
 
 UENUM() enum class EMS_CameraModeType
@@ -34,6 +36,7 @@ public:
 	UFUNCTION(BlueprintCallable) void ZoomCamera(float aMagnification, EMS_InterpolationType aInterpolationType);
 	UFUNCTION(BlueprintCallable) void ShakeCamera(float aIntensity, float aDuration);
 
+	UFUNCTION(BlueprintCallable) void InitializeViewCamera();
 	FORCEINLINE void SwitchViewCamera(EMS_ViewCameraType aViewCameraType);
 	FORCEINLINE void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
 
@@ -74,10 +77,11 @@ private:
 
 	// Instance
 public:
-	TObjectPtr<class AMS_ViewCamera> ViewCamera = nullptr;
+	TWeakObjectPtr<class AMS_ViewCamera> ViewCamera = nullptr;
 	TWeakObjectPtr<class UMS_CameraMode> CameraMode = nullptr;
 	TObjectPtr<class UMS_CameraEffect> CameraEffect = nullptr;
 
 private:
 	TMap<EMS_CameraModeType, TObjectPtr<class UMS_CameraMode>> CameraModeMap = {};
+	TMap<EMS_ViewCameraType, TObjectPtr<class AMS_ViewCamera>> ViewCameraMap = {};
 };

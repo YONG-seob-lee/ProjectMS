@@ -1,11 +1,11 @@
 ﻿#include "Management/MS_PlayerCameraManager.h"
 
-#include "Utility/MS_Define.h"
 #include "Camera/CameraModifier_CameraShake.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 
 #include "Camera/ViewCamera/QuarterViewCamera/MS_QuarterViewCamera.h"
+#include "Camera/ViewCamera/SideViewCamera/MS_SideViewCamera.h"
 
 #include "Camera/CameraMode/FollowingInputCameraMode/MS_FollowingInputCameraMode.h"
 #include "Camera/CameraMode/FollowingPlayerCameraMode/MS_FollowingPlayerCameraMode.h"
@@ -27,7 +27,9 @@ void AMS_PlayerCameraManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SwitchViewCamera(EMS_ViewCameraType::QuarterView);
+	InitializeViewCamera();
+
+	SwitchViewCamera(EMS_ViewCameraType::SideView);
 	SwitchCameraMode(EMS_CameraModeType::ImmobileCameraMode);
 
 	AdjustPostProcessEffect(CameraEffect->GetCameraPostProcessEffect());
@@ -86,47 +88,46 @@ void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
 	StartCameraShake(UMS_CameraShake::StaticClass(), AddCameraShakeParams);
 }
 
+void AMS_PlayerCameraManager::InitializeViewCamera()
+{
+	FActorSpawnParameters ActorSpawnParameters = {};
+	
+	ActorSpawnParameters.Name = TEXT("QuarterViewCamera");
+	ViewCameraMap.Add(EMS_ViewCameraType::QuarterView, GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
+
+	ActorSpawnParameters.Name = TEXT("SideViewCamera");
+	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
+
+	for (const TPair<EMS_ViewCameraType, TObjectPtr<AMS_ViewCamera>>& PairMap : ViewCameraMap)
+	{
+		PairMap.Value->Deactivate();
+	}
+}
+
 void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType)
 {
-	// TODO: Update
+	TObjectPtr<AMS_ViewCamera> TempViewCamera = ViewCameraMap.Find(aViewCameraType)->Get();
+
+	if (TempViewCamera == nullptr)
+	{
+		MS_CHECK(TempViewCamera);
+		return;
+	}
+
 	if (ViewCameraType == aViewCameraType)
 	{
 		return;
 	}
 
-	TObjectPtr<AMS_QuarterViewCamera> TempViewCamera = nullptr;
-
-	switch (aViewCameraType)
+	if (ViewCamera.IsValid() == true)
 	{
-	case EMS_ViewCameraType::Undefined:
-	{
-		break;
-	}
-	case EMS_ViewCameraType::QuarterView:
-	{
-		FActorSpawnParameters ActorSpawnParameters = {};
-		ActorSpawnParameters.Name = TEXT("QuarterViewCamera");
-		TempViewCamera = GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters);
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-
-	MS_CHECK(TempViewCamera);
-
-	if (ViewCamera != nullptr && ViewCamera->IsActorBeingDestroyed() == false)
-	{
-		ViewCamera->Destroy();
-		ViewCamera = nullptr;
+		ViewCamera->Deactivate();
 	}
 
 	ViewCamera = TempViewCamera;
 	ViewCameraType = aViewCameraType;
 
-	SetViewTarget(ViewCamera);
+	SetViewTarget(ViewCamera.Get());
 }
 
 void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeType)
@@ -149,7 +150,7 @@ void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeTyp
 
 void AMS_PlayerCameraManager::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCameraPostProcessEffect)
 {
-	MS_CHECK(ViewCamera); MS_CHECK(aCameraPostProcessEffect);
+	MS_CHECK(ViewCamera.Get()); MS_CHECK(aCameraPostProcessEffect);
 
 	ViewCamera->AdjustPostProcessEffect(aCameraPostProcessEffect);
 }

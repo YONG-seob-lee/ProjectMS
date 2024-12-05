@@ -14,12 +14,11 @@ public:
 
 	virtual void BeginPlay() override;
 
-	virtual void AdjustCameraDistance(const float& aDistance);
-
 	virtual void Activate();
 	virtual void Deactivate();
 
-	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
+	virtual void AdjustCameraDistance(const float& aDistance);
+	virtual void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
 
 	// Component
 public:
@@ -28,6 +27,5 @@ public:
 
 	// Property
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	float CameraDistance = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") float CameraDistance = 0.0f;
 };

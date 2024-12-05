@@ -14,7 +14,6 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void AdjustCameraDistance(const float& aDistance) override;
-
 	virtual void Activate() override;
 	virtual void Deactivate() override;
 };

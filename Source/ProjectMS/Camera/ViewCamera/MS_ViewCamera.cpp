@@ -34,5 +34,10 @@ void AMS_ViewCamera::Deactivate()
 
 void AMS_ViewCamera::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCameraPostProcessEffect)
 {
+	if (aCameraPostProcessEffect == nullptr)
+	{
+		return;
+	}
+
 	CameraComponent->PostProcessSettings.AddBlendable(aCameraPostProcessEffect->PostProcessMaterial, 1.0f);
 }
