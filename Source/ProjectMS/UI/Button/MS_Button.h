@@ -25,23 +25,23 @@ public:
 
 	FCommonButtonEvent& GetOnClickedDelegate() { SetDelegates(); return MS_OnClickedDelegate; }
 	FORCEINLINE void UnbindClickedDelegate() { MS_OnClickedDelegate.Clear(); }
-	void SetOnPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnPressedDelegate = Delegate; }
+	FCommonButtonEvent& GetOnPressedDelegate() { SetDelegates(); return MS_OnPressedDelegate; }
 	FORCEINLINE void UnbindPressedDelegate() { MS_OnPressedDelegate.Clear(); }
-	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnReleasedDelegate = Delegate; }
+	FCommonButtonEvent& GetOnReleasedDelegate() { SetDelegates(); return MS_OnReleasedDelegate; }
 	FORCEINLINE void UnbindReleasedDelegate() { MS_OnReleasedDelegate.Clear(); }
-	void SetOnHoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnHoveredDelegate = Delegate; }
+	FCommonButtonEvent& GetOnHoveredDelegate() { SetDelegates(); return MS_OnHoveredDelegate; }
 	FORCEINLINE void UnbindHoveredDelegate() { MS_OnHoveredDelegate.Clear(); }
-	void SetOnUnhoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnUnhoveredDelegate = Delegate; };
+	FCommonButtonEvent& GetOnUnhoveredDelegate() { SetDelegates(); return MS_OnUnhoveredDelegate; };
 	FORCEINLINE void UnbindUnhoveredDelegate() { MS_OnUnhoveredDelegate.Clear(); }
-	void SetWillCloseWidgetDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_WillCloseWidgetDelegate = Delegate; };
+	FCommonButtonEvent& GetWillCloseWidgetDelegate() { SetDelegates(); return MS_WillCloseWidgetDelegate; };
 	FORCEINLINE void UnbindWillCloseWidgetDelegate() { MS_WillCloseWidgetDelegate.Clear(); }
-	void SetWillCreateSceneDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_WillCreateSceneDelegate = Delegate; };
+	FCommonButtonEvent& GetWillCreateSceneDelegate() { SetDelegates(); return MS_WillCreateSceneDelegate; };
 	FORCEINLINE void UnbindWillCreateSceneDelegate() { MS_WillCreateSceneDelegate.Clear(); }
-	void SetPlayAnimDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_PlayAnimDelegate = Delegate; };
+	FCommonButtonEvent& GetPlayAnimDelegate() { SetDelegates(); return MS_PlayAnimDelegate; };
 	FORCEINLINE void UnbindPlayAnimDelegate() { MS_PlayAnimDelegate.Clear(); }
-	void SetOnClickedInDelayTimeDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnClickedInDelayTimeDelegate = Delegate; };
+	FCommonButtonEvent& GetOnClickedInDelayTimeDelegate() { SetDelegates(); return MS_OnClickedInDelayTimeDelegate; };
 	FORCEINLINE void UnbindClickedInDelayTimeDelegate() { MS_OnClickedInDelayTimeDelegate.Clear(); }
-	void SetOnLongPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); MS_OnLongPressedDelegate = Delegate; };
+	FCommonButtonEvent& GetOnLongPressedDelegate() { SetDelegates(); return MS_OnLongPressedDelegate; };
 	FORCEINLINE void UnbindLongPressedDelegate() { MS_OnLongPressedDelegate.Clear(); }
 
 	FORCEINLINE void SetCustomVector(const FVector& Vector) { CustomVector = Vector;}
