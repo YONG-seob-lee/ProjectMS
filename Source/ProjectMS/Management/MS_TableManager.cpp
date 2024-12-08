@@ -9,6 +9,7 @@
 #include "ProjectMS/Utility/MS_Define.h"
 #include "Table/Caches/MS_LevelCacheTable.h"
 #include "Table/Caches/MS_ResourceWidgetCacheTable.h"
+#include "Table/RowBase/MS_BasePathImgFile.h"
 
 void FMS_CacheTableData::Finalize()
 {
@@ -130,12 +131,12 @@ FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool
 		break;
 	case EMS_TableDataType::BasePathImgFile:
 		{
-			// const FBasePath_Img_File* RowData = GetTableRowData<FBasePath_Img_File>(TableType, Key);
-			//
-			// // 테이블로 관리하는 경우 : 경로 + 파일 이름
-			// return bResourcePath ? GetDirectory(RowData->Directory_Table_Id) + RowData->Img_File_Name + '.' + RowData->Img_File_Name + TEXT("_C")
-			// // 관리 안하는 경우 : 레퍼런스 경로
-			// 	: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->Img_File_Name});
+			const FMS_BasePathImgFile* RowData = GetTableRowData<FMS_BasePathImgFile>(aTableType, aKey);
+			
+			// 테이블로 관리하는 경우 : 경로 + 파일 이름
+			return bResourcePath ? GetDirectory(RowData->Directory_Table_Id) + RowData->Img_File_Name + '.' + RowData->Img_File_Name + TEXT("_C")
+			// 관리 안하는 경우 : 레퍼런스 경로
+				: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->Img_File_Name});
 		}
 		break;
 	default:
@@ -245,6 +246,7 @@ void UMS_TableManager::MakeTableStructData()
 	// [Add TableData] CreateTableData(EnumType, RowDataPath);
 	CreateTableData(EMS_TableDataType::BasePathDirectory, TEXT("/Game/TableData/BasePath_Directory"));
 	CreateTableData(EMS_TableDataType::BasePathBPFile, TEXT("/Game/TableData/BasePath_BP_File"));
+	CreateTableData(EMS_TableDataType::BasePathImgFile, TEXT("/Game/TableData/BasePath_Img_File"));
 	
 	CreateTableData(EMS_TableDataType::Level, TEXT("/Game/TableData/Level.Level"), UMS_LevelCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());

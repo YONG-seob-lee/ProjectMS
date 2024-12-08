@@ -14,6 +14,11 @@ class PROJECTMS_API UMS_ContentsPartWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-
+	virtual void NativeConstruct() override;
+	
 private:
+	void OnClickMarketButton();
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_HorizontalBox> CPP_HorizontalBox = nullptr;
 };

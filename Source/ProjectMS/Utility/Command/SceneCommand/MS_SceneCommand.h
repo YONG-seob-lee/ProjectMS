@@ -16,6 +16,7 @@ enum class EMS_LevelType
 	AccountLevel = 2,
 	TownLevel = 3,
 	MarketLevel = 4,
+	InMarketLevel = 5,
 
 	
 	PracticeLevel_01 = 1000,
