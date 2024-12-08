@@ -18,6 +18,8 @@ class PROJECTMS_API UMS_WidgetManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 public:
+	UMS_WidgetManager();
+	
 	virtual void BuiltInInitialize() override;
 	virtual void Initialize() override;
 	virtual void PostInitialize() override;
@@ -54,4 +56,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UMS_RootWidget> RootWidget = nullptr;
+	
+#define gWidgetMng (*UMS_WidgetManager::GetInstance())
 };

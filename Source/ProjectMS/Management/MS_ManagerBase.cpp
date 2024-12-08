@@ -2,3 +2,8 @@
 
 
 #include "MS_ManagerBase.h"
+
+TObjectPtr<UMS_ManagerBase> UMS_ManagerBase::GetInstance()
+{
+	return Manager;
+}

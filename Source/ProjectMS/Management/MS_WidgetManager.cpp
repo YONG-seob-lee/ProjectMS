@@ -11,6 +11,11 @@
 #include "Utility/MS_Define.h"
 #include "Widget/MS_RootWidget.h"
 
+UMS_WidgetManager::UMS_WidgetManager()
+{
+	Manager = this;
+}
+
 void UMS_WidgetManager::BuiltInInitialize()
 {
 	Super::BuiltInInitialize();

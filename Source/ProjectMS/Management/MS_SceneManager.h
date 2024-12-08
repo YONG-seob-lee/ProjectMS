@@ -79,4 +79,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
+
+public:
+	inline static TObjectPtr<AMS_SceneManager> SceneManager = nullptr;
+	static AMS_SceneManager* GetInstance();
+	
+#define gSceneMng (*AMS_SceneManager::GetInstance())
 };

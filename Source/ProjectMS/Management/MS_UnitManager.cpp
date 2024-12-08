@@ -5,6 +5,11 @@
 
 #include "Unit/MS_UnitBase.h"
 
+UMS_UnitManager::UMS_UnitManager()
+{
+	Manager = this;
+}
+
 TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition, const FRotator& aRotator)
 {
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, aUnitType);

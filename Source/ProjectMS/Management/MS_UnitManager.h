@@ -16,6 +16,8 @@ class PROJECTMS_API UMS_UnitManager : public UMS_ManagerBase
 	GENERATED_BODY()
 
 public:
+	UMS_UnitManager();
+	
 	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 
 private:
@@ -23,4 +25,6 @@ private:
 	bool bOutLineModeOn = true;
 
 	TMap<MS_Handle, TObjectPtr<UMS_UnitBase>> Units;
+
+#define gUnitMng (*UMS_UnitManager::GetInstance())
 };

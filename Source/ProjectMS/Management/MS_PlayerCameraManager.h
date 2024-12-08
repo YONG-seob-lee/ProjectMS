@@ -81,7 +81,12 @@ public:
 	TWeakObjectPtr<class UMS_CameraMode> CameraMode = nullptr;
 	TObjectPtr<class UMS_CameraEffect> CameraEffect = nullptr;
 
+	inline static TObjectPtr<AMS_PlayerCameraManager> CameraManager = nullptr;
+	static AMS_PlayerCameraManager* GetInstance();
+
 private:
 	TMap<EMS_CameraModeType, TObjectPtr<class UMS_CameraMode>> CameraModeMap = {};
 	TMap<EMS_ViewCameraType, TObjectPtr<class AMS_ViewCamera>> ViewCameraMap = {};
+	
+#define gCameraMng (*AMS_PlayerCameraManager::GetInstance())
 };

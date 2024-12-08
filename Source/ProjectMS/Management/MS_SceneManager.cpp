@@ -14,6 +14,8 @@
 AMS_SceneManager::AMS_SceneManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	SceneManager = this;
 }
 
 void AMS_SceneManager::PostInitializeComponents()
@@ -218,4 +220,9 @@ void AMS_SceneManager::HandleLoadingLevel()
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;
 	StartFade();
+}
+
+AMS_SceneManager* AMS_SceneManager::GetInstance()
+{
+	return SceneManager;
 }

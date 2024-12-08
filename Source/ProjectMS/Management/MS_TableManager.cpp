@@ -24,6 +24,7 @@ void FMS_CacheTableData::Finalize()
 
 UMS_TableManager::UMS_TableManager()
 {
+	Manager = this;
 }
 
 UMS_TableManager::~UMS_TableManager()

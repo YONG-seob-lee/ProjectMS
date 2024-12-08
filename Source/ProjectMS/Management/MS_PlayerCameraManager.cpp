@@ -16,6 +16,7 @@
 
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
 {
+	CameraManager = this;
 	CameraModeMap.Add(EMS_CameraModeType::FollowingInputCameraMode, CreateDefaultSubobject<UMS_FollowingInputCameraMode>(TEXT("FollowingInputCameraMode")));
 	CameraModeMap.Add(EMS_CameraModeType::FollowingPlayerCameraMode, CreateDefaultSubobject<UMS_FollowingPlayerCameraMode>(TEXT("FollowingPlayerCameraMode")));
 	CameraModeMap.Add(EMS_CameraModeType::ImmobileCameraMode, CreateDefaultSubobject<UMS_ImmobileCameraMode>(TEXT("ImmobileCameraMode")));
@@ -372,4 +373,9 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 				}
 			}, 0.005f, true);
 	}
+}
+
+AMS_PlayerCameraManager* AMS_PlayerCameraManager::GetInstance()
+{
+	return CameraManager;
 }
