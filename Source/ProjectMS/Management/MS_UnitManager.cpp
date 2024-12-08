@@ -7,7 +7,7 @@
 
 UMS_UnitManager::UMS_UnitManager()
 {
-	Manager = this;
+	UnitManager = this;
 }
 
 TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition, const FRotator& aRotator)
@@ -35,4 +35,9 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, const T
 	Units.Add(aUnitTableId, Unit);
 	
 	return Unit;
+}
+
+UMS_UnitManager* UMS_UnitManager::GetInstance()
+{
+	return UnitManager;
 }

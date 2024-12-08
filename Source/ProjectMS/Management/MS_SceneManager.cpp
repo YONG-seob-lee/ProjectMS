@@ -112,13 +112,25 @@ void AMS_SceneManager::EndFade()
 	
 		WidgetManager->RefreshContentWidget();
 		WidgetManager->Create_Widget(NewCommand->GetNextWidgetName());
+		
+		if(NewCommand->OnFadeEventDelegate.IsBound())
+		{
+			NewCommand->OnFadeEventDelegate.Execute();
+			NewCommand->OnFadeEventDelegate.Unbind();
+		}
 	}
 	else
 	{
 		if(LevelChangeStep == EMS_FadeStep::ExitFadeOut)
 		{
 			// 레벨 이동
-			RequestLevel();	
+			RequestLevel();
+
+			if(NewCommand->OnFadeEventDelegate.IsBound())
+			{
+				NewCommand->OnFadeEventDelegate.Execute();
+				NewCommand->OnFadeEventDelegate.Unbind();
+			}
 		}
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
 		{

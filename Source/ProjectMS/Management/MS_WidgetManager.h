@@ -57,5 +57,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UMS_RootWidget> RootWidget = nullptr;
 	
+public:
+	inline static TObjectPtr<UMS_WidgetManager> WidgetManager = nullptr;
+	static UMS_WidgetManager* GetInstance();
+	
 #define gWidgetMng (*UMS_WidgetManager::GetInstance())
 };

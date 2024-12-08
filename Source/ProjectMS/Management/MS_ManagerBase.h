@@ -25,7 +25,4 @@ public:
 	virtual void BuiltInFinalize() {}
 
 	virtual void Tick(float aDeltaTime) {}
-
-	inline static TObjectPtr<UMS_ManagerBase> Manager = nullptr;
-	static TObjectPtr<UMS_ManagerBase> GetInstance();
 };

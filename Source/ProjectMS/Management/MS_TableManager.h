@@ -130,5 +130,9 @@ private:
 
 	bool bInitialize = false;
 
+public:
+	inline static TObjectPtr<UMS_TableManager> TableManager = nullptr;
+	static UMS_TableManager* GetInstance();
+	
 #define gTableMng (*UMS_TableManager::GetInstance())
 };

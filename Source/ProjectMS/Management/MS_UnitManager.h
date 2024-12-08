@@ -26,5 +26,9 @@ private:
 
 	TMap<MS_Handle, TObjectPtr<UMS_UnitBase>> Units;
 
+public:
+	inline static TObjectPtr<UMS_UnitManager> UnitManager = nullptr;
+	static UMS_UnitManager* GetInstance();
+	
 #define gUnitMng (*UMS_UnitManager::GetInstance())
 };

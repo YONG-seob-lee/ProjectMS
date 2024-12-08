@@ -13,7 +13,7 @@
 
 UMS_WidgetManager::UMS_WidgetManager()
 {
-	Manager = this;
+	WidgetManager = this;
 }
 
 void UMS_WidgetManager::BuiltInInitialize()
@@ -245,4 +245,9 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal_NotManaging(cons
 void UMS_WidgetManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aWidgetData)
 {
 	
+}
+
+UMS_WidgetManager* UMS_WidgetManager::GetInstance()
+{
+	return WidgetManager;
 }

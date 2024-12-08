@@ -6,6 +6,7 @@
 #include "UObject/Object.h"
 #include "MS_SceneCommand.generated.h"
 
+DECLARE_DELEGATE(FMS_FadeEventDelegate);
 
 UENUM()
 enum class EMS_LevelType
@@ -75,6 +76,7 @@ public:
 	FORCEINLINE EMS_FadeAnimationCurveType GetFadeAnimationCurveType() const { return FadeAnimationCurveType; }
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 
+	FMS_FadeEventDelegate OnFadeEventDelegate;
 private:
 	TSubclassOf<UMS_Widget> LoadingWidget = nullptr;
 	FName WidgetName = FName();

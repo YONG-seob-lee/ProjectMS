@@ -24,7 +24,7 @@ void FMS_CacheTableData::Finalize()
 
 UMS_TableManager::UMS_TableManager()
 {
-	Manager = this;
+	TableManager = this;
 }
 
 UMS_TableManager::~UMS_TableManager()
@@ -252,4 +252,9 @@ void UMS_TableManager::MakeTableStructData()
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)
 {
+}
+
+UMS_TableManager* UMS_TableManager::GetInstance()
+{
+	return TableManager;
 }

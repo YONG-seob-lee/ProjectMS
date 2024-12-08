@@ -4,21 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_LobbyWidget.generated.h"
+#include "MS_ContentButtonWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_LobbyWidget : public UMS_Widget
+class PROJECTMS_API UMS_ContentButtonWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	
+
 private:
-	void OnClickedStartButton();
-	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_StartButton = nullptr;
+	TObjectPtr<class UMS_Button> CPP_ContentButton = nullptr;
 };
