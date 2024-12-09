@@ -17,12 +17,13 @@ enum class EMS_TableDataType : uint8
 	ResourceUnit					UMETA(DisplayName = "ResourceUnit"),
 
 	BasePathDirectory				UMETA(DisplayName = "BasePathDirectory"),
-	BasePathBPFile				UMETA(DisplayName = "BasePathBP_File"),
-	BasePathImgFile				UMETA(DisplayName = "BasePathImgFile"),
+	BasePathBPFile					UMETA(DisplayName = "BasePathBP_File"),
+	BasePathImgFile					UMETA(DisplayName = "BasePathImgFile"),
 
 	Level							UMETA(DisplayName = "Level"),
 	PlayerStatus					UMETA(DisplayName = "PlayerStatus"),
 	Enemy							UMETA(DisplayName = "Enemy"),
+	InputActionData					UMETA(DisplayName = "InputActionData"),
 };
 
 USTRUCT()

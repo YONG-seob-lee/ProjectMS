@@ -5,9 +5,9 @@
 				"editorLevel": "/Game/-DEBUG-/AIDebugLevel.AIDebugLevel",
 				"globalLevel": "/Game/-DEBUG-/AIDebugLevel.AIDebugLevel",
 				"globalGameInstance": "/Script/CoreUObject.Class'/Script/Engine.GameInstance'",
-				"globalGameMode": "/Script/Engine.BlueprintGeneratedClass'/Game/-DEBUG-/TestGameMode.TestGameMode_C'",
+				"globalGameMode": "None",
 				"worldLevel": "/Game/-DEBUG-/AIDebugLevel.AIDebugLevel",
-				"worldGameMode": "/Script/Engine.BlueprintGeneratedClass'/Game/-DEBUG-/TestGameMode.TestGameMode_C'"
+				"worldGameMode": "None"
 			}
 		]
 	}

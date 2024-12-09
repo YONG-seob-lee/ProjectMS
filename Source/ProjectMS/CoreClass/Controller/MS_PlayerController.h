@@ -5,40 +5,33 @@
 #include "ProjectMS/Unit/MS_UnitBase.h"
 #include "MS_PlayerController.generated.h"
 
-UCLASS()
-class PROJECTMS_API AMS_PlayerController : public APlayerController
+UCLASS() class PROJECTMS_API AMS_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
 	AMS_PlayerController();
 
+	virtual void PostLoad() override;
+	virtual void Tick(float aDeltaTime) override;
+
 	void RegisterManagement();
 	
-	virtual void Tick(float aDeltaTime) override;
-	virtual void PostLoad() override;
-
-	TObjectPtr<AMS_CharacterBase> GetCharacterBase() const;
-	TObjectPtr<UMS_TableManager> GetTableManager() const;
-	TObjectPtr<UMS_UnitManager> GetUnitManager() const;
-	TObjectPtr<AMS_SceneManager> GetSceneManager() const;
-	TObjectPtr<UMS_WidgetManager> GetWidgetManager() const;
+	TObjectPtr<class AMS_CharacterBase> GetCharacterBase() const;
+	TObjectPtr<class UMS_TableManager> GetTableManager() const;
+	TObjectPtr<class UMS_UnitManager> GetUnitManager() const;
+	TObjectPtr<class AMS_SceneManager> GetSceneManager() const;
+	TObjectPtr<class UMS_WidgetManager> GetWidgetManager() const;
 	FORCEINLINE class UInputMappingContext* GetInputMappingContext() { return MappingContext; }
-
-	inline FIntVector2 AcquireViewportSize();
-	inline FVector2D AcquireMousePositionOnViewport();
-	inline FVector2D AcquireTouchPositionOnViewport(ETouchIndex::Type aFingerIndex);
 
 protected:
 	virtual void BeginPlay() override;
 	
+	// Instance
 private:
-	UPROPERTY()
-	TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
+	UPROPERTY() TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
+	UPROPERTY() TObjectPtr<UMS_Management> Management = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* MappingContext = nullptr;
-	
-	UPROPERTY()
-	TObjectPtr<UMS_Management> Management = nullptr;
+	// Input
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true")) class UInputMappingContext* MappingContext = nullptr;
 };

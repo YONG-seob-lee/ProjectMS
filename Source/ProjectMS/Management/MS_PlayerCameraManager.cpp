@@ -31,7 +31,7 @@ void AMS_PlayerCameraManager::BeginPlay()
 	InitializeViewCamera();
 
 	SwitchViewCamera(EMS_ViewCameraType::SideView);
-	SwitchCameraMode(EMS_CameraModeType::ImmobileCameraMode);
+	SwitchCameraMode(EMS_CameraModeType::FollowingInputCameraMode);
 
 	AdjustPostProcessEffect(CameraEffect->GetCameraPostProcessEffect());
 }
@@ -127,7 +127,7 @@ void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraTyp
 
 	ViewCamera = TempViewCamera;
 	ViewCameraType = aViewCameraType;
-
+	
 	SetViewTarget(ViewCamera.Get());
 }
 
@@ -146,6 +146,7 @@ void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeTyp
 	}
 
 	CameraMode = TempCameraMode;
+	CameraMode->Bind(this);
 	CameraMode->ActivateMode();
 }
 

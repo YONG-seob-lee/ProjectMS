@@ -20,5 +20,4 @@ public:
 	// Instance
 public:
 	TObjectPtr<class AMS_PlayerCameraManager> CameraManager = nullptr;
-
 };
