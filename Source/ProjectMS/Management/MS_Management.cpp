@@ -3,6 +3,7 @@
 
 #include "MS_Management.h"
 
+#include "MS_CommandManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "MS_PlayerCameraManager.h"
 #include "ProjectMS/Utility/MS_Define.h"
@@ -53,4 +54,8 @@ void UMS_Management::InitManager()
 	UnitManager->Initialize();
 	
 	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
+
+	CommandManager = MS_NewObject<UMS_CommandManager>(this);
+	MS_CHECK(CommandManager);
+	CommandManager->Initialize();
 }

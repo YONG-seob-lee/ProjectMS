@@ -14,6 +14,7 @@ void UMS_ContentsPartWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// 나중에 동적으로 배치할 수있게 개선할 예정
 	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(0)))
 	{
 		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 1);

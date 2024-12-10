@@ -3,10 +3,10 @@
 
 #include "MS_ContentButtonWidget.h"
 
-#include "MS_WidgetManager.h"
 #include "Button/MS_Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/Image.h"
-#include "Widget/WidgetComponent/MS_VerticalBox.h"
+#include "Widget/Town/Extension/MS_ExtensionWidget.h"
 
 void UMS_ContentButtonWidget::NativeConstruct()
 {
@@ -25,9 +25,9 @@ void UMS_ContentButtonWidget::SetIconImage(UTexture2D* aIconImage) const
 
 void UMS_ContentButtonWidget::SetVerticalBoxVisibility(bool bShow) const
 {
-	if(CPP_VerticalBox)
+	if(CPP_ExtensionPanel)
 	{
-		CPP_VerticalBox->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		CPP_ExtensionPanel->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	}
 }
 

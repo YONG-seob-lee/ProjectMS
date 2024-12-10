@@ -39,6 +39,6 @@ private:
 	TObjectPtr<class UImage> CPP_IconImage = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_VerticalBox> CPP_VerticalBox = nullptr;
+	TObjectPtr<class UCanvasPanel> CPP_ExtensionPanel = nullptr;
 	bool bOpen = false;
 };
