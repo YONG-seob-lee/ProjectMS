@@ -18,6 +18,7 @@ public:
 	
 private:
 	void OnClickMarketButton();
+	void OnClickHamburgerButton(TObjectPtr<class UMS_ContentButtonWidget> aCommandModeButton);
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_HorizontalBox> CPP_HorizontalBox = nullptr;

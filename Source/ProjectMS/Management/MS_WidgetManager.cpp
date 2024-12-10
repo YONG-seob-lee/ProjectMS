@@ -78,14 +78,14 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName, 
 		ManagedWidgets.Remove(aTypeName);
 	}
 
-	const TObjectPtr<UMS_Widget> Widget = Cast<UMS_Widget>(CreateWidget_Internal(aTypeName, true));
+	const TObjectPtr<UMS_Widget> Widget = Cast<UMS_Widget>(CreateWidget_Internal(aTypeName, true, bAttachToRoot));
 	MS_CHECK(Widget != nullptr);
 
 	ManagedWidgets.Emplace(aTypeName, Widget);
 
 	if(bAttachToRoot)
 	{
-		RootWidget->AttachContentWidget(Widget);
+		AttachToRoot(Widget);
 	}
 	
 	if(OnCreateWidget.IsBound())
@@ -150,6 +150,11 @@ void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
 	}
 }
 
+void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget)
+{
+	RootWidget->AttachContentWidget(aWidget);
+}
+
 void UMS_WidgetManager::RefreshContentWidget() 
 {
 	MS_CHECK(RootWidget);
@@ -158,7 +163,7 @@ void UMS_WidgetManager::RefreshContentWidget()
 	ManagedWidgets.Empty();
 }
 
-TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged)
+TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged, bool bAttachToRoot/* = true */)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	MS_CHECK(World);
@@ -199,7 +204,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTy
 	WidgetInfo.NotRender3D = ResourceWidgetData->NotRender3D;
 
 	ResultWidget->SetResourceWidgetInfo(WidgetInfo);
-	ResultWidget->InitWidget(aTypeName, bManaged);
+	ResultWidget->InitWidget(aTypeName, bManaged, bAttachToRoot);
 
 	return ResultWidget;
 }

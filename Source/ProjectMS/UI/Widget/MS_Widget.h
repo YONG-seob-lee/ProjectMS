@@ -42,7 +42,7 @@ public:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bActivate = true);
+	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot = true);
 	virtual void FinishWidget();
 	
 	virtual void NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime) override;
@@ -52,7 +52,7 @@ public:
 	UFUNCTION()
 	virtual void OnRuntimeInitialize();
 
-	virtual void Active(bool bActive = true);
+	virtual void Active(bool bActive = true, bool bAttachToRoot = true);
 
 	FORCEINLINE FMS_ResourceWidgetInfo GetResourceWidgetInfo() const { return ResourceWidgetInfo; }
 	FORCEINLINE void SetResourceWidgetInfo(const FMS_ResourceWidgetInfo& Info) { ResourceWidgetInfo = Info; }

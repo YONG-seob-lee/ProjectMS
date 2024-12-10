@@ -55,6 +55,17 @@ void AMS_PlayerController::BeginPlay()
 	}
 }
 
+void AMS_PlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+}
+
+void AMS_PlayerController::InputTouch(const FInputActionValue& aValue)
+{
+	const FVector2D TouchVector = aValue.Get<FVector2D>();
+}
+
 void AMS_PlayerController::PostLoad()
 {
 	Super::PostLoad();

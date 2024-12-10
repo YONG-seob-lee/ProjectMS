@@ -44,11 +44,14 @@ void UMS_RootWidget::AttachContentWidget(const TObjectPtr<UMS_Widget>& aContentW
 {
 	MS_CHECK(CPP_ContentFrameCanvasPanel);
 
-	CPP_ContentFrameCanvasPanel->AddChild(aContentWidget);
-	const TObjectPtr<UCanvasPanelSlot> CanvasPanelSlot = Cast<UCanvasPanelSlot>(aContentWidget->Slot);
-	CanvasPanelSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
-	CanvasPanelSlot->SetPosition(FVector2D::ZeroVector);
-	CanvasPanelSlot->SetOffsets(FMargin(0.f, 0.f));
+	if(CPP_ContentFrameCanvasPanel->HasChild(aContentWidget) == false)
+	{
+		CPP_ContentFrameCanvasPanel->AddChild(aContentWidget);
+		const TObjectPtr<UCanvasPanelSlot> CanvasPanelSlot = Cast<UCanvasPanelSlot>(aContentWidget->Slot);
+		CanvasPanelSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+		CanvasPanelSlot->SetPosition(FVector2D::ZeroVector);
+		CanvasPanelSlot->SetOffsets(FMargin(0.f, 0.f));
+	}
 }
 
 void UMS_RootWidget::RefreshContentCanvas() const

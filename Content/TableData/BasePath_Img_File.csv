@@ -1,2 +1,3 @@
 Id,Directory_Table_Id,Img_File_Name,Img_File_Local
-1,1001,MarketIcon,FALSE
+1,1001,MarketButtonImage,FALSE
+2,1001,HamburgerButtonImage,FALSE

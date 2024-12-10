@@ -4,6 +4,7 @@
 #include "MS_Widget.h"
 
 #include "MovieScene.h"
+#include "MS_WidgetManager.h"
 #include "Animation/WidgetAnimation.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
 
@@ -27,7 +28,7 @@ void UMS_Widget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_Widget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
+void UMS_Widget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot /* = true */)
 {
 	IsManaged = bManaged;
 	
@@ -35,7 +36,7 @@ void UMS_Widget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivat
 
 	if(bManaged)
 	{
-		Active(true);
+		Active(true, bAttachToRoot);
 	}
 }
 
@@ -59,9 +60,16 @@ void UMS_Widget::OnRuntimeInitialize()
 {
 }
 
-void UMS_Widget::Active(bool bActive)
+void UMS_Widget::Active(bool bActive, bool bAttachToRoot/* = true */)
 {
-	AddToViewport(bActive ? ResourceWidgetInfo.zOrder : 0);
+	if(bAttachToRoot)
+	{
+		gWidgetMng.AttachToRoot(this);
+	}
+	else
+	{
+		AddToViewport(bActive ? ResourceWidgetInfo.zOrder : 0);
+	}
 	
 	if(IsVisible())
 	{

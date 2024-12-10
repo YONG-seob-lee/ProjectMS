@@ -42,10 +42,11 @@ public:
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
+	void AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget);
 	void RefreshContentWidget();
 	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }
 private:
-	TObjectPtr<class UMS_Widget> CreateWidget_Internal(const FName& aTypeName, bool bManaged);
+	TObjectPtr<class UMS_Widget> CreateWidget_Internal(const FName& aTypeName, bool bManaged, bool bAttachToRoot = true);
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal_Managing(const FString& aPath);
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal_NotManaging(const FString& aPath) const;
 	

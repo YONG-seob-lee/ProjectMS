@@ -7,6 +7,7 @@
 #include "MS_Define.h"
 #include "MS_SceneManager.h"
 #include "MS_TableManager.h"
+#include "MS_WidgetManager.h"
 #include "Widget/WidgetComponent/MS_HorizontalBox.h"
 
 void UMS_ContentsPartWidget::NativeConstruct()
@@ -23,6 +24,40 @@ void UMS_ContentsPartWidget::NativeConstruct()
 
 		ContentButtonWidget->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickMarketButton);
 	}
+
+	if(const TObjectPtr<UMS_ContentButtonWidget> CommandModeButton = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(2)))
+	{
+		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 2);
+		if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
+		{
+			CommandModeButton->SetIconImage(IconImage);
+		}
+		CommandModeButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickHamburgerButton, CommandModeButton);
+	}
+
+	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(4)))
+	{
+		ContentButtonWidget->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+			{
+				gWidgetMng.ShowToastMessage(TEXT(""));
+			});
+	}
+
+	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(6)))
+	{
+		ContentButtonWidget->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+			{
+				gWidgetMng.ShowToastMessage(TEXT(""));
+			});
+	}
+
+	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(8)))
+	{
+		ContentButtonWidget->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+			{
+				gWidgetMng.ShowToastMessage(TEXT(""));
+			});
+	}
 }
 
 void UMS_ContentsPartWidget::OnClickMarketButton()
@@ -36,4 +71,12 @@ void UMS_ContentsPartWidget::OnClickMarketButton()
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
 	gSceneMng.RequestChangeScene(Command);
+}
+
+void UMS_ContentsPartWidget::OnClickHamburgerButton(TObjectPtr<UMS_ContentButtonWidget> aCommandModeButton)
+{
+	if(aCommandModeButton)
+	{
+		aCommandModeButton->OpenExtensionUI();
+	}
 }

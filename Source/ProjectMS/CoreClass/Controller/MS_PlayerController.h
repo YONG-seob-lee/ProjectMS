@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "ProjectMS/Management/MS_Management.h"
 #include "ProjectMS/Unit/MS_UnitBase.h"
 #include "MS_PlayerController.generated.h"
@@ -26,12 +27,19 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 	
 	// Instance
 private:
+	void InputTouch(const FInputActionValue& aValue);
+	
 	UPROPERTY() TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
 	UPROPERTY() TObjectPtr<UMS_Management> Management = nullptr;
 
 	// Input
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (AllowPrivateAccess = "true")) class UInputMappingContext* MappingContext = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	class UInputMappingContext* MappingContext = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> InputAction_DollyIn = nullptr;
 };
