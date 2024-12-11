@@ -31,6 +31,7 @@ public:
 
 	void SetMode(EMS_ModeType aModeType);
 
+	void ShowRotateWidget();
 	FMS_OnSetMode OnSetMode;
 	
 private:

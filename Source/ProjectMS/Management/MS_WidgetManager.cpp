@@ -150,6 +150,14 @@ void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
 	}
 }
 
+void UMS_WidgetManager::ShowRotateWidget() const
+{
+	if(RootWidget)
+	{
+		RootWidget->ShowRotateWidget();
+	}
+}
+
 void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget)
 {
 	RootWidget->AttachContentWidget(aWidget);

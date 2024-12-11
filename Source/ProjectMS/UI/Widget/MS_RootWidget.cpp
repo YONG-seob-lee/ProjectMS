@@ -8,6 +8,7 @@
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
 #include "System/MS_ToastWidget.h"
+#include "System/Rotate/MS_RotateWidget.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
 #include "WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -30,6 +31,7 @@ void UMS_RootWidget::NativeOnInitialized()
 	
 	CPP_LoadingPanel->SetVisibility(ESlateVisibility::Hidden);
 	CPP_MessagePanel->SetVisibility(ESlateVisibility::Hidden);
+	CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMS_RootWidget::OnRuntimeInitialize()
@@ -188,4 +190,18 @@ void UMS_RootWidget::ShowToastMessage(const FString& Message) const
 		
 	// 추후 인수를 토스트위젯에 추가하여 대입
 	CPP_ToastWidget->PlayAnimationByName(DefaultWidgetAnimation::Appearance);
+}
+
+void UMS_RootWidget::ShowRotateWidget() const
+{
+	if(CPP_InterfacePanel->IsVisible())
+	{
+		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
+		CPP_RotateWidget->SetVisibility(ESlateVisibility::Collapsed);	
+	}
+	else
+	{
+		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Visible);
+		CPP_RotateWidget->SetVisibility(ESlateVisibility::Visible);
+	}
 }

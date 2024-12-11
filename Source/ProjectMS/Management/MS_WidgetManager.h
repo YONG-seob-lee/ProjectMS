@@ -38,6 +38,8 @@ public:
 	void PostDestroyWidget(const FName& aTypeName);
 	
 	void ShowToastMessage(const FString& aMessage) const;
+	
+	void ShowRotateWidget() const;
 
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

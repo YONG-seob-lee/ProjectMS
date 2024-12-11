@@ -32,8 +32,11 @@ public:
 	void ResetCanvasZOrder() const;
 
 	void ResetToastPanel() const;
+	
 	void ShowToastMessage(const FString& Message) const;
 
+	void ShowRotateWidget() const;
+	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
@@ -49,7 +52,11 @@ private:
 	TObjectPtr<class UMS_WidgetSwitcher> CPP_MessageWidgetSwitcher = nullptr;
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ToastWidget> CPP_ToastWidget = nullptr;
-	
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<UMS_CanvasPanel> CPP_InterfacePanel = nullptr;
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_RotateWidget> CPP_RotateWidget = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_PreventionCoverImage = nullptr;
