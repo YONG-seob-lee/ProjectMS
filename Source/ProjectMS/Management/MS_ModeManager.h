@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "MS_CommandManager.generated.h"
+#include "MS_ModeManager.generated.h"
+
 
 UENUM()
 enum class EMS_ModeType : uint8
@@ -15,23 +16,29 @@ enum class EMS_ModeType : uint8
 	StaffManagement = 3,
 	CustomerManagement = 4,
 };
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnSetMode, uint8);
+
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_CommandManager : public UMS_ManagerBase
+class PROJECTMS_API UMS_ModeManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 public:
-	UMS_CommandManager();
+	UMS_ModeManager();
 
 	void SetMode(EMS_ModeType aModeType);
+
+	FMS_OnSetMode OnSetMode;
+	
 private:
 	
 	
 public:
-	inline static TObjectPtr<UMS_CommandManager> CommandManager = nullptr;
-	static UMS_CommandManager* GetInstance();
+	inline static TObjectPtr<UMS_ModeManager> ModeManager = nullptr;
+	static UMS_ModeManager* GetInstance();
 	
-#define gCommandMng (*UMS_CommandManager::GetInstance())
+#define gModeMng (*UMS_ModeManager::GetInstance())
 };

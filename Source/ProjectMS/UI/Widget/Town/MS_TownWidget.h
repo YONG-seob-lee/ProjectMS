@@ -6,6 +6,11 @@
 #include "Widget/MS_Widget.h"
 #include "MS_TownWidget.generated.h"
 
+namespace ModePanelAnimation
+{
+	const FName SetMode = FName(TEXT("SetMode"));
+	const FName UnSetMode = FName(TEXT("UnSetMode"));
+}
 /**
  * 
  */
@@ -17,15 +22,23 @@ public:
 	static FName GetWidgetName() { return TEXT("Town"); }
 	virtual void NativeConstruct() override;
 
+	virtual void OnAnimFinished(const FName& aAnimName) override;
 private:
 	void OnClickedDefaultButton();
+	void OnSetMode(uint8 aMode);
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ContentsPartWidget> CPP_ContentsPartWidget = nullptr;
+	TObjectPtr<class UMS_ContentsPartWidget> CPP_ContentsPart = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_SettingButtonWidget> CPP_SettingButton = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ManagerButtonWidget> CPP_ManagerButton = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_ModeNameWidget> CPP_ModeName = nullptr;
+
+	FTimerHandle OnSetTimerHandle;
+	bool IsShowModePanel = false;
 };

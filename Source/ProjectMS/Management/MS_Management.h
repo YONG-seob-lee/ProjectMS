@@ -44,5 +44,5 @@ private:
 	TObjectPtr<class AMS_PlayerCameraManager> CameraManager = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<class UMS_CommandManager> CommandManager = nullptr;
+	TObjectPtr<class UMS_ModeManager> CommandManager = nullptr;
 };
