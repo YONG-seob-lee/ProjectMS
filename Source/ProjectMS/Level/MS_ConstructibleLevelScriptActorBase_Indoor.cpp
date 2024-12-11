@@ -49,14 +49,15 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 		
 		for (const UMS_GridBoxComponent* GridBoxComponent : GridBoxComponents)
 		{
-			FVector WorldLocation = GridBoxComponent->GetComponentLocation() + GridBoxComponent->GetGridLocationOffset();
+			float PropYaw = Prop->GetActorRotation().Yaw;
+			MS_LOG_Verbosity(Warning, TEXT("PropYaw : %f [PropName : %s]"), PropYaw, *Prop->GetName());
 
-#if WITH_EDITOR
-			MS_Ensure(FMath::IsNearlyZero(WorldLocation.X / MS_GridSize.X, FMath::RoundToInt32(WorldLocation.X / MS_GridSize.X)));
-			MS_Ensure(FMath::IsNearlyZero(WorldLocation.Y / MS_GridSize.Y, FMath::RoundToInt32(WorldLocation.Y / MS_GridSize.Y)));
-			MS_Ensure(FMath::IsNearlyZero(WorldLocation.Z / MS_GridSize.Z, FMath::RoundToInt32(WorldLocation.Z / MS_GridSize.Z)));
-#endif
-				
+			FVector GridLocationOffset = GridBoxComponent->GetGridLocationOffset();
+			GridLocationOffset = GridLocationOffset.RotateAngleAxis(PropYaw, FVector(0.f, 0.f, 1.f));
+			
+			FVector WorldLocation = GridBoxComponent->GetComponentLocation() + GridLocationOffset;
+			MS_LOG_Verbosity(Warning, TEXT("WorldLocation : %f, %f, %f [PropName : %s]"), WorldLocation.X, WorldLocation.Y, WorldLocation.Z, *Prop->GetName());
+			
 			FIntVector GridPosition = FIntVector(
 			FMath::RoundToInt32(WorldLocation.X / MS_GridSize.X),
 			FMath::RoundToInt32(WorldLocation.Y / MS_GridSize.Y),
@@ -73,29 +74,29 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 
 			case EMS_PropType::Wall:
 				{
-					if (PropActor->GetActorRotation().Yaw == 0.f)
+					if (FMath::IsNearlyEqual(PropYaw, 0.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_0.Contains(GridPosition));
 						LevelPropDatas_Indoor.WallDatas_0.Emplace(GridPosition, PropActor);
 					}
-					else if (PropActor->GetActorRotation().Yaw == 90.f || PropActor->GetActorRotation().Yaw == -270.f)
+					else if (FMath::IsNearlyEqual(PropYaw, 90.f) || FMath::IsNearlyEqual(PropYaw, -270.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_90.Contains(GridPosition));
 						LevelPropDatas_Indoor.WallDatas_90.Emplace(GridPosition, PropActor);
 					}
-					else if (PropActor->GetActorRotation().Yaw == 180.f || PropActor->GetActorRotation().Yaw == -180.f)
+					else if (FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_180.Contains(GridPosition));
 						LevelPropDatas_Indoor.WallDatas_180.Emplace(GridPosition, PropActor);
 					}
-					else if (PropActor->GetActorRotation().Yaw == 270.f || PropActor->GetActorRotation().Yaw == -90.f)
+					else if (FMath::IsNearlyEqual(PropYaw, 270.f) || FMath::IsNearlyEqual(PropYaw, -90.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_270.Contains(GridPosition));
 						LevelPropDatas_Indoor.WallDatas_270.Emplace(GridPosition, PropActor);
 					}
 					else
 					{
-						MS_LOG_Verbosity(Error, TEXT("Wall Rotation is Wrong [PropName : %s]"), *Prop->GetName());
+						MS_LOG_Verbosity(Error, TEXT("Wall Rotation is Wrong [PropName : %s]"), *Prop->GetFName().ToString());
 					}
 					break;
 				}
@@ -118,8 +119,7 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 			
 			default:
 				{
-					MS_LOG_Verbosity(Error, TEXT("Prop Type is Wrong [PropName : %s]"), *Prop->GetName());
-					MS_Ensure(false);
+					MS_LOG_Verbosity(Error, TEXT("Prop Type is Wrong [PropName : %s]"), *Prop->GetFName().ToString());
 				}
 			}
 		}
