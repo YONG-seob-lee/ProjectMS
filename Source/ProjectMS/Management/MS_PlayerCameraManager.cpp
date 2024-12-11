@@ -1,6 +1,7 @@
 ﻿#include "Management/MS_PlayerCameraManager.h"
 
 #include "Camera/CameraModifier_CameraShake.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "CoreClass/Controller/MS_PlayerController.h"
 
@@ -30,7 +31,7 @@ void AMS_PlayerCameraManager::BeginPlay()
 
 	InitializeViewCamera();
 
-	SwitchViewCamera(EMS_ViewCameraType::SideView);
+	SwitchViewCamera(EMS_ViewCameraType::QuarterView);
 	SwitchCameraMode(EMS_CameraModeType::FollowingInputCameraMode);
 
 	AdjustPostProcessEffect(CameraEffect->GetCameraPostProcessEffect());
@@ -260,7 +261,7 @@ void AMS_PlayerCameraManager::TruckRight(const FInputActionValue& aValue)
 	}
 }
 
-void AMS_PlayerCameraManager::DollyAndTruckOnMobile(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
+void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
 {
 	if (RestrictedZoneFlag == true)
 	{
@@ -345,29 +346,17 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 {
 	InertiaForceMagnitude += aMagnitude;
 
-	if (GetWorld()->GetTimerManager().IsTimerActive(GenerateInertiaForceTimerHandle) == false)
+	if (!GetWorld()->GetTimerManager().IsTimerActive(GenerateInertiaForceTimerHandle))
 	{
 		GetWorld()->GetTimerManager().SetTimer(GenerateInertiaForceTimerHandle, [&]()
 			{
 				FVector AppliedInertiaForceMagnitude = InertiaForceMagnitude * 0.025f;
 				InertiaForceMagnitude -= AppliedInertiaForceMagnitude;
 
-				FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + AppliedInertiaForceMagnitude);
-				if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-				{
-					float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-					float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-					float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-					FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-					ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-					ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-				}
-				else
-				{
-					ViewCamera->AddActorWorldOffset(AppliedInertiaForceMagnitude);
-				}
+				FVector NewCameraLocation = ViewCamera->GetActorLocation() + AppliedInertiaForceMagnitude;
+				ViewCamera->SetActorLocation(NewCameraLocation);
 
-				if (InertiaForceMagnitude.Equals(FVector::ZeroVector, 0.001f) == true)
+				if (InertiaForceMagnitude.Equals(FVector::ZeroVector, 0.001f))
 				{
 					GetWorld()->GetTimerManager().ClearTimer(GenerateInertiaForceTimerHandle);
 					InertiaForceMagnitude = FVector::ZeroVector;
@@ -375,6 +364,7 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 			}, 0.005f, true);
 	}
 }
+
 
 AMS_PlayerCameraManager* AMS_PlayerCameraManager::GetInstance()
 {

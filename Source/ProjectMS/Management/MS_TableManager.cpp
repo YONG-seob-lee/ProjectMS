@@ -251,8 +251,6 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::Level, TEXT("/Game/TableData/Level.Level"), UMS_LevelCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());
 
-	CreateTableData(EMS_TableDataType::InputActionData, TEXT("/Game/TableData/InputActionData"));
-
 }
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)

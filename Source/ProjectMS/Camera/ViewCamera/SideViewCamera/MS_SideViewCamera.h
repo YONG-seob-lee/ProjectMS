@@ -15,6 +15,6 @@ public:
 	virtual void Activate() override;
 	virtual void Deactivate() override;
 
-	virtual void AdjustCameraDistance(const float& aDistance) override;
+	virtual void AdjustCameraDistance(float aDistance) override;
 	virtual void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect) override;
 };

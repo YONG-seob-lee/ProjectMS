@@ -49,7 +49,7 @@ public:
 	UFUNCTION() void DollyOut(const FInputActionValue& aValue);
 	UFUNCTION() void TruckLeft(const FInputActionValue& aValue);
 	UFUNCTION() void TruckRight(const FInputActionValue& aValue);
-	UFUNCTION() void DollyAndTruckOnMobile(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
+	UFUNCTION() void DollyAndTruck(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
 	UFUNCTION() void PedestalUp(const FInputActionValue& aValue);
 	UFUNCTION() void PedestalDown(const FInputActionValue& aValue);
 	UFUNCTION() void RollCounterclockwise(const FInputActionValue& aValue);

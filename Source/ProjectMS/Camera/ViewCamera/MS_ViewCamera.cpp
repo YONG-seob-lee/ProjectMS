@@ -20,7 +20,7 @@ void AMS_ViewCamera::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_ViewCamera::AdjustCameraDistance(const float& aDistance)
+void AMS_ViewCamera::AdjustCameraDistance(float aDistance)
 {
 }
 

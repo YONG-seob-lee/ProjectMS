@@ -18,16 +18,26 @@
 
 AMS_PlayerController::AMS_PlayerController()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	
 	PlayerCameraManagerClass = AMS_PlayerCameraManager::StaticClass();
 
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> MAPPINGCONTEXTFINDER(TEXT("/Game/Input/MappingContext/CameraInputMappingContext"));
-	MS_CHECK(MAPPINGCONTEXTFINDER.Object);
-
-	MappingContext = MAPPINGCONTEXTFINDER.Object;
-
+	PrimaryActorTick.bCanEverTick = true;
 	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableTouchEvents = true;
+	bEnableMouseOverEvents = true;
+	bEnableTouchOverEvents = true;
+
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext> MappingContextFinder(TEXT("/Game/Input/MappingContext/CameraInputMappingContext"));
+	MS_CHECK(MappingContextFinder.Object);
+	MappingContext = MappingContextFinder.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> PinchInputActionFinder(TEXT("/Game/Input/InputAction/PinchInputAction"));
+	MS_CHECK(PinchInputActionFinder.Object);
+	PinchInputAction = PinchInputActionFinder.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> PointerPressInputActionFinder(TEXT("/Game/Input/InputAction/PointerPressInputAction"));
+	MS_CHECK(PointerPressInputActionFinder.Object);
+	PointerPressInputAction = PointerPressInputActionFinder.Object;
 }
 
 void AMS_PlayerController::RegisterManagement()
@@ -43,27 +53,233 @@ void AMS_PlayerController::RegisterManagement()
 	Management->InitManager();
 }
 
+
 void AMS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RegisterManagement();
+	GetWorld()->GetTimerManager().SetTimer(HandlePointerMoveTimerHandle, this, &AMS_PlayerController::HandlePointerMove, 0.01f, true);
 
-	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		EnhancedInputLocalPlayerSubSystem->AddMappingContext(MappingContext, 0);
-	}
+	RegisterManagement();
+}
+
+void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorld()->GetTimerManager().ClearTimer(HandlePointerMoveTimerHandle);
 }
 
 void AMS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	MS_CHECK(EnhancedInputLocalPlayerSubSystem);
+	EnhancedInputLocalPlayerSubSystem->AddMappingContext(MappingContext, 0);
+
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
+	MS_CHECK(EnhancedInputComponent);
+
+	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Started, this, TEXT("HandlePointerDown"));
+	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Completed, this, TEXT("HandlePointerUp"));
+	EnhancedInputComponent->BindAction(PinchInputAction, ETriggerEvent::Started, this, TEXT("HandlePinchAction"));
 }
 
-void AMS_PlayerController::InputTouch(const FInputActionValue& aValue)
+FVector2D AMS_PlayerController::AcquirePointerPositionOnViewport()
 {
-	const FVector2D TouchVector = aValue.Get<FVector2D>();
+	FVector2D PointerPosition = {};
+
+#if PLATFORM_WINDOWS || PLATFORM_MAC
+	GetMousePosition(PointerPosition.X, PointerPosition.Y);
+
+#elif PLATFORM_ANDROID || PLATFORM_IOS
+	bool CurrentlyTouchPressFlag = {};
+	GetInputTouchState(ETouchIndex::Touch1, PointerPosition.X, PointerPosition.Y, CurrentlyTouchPressFlag);
+#endif
+	return PointerPosition;
+}
+
+void AMS_PlayerController::HandlePointerDown(const FInputActionValue& aValue)
+{
+	if (PointerPressFlag == true)
+	{
+		return;
+	}
+	PointerPressFlag = true;
+
+	PointerDownTimestamp = FDateTime::UtcNow().GetTicks();
+	PointerDownPosition = AcquirePointerPositionOnViewport();
+
+	FHitResult HitResult = {};
+	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
+	{
+		PointerDownActor = HitResult.GetActor();
+	}
+	else
+	{
+		PointerDownActor = nullptr;
+	}
+
+	OnPointerDownDelegate.Broadcast(PointerDownPosition, PointerDownActor);
+
+	GetWorld()->GetTimerManager().SetTimer(HandlePointerHoldTimerHandle, this, &AMS_PlayerController::HandlePointerHold, POINTER_HOLD_DELAY);
+}
+
+void AMS_PlayerController::HandlePointerUp(const FInputActionValue& aValue)
+{
+	if (PointerPressFlag == false)
+	{
+		return;
+	}
+	PointerPressFlag = false;
+
+	PointerUpTimestamp = FDateTime::UtcNow().GetTicks();
+	PointerUpPosition = AcquirePointerPositionOnViewport();
+
+	FHitResult HitResult = {};
+	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
+	{
+		PointerUpActor = HitResult.GetActor();
+	}
+	else
+	{
+		PointerUpActor = nullptr;
+	}
+
+	OnPointerUpDelegate.Broadcast(PointerUpPosition, PointerUpActor);
+
+	GetWorld()->GetTimerManager().ClearTimer(HandlePointerHoldTimerHandle);
+	PointerDownUpIntervalTime = (PointerUpTimestamp - PointerDownTimestamp) / 10000000.0f;
+
+	HandlePointerClick();
+}
+
+void AMS_PlayerController::HandlePointerClick()
+{
+	if (PointerDownUpIntervalTime < POINTER_CLICK_DELAY)
+	{
+		PointerClickIntervalTime = (FDateTime::UtcNow().GetTicks() - PointerClickTimestamp) / 10000000.0f;;
+		PointerClickTimestamp = FDateTime::UtcNow().GetTicks();
+		PointerClickPosition = AcquirePointerPositionOnViewport();
+
+		if (PointerDownActor != nullptr && PointerUpActor != nullptr && PointerDownActor == PointerUpActor)
+		{
+			PointerClickActor = PointerUpActor;
+		}
+		else
+		{
+			PointerClickActor = nullptr;
+		}
+
+		OnPointerClickDelegate.Broadcast(PointerClickPosition, PointerClickActor);
+	}
+}
+
+void AMS_PlayerController::HandlePointerMove()
+{
+	FVector2D PreviousPointerMovePosition = PointerMovePosition;
+	PointerMovePosition = AcquirePointerPositionOnViewport();
+
+	if (PreviousPointerMovePosition.Equals(FVector2D(-FLT_MAX, -FLT_MAX)) == true)
+	{
+		PointerMovePositionDelta = FVector2D::ZeroVector;
+	}
+	else
+	{
+		PointerMovePositionDelta = PointerMovePosition - PreviousPointerMovePosition;
+	}
+
+	PointerMovePositionDeltaArray.Add(PointerMovePositionDelta);
+	if (PointerMovePositionDeltaArray.Num() > 5)
+	{
+		PointerMovePositionDeltaArray.RemoveAt(0, EAllowShrinking::Yes);
+	}
+
+	PointerMovePositionDeltaTrend = FVector2D::ZeroVector;
+	for (int i = 0; i < PointerMovePositionDeltaArray.Num(); ++i)
+	{
+		PointerMovePositionDeltaTrend += PointerMovePositionDeltaArray[i];
+	}
+	PointerMovePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
+
+	OnPointerMoveDelegate.Broadcast(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
+
+	HandlePointerGlide();
+}
+
+void AMS_PlayerController::HandlePointerGlide()
+{
+	if (PointerPressFlag == true)
+	{
+		FVector2D PreviousPointerGlidePosition = PointerGlidePosition;
+		PointerGlidePosition = PointerMovePosition;
+		if (PreviousPointerGlidePosition.Equals(FVector2D(-FLT_MAX, -FLT_MAX)) == true)
+		{
+			PointerGlidePositionDelta = FVector2D::ZeroVector;
+		}
+		else
+		{
+			PointerGlidePositionDelta = PointerGlidePosition - PreviousPointerGlidePosition;
+		}
+
+		PointerGlidePositionDeltaArray.Add(PointerGlidePositionDelta);
+		if (PointerGlidePositionDeltaArray.Num() > 5)
+		{
+			PointerGlidePositionDeltaArray.RemoveAt(0, EAllowShrinking::Yes);
+		}
+
+		PointerGlidePositionDeltaTrend = FVector2D::ZeroVector;
+		for (int i = 0; i < PointerGlidePositionDeltaArray.Num(); ++i)
+		{
+			PointerGlidePositionDeltaTrend += PointerGlidePositionDeltaArray[i];
+		}
+		PointerGlidePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
+
+		OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+	}
+	else
+	{
+		PointerGlidePosition = { -FLT_MAX, -FLT_MAX };
+		PointerGlidePositionDelta = { -FLT_MAX, -FLT_MAX };
+		PointerGlidePositionDeltaArray.Empty();
+		PointerGlidePositionDeltaTrend = { -FLT_MAX, -FLT_MAX };
+	}
+}
+
+void AMS_PlayerController::HandlePinchAction(const FInputActionValue& aValue)
+{
+	OnPinchActionDelegate.Broadcast(aValue.Get<float>());
+}
+
+void AMS_PlayerController::HandlePointerHold()
+{
+	PointerHoldPosition = AcquirePointerPositionOnViewport();
+
+	FHitResult HitResult = {};
+	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
+	{
+		if (PointerDownActor != nullptr && PointerDownActor == HitResult.GetActor())
+		{
+			PointerHoldActor = HitResult.GetActor();
+
+			if (PointerHoldActor != nullptr && PointerDownActor != nullptr && PointerHoldActor == PointerDownActor)
+			{
+				PointerHeldActor = HitResult.GetActor();
+			}
+			else
+			{
+				PointerHeldActor = nullptr;
+			}
+		}
+	}
+	else
+	{
+		PointerHoldActor = nullptr;
+	}
+
+	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, PointerHoldActor);
+	OnPointerHeldDelegate.Broadcast(PointerHoldPosition, PointerHeldActor);
 }
 
 void AMS_PlayerController::PostLoad()

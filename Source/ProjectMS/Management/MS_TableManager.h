@@ -23,7 +23,6 @@ enum class EMS_TableDataType : uint8
 	Level							UMETA(DisplayName = "Level"),
 	PlayerStatus					UMETA(DisplayName = "PlayerStatus"),
 	Enemy							UMETA(DisplayName = "Enemy"),
-	InputActionData					UMETA(DisplayName = "InputActionData"),
 };
 
 USTRUCT()
