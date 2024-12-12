@@ -173,7 +173,6 @@ void AMS_PlayerController::HandlePointerClick()
 		if (PointerDownActor != nullptr && PointerUpActor != nullptr && PointerDownActor == PointerUpActor)
 		{
 			PointerClickActor = PointerUpActor;
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Click: %s"), *PointerClickActor->GetName()));
 		}
 		else
 		{
@@ -299,7 +298,6 @@ void AMS_PlayerController::HandlePointerHold()
 		if (PointerDownActor != nullptr && PointerDownActor == HitResult.GetActor())
 		{
 			PointerHoldActor = HitResult.GetActor();
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Hold: %s"), *PointerHoldActor->GetName()));
 		}
 	}
 	else
