@@ -4,10 +4,6 @@
 #include "GameFramework/Actor.h"
 #include "MS_ViewCamera.generated.h"
 
-#define CAMERA_DISTANCE_STRANGTH 20.0f
-#define MAX_CAMERA_DISTANCE 2000.0f
-#define MIN_CAMERA_DISTANCE 300.0f
-
 UCLASS() class PROJECTMS_API AMS_ViewCamera : public AActor
 {
 	GENERATED_BODY()

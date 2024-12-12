@@ -23,7 +23,8 @@ void UMS_FollowingInputCameraMode::ActivateMode()
 	MS_CHECK(PlayerController);
 
 	PlayerController->OnPointerGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
-	PlayerController->OnPinchActionDelegate.AddDynamic(CameraManager->ViewCamera.Get(), &AMS_ViewCamera::AdjustCameraDistance);
+	PlayerController->OnPinchActionDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
+	PlayerController->OnMouseRightButtonGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
 }
 
 void UMS_FollowingInputCameraMode::DeactivateMode()
@@ -34,5 +35,6 @@ void UMS_FollowingInputCameraMode::DeactivateMode()
 	MS_CHECK(PlayerController);
 
 	PlayerController->OnPointerGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
-	PlayerController->OnPinchActionDelegate.RemoveDynamic(CameraManager->ViewCamera.Get(), &AMS_ViewCamera::AdjustCameraDistance);
+	PlayerController->OnPinchActionDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
+	PlayerController->OnMouseRightButtonGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
 }

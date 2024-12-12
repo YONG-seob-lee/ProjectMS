@@ -15,8 +15,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerDownDelegate, FVector2D,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerUpDelegate, FVector2D, aPointerUpPosition, AActor*, aPointerUpActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerMoveDelegate, FVector2D, aPointerMovePosition, FVector2D, aPointerMovePositionDelta, FVector2D, aPointerMovePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnMouseRightButtonGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerHoldDelegate, FVector2D, aPointerHoldPosition, AActor*, aPointerHoldActor);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerHeldDelegate, FVector2D, aPointerHeldPosition, AActor*, aPointerHeldActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerClickDelegate, FVector2D, aPointerClickPosition, AActor*, aPointerClickActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FXOnPinchActionDelegate, float, aPinchValue);
 
@@ -59,6 +59,10 @@ public:
 
 	UFUNCTION() void HandlePinchAction(const FInputActionValue& aValue);
 
+	// DEBUG
+	UFUNCTION() void HandleMouseRightButtonDown(const FInputActionValue& aValue);
+	UFUNCTION() void HandleMouseRightButtonUp(const FInputActionValue& aValue);
+
 	// Property
 private:
 	UPROPERTY() bool PointerPressFlag = false;
@@ -85,18 +89,21 @@ private:
 	FTimerHandle HandlePointerHoldTimerHandle = {};
 	UPROPERTY() FVector2D PointerHoldPosition = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() AActor* PointerHoldActor = nullptr;
-	UPROPERTY() AActor* PointerHeldActor = nullptr;
 
 	UPROPERTY() int64 PointerClickTimestamp = 0;
 	UPROPERTY() FVector2D PointerClickPosition = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() AActor* PointerClickActor = nullptr;
 	UPROPERTY() float PointerClickIntervalTime = -FLT_MAX;
 
+	// DEBUG
+	UPROPERTY() bool MouseRightButtonPressFlag = false;
+
 	// Instance
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true")) class UInputMappingContext* MappingContext = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true")) TObjectPtr<class UInputAction> PinchInputAction = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true")) TObjectPtr<class UInputAction> RotationInputAction = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true")) TObjectPtr<class UInputAction> PointerPressInputAction = nullptr;
 
 	// Delegate
@@ -106,8 +113,10 @@ public:
 	FXOnPointerMoveDelegate OnPointerMoveDelegate = {};
 	FXOnPointerHoldDelegate OnPointerHoldDelegate = {};
 	FXOnPointerClickDelegate OnPointerClickDelegate = {};
-	FXOnPointerHeldDelegate OnPointerHeldDelegate = {};
 	FXOnPointerGlideDelegate OnPointerGlideDelegate = {};
 
 	FXOnPinchActionDelegate OnPinchActionDelegate = {};
+
+	// DEBUG
+	FXOnMouseRightButtonGlideDelegate OnMouseRightButtonGlideDelegate = {};
 };

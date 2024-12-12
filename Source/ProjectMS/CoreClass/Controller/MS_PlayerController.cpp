@@ -15,7 +15,6 @@
 
 #include "Unit/UnitState/MS_UnitStateBase.h"
 
-
 AMS_PlayerController::AMS_PlayerController()
 {
 	PlayerCameraManagerClass = AMS_PlayerCameraManager::StaticClass();
@@ -38,6 +37,10 @@ AMS_PlayerController::AMS_PlayerController()
 	static ConstructorHelpers::FObjectFinder<UInputAction> PointerPressInputActionFinder(TEXT("/Game/Input/InputAction/PointerPressInputAction"));
 	MS_CHECK(PointerPressInputActionFinder.Object);
 	PointerPressInputAction = PointerPressInputActionFinder.Object;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> RotationInputActionFinder(TEXT("/Game/Input/InputAction/RotateInputAction"));
+	MS_CHECK(RotationInputActionFinder.Object);
+	RotationInputAction = RotationInputActionFinder.Object;
 }
 
 void AMS_PlayerController::RegisterManagement()
@@ -84,6 +87,10 @@ void AMS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Started, this, TEXT("HandlePointerDown"));
 	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Completed, this, TEXT("HandlePointerUp"));
 	EnhancedInputComponent->BindAction(PinchInputAction, ETriggerEvent::Started, this, TEXT("HandlePinchAction"));
+
+	// DEBUG
+	EnhancedInputComponent->BindAction(RotationInputAction, ETriggerEvent::Started, this, TEXT("HandleMouseRightButtonDown"));
+	EnhancedInputComponent->BindAction(RotationInputAction, ETriggerEvent::Completed, this, TEXT("HandleMouseRightButtonUp"));
 }
 
 FVector2D AMS_PlayerController::AcquirePointerPositionOnViewport()
@@ -166,6 +173,7 @@ void AMS_PlayerController::HandlePointerClick()
 		if (PointerDownActor != nullptr && PointerUpActor != nullptr && PointerDownActor == PointerUpActor)
 		{
 			PointerClickActor = PointerUpActor;
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Click: %s"), *PointerClickActor->GetName()));
 		}
 		else
 		{
@@ -210,7 +218,8 @@ void AMS_PlayerController::HandlePointerMove()
 
 void AMS_PlayerController::HandlePointerGlide()
 {
-	if (PointerPressFlag == true)
+	// DEBUG
+	if (PointerPressFlag == true || MouseRightButtonPressFlag == true)
 	{
 		FVector2D PreviousPointerGlidePosition = PointerGlidePosition;
 		PointerGlidePosition = PointerMovePosition;
@@ -236,7 +245,16 @@ void AMS_PlayerController::HandlePointerGlide()
 		}
 		PointerGlidePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
 
-		OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+		if (PointerPressFlag == true)
+		{
+			OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+		}
+
+		// DEBUG
+		if (MouseRightButtonPressFlag == true)
+		{
+			OnMouseRightButtonGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+		}
 	}
 	else
 	{
@@ -245,6 +263,25 @@ void AMS_PlayerController::HandlePointerGlide()
 		PointerGlidePositionDeltaArray.Empty();
 		PointerGlidePositionDeltaTrend = { -FLT_MAX, -FLT_MAX };
 	}
+}
+
+// DEBUG
+void AMS_PlayerController::HandleMouseRightButtonDown(const FInputActionValue& aValue)
+{
+	if (MouseRightButtonPressFlag == true)
+	{
+		return;
+	}
+	MouseRightButtonPressFlag = true;
+}
+
+void AMS_PlayerController::HandleMouseRightButtonUp(const FInputActionValue& aValue)
+{
+	if (MouseRightButtonPressFlag == false)
+	{
+		return;
+	}
+	MouseRightButtonPressFlag = false;
 }
 
 void AMS_PlayerController::HandlePinchAction(const FInputActionValue& aValue)
@@ -262,15 +299,7 @@ void AMS_PlayerController::HandlePointerHold()
 		if (PointerDownActor != nullptr && PointerDownActor == HitResult.GetActor())
 		{
 			PointerHoldActor = HitResult.GetActor();
-
-			if (PointerHoldActor != nullptr && PointerDownActor != nullptr && PointerHoldActor == PointerDownActor)
-			{
-				PointerHeldActor = HitResult.GetActor();
-			}
-			else
-			{
-				PointerHeldActor = nullptr;
-			}
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Hold: %s"), *PointerHoldActor->GetName()));
 		}
 	}
 	else
@@ -279,7 +308,6 @@ void AMS_PlayerController::HandlePointerHold()
 	}
 
 	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, PointerHoldActor);
-	OnPointerHeldDelegate.Broadcast(PointerHoldPosition, PointerHeldActor);
 }
 
 void AMS_PlayerController::PostLoad()

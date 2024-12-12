@@ -7,6 +7,10 @@
 #include "Utility/MathUtility/MS_MathUtility.h"
 #include "MS_PlayerCameraManager.generated.h"
 
+#define CAMERA_DISTANCE_STRANGTH 20.0f
+#define MAX_CAMERA_DISTANCE 2000.0f
+#define MIN_CAMERA_DISTANCE 300.0f
+
 UENUM() enum class EMS_ViewCameraType
 {
 	Undefined,
@@ -31,9 +35,14 @@ public:
 
 	virtual void BeginPlay() override;
 
+	// DEBUG
+	UFUNCTION(BlueprintCallable) void DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
+	UFUNCTION() FRotator GenerateInertiaForceForRotation(FRotator aCurrentRotation, FRotator aTargetRotation, float& aVelocity, float aDampingFactor);
+
 	UFUNCTION(BlueprintCallable) void FadeInCamera(float aDuration, EMS_InterpolationType aInterpolationType);
 	UFUNCTION(BlueprintCallable) void FadeOutCamera(float aDuration, EMS_InterpolationType aInterpolationType);
-	UFUNCTION(BlueprintCallable) void ZoomCamera(float aMagnification, EMS_InterpolationType aInterpolationType);
+	UFUNCTION(BlueprintCallable) void ZoomCamera(float aDistance);
+	UFUNCTION(BlueprintCallable) void OrbitCamera(float aFloat);
 	UFUNCTION(BlueprintCallable) void ShakeCamera(float aIntensity, float aDuration);
 
 	UFUNCTION(BlueprintCallable) void InitializeViewCamera();
@@ -71,9 +80,13 @@ private:
 	float TurnSensitivity = 1.0f;
 	FTimerHandle GenerateInertiaForceTimerHandle = {};
 	FVector InertiaForceMagnitude = {};
-	bool RestrictedZoneFlag = false;
-	FTransform RestrictedZoneTransform = {};
-	FVector RestrictedZoneSize = {};
+
+	float CameraInertiaForce = 0.0f;
+	FTimerHandle CameraInertiaTimerHandle = {};
+
+	// DEBUG
+	FTimerHandle CameraRotationTimerHandle = {};
+	FRotator TargetCameraRotation = {};
 
 	// Instance
 public:

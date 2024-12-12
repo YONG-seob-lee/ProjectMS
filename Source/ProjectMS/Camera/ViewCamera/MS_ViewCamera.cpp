@@ -22,6 +22,7 @@ void AMS_ViewCamera::BeginPlay()
 
 void AMS_ViewCamera::AdjustCameraDistance(float aDistance)
 {
+	CameraDistance = aDistance;
 }
 
 void AMS_ViewCamera::Activate()

@@ -45,42 +45,78 @@ void AMS_PlayerCameraManager::FadeOutCamera(float aDuration, EMS_InterpolationTy
 {
 }
 
-void AMS_PlayerCameraManager::ZoomCamera(float aMagnification, EMS_InterpolationType aInterpolationType)
+void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 {
-	if (aInterpolationType == EMS_InterpolationType::Undefined)
+	float TargetCameraDistance = ViewCamera.Get()->CameraDistance + (-aDistance * CAMERA_DISTANCE_STRANGTH);
+	TargetCameraDistance = FMath::Clamp(TargetCameraDistance, MIN_CAMERA_DISTANCE, MAX_CAMERA_DISTANCE);
+
+	const float NewInertiaForce = FMath::Clamp((TargetCameraDistance - ViewCamera.Get()->CameraDistance) * 0.9f, -100.0f, 100.0f);
+
+	if (GetWorld()->GetTimerManager().IsTimerActive(CameraInertiaTimerHandle))
 	{
-		MS_CHECK(true);
+		CameraInertiaForce = NewInertiaForce;
+		return;
 	}
 
-	const float Duration = 0.5f;
-	static float ElapsedTime;
-	ElapsedTime = 0.0f;
+	CameraInertiaForce = NewInertiaForce;
 
-	const float OriginZoomMagnification = ZoomMagnification;
-
-	GetWorld()->GetTimerManager().SetTimer(ZoomTimerHandle, [&, OriginZoomMagnification, aMagnification, aInterpolationType, Duration]()
+	GetWorld()->GetTimerManager().SetTimer(CameraInertiaTimerHandle, [this]()
 		{
-			float ProgressRate = ElapsedTime / Duration;
-			ProgressRate = FMath::Clamp(ProgressRate, 0.0f, 1.0f);
+			CameraInertiaForce *= 0.9f;
 
-			float InterpolatedRate = UMS_MathUtility::CalculateInterpolation(ProgressRate, aInterpolationType);
-			float ChangedMagnification = FMath::Lerp(OriginZoomMagnification, aMagnification, InterpolatedRate);
-
-			ViewCamera->AdjustCameraDistance(ViewCamera->CameraDistance * (1 / ChangedMagnification));
-			ZoomMagnification = ChangedMagnification;
-
-			if (ElapsedTime >= Duration)
+			if (FMath::Abs(CameraInertiaForce) < 0.01f)
 			{
-				GetWorld()->GetTimerManager().ClearTimer(ZoomTimerHandle);
-				ElapsedTime = 0.0f;
+				CameraInertiaForce = 0.0f;
+				GetWorld()->GetTimerManager().ClearTimer(CameraInertiaTimerHandle);
+				return;
 			}
-			else
-			{
-				ElapsedTime += 0.01f;
-			}
+
+			float NewCameraDistance = ViewCamera.Get()->CameraDistance + CameraInertiaForce;
+			NewCameraDistance = FMath::Clamp(NewCameraDistance, MIN_CAMERA_DISTANCE, MAX_CAMERA_DISTANCE);
+
+			ViewCamera.Get()->AdjustCameraDistance(NewCameraDistance);
+
 		}, 0.01f, true);
 }
 
+void AMS_PlayerCameraManager::OrbitCamera(float aFloat)
+{
+}
+
+FRotator AMS_PlayerCameraManager::GenerateInertiaForceForRotation(FRotator aCurrentRotation, FRotator aTargetRotation, float& aVelocity, float aDampingFactor)
+{
+	FRotator Delta = aTargetRotation - aCurrentRotation;
+	aVelocity += Delta.Yaw * aDampingFactor;
+	aVelocity *= aDampingFactor;
+
+	return aCurrentRotation + FRotator(0.0f, aVelocity, 0.0f);
+}
+
+void AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
+{
+	TargetCameraRotation = ViewCamera.Get()->GetActorRotation();
+	TargetCameraRotation.Yaw += aPointerGlidePositionDelta.X * 0.9f;
+
+	if (!GetWorld()->GetTimerManager().IsTimerActive(CameraRotationTimerHandle))
+	{
+		GetWorld()->GetTimerManager().SetTimer(CameraRotationTimerHandle, [this]()
+			{
+				FRotator CurrentRotation = ViewCamera.Get()->GetActorRotation();
+
+				static float VelocityYaw = 0.0f;
+
+				FRotator NewRotation = GenerateInertiaForceForRotation(CurrentRotation, TargetCameraRotation, VelocityYaw, 0.2f);
+				NewRotation.Yaw = FMath::Clamp(NewRotation.Yaw, -45.0f, 45.0f);
+
+				ViewCamera.Get()->SetActorRotation(NewRotation);
+
+				if (FMath::Abs(VelocityYaw) < 0.01f && FMath::IsNearlyEqual(NewRotation.Yaw, TargetCameraRotation.Yaw, 0.01f))
+				{
+					GetWorld()->GetTimerManager().ClearTimer(CameraRotationTimerHandle);
+				}
+			}, 0.005f, true);
+	}
+}
 void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
 {
 	FAddCameraShakeParams AddCameraShakeParams = {};
@@ -168,26 +204,10 @@ void AMS_PlayerCameraManager::RotateCamera(FRotator aRotation)
 	ViewCamera->SetActorRotation(aRotation);
 }
 
-
 void AMS_PlayerCameraManager::DollyIn(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		if (RestrictedZoneFlag == true)
-		{
-			FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + FVector(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
-			if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-			{
-				float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-				FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-				ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-				ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-				return;
-			}
-		}
-
 		ViewCamera->AddActorWorldOffset(FVector(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
@@ -196,21 +216,6 @@ void AMS_PlayerCameraManager::DollyOut(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		if (RestrictedZoneFlag == true)
-		{
-			FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + FVector(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
-			if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-			{
-				float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-				FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-				ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-				ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-				return;
-			}
-		}
-
 		ViewCamera->AddActorWorldOffset(FVector(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
@@ -219,21 +224,6 @@ void AMS_PlayerCameraManager::TruckLeft(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		if (RestrictedZoneFlag == true)
-		{
-			FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + FVector(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
-			if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-			{
-				float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-				FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-				ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-				ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-				return;
-			}
-		}
-
 		ViewCamera->AddActorWorldOffset(FVector(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
@@ -242,46 +232,15 @@ void AMS_PlayerCameraManager::TruckRight(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		if (RestrictedZoneFlag == true)
-		{
-			FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + FVector(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
-			if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-			{
-				float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-				float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-				FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-				ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-				ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-				return;
-			}
-		}
-
 		ViewCamera->AddActorWorldOffset(FVector(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
 void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
 {
-	if (RestrictedZoneFlag == true)
-	{
-		FVector ExpectedMoveLocalLocation = RestrictedZoneTransform.InverseTransformPosition(ViewCamera->GetActorLocation() + FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
-		if (FBox(-(RestrictedZoneSize / 2.0f), (RestrictedZoneSize / 2.0f)).IsInsideOrOn(ExpectedMoveLocalLocation) == false)
-		{
-			float ClosestLocalLocationXToZone = FMath::Clamp(ExpectedMoveLocalLocation.X, (-RestrictedZoneSize.X / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.X / 2.0f) - FLT_EPSILON);
-			float ClosestLocalLocationYToZone = FMath::Clamp(ExpectedMoveLocalLocation.Y, (-RestrictedZoneSize.Y / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Y / 2.0f) - FLT_EPSILON);
-			float ClosestLocalLocationZToZone = FMath::Clamp(ExpectedMoveLocalLocation.Z, (-RestrictedZoneSize.Z / 2.0f) + FLT_EPSILON, (RestrictedZoneSize.Z / 2.0f) - FLT_EPSILON);
-			FVector ClosestWorldLocationToZone = RestrictedZoneTransform.TransformPosition(FVector(ClosestLocalLocationXToZone, ClosestLocalLocationYToZone, ClosestLocalLocationZToZone));
-			ClosestWorldLocationToZone.Z = ViewCamera->GetActorLocation().Z;
-			ViewCamera->SetActorLocation(ClosestWorldLocationToZone);
-			return;
-		}
-	}
-
 	ViewCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
 	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * 0.85f);
 }
-
 
 void AMS_PlayerCameraManager::PedestalUp(const FInputActionValue& aValue)
 {
@@ -364,7 +323,6 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 			}, 0.005f, true);
 	}
 }
-
 
 AMS_PlayerCameraManager* AMS_PlayerCameraManager::GetInstance()
 {

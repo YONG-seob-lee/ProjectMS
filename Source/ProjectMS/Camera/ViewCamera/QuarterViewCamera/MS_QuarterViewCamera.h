@@ -18,9 +18,4 @@ public:
 
 	virtual void AdjustCameraDistance(float aDistance) override;
 
-	// Property
-public:
-	float CameraInertiaForce = 0.0f;
-	FTimerHandle CameraInertiaTimerHandle = {};
-
 };
