@@ -36,12 +36,14 @@ void UMS_ContentsPartWidget::NativeConstruct()
 		CommandModeButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickHamburgerButton, CommandModeButton);
 	}
 
-	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(4)))
+	if(const TObjectPtr<UMS_ContentButtonWidget> ModalButton = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(4)))
 	{
-		ContentButtonWidget->GetOnClickedDelegate().AddWeakLambda(this, [this]()
-			{
-				gWidgetMng.ShowToastMessage(TEXT(""));
-			});
+		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 3);
+		if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
+		{
+			ModalButton->SetIconImage(IconImage);
+		}
+		ModalButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickModalButton);
 	}
 
 	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(6)))
@@ -80,4 +82,9 @@ void UMS_ContentsPartWidget::OnClickHamburgerButton(TObjectPtr<UMS_ContentButton
 	{
 		aCommandModeButton->OpenExtensionUI();
 	}
+}
+
+void UMS_ContentsPartWidget::OnClickModalButton()
+{
+	gWidgetMng.ShowModalWidget(nullptr);
 }

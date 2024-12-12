@@ -8,6 +8,7 @@
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
 #include "System/MS_ToastWidget.h"
+#include "System/Modal/MS_ModalWidget.h"
 #include "System/Rotate/MS_RotateWidget.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
 #include "WidgetComponent/MS_WidgetSwitcher.h"
@@ -15,6 +16,12 @@
 namespace MessageType
 {
 	constexpr int32 Toast  = 0;
+}
+
+namespace InterfaceType
+{
+	constexpr int32 Rotate = 0;
+	constexpr int32 Modal = 1;
 }
 
 UMS_RootWidget::UMS_RootWidget(const FObjectInitializer& aObjectInitializer) :Super(aObjectInitializer)
@@ -194,6 +201,8 @@ void UMS_RootWidget::ShowToastMessage(const FString& Message) const
 
 void UMS_RootWidget::ShowRotateWidget() const
 {
+	CPP_InterfaceWidgetSwitcher->SetActiveWidgetIndex(InterfaceType::Rotate);
+	
 	if(CPP_InterfacePanel->IsVisible())
 	{
 		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
@@ -203,5 +212,19 @@ void UMS_RootWidget::ShowRotateWidget() const
 	{
 		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Visible);
 		CPP_RotateWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UMS_RootWidget::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
+{
+	if(bShow)
+	{
+		CPP_InterfaceWidgetSwitcher->SetActiveWidgetIndex(InterfaceType::Modal);
+		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Visible);
+		CPP_ModalWidget->SetModal(aModalData);	
+	}
+	else
+	{
+		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

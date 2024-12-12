@@ -158,6 +158,11 @@ void UMS_WidgetManager::ShowRotateWidget() const
 	}
 }
 
+void UMS_WidgetManager::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
+{
+	RootWidget->ShowModalWidget(aModalData, bShow);
+}
+
 void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget)
 {
 	RootWidget->AttachContentWidget(aWidget);

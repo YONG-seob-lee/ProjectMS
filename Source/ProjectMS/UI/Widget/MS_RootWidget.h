@@ -36,6 +36,7 @@ public:
 	void ShowToastMessage(const FString& Message) const;
 
 	void ShowRotateWidget() const;
+	void ShowModalWidget(struct FMS_ModalData* aModalData, bool bShow = true) const;
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
@@ -56,7 +57,11 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<UMS_CanvasPanel> CPP_InterfacePanel = nullptr;
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_InterfaceWidgetSwitcher = nullptr;
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_RotateWidget> CPP_RotateWidget = nullptr;
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_ModalWidget> CPP_ModalWidget = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_PreventionCoverImage = nullptr;
