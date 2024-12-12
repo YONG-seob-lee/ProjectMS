@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/LevelScriptActor.h"
+#include "Table/RowBase/MS_ResourceUnit.h"
 #include "MS_LevelScriptActorBase.generated.h"
 
 namespace Practice
@@ -37,10 +38,13 @@ protected:
 	
 	TWeakObjectPtr<class UMS_UnitManager> UnitManager = nullptr;
 	TObjectPtr<class AMS_SceneManager> SceneManager = nullptr;
+
+	FMS_ResourceUnit* GetUnitData(const TObjectPtr<AActor>& aActor, int32& aUnitKey);
 public:
 	
 	// Property
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TArray<TSoftObjectPtr<UWorld>> BaseLayerLevelArray = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool BaseLayerLevelCollectionSwitch = false;
 
+	TArray<TObjectPtr<AActor>> Actorss;
 };

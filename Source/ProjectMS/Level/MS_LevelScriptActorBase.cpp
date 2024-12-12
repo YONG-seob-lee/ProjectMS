@@ -9,6 +9,7 @@
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Management/MS_UnitManager.h"
+#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Unit/MS_BasePlayer.h"
 #include "Utility/MS_Define.h"
 
@@ -43,15 +44,29 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	
 	GetWorldSettings()->bAllowTickBeforeBeginPlay = false;
-	
-	TArray<TObjectPtr<AActor>>& ActorArray = GetLevel()->Actors;
-	for (int i = 0; i < ActorArray.Num(); ++i)
+
+	const TObjectPtr<ULevel> Level = GetLevel();
+	Actorss = Level->Actors;
+
+	for (int i = 0; i < Actorss.Num(); ++i)
 	{
-		if (ActorArray[i].Get() == nullptr)
+		TObjectPtr<AActor> Actor = Actorss[i].Get();
+		if (Actor == nullptr)
 		{
 			continue;
 		}
 
+		if(Actor->Tags.IsValidIndex(0))
+		{
+			int32 UnitKey = 0;
+			const FMS_ResourceUnit* UnitData = GetUnitData(Actor, UnitKey);
+			if(!UnitData)
+			{
+				continue;
+			}
+			
+			gUnitMng.CreateUnit(UnitKey, UnitData->UnitType, Actor->GetActorLocation(), Actor->GetActorRotation());
+		}
 		//gUnitMng.CreateUnit()
 		// if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
 		// {
@@ -71,6 +86,8 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 
 void AMS_LevelScriptActorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	gUnitMng.DestroyAllUnits();
+	
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -197,4 +214,13 @@ TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr
 	//UITT_InstUtil::AssignUnitHandle(gUnitMng.GetUnitHandle(Cody));
 
 	return Player;
+}
+
+FMS_ResourceUnit* AMS_LevelScriptActorBase::GetUnitData(const TObjectPtr<AActor>& aActor, int32& aUnitKey)
+{
+	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+	const FString UnitKeyString = aActor->Tags[0].ToString();
+	aUnitKey = FCString::Atoi(*UnitKeyString);
+
+	return UnitTable->GetResourceUnitData(aUnitKey);
 }
