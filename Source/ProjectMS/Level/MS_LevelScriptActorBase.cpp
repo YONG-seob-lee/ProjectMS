@@ -48,10 +48,15 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 	for (int i = 0; i < ActorArray.Num(); ++i)
 	{
 		if (ActorArray[i].Get() == nullptr)
+		{
 			continue;
+		}
 
-		if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
-			ActorArray[i]->Destroy();
+		//gUnitMng.CreateUnit()
+		// if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
+		// {
+		// 	ActorArray[i]->Destroy();
+		// }
 	}
 
 	for (int i = 0; i < BaseLayerLevelArray.Num(); ++i)

@@ -65,6 +65,8 @@ void UMS_ContentsPartWidget::NativeConstruct()
 
 void UMS_ContentsPartWidget::OnClickMarketButton()
 {
+	
+	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::InMarketLevel);
 	Command->SetPreviousLevelType(EMS_LevelType::TownLevel);

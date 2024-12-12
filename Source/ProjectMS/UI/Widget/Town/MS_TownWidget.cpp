@@ -14,6 +14,14 @@ void UMS_TownWidget::NativeConstruct()
 	gModeMng.OnSetMode.AddUObject(this, &UMS_TownWidget::OnSetMode);
 
 	PlayAnimationByName(ModePanelAnimation::SetMode);
+
+	if(CPP_ContentsPart)
+	{
+		CPP_ContentsPart->SetOnClickMarketButtonFunc([this]()
+		{
+			StopAllAnimations();
+		});
+	}
 }
 
 void UMS_TownWidget::OnAnimFinished(const FName& aAnimName)

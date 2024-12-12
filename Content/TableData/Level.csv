@@ -6,4 +6,4 @@ int32,FName,int32,FName
 4,AccountLevel,2,Logo
 5,TownLevel,3,Lobby
 6,MarketLevel,4,Market
-7,Inside,5,Market
+7,InMarketLevel,5,Market
