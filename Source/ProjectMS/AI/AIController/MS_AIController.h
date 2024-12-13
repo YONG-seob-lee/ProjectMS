@@ -15,5 +15,4 @@ public:
 	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type aEndPlayReason) override;
-	
 };

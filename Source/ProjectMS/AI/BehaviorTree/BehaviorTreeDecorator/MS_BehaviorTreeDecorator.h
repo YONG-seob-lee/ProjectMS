@@ -8,4 +8,6 @@ UCLASS() class PROJECTMS_API UMS_BehaviorTreeDecorator : public UBTDecorator
 {
 	GENERATED_BODY()
 	
+public:
+	UMS_BehaviorTreeDecorator();
 };

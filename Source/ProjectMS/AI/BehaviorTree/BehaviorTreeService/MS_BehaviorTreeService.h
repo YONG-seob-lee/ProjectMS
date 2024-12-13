@@ -8,4 +8,6 @@ UCLASS() class PROJECTMS_API UMS_BehaviorTreeService : public UBTService
 {
 	GENERATED_BODY()
 	
+public:
+	UMS_BehaviorTreeService();
 };
