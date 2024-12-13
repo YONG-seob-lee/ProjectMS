@@ -124,9 +124,13 @@ void UMS_Widget::OnAnimFinished(const FName& aAnimName)
 
 TObjectPtr<UWidgetAnimation> UMS_Widget::GetAnimationByName(FName aAnimName) const
 {
-	TObjectPtr<UWidgetAnimation> const* pWidgetAnim = WidgetAnimations.Find(aAnimName);
+	if (WidgetAnimations.Contains(aAnimName))
+	{
+		TObjectPtr<UWidgetAnimation> const* pWidgetAnim = WidgetAnimations.Find(aAnimName);
+		return pWidgetAnim == nullptr ? nullptr : *pWidgetAnim;
+	}
 
-	return pWidgetAnim == nullptr ? nullptr : *pWidgetAnim;
+	return nullptr;
 }
 
 void UMS_Widget::PlayAnimationByName(FName aName, float aStartTime, int32 aLoopCount, EUMGSequencePlayMode::Type aPlayType, float aSpeed)
