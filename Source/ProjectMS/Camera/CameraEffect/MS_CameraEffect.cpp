@@ -9,11 +9,6 @@ UMS_CameraEffect::UMS_CameraEffect()
 	SwitchCameraPostProcessEffect(EMS_CameraPostProcessEffectType::Standard);
 }
 
-TObjectPtr<UMS_CameraPostProcessEffect> UMS_CameraEffect::GetCameraPostProcessEffect()
-{
-	return CameraPostProcessEffect.IsValid() ? CameraPostProcessEffect.Get() : nullptr;
-}
-
 void UMS_CameraEffect::SwitchCameraPostProcessEffect(EMS_CameraPostProcessEffectType aCameraPostProcessEffectType)
 {
 	UMS_CameraPostProcessEffect* TempCameraPostProcessEffect = CameraPostProcessEffectMap.Find(aCameraPostProcessEffectType)->Get();

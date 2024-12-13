@@ -19,8 +19,7 @@ class PROJECTMS_API UMS_CameraEffect : public UObject
 public:
 	UMS_CameraEffect();
 
-	FORCEINLINE
-	TObjectPtr<class UMS_CameraPostProcessEffect> GetCameraPostProcessEffect();
+	FORCEINLINE TObjectPtr<class UMS_CameraPostProcessEffect> GetCameraPostProcessEffect() { return CameraPostProcessEffect.IsValid() ? CameraPostProcessEffect.Get() : nullptr; }
 	UFUNCTION(BlueprintCallable)
 	void SwitchCameraPostProcessEffect(EMS_CameraPostProcessEffectType aCameraPostProcessEffectType);
 
