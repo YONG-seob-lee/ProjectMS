@@ -45,15 +45,7 @@ void UMS_AccountWidget::OnClickAccountButton()
 }
 
 void UMS_AccountWidget::OnClickStartButton()
-{
-	const TObjectPtr<UWorld> World = GetWorld();
-	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	MS_CHECK(PlayerController);
-
-	const TObjectPtr<AMS_SceneManager> SceneManager = PlayerController->GetSceneManager();
-	
+{	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::TownLevel);
 	Command->SetPreviousLevelType(EMS_LevelType::AccountLevel);
@@ -62,5 +54,5 @@ void UMS_AccountWidget::OnClickStartButton()
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
-	SceneManager->RequestChangeScene(Command);
+	gSceneMng.RequestChangeScene(Command);
 }

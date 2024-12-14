@@ -24,20 +24,10 @@ void AMS_SceneManager::PostInitializeComponents()
 	
 	PersistentLevelWorld = GetWorld();
 
-	const TObjectPtr<UWorld> World = GetWorld();
-	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
-	MS_CHECK(PlayerController);
-	
-	const TObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
-	MS_CHECK(TableManager);
-
-	LevelTable = Cast<UMS_LevelCacheTable>(TableManager->GetCacheTable(EMS_TableDataType::Level));
+	LevelTable = Cast<UMS_LevelCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Level));
 	MS_CHECK(LevelTable);
 
-	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-	RootWidget = WidgetManager->GetRootWidget();
+	RootWidget = gWidgetMng.GetRootWidget();
 }
 
 void AMS_SceneManager::Tick(float DeltaSeconds)
@@ -100,18 +90,9 @@ void AMS_SceneManager::EndFade()
 	
 	if(NewCommand->GetLevelType() == EMS_LevelType::None)
 	{
-		// 위젯 변경만
-		const TObjectPtr<UWorld> World = Cast<UWorld>(GetWorld());
-		MS_CHECK(World);
-
-		const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
-		MS_CHECK(PlayerController);
-		
-		const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-		MS_CHECK(WidgetManager);
-	
-		WidgetManager->RefreshContentWidget();
-		WidgetManager->Create_Widget(NewCommand->GetNextWidgetName());
+		// 위젯 변경만	
+		gWidgetMng.RefreshContentWidget();
+		gWidgetMng.Create_Widget(NewCommand->GetNextWidgetName());
 		
 		if(NewCommand->OnFadeEventDelegate.IsBound())
 		{
@@ -216,18 +197,9 @@ void AMS_SceneManager::HandleLoadingLevel()
 	{
 		OnLevelLoadedDelegate.Broadcast();
 	}
-
-	const TObjectPtr<UWorld> World = Cast<UWorld>(GetWorld());
-	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
-	MS_CHECK(PlayerController);
 	
-	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-	MS_CHECK(WidgetManager);
-	
-	WidgetManager->RefreshContentWidget();
-	WidgetManager->Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	gWidgetMng.RefreshContentWidget();
+	gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
 	
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;

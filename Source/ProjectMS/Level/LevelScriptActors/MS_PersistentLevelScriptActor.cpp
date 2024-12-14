@@ -20,21 +20,8 @@ AMS_PersistentLevelScriptActor::AMS_PersistentLevelScriptActor()
 void AMS_PersistentLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	MS_CHECK(SceneManager);
 	
-	const TObjectPtr<UWorld> World = GetWorld();
-	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	MS_CHECK(PlayerController);
-
-	const TObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
-	MS_CHECK(TableManager);
-		
-	const TObjectPtr<UMS_WidgetManager> WidgetManager = PlayerController->GetWidgetManager();
-	MS_CHECK(WidgetManager);
-	WidgetManager->Create_Widget(UMS_PersistentWidget::GetWidgetName());
+	gWidgetMng.Create_Widget(UMS_PersistentWidget::GetWidgetName());
 	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::AccountLevel);
@@ -43,7 +30,7 @@ void AMS_PersistentLevelScriptActor::BeginPlay()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
-	SceneManager->RequestChangeScene(Command);
+	gSceneMng.RequestChangeScene(Command);
 }
 
 // Called every frame

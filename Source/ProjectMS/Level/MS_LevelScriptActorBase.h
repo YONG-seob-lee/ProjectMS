@@ -36,9 +36,6 @@ protected:
 	virtual TObjectPtr<class AMS_SpawnPoint> GetSpawnPoint(const FName& aCharacterName) const;
 	virtual TObjectPtr<class UMS_UnitBase> CreatePlayer(const TObjectPtr<class AMS_SpawnPoint> aSpawnPoint);
 	
-	TWeakObjectPtr<class UMS_UnitManager> UnitManager = nullptr;
-	TObjectPtr<class AMS_SceneManager> SceneManager = nullptr;
-
 	FMS_ResourceUnit* GetUnitData(const TObjectPtr<AActor>& aActor, int32& aUnitKey);
 public:
 	

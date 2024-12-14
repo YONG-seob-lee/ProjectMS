@@ -320,34 +320,6 @@ TObjectPtr<AMS_CharacterBase> AMS_PlayerController::GetCharacterBase() const
 	return UnitBase->GetCharacterBase();
 }
 
-TObjectPtr<UMS_TableManager> AMS_PlayerController::GetTableManager() const
-{
-	MS_CHECK(Management);
-
-	return Management->GetTableManager();
-}
-
-TObjectPtr<UMS_UnitManager> AMS_PlayerController::GetUnitManager() const
-{
-	MS_CHECK(Management);
-
-	return Management->GetUnitManager();
-}
-
-TObjectPtr<AMS_SceneManager> AMS_PlayerController::GetSceneManager() const
-{
-	MS_CHECK(Management);
-
-	return Management->GetSceneManager();
-}
-
-TObjectPtr<UMS_WidgetManager> AMS_PlayerController::GetWidgetManager() const
-{
-	MS_CHECK(Management);
-
-	return Management->GetWidgetManager();
-}
-
 void AMS_PlayerController::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);

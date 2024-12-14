@@ -21,10 +21,6 @@ public:
 
 	void InitManager();
 	
-	FORCEINLINE TObjectPtr<class UMS_TableManager> GetTableManager() { return TableManager; }
-	FORCEINLINE TObjectPtr<class UMS_WidgetManager> GetWidgetManager() { return WidgetManager; }
-	FORCEINLINE TObjectPtr<class UMS_UnitManager> GetUnitManager() { return UnitManager; }
-	FORCEINLINE TObjectPtr<class AMS_SceneManager> GetSceneManager() { return SceneManager; }
 private:
 
 	// Manager Property

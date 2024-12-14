@@ -104,11 +104,6 @@ void AMS_LevelScriptActorBase::BeginPlay()
 
 	PlayerController->RegisterManagement();
 	
-	UnitManager = PlayerController->GetUnitManager();
-	MS_CHECK(UnitManager.IsValid());
-	
-	SceneManager = PlayerController->GetSceneManager();
-	MS_CHECK(SceneManager);
 }
 
 // Called every frame
@@ -201,9 +196,7 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	MS_CHECK(UnitManager.IsValid());
-	
-	const TObjectPtr<UMS_UnitBase> Player = UnitManager->CreateUnit(Practice::DefaultCharacterIndex, UMS_BasePlayer::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation());
+	const TObjectPtr<UMS_UnitBase> Player = gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, UMS_BasePlayer::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation());
 	MS_CHECK(Player);
 
 	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacterBase())

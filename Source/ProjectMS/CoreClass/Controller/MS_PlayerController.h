@@ -36,10 +36,6 @@ public:
 	void RegisterManagement();
 
 	TObjectPtr<class AMS_CharacterBase> GetCharacterBase() const;
-	TObjectPtr<class UMS_TableManager> GetTableManager() const;
-	TObjectPtr<class UMS_UnitManager> GetUnitManager() const;
-	TObjectPtr<class AMS_SceneManager> GetSceneManager() const;
-	TObjectPtr<class UMS_WidgetManager> GetWidgetManager() const;
 	FORCEINLINE class UInputMappingContext* GetInputMappingContext() { return MappingContext; }
 
 private:

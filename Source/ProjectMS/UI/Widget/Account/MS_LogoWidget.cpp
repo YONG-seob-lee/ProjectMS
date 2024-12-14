@@ -36,19 +36,12 @@ void UMS_LogoWidget::OnAnimFinished(const FName& aAnimName)
 	}
 	else if(aAnimName == DefaultWidgetAnimation::DisAppearance)
 	{
-		const TObjectPtr<AMS_PlayerController> PlayerController = GetWorld()->GetFirstPlayerController<AMS_PlayerController>();
-		MS_CHECK(PlayerController);
-
-		PlayerController->RegisterManagement();
-
-		const TObjectPtr<AMS_SceneManager> SceneManager = PlayerController->GetSceneManager();
-		MS_CHECK(SceneManager);
 		
 		CREATE_SCENE_COMMAND(Command);
 		Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
 		Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
 		Command->SetNextWidget(UMS_AccountWidget::GetWidgetName());
-		SceneManager->RequestChangeScene(Command);
+		gSceneMng.RequestChangeScene(Command);
 	}
 }
 

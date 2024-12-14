@@ -177,17 +177,8 @@ void UMS_WidgetManager::RefreshContentWidget()
 }
 
 TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTypeName, bool bManaged, bool bAttachToRoot/* = true */)
-{
-	const TObjectPtr<UWorld> World = GetWorld();
-	MS_CHECK(World);
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = Cast<AMS_PlayerController>(World->GetFirstPlayerController());
-	MS_CHECK(PlayerController);
-	
-	const TWeakObjectPtr<UMS_TableManager> TableManager = PlayerController->GetTableManager();
-	MS_CHECK(TableManager.IsValid());
-	
-	const TObjectPtr<UMS_ResourceWidgetCacheTable> ResourceWidgetCache = Cast<UMS_ResourceWidgetCacheTable>(TableManager.Get()->GetCacheTable(EMS_TableDataType::ResourceWidget));
+{	
+	const TObjectPtr<UMS_ResourceWidgetCacheTable> ResourceWidgetCache = Cast<UMS_ResourceWidgetCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceWidget));
 	if(ResourceWidgetCache == nullptr)
 	{
 		return nullptr;
@@ -200,7 +191,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal(const FName& aTy
 		return nullptr;
 	}
 
-	const FString ResourcePath = TableManager.Get()->GetPath(EMS_TableDataType::BasePathBPFile, ResourceWidgetData->Path_File, true);
+	const FString ResourcePath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, ResourceWidgetData->Path_File, true);
 
 	const TObjectPtr<UMS_Widget> ResultWidget = bManaged ? CreateWidget_Internal_Managing(ResourcePath) : CreateWidget_Internal_NotManaging(ResourcePath);
 
