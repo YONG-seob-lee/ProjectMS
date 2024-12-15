@@ -3,16 +3,22 @@
 #include "Actor/Character/AICharacter/MS_AICharacter.h"
 #include "AI/AIController/MS_AIController.h"
 
+#include "AI/AIController/BehaviorTree/Blackboard/BlackboardKeyType/MS_BlackboardKeyTypeMap.h"
+
 UMS_BlackboardData::UMS_BlackboardData()
 {
     AddEntryAsObject(FName(TEXT("OwnerCharacter")), AMS_AICharacter::StaticClass());
     AddEntryAsObject(FName(TEXT("OwnerController")), AMS_AIController::StaticClass());
+
+    AddEntryAsMap(FName(TEXT("SubBehaviorTreeMap")));
 }
 
 void UMS_BlackboardData::AddEntryAsBool(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -25,7 +31,9 @@ void UMS_BlackboardData::AddEntryAsBool(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsInt(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -38,7 +46,9 @@ void UMS_BlackboardData::AddEntryAsInt(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsFloat(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -51,7 +61,9 @@ void UMS_BlackboardData::AddEntryAsFloat(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsString(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -64,7 +76,9 @@ void UMS_BlackboardData::AddEntryAsString(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsVector(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -78,7 +92,9 @@ void UMS_BlackboardData::AddEntryAsVector(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsRotator(const FName& aEntryName)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -92,7 +108,9 @@ void UMS_BlackboardData::AddEntryAsRotator(const FName& aEntryName)
 void UMS_BlackboardData::AddEntryAsObject(const FName& aEntryName, const TSubclassOf<UObject>& aObjectClass)
 {
     if (aEntryName.IsNone() == true)
+    {
         return;
+    }
 
     FBlackboardEntry BlackboardEntry = {};
     BlackboardEntry.EntryName = aEntryName;
@@ -100,4 +118,21 @@ void UMS_BlackboardData::AddEntryAsObject(const FName& aEntryName, const TSubcla
     UBlackboardKeyType_Object* ObjectKeyType = Cast<UBlackboardKeyType_Object>(BlackboardEntry.KeyType);
     ObjectKeyType->BaseClass = aObjectClass;
     Keys.Add(BlackboardEntry);
+}
+
+void UMS_BlackboardData::AddEntryAsMap(const FName& EntryName)
+{
+    if (EntryName.IsNone())
+    {
+        return;
+    }
+
+    FBlackboardEntry BlackboardEntry;
+    BlackboardEntry.EntryName = EntryName;
+
+    BlackboardEntry.KeyType = NewObject<UMS_BlackboardKeyTypeMap>(this, UMS_BlackboardKeyTypeMap::StaticClass(), FName(*FString::Printf(TEXT("BlackboardKeyType_%s"), *EntryName.ToString())));
+    if (BlackboardEntry.KeyType)
+    {
+        Keys.Add(BlackboardEntry);
+    }
 }

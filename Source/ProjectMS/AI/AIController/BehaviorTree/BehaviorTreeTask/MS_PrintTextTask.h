@@ -2,14 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_BehaviorTreeTask.h"
-#include "MS_ExecuteSubBehaviorTreeTask.generated.h"
+#include "MS_PrintTextTask.generated.h"
 
-UCLASS() class PROJECTMS_API UMS_ExecuteSubBehaviorTreeTask : public UMS_BehaviorTreeTask
+UCLASS() class PROJECTMS_API UMS_PrintTextTask : public UMS_BehaviorTreeTask
 {
 	GENERATED_BODY()
-	
+
 public:
-	UMS_ExecuteSubBehaviorTreeTask();
+	UMS_PrintTextTask();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual EBTNodeResult::Type AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
@@ -19,11 +19,8 @@ public:
 
 	// Property
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString BehaviorTreeName = {};
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FBlackboardKeySelector SubBehaviorTreeKey = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString StringToPrint = {};
 
-	// Instance
-public:
-	UBehaviorTree* SubBehaviorTree = nullptr;
-	bool IsSubBehaviorTreeRunning = false;
+	FTimerHandle TimerHandle;
+	void StopBehaviorTree(UBehaviorTreeComponent* OwnerComp);
 };

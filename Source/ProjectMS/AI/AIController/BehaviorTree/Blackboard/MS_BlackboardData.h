@@ -11,6 +11,9 @@ UCLASS(BlueprintType, Blueprintable, EditInlineNew) class PROJECTMS_API UMS_Blac
 	
 public:
 	UMS_BlackboardData();
+	
+public:
+	void AddEntryAsMap(const FName& EntryName);
 
 protected:
 	void AddEntryAsBool(const FName& aEntryName);

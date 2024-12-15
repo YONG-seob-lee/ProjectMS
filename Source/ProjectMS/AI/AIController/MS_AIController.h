@@ -14,6 +14,7 @@ UCLASS() class PROJECTMS_API AMS_AIController : public AAIController
 public:
 	AMS_AIController();
 
+	virtual void PostInitializeComponents() override;
 	virtual void OnPossess(APawn* aInPawn) override;
 	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
@@ -22,7 +23,7 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void ExecuteBehaviorTree();
 	UFUNCTION(BlueprintCallable) virtual void TerminateBehaviorTree();
 	UFUNCTION() virtual void SynchronizeBlackboard();
-
+	UFUNCTION() virtual void SynchronizeSubBehaviorTreeToBlackboard();
 
 	// Component
 public:
@@ -32,6 +33,7 @@ public:
 
 	// Instance
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* BehaviorTree = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* DefaultBehaviorTree = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FString, UBehaviorTree*> SubBehaviorTreeMap = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBlackboardData* BlackboardData = nullptr;
 };
