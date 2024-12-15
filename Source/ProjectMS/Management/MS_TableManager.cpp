@@ -7,6 +7,7 @@
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathBPFile.h"
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathDirectory.h"
 #include "ProjectMS/Utility/MS_Define.h"
+#include "Table/Caches/MS_CommonCacheTable.h"
 #include "Table/Caches/MS_LevelCacheTable.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Table/Caches/MS_ResourceWidgetCacheTable.h"
@@ -245,6 +246,7 @@ void UMS_TableManager::MakeTableStructData()
 	ResetData();
 
 	// [Add TableData] CreateTableData(EnumType, RowDataPath);
+	CreateTableData(EMS_TableDataType::Common, TEXT("/Game/TableData/Common"), UMS_CommonCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::BasePathDirectory, TEXT("/Game/TableData/BasePath_Directory"));
 	CreateTableData(EMS_TableDataType::BasePathBPFile, TEXT("/Game/TableData/BasePath_BP_File"));
 	CreateTableData(EMS_TableDataType::BasePathImgFile, TEXT("/Game/TableData/BasePath_Img_File"));

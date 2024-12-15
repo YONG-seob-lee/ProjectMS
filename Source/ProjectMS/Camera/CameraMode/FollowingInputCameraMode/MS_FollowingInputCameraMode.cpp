@@ -1,14 +1,8 @@
 #include "Camera/CameraMode/FollowingInputCameraMode/MS_FollowingInputCameraMode.h"
 
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "InputAction.h"
-
+#include "MS_InputManager.h"
 #include "Management/MS_PlayerCameraManager.h"
-#include "CoreClass/Controller/MS_PlayerController.h"
-#include "Camera/ViewCamera/MS_ViewCamera.h"
-
-#include "Management/MS_TableManager.h"
 #include "Data/Table/RowBase/MS_InputActionData.h"
 
 UMS_FollowingInputCameraMode::UMS_FollowingInputCameraMode()
@@ -19,22 +13,16 @@ void UMS_FollowingInputCameraMode::ActivateMode()
 {
 	Super::ActivateMode();
 
-	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(CameraManager->PCOwner);
-	MS_CHECK(PlayerController);
-
-	PlayerController->OnPointerGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
-	PlayerController->OnPinchActionDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
-	PlayerController->OnMouseRightButtonGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
+	gInputMng.OnPointerGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
+	gInputMng.OnPinchActionDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
+	gInputMng.OnMouseRightButtonGlideDelegate.AddDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
 }
 
 void UMS_FollowingInputCameraMode::DeactivateMode()
 {
 	Super::DeactivateMode();
 
-	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(CameraManager->PCOwner);
-	MS_CHECK(PlayerController);
-
-	PlayerController->OnPointerGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
-	PlayerController->OnPinchActionDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
-	PlayerController->OnMouseRightButtonGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
+	gInputMng.OnPointerGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DollyAndTruck);
+	gInputMng.OnPinchActionDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::ZoomCamera);
+	gInputMng.OnMouseRightButtonGlideDelegate.RemoveDynamic(CameraManager, &AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera);
 }

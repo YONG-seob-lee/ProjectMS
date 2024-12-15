@@ -3,6 +3,7 @@
 
 #include "MS_Management.h"
 
+#include "MS_InputManager.h"
 #include "MS_ModeManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "MS_PlayerCameraManager.h"
@@ -35,6 +36,10 @@ void UMS_Management::InitManager()
 	TableManager = MS_NewObject<UMS_TableManager>(this);
 	MS_CHECK(TableManager);
 	TableManager->Initialize();
+
+	InputManager = MS_NewObject<UMS_InputManager>(this);
+	MS_CHECK(InputManager);
+	InputManager->Initialize();
 	
 	AMS_PlayerController* PlayerController = Cast<AMS_PlayerController>(GetOuter());
 	MS_CHECK(PlayerController);

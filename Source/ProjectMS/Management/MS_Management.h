@@ -22,11 +22,13 @@ public:
 	void InitManager();
 	
 private:
-
 	// Manager Property
 	UPROPERTY()
 	TObjectPtr<class UMS_TableManager> TableManager = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMS_InputManager> InputManager = nullptr;
+	
 	UPROPERTY()
 	TObjectPtr<class AMS_SceneManager> SceneManager = nullptr;
 
