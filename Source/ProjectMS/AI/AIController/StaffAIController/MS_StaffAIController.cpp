@@ -1,6 +1,6 @@
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 
-#include "AI/AIController/StaffAIController/Blackboard/MS_StaffBlackboardData.h"
+#include "AI/AIController/StaffAIController/BehaviorTree/Blackboard/MS_StaffBlackboardData.h"
 
 AMS_StaffAIController::AMS_StaffAIController()
 {

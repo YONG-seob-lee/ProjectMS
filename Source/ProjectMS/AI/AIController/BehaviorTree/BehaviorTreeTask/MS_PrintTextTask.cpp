@@ -9,20 +9,6 @@ EBTNodeResult::Type UMS_PrintTextTask::ExecuteTask(UBehaviorTreeComponent& Owner
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	if (OwnerComp.GetWorld())
-	{
-		if (TimerHandle.IsValid() == true)
-			return Result;
-
-		OwnerComp.GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle,
-			FTimerDelegate::CreateUObject(this, &UMS_PrintTextTask::StopBehaviorTree, &OwnerComp),
-			10.0f,
-			false
-		);
-	}
-
-
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("%s"), *StringToPrint));
 
 	return Result;
@@ -48,16 +34,4 @@ void UMS_PrintTextTask::OnMessage(UBehaviorTreeComponent& OwnerComp, uint8* Node
 void UMS_PrintTextTask::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult)
 {
 	Super::OnTaskFinished(OwnerComp, NodeMemory, TaskResult);
-}
-
-void UMS_PrintTextTask::StopBehaviorTree(UBehaviorTreeComponent* OwnerComp)
-{
-	if (OwnerComp)
-	{
-		// Behavior Tree ÁßÁö
-		OwnerComp->StopTree(EBTStopMode::Safe);
-		TimerHandle.Invalidate();
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Behavior Tree Stopped!"));
-	}
-
 }
