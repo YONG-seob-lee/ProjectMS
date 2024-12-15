@@ -11,4 +11,5 @@ UCLASS() class PROJECTMS_API AMS_StaffAIController : public AMS_AIController
 public:
 	AMS_StaffAIController();
 
+	virtual void BeginPlay() override;
 };

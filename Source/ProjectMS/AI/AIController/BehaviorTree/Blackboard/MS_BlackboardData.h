@@ -2,12 +2,22 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BlackboardData.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
 #include "MS_BlackboardData.generated.h"
 
-UCLASS() class PROJECTMS_API UMS_BlackboardData : public UBlackboardData
+UCLASS(BlueprintType, Blueprintable, EditInlineNew) class PROJECTMS_API UMS_BlackboardData : public UBlackboardData
 {
 	GENERATED_BODY()
 	
 public:
 	UMS_BlackboardData();
+
+protected:
+	void AddEntryAsBool(const FName& aEntryName);
+	void AddEntryAsInt(const FName& aEntryName);
+	void AddEntryAsFloat(const FName& aEntryName);
+	void AddEntryAsString(const FName& aEntryName);
+	void AddEntryAsVector(const FName& aEntryName);
+	void AddEntryAsRotator(const FName& aEntryName);
+	void AddEntryAsObject(const FName& aEntryName, const TSubclassOf<UObject>& aObjectClass);
 };
