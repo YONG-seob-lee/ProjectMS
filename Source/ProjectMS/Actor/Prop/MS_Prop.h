@@ -20,6 +20,7 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
 	
 	// Property :: Getter
 	EMS_PropType GetPropType() const { return PropType; }
@@ -31,6 +32,10 @@ public:
 	class UMeshComponent* GetMeshComponent() const { return MeshComponent; }
 
 	TArray<class UMS_GridBoxComponent*> GetGridBoxComponents() const { return GridBoxComponents; }
+
+	
+	// Zone Data :: Setter
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aZoneGridPosition);
 
 	
 protected:
@@ -48,4 +53,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMS_GridBoxComponent*> GridBoxComponents;
+
+	
+	// Zone Data
+	UPROPERTY()
+	TWeakObjectPtr<class AMS_Zone> OwnerZone;
+
+	UPROPERTY()
+	FIntVector2 ZoneGridPosition;
 };

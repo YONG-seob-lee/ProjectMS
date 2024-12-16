@@ -20,6 +20,12 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	
 protected:
 	virtual void ParsingDefaultPropDatas();
+
+	
+protected:
+	UPROPERTY(EditAnywhere)
+	TMap<int32, TObjectPtr<class AMS_Zone>> Zones;
 };

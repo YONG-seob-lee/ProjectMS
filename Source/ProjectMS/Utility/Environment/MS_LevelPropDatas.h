@@ -27,6 +27,52 @@ enum class EMS_PropSpaceType : uint8
 	FreeSpace = 2,
 };
 
+
+// GridDatas
+USTRUCT(BlueprintType)
+struct FMS_GridData
+{
+	GENERATED_BODY()
+
+public:
+	FMS_GridData()
+	: ZoneGridPosition(FIntVector2::ZeroValue), WorldGridPosition(FIntVector2::ZeroValue)
+	{
+	}
+
+	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aZoneGridPosition, FIntVector2 aWorldGridPosition)
+		: OwnerZone(aOwnerZone), ZoneGridPosition(aZoneGridPosition), WorldGridPosition(aWorldGridPosition)
+	{
+	}
+	
+	virtual ~FMS_GridData()
+	{
+	}
+
+	TWeakObjectPtr<AActor> GetOwnerZone() const { return OwnerZone; }
+	const FIntVector2& GetZoneGridPosition() const { return ZoneGridPosition; }
+	const FIntVector2& GetWorldGridPosition() const { return WorldGridPosition; }
+
+	
+private:
+	UPROPERTY()
+	TWeakObjectPtr<AActor> OwnerZone;
+	
+	UPROPERTY()
+	FIntVector2 ZoneGridPosition;
+
+	UPROPERTY()
+	FIntVector2 WorldGridPosition;
+
+public:
+	UPROPERTY()
+	TWeakObjectPtr<AActor> Floor;
+
+	UPROPERTY()
+	TWeakObjectPtr<AActor> Object;
+};
+
+
 // LevelPropDatas
 USTRUCT(BlueprintType)
 struct FMS_LevelPropDatas

@@ -7,7 +7,7 @@
 #include "MS_InMarketLevelScriptActor.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_InMarketLevelScriptActor : public AMS_ConstructibleLevelScriptActorBase_Indoor
+class PROJECTMS_API AMS_InMarketLevelScriptActor : public AMS_ConstructibleLevelScriptActorBase
 {
 	GENERATED_BODY()
 

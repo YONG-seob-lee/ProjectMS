@@ -4,6 +4,7 @@
 #include "Prop/MS_Prop.h"
 #include "MS_Prop_Floor.generated.h"
 
+
 UCLASS()
 class PROJECTMS_API AMS_Prop_Floor : public AMS_Prop
 {
@@ -17,4 +18,13 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aZoneGridPosition) override;
+
+protected:
+	// Component
+#if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UWidgetComponent> WidgetComponent_ShowGridNum;
+#endif
 };
