@@ -24,6 +24,9 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 
+	virtual void OnRegisteredWithLevelPropDatas(FIntVector aGridPosition);
+
+	
 	// Property :: Getter
 	FVector GetGridLocationOffset() const { return GridLocationOffset; }
 	
@@ -37,4 +40,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 	EMS_PropSpaceType PropSpaceType;
+
+	
+	// Cache
+	UPROPERTY()
+	FIntVector GridPosition;
 };
