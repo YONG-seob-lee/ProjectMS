@@ -40,6 +40,8 @@ public:
 	void ShowToastMessage(const FString& aMessage) const;
 	
 	void ShowRotateWidget() const;
+	void HideRotateWidget() const;
+	
 	void ShowModalWidget(FMS_ModalData* aModalData, bool bShow = true) const;
 
 	FMS_CreateWidget OnCreateWidget;

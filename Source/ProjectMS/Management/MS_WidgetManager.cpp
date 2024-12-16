@@ -158,6 +158,10 @@ void UMS_WidgetManager::ShowRotateWidget() const
 	}
 }
 
+void UMS_WidgetManager::HideRotateWidget() const
+{
+}
+
 void UMS_WidgetManager::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
 {
 	RootWidget->ShowModalWidget(aModalData, bShow);

@@ -12,43 +12,58 @@ void UMS_ModeNameWidget::NativeConstruct()
 
 	SetModeName(TEXT("Normal"));
 	
-	gModeMng.OnSetMode.AddUObject(this, &UMS_ModeNameWidget::OnSetMode);
+	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_ModeNameWidget::OnChangeMode);
 }
 
-void UMS_ModeNameWidget::OnSetMode(uint8 aModeType)
+void UMS_ModeNameWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
-	switch(static_cast<EMS_ModeType>(aModeType))
+	FString ModeStateName;
+	FString ControllerModeName;
+	
+	switch(aModeState)
 	{
-		case(EMS_ModeType::Normal):
+	case EMS_ModeState::None:
 		{
-			SetModeName(TEXT("Normal"));
+			ModeStateName = FString("None");
 			break;
 		}
-		case(EMS_ModeType::Rotate):
+	case EMS_ModeState::Construct:
 		{
-			SetModeName(TEXT("Rotate"));
+			ModeStateName = FString("Construct");
 			break;
 		}
-		case(EMS_ModeType::Construct):
+	case EMS_ModeState::StaffManagement:
 		{
-			SetModeName(TEXT("Construct"));
+			ModeStateName = FString("Staff");
 			break;
 		}
-		case(EMS_ModeType::StaffManagement):
+	case(EMS_ModeState::CustomerManagement):
 		{
-			SetModeName(TEXT("Staff"));	
-			break;
-		}
-		case(EMS_ModeType::CustomerManagement):
-		{
-			SetModeName(TEXT("Customer"));
+			ModeStateName = FString("Customer");
 			break;		
 		}
-		default:
+	default:
 		{
+			ModeStateName = FString("Error");
 			break;
 		}
 	}
+
+	switch(aControllerModeType)
+	{
+	case EMS_ControllerModeType::Normal:
+		{
+			ControllerModeName = FString("Normal");
+			break;
+		}
+	case EMS_ControllerModeType::Rotate:
+		{
+			ControllerModeName = FString("Rotate");
+			break;
+		}
+	}
+	
+	SetModeName(ModeStateName + " | " + ControllerModeName);
 }
 
 void UMS_ModeNameWidget::SetModeName(const FString& aModeName) const

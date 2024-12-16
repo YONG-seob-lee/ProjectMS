@@ -23,6 +23,9 @@ enum class EMS_TableDataType : uint8
 	Level							UMETA(DisplayName = "Level"),
 	PlayerStatus					UMETA(DisplayName = "PlayerStatus"),
 	Enemy							UMETA(DisplayName = "Enemy"),
+	
+	Env_Zone						UMETA(DisplayName = "Env_Zone"),
+	Env_Prop_FloorTile				UMETA(DisplayName = "Env_Prop_FloorTile"),
 };
 
 USTRUCT()
