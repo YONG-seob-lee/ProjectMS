@@ -27,13 +27,14 @@ void UMS_TownWidget::NativeConstruct()
 void UMS_TownWidget::OnAnimFinished(const FName& aAnimName)
 {
 	Super::OnAnimFinished(aAnimName);
-
+	
 	if(aAnimName == ModePanelAnimation::SetMode)
 	{
-		GetWorld()->GetTimerManager().SetTimer(OnSetTimerHandle, [this]
-		{
-			PlayAnimationByName(ModePanelAnimation::UnSetMode);
-		}, 3.f, false);	
+		PlayAnimationByName(ModePanelAnimation::IdleMode);
+	}
+	else if(aAnimName == ModePanelAnimation::IdleMode)
+	{
+		PlayAnimationByName(ModePanelAnimation::UnSetMode);
 	}
 	else if(aAnimName == ModePanelAnimation::UnSetMode)
 	{
