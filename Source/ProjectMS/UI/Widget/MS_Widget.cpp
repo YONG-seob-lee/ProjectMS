@@ -4,8 +4,8 @@
 #include "MS_Widget.h"
 
 #include "MovieScene.h"
-#include "MS_WidgetManager.h"
 #include "Animation/WidgetAnimation.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
 
 UMS_Widget::UMS_Widget(const FObjectInitializer& aObjectInitializer) : Super(aObjectInitializer)

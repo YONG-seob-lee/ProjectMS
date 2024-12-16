@@ -1,12 +1,13 @@
 ﻿#include "MS_PlayerController.h"
 
+#include "MS_ManagementClient.h"
+#include "Manager_Client/MS_InputManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
+
 #if WITH_EDITOR
 #include "LevelEditor.h"
 #endif
 
-#include "MS_InputManager.h"
-#include "Management/MS_UnitManager.h"
-#include "Management/MS_PlayerCameraManager.h"
 
 AMS_PlayerController::AMS_PlayerController()
 {
@@ -20,11 +21,16 @@ AMS_PlayerController::AMS_PlayerController()
 	bEnableTouchOverEvents = true;
 }
 
+void AMS_PlayerController::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	RegisterManagement();
+}
+
 void AMS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	RegisterManagement();
 
 	SetupInputComponent();
 }
@@ -43,7 +49,7 @@ void AMS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
-	if(Management)
+	if(ManagementClient)
 	{
 		gInputMng.SetupInputComponent(InputComponent, GetLocalPlayer());
 	}
@@ -52,12 +58,12 @@ void AMS_PlayerController::SetupInputComponent()
 void AMS_PlayerController::RegisterManagement()
 {
 	// BeginPlay
-	if(Management)
+	if(ManagementClient)
 	{
 		return;
 	}
 	
-	Management = NewObject<UMS_Management>(this);
-	MS_CHECK(Management);
-	Management->InitManager();
+	ManagementClient = NewObject<UMS_ManagementClient>(this);
+	MS_CHECK(ManagementClient);
+	ManagementClient->Initialize();
 }

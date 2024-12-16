@@ -1,9 +1,9 @@
 #include "Camera/CameraMode/FollowingInputCameraMode/MS_FollowingInputCameraMode.h"
 
 #include "EnhancedInputSubsystems.h"
-#include "MS_InputManager.h"
-#include "Management/MS_PlayerCameraManager.h"
 #include "Data/Table/RowBase/MS_InputActionData.h"
+#include "Manager_Client/MS_InputManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 
 UMS_FollowingInputCameraMode::UMS_FollowingInputCameraMode()
 {

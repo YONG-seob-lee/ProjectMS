@@ -3,9 +3,10 @@
 
 #include "MS_LobbyWidget.h"
 
-#include "MS_PlayerCameraManager.h"
-#include "MS_SceneManager.h"
+#include "MS_Define.h"
 #include "Button/MS_Button.h"
+#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Widget/Town/MS_TownWidget.h"
 
 void UMS_LobbyWidget::NativeConstruct()

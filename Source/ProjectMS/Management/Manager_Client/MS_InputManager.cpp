@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_TableManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 
 namespace InputInstancePath

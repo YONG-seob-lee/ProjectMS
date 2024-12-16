@@ -4,8 +4,8 @@
 #include "MS_ModalWidget.h"
 
 #include "MS_InModalWidget.h"
-#include "MS_WidgetManager.h"
 #include "Button/MS_Button.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ModalWidget::NativeConstruct()
 {

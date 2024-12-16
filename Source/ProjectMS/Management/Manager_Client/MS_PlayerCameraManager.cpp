@@ -1,4 +1,4 @@
-﻿#include "Management/MS_PlayerCameraManager.h"
+﻿#include "Management/Manager_Client/MS_PlayerCameraManager.h"
 
 #include "Camera/CameraModifier_CameraShake.h"
 #include "Kismet/GameplayStatics.h"

@@ -4,8 +4,8 @@
 #include "Level/LevelScriptActors/MS_PersistentLevelScriptActor.h"
 
 #include "MS_Define.h"
-#include "MS_SceneManager.h"
-#include "MS_WidgetManager.h"
+#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Persistent/MS_PersistentWidget.h"
 
 // Sets default values
@@ -19,7 +19,9 @@ AMS_PersistentLevelScriptActor::AMS_PersistentLevelScriptActor()
 void AMS_PersistentLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	gWidgetMng.CreateRoot();
+	gSceneMng.InitRootWidget();
 	gWidgetMng.Create_Widget(UMS_PersistentWidget::GetWidgetName());
 	
 	CREATE_SCENE_COMMAND(Command);

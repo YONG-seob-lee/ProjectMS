@@ -3,8 +3,8 @@
 
 #include "MS_ModeNameWidget.h"
 
-#include "MS_ModeManager.h"
 #include "Components/TextBlock.h"
+#include "Manager_Both/MS_ModeManager.h"
 
 void UMS_ModeNameWidget::NativeConstruct()
 {

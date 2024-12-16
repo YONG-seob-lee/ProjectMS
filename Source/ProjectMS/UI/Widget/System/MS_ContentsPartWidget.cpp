@@ -5,9 +5,8 @@
 
 #include "MS_ContentButtonWidget.h"
 #include "MS_Define.h"
-#include "MS_SceneManager.h"
-#include "MS_TableManager.h"
-#include "MS_WidgetManager.h"
+#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/WidgetComponent/MS_HorizontalBox.h"
 
 void UMS_ContentsPartWidget::NativeConstruct()

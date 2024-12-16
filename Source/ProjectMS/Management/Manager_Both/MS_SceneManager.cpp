@@ -3,39 +3,46 @@
 
 #include "MS_SceneManager.h"
 
+#include "MS_TableManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_LevelCacheTable.h"
 #include "Kismet/GameplayStatics.h"
-#include "MS_WidgetManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Utility/MS_Define.h"
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
 #include "Widget/MS_RootWidget.h"
 
-AMS_SceneManager::AMS_SceneManager()
+UMS_SceneManager::UMS_SceneManager()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	SceneManager = this;
 }
 
-void AMS_SceneManager::PostInitializeComponents()
+void UMS_SceneManager::Initialize()
 {
-	Super::PostInitializeComponents();
+	Super::Initialize();
 	
 	PersistentLevelWorld = GetWorld();
 
 	LevelTable = Cast<UMS_LevelCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Level));
 	MS_CHECK(LevelTable);
-
-	RootWidget = gWidgetMng.GetRootWidget();
 }
 
-void AMS_SceneManager::Tick(float DeltaSeconds)
+void UMS_SceneManager::PostInitialize()
+{
+	Super::PostInitialize();
+}
+
+void UMS_SceneManager::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 }
 
-void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
+void UMS_SceneManager::InitRootWidget()
+{
+	RootWidget = gWidgetMng.GetRootWidget();
+}
+
+void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
 {
 	MS_CHECK(aCommand);
 	NewCommand = aCommand;
@@ -45,7 +52,7 @@ void AMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	StartFade();
 }
 
-void AMS_SceneManager::StartFade()
+void UMS_SceneManager::StartFade()
 {
 	MS_CHECK(NewCommand);
 
@@ -59,10 +66,10 @@ void AMS_SceneManager::StartFade()
 	
 	RootWidget->SetContentWidgetRender(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle());
 	
-	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &AMS_SceneManager::ProcessFade, 0.01f, true);
+	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &UMS_SceneManager::ProcessFade, 0.01f, true);
 }
 
-void AMS_SceneManager::ProcessFade()
+void UMS_SceneManager::ProcessFade()
 {
 	FadeProgressRate += 0.01f;
 
@@ -81,7 +88,7 @@ void AMS_SceneManager::ProcessFade()
 	}
 }
 
-void AMS_SceneManager::EndFade()
+void UMS_SceneManager::EndFade()
 {
 	LevelChangeStep = LevelChangeStep < EMS_FadeStep::Loading ? EMS_FadeStep::ExitFadeOut : EMS_FadeStep::ExitFadeIn;
 	GetWorld()->GetTimerManager().ClearTimer(FadeTimerHandle);
@@ -122,7 +129,7 @@ void AMS_SceneManager::EndFade()
 	}
 }
 
-void AMS_SceneManager::RequestLevel()
+void UMS_SceneManager::RequestLevel()
 {
 	MS_CHECK(NewCommand);
 
@@ -133,7 +140,7 @@ void AMS_SceneManager::RequestLevel()
 	}
 }
 
-void AMS_SceneManager::HandleUnloadLevel(const FName& aLevelName)
+void UMS_SceneManager::HandleUnloadLevel(const FName& aLevelName)
 {
 	LevelChangeStep = EMS_FadeStep::Loading;
 	FLatentActionInfo LatentActionInfo = {};
@@ -144,15 +151,15 @@ void AMS_SceneManager::HandleUnloadLevel(const FName& aLevelName)
 	UGameplayStatics::UnloadStreamLevel(PersistentLevelWorld, aLevelName, LatentActionInfo, false);
 }
 
-void AMS_SceneManager::HandleLevelInstanceLoading()
+void UMS_SceneManager::HandleLevelInstanceLoading()
 {
 }
 
-void AMS_SceneManager::HandleLevelInstanceUnLoading()
+void UMS_SceneManager::HandleLevelInstanceUnLoading()
 {
 }
 
-void AMS_SceneManager::HandleLoadLevel()
+void UMS_SceneManager::HandleLoadLevel()
 {
 	MS_CHECK(LevelTable);
 
@@ -182,7 +189,7 @@ void AMS_SceneManager::HandleLoadLevel()
 	UGameplayStatics::LoadStreamLevel(PersistentLevelWorld, LevelName, true, false, LatentActionInfo);
 }
 
-void AMS_SceneManager::HandleLoadingLevel()
+void UMS_SceneManager::HandleLoadingLevel()
 {
 	MS_CHECK(NewCommand);
 	
@@ -206,7 +213,7 @@ void AMS_SceneManager::HandleLoadingLevel()
 	StartFade();
 }
 
-AMS_SceneManager* AMS_SceneManager::GetInstance()
+UMS_SceneManager* UMS_SceneManager::GetInstance()
 {
 	return SceneManager;
 }

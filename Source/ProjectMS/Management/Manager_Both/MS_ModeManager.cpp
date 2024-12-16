@@ -4,7 +4,7 @@
 #include "MS_ModeManager.h"
 
 #include "MS_Define.h"
-#include "MS_WidgetManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "StateMachine/MS_StateMachine.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 

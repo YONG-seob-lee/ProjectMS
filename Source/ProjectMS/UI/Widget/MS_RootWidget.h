@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Widget.h"
-#include "MS_SceneManager.h"
+#include "Command/SceneCommand/MS_SceneCommand.h"
 #include "MS_RootWidget.generated.h"
 
 /**

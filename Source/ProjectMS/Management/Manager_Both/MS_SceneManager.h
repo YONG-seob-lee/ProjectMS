@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MS_ManagerBase.h"
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
 #include "MS_SceneManager.generated.h"
 
@@ -31,16 +32,18 @@ enum class EMS_FadeStep
  * 
  */
 UCLASS()
-class PROJECTMS_API AMS_SceneManager : public AActor
+class PROJECTMS_API UMS_SceneManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 public:
-	AMS_SceneManager();
-	
-	virtual void PostInitializeComponents() override;
+	UMS_SceneManager();
+	virtual void Initialize() override;
+	virtual void PostInitialize() override;
 	virtual void Tick(float DeltaSeconds) override;
+	void InitRootWidget();
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
+
 private:
 	void StartFade();
 	void ProcessFade();
@@ -81,8 +84,8 @@ private:
 	TObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
 
 public:
-	inline static TObjectPtr<AMS_SceneManager> SceneManager = nullptr;
-	static AMS_SceneManager* GetInstance();
+	inline static TObjectPtr<UMS_SceneManager> SceneManager = nullptr;
+	static UMS_SceneManager* GetInstance();
 	
-#define gSceneMng (*AMS_SceneManager::GetInstance())
+#define gSceneMng (*UMS_SceneManager::GetInstance())
 };

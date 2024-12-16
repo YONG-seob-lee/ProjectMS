@@ -47,6 +47,7 @@ public:
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
+	void CreateRoot();
 	void AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget);
 	void RefreshContentWidget();
 	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }

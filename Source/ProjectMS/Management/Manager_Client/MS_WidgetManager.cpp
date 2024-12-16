@@ -7,6 +7,7 @@
 #include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Data/Table/RowBase/MS_ResourceWidget.h"
 #include "Engine/AssetManager.h"
+#include "Manager_Both/MS_TableManager.h"
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"
 #include "Widget/MS_RootWidget.h"
@@ -24,8 +25,6 @@ void UMS_WidgetManager::BuiltInInitialize()
 void UMS_WidgetManager::Initialize()
 {
 	Super::Initialize();
-
-	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
 }
 
 void UMS_WidgetManager::PostInitialize()
@@ -165,6 +164,11 @@ void UMS_WidgetManager::HideRotateWidget() const
 void UMS_WidgetManager::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
 {
 	RootWidget->ShowModalWidget(aModalData, bShow);
+}
+
+void UMS_WidgetManager::CreateRoot()
+{
+	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
 }
 
 void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget)

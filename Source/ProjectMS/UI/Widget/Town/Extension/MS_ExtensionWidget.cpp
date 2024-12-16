@@ -4,10 +4,10 @@
 #include "MS_ExtensionWidget.h"
 
 #include "MS_ExtensionButtonWidget.h"
-#include "MS_ModeManager.h"
-#include "MS_WidgetManager.h"
 #include "Components/CanvasPanel.h"
 #include "Components/VerticalBoxSlot.h"
+#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/WidgetComponent/MS_VerticalBox.h"
 
 void UMS_ExtensionWidget::NativeConstruct()

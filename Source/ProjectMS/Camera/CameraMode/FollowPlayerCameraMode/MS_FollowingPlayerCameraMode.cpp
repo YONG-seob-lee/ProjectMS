@@ -2,10 +2,10 @@
 
 #include "Utility/MS_Define.h"
 
-#include "Management/MS_PlayerCameraManager.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
 
 #include "GameFramework/PlayerController.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 
 UMS_FollowingPlayerCameraMode::UMS_FollowingPlayerCameraMode()
 {

@@ -8,7 +8,7 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "LevelInstance/LevelInstanceActor.h"
-#include "Management/MS_UnitManager.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Unit/MS_BasePlayer.h"
 #include "Utility/MS_Define.h"

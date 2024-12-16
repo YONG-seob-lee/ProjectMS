@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "ProjectMS/Management/MS_Management.h"
+#include "ProjectMS/Management/MS_ManagementBase.h"
 #include "ProjectMS/Unit/MS_UnitBase.h"
 #include "MS_PlayerController.generated.h"
 
@@ -11,6 +11,8 @@ UCLASS() class PROJECTMS_API AMS_PlayerController : public APlayerController
 
 public:
 	AMS_PlayerController();
+	virtual void PostInitializeComponents() override;
+	
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float aDeltaTime) override;
@@ -24,5 +26,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
 	UPROPERTY()
-	TObjectPtr<UMS_Management> Management = nullptr;
+	TObjectPtr<class UMS_ManagementClient> ManagementClient = nullptr;
 };

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Command/SceneCommand/MS_SceneCommand.h"
-#include "Management/MS_TableManager.h"
+#include "Management/Manager_Both/MS_TableManager.h"
 //#include "MS_Define.generated.h"
 
 /**

@@ -13,4 +13,15 @@ UCLASS()
 class PROJECTMS_API AMS_GameState : public AGameState
 {
 	GENERATED_BODY()
+public:
+
+protected:
+	virtual void PostInitializeComponents() override;
+	virtual void BeginPlay() override;
+	
+private:
+	void RegisterManagement();
+	
+	UPROPERTY()
+	TObjectPtr<class UMS_ManagementBoth> ManagementBoth = nullptr;
 };
