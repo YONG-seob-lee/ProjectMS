@@ -11,6 +11,7 @@ enum class EMS_ControllerModeType : uint8;
 
 namespace ModePanelAnimation
 {
+	const FName IdleMode = FName(TEXT("Idle"));
 	const FName SetMode = FName(TEXT("SetMode"));
 	const FName UnSetMode = FName(TEXT("UnSetMode"));
 }
@@ -28,7 +29,7 @@ public:
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 private:
 	void OnClickedDefaultButton();
-	void OnChangeMode(EMS_ModeState aMode, EMS_ControllerModeType);
+	void OnSetMode(uint8 aMode);
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ContentsPartWidget> CPP_ContentsPart = nullptr;

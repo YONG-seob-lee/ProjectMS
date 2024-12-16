@@ -42,6 +42,7 @@ void UMS_Widget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachT
 
 void UMS_Widget::FinishWidget()
 {
+	StopAllAnimations();
 }
 
 void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
