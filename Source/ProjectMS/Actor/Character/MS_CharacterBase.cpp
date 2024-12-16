@@ -29,8 +29,6 @@ void AMS_CharacterBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 
 	const TObjectPtr<UMS_UnitStateBase> UnitStateBase = Cast<UMS_UnitStateBase>(Unit->GetCurrentUnitState());
 	MS_CHECK(UnitStateBase);
-
-	UnitStateBase->SetupPlayerInputComponent(aPlayerInputComponent);
 }
 
 void AMS_CharacterBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine)
