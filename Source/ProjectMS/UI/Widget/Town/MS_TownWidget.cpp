@@ -11,7 +11,7 @@ void UMS_TownWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	gModeMng.OnSetMode.AddUObject(this, &UMS_TownWidget::OnSetMode);
+	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_TownWidget::OnChangeMode);
 
 	PlayAnimationByName(ModePanelAnimation::SetMode);
 
@@ -46,7 +46,7 @@ void UMS_TownWidget::OnClickedDefaultButton()
 	gWidgetMng.ShowToastMessage(TEXT(""));
 }
 
-void UMS_TownWidget::OnSetMode(uint8 aMode)
+void UMS_TownWidget::OnChangeMode(EMS_ModeState aMode, EMS_ControllerModeType)
 {
 	if(IsShowModePanel == true)
 	{

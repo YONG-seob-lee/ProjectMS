@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_ModeManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_ExtensionButtonWidget.generated.h"
 
 /**
  * 
  */
+enum class EMS_ModeState : uint8;
+
 UCLASS()
 class PROJECTMS_API UMS_ExtensionButtonWidget : public UMS_Widget
 {
@@ -19,10 +20,13 @@ public:
 	
 	virtual void NativeConstruct() override;
 
-	FORCEINLINE void SetModeType(EMS_ModeType aMode) { Mode = aMode; }
+	FORCEINLINE void SetModeType(EMS_ModeState aModeState);
+
+	
 private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ExtensionButton = nullptr;
 
-	EMS_ModeType Mode = EMS_ModeType::Normal;
+	UPROPERTY()
+	EMS_ModeState ModeState;
 };

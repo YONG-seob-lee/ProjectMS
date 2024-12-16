@@ -9,6 +9,9 @@
 /**
  * 
  */
+enum class EMS_ModeState : uint8;
+enum class EMS_ControllerModeType : uint8;
+
 UCLASS()
 class PROJECTMS_API UMS_ModeNameWidget : public UMS_Widget
 {
@@ -16,7 +19,7 @@ class PROJECTMS_API UMS_ModeNameWidget : public UMS_Widget
 public:
 	virtual void NativeConstruct() override;
 	
-	void OnSetMode(uint8 aModeType);
+	void OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
 	
 private:
 	void SetModeName(const FString& aModeName) const;

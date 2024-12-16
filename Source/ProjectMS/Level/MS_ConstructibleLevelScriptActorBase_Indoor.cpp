@@ -47,7 +47,7 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 
 		const TArray<UMS_GridBoxComponent*>& GridBoxComponents = Prop->GetGridBoxComponents();
 		
-		for (const UMS_GridBoxComponent* GridBoxComponent : GridBoxComponents)
+		for (UMS_GridBoxComponent* GridBoxComponent : GridBoxComponents)
 		{
 			float PropYaw = Prop->GetActorRotation().Yaw;
 			MS_LOG_Verbosity(Warning, TEXT("PropYaw : %f [PropName : %s]"), PropYaw, *Prop->GetName());
@@ -68,7 +68,7 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 			case EMS_PropType::Floor:
 				{
 					MS_Ensure(!LevelPropDatas_Indoor.FloorDatas.Contains(GridPosition));
-					LevelPropDatas_Indoor.FloorDatas.Emplace(GridPosition, PropActor);
+					LevelPropDatas_Indoor.FloorDatas.Emplace(GridPosition, Prop);
 					break;
 				}
 
@@ -77,22 +77,22 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 					if (FMath::IsNearlyEqual(PropYaw, 0.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_0.Contains(GridPosition));
-						LevelPropDatas_Indoor.WallDatas_0.Emplace(GridPosition, PropActor);
+						LevelPropDatas_Indoor.WallDatas_0.Emplace(GridPosition, Prop);
 					}
 					else if (FMath::IsNearlyEqual(PropYaw, 90.f) || FMath::IsNearlyEqual(PropYaw, -270.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_90.Contains(GridPosition));
-						LevelPropDatas_Indoor.WallDatas_90.Emplace(GridPosition, PropActor);
+						LevelPropDatas_Indoor.WallDatas_90.Emplace(GridPosition, Prop);
 					}
 					else if (FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_180.Contains(GridPosition));
-						LevelPropDatas_Indoor.WallDatas_180.Emplace(GridPosition, PropActor);
+						LevelPropDatas_Indoor.WallDatas_180.Emplace(GridPosition, Prop);
 					}
 					else if (FMath::IsNearlyEqual(PropYaw, 270.f) || FMath::IsNearlyEqual(PropYaw, -90.f))
 					{
 						MS_Ensure(!LevelPropDatas_Indoor.WallDatas_270.Contains(GridPosition));
-						LevelPropDatas_Indoor.WallDatas_270.Emplace(GridPosition, PropActor);
+						LevelPropDatas_Indoor.WallDatas_270.Emplace(GridPosition, Prop);
 					}
 					else
 					{
@@ -105,7 +105,7 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 				{
 					MS_Ensure(!LevelPropDatas_Indoor.FurnitureDatas.Contains(GridPosition));
 					MS_Ensure(!LevelPropDatas_Indoor.StructureDatas.Contains(GridPosition));
-					LevelPropDatas_Indoor.FurnitureDatas.Emplace(GridPosition, PropActor);
+					LevelPropDatas_Indoor.FurnitureDatas.Emplace(GridPosition, Prop);
 					break;
 				}
 
@@ -113,7 +113,7 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 				{
 					MS_Ensure(!LevelPropDatas_Indoor.FurnitureDatas.Contains(GridPosition));
 					MS_Ensure(!LevelPropDatas_Indoor.StructureDatas.Contains(GridPosition));
-					LevelPropDatas_Indoor.StructureDatas.Emplace(GridPosition, PropActor);
+					LevelPropDatas_Indoor.StructureDatas.Emplace(GridPosition, Prop);
 					break;
 				}
 			
@@ -121,6 +121,9 @@ void AMS_ConstructibleLevelScriptActorBase_Indoor::ParsingDefaultPropDatas()
 				{
 					MS_LOG_Verbosity(Error, TEXT("Prop Type is Wrong [PropName : %s]"), *Prop->GetFName().ToString());
 				}
+
+				// OnRegister
+				GridBoxComponent->OnRegisteredWithLevelPropDatas(GridPosition);
 			}
 		}
 	}

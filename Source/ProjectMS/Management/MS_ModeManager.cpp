@@ -3,43 +3,41 @@
 
 #include "MS_ModeManager.h"
 
+#include "MS_Define.h"
 #include "MS_WidgetManager.h"
+#include "StateMachine/MS_StateMachine.h"
+#include "Mode/ModeState/MS_ModeStateBase.h"
+
 
 UMS_ModeManager::UMS_ModeManager()
 {
 	ModeManager = this;
 }
 
-void UMS_ModeManager::SetMode(EMS_ModeType aModeType)
+UMS_ModeManager* UMS_ModeManager::GetInstance()
 {
-	switch(aModeType)
+	return ModeManager;
+}
+
+void UMS_ModeManager::ChangeControllerMode(EMS_ControllerModeType aControllerModeType)
+{
+	ControllerModeType = aControllerModeType;
+	
+	switch(aControllerModeType)
 	{
-	case(EMS_ModeType::Normal):
+	case(EMS_ControllerModeType::Normal):
 		{
 			break;
 		}
-	case(EMS_ModeType::Rotate):
+	case(EMS_ControllerModeType::Rotate):
 		{
-			gModeMng.ShowRotateWidget();
-			break;
-		}
-	case(EMS_ModeType::Construct):
-		{
-			break;
-		}
-	case(EMS_ModeType::StaffManagement):
-		{
-			break;
-		}
-	case(EMS_ModeType::CustomerManagement):
-		{
-			break;		
-		}
-	default:
-		{
+			ShowRotateWidget();
 			break;
 		}
 	}
+
+	OnChangeModeDelegate.Broadcast(ModeStateMachine == nullptr ? EMS_ModeState::None : GetCurrentModeStateId()
+		, ControllerModeType);
 }
 
 void UMS_ModeManager::ShowRotateWidget()
@@ -47,7 +45,51 @@ void UMS_ModeManager::ShowRotateWidget()
 	gWidgetMng.ShowRotateWidget();
 }
 
-UMS_ModeManager* UMS_ModeManager::GetInstance()
+void UMS_ModeManager::HideRotateWidget()
 {
-	return ModeManager;
+	gWidgetMng.HideRotateWidget();
+}
+
+void UMS_ModeManager::CreateModeStateMachine()
+{
+	ModeStateMachine = MS_NewObject<UMS_StateMachine>(this, UMS_StateMachine::StaticClass());
+	MS_CHECK(ModeStateMachine);
+	ModeStateMachine->AddToRoot();
+	ModeStateMachine->Create();
+}
+
+void UMS_ModeManager::RegisterModeState(EMS_ModeState aModeState, const FName& aName, TSubclassOf<UMS_ModeStateBase> aClassType)
+{
+	MS_CHECK(ModeStateMachine);
+	
+	ModeStateMachine->RegisterState(static_cast<int8>(aModeState), aName, aClassType);
+}
+
+TObjectPtr<UMS_ModeStateBase> UMS_ModeManager::GetCurrentModeState() const
+{
+	MS_CHECK(ModeStateMachine);
+	
+	return Cast<UMS_ModeStateBase>(ModeStateMachine->GetCurrentState());
+}
+
+EMS_ModeState UMS_ModeManager::GetCurrentModeStateId() const
+{
+	if (GetCurrentModeState() != nullptr)
+	{
+		return static_cast<EMS_ModeState>(GetCurrentModeState()->GetStateIndex());
+	}
+
+	return EMS_ModeState::None;
+}
+
+void UMS_ModeManager::ChangeState(EMS_ModeState aModeState)
+{
+	if(ModeStateMachine == nullptr)
+	{
+		return;
+	}
+	
+	ModeStateMachine->SetState(static_cast<uint8>(aModeState));
+
+	ChangeControllerMode(EMS_ControllerModeType::Normal);
 }
