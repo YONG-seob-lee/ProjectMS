@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "MS_ManagerBase.h"
 #include "MS_InputManager.generated.h"
 
