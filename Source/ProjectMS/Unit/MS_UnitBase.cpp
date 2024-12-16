@@ -66,12 +66,6 @@ void UMS_UnitBase::RegisterUnitState(EMS_UnitState aState, const FName& aName, T
 	MS_CHECK(UnitStateMachine);
 	
 	UnitStateMachine->RegisterState(static_cast<int8>(aState), aName, aClassType);
-	TObjectPtr<UMS_UnitStateBase> State = Cast<UMS_UnitStateBase>(UnitStateMachine->GetState(static_cast<int8>(aState)));
-	MS_CHECK(State);
-	
-	const TObjectPtr<AMS_PlayerController> Controller = Cast<AMS_PlayerController>(GetOuter());
-	MS_CHECK(Controller);
-	State->WeakBindController(Controller);
 }
 
 TObjectPtr<UMS_StateBase> UMS_UnitBase::GetCurrentUnitState() const
