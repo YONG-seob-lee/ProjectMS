@@ -7,7 +7,6 @@
 #include "MS_WidgetManager.h"
 #include "Components/CanvasPanel.h"
 #include "Components/VerticalBoxSlot.h"
-#include "Widget/System/MS_ContentButtonWidget.h"
 #include "Widget/WidgetComponent/MS_VerticalBox.h"
 
 void UMS_ExtensionWidget::NativeConstruct()

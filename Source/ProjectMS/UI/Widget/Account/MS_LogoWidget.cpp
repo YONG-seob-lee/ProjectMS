@@ -7,7 +7,6 @@
 #include "MS_Define.h"
 #include "MS_SceneManager.h"
 #include "Button/MS_Button.h"
-#include "Controller/MS_PlayerController.h"
 
 void UMS_LogoWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
 {

@@ -12,10 +12,4 @@ class PROJECTMS_API UMS_UnitStateBase : public UMS_StateBase
 public:
 	UMS_UnitStateBase();
 
-	void SetupPlayerInputComponent(class UInputComponent* aPlayerInputComponent);
-	virtual void WeakBindController(const TObjectPtr<class AMS_PlayerController>& aPlayerController);
-
-	// Instance
-protected:
-	UPROPERTY() TWeakObjectPtr<class AMS_PlayerController> PlayerController = nullptr;
 };

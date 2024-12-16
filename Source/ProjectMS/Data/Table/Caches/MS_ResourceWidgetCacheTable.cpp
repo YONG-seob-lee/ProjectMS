@@ -3,7 +3,7 @@
 
 #include "MS_ResourceWidgetCacheTable.h"
 
-#include "..\RowBase\MS_ResourceWidget.h"
+#include "Table/RowBase/MS_ResourceWidget.h"
 
 void UMS_ResourceWidgetCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
