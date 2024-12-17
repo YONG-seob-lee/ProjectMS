@@ -20,7 +20,4 @@ public:
 	// Property
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString StringToPrint = {};
-
-	FTimerHandle TimerHandle;
-	void StopBehaviorTree(UBehaviorTreeComponent* OwnerComp);
 };

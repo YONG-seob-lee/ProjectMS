@@ -5,17 +5,12 @@
 AMS_StaffAIController::AMS_StaffAIController()
 {
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviorTreeObjectFinder(TEXT("/Game/AI/AIController/StaffAIController/BehaviorTree/BP_StaffBehaviorTree"));
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> SubBehaviorTreeObjectFinder(TEXT("/Game/AI/DEBUG_Content/DebugBehaviorTree"));
 
 	MS_CHECK(BehaviorTreeObjectFinder.Object);
-	MS_CHECK(SubBehaviorTreeObjectFinder.Object);
 
-	// DEBUG
 	DefaultBehaviorTree = BehaviorTreeObjectFinder.Object;
 	BlackboardData = NewObject<UMS_StaffBlackboardData>(DefaultBehaviorTree, UMS_StaffBlackboardData::StaticClass(), TEXT("BP_StaffBlackboardData"), RF_Transient);
 	DefaultBehaviorTree->BlackboardAsset = BlackboardData;
-
-	SubBehaviorTreeMap.Add(TEXT("SubBehaviorTree"), SubBehaviorTreeObjectFinder.Object);
 }
 
 void AMS_StaffAIController::OnPossess(APawn* aInPawn)
