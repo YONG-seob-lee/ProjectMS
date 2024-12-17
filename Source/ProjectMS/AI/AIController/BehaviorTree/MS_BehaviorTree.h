@@ -8,8 +8,7 @@
 #include "MS_BehaviorTree.generated.h"
 
 
-UCLASS(BlueprintType)
-class UMS_BehaviorTree : public UObject
+UCLASS(BlueprintType) class UMS_BehaviorTree : public UObject
 {
 	GENERATED_BODY()
 };

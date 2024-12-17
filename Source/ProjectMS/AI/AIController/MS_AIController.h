@@ -23,7 +23,6 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void ExecuteBehaviorTree();
 	UFUNCTION(BlueprintCallable) virtual void TerminateBehaviorTree();
 	UFUNCTION() virtual void SynchronizeBlackboard();
-	UFUNCTION() virtual void SynchronizeSubBehaviorTreeToBlackboard();
 
 	// Component
 public:
@@ -34,6 +33,5 @@ public:
 	// Instance
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* DefaultBehaviorTree = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FString, UBehaviorTree*> SubBehaviorTreeMap = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBlackboardData* BlackboardData = nullptr;
 };
