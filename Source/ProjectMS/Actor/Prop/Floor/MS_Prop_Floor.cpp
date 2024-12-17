@@ -17,10 +17,12 @@ AMS_Prop_Floor::AMS_Prop_Floor()
 	PropType = EMS_PropType::Floor;
 
 	// Component
+	/*
 #if WITH_EDITORONLY_DATA
 	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
 	WidgetComponent_ShowGridNum->SetupAttachment(MeshComponent);
 #endif
+	*/
 }
 
 void AMS_Prop_Floor::BeginPlay()
@@ -37,6 +39,7 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FInt
 {
 	Super::SetZoneData(aOwnerZone, aZoneGridPosition);
 
+	/*
 #if WITH_EDITORONLY_DATA
 	if (WidgetComponent_ShowGridNum)
 	{
@@ -51,5 +54,6 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FInt
 		}
 	}
 #endif
+	*/
 }
 

@@ -23,8 +23,10 @@ public:
 
 protected:
 	// Component
+	/*
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> WidgetComponent_ShowGridNum;
 #endif
+	*/
 };
