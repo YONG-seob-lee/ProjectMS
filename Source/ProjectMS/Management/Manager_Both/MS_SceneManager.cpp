@@ -42,7 +42,7 @@ void UMS_SceneManager::InitRootWidget()
 	RootWidget = gWidgetMng.GetRootWidget();
 }
 
-FMS_Level* UMS_SceneManager::GetCurrentLevelDate()
+FMS_Level* UMS_SceneManager::GetCurrentLevelData()
 {
 	MS_CHECK(NewCommand);
 	

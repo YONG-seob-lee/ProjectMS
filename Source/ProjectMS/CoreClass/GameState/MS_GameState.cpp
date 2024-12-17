@@ -65,7 +65,7 @@ void AMS_GameState::ChangeModeHelper()
 		return;
 	}
 	
-	FMS_Level* LevelData = gSceneMng.GetCurrentLevelDate();
+	FMS_Level* LevelData = gSceneMng.GetCurrentLevelData();
 	if (LevelData && LevelData->LevelModeHelperClass != nullptr)
 	{
 		LevelModeHelper = MS_NewObject<UMS_LevelModeHelper>(this, LevelData->LevelModeHelperClass);

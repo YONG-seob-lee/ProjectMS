@@ -65,6 +65,7 @@ private:
 private:
 	// ModeStateMachine
 	void CreateModeStateMachine();
+	void DestroyModeStateMachine();
 
 public:
 	void RegisterModeState(EMS_ModeState aModeState, const FName& aName, TSubclassOf<class UMS_ModeStateBase> aClassType);

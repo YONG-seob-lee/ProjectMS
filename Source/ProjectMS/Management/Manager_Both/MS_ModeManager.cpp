@@ -38,6 +38,7 @@ void UMS_ModeManager::PreFinalize()
 
 void UMS_ModeManager::Finalize()
 {
+	DestroyModeStateMachine();
 }
 
 void UMS_ModeManager::BuiltInFinalize()
@@ -85,6 +86,16 @@ void UMS_ModeManager::CreateModeStateMachine()
 	MS_CHECK(ModeStateMachine);
 	ModeStateMachine->AddToRoot();
 	ModeStateMachine->Create();
+}
+
+void UMS_ModeManager::DestroyModeStateMachine()
+{
+	if (ModeStateMachine)
+	{
+		ModeStateMachine->Destroy();
+		ModeStateMachine->RemoveFromRoot();
+		ModeStateMachine = nullptr;
+	}
 }
 
 void UMS_ModeManager::RegisterModeState(EMS_ModeState aModeState, const FName& aName, TSubclassOf<UMS_ModeStateBase> aClassType)

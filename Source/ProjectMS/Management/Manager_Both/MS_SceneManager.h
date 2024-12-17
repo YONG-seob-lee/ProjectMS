@@ -42,7 +42,7 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	void InitRootWidget();
 	
-	struct FMS_Level* GetCurrentLevelDate();
+	struct FMS_Level* GetCurrentLevelData();
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 
