@@ -8,9 +8,11 @@
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathDirectory.h"
 #include "ProjectMS/Utility/MS_Define.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_LevelCacheTable.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Table/Caches/MS_ResourceWidgetCacheTable.h"
+#include "Table/Caches/MS_SaleStandCacheTable.h"
 #include "Table/RowBase/MS_BasePathImgFile.h"
 
 void FMS_CacheTableData::Finalize()
@@ -254,7 +256,9 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::Level, TEXT("/Game/TableData/Level.Level"), UMS_LevelCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceUnit, TEXT("/Game/TableData/ResourceUnit.ResourceUnit"), UMS_ResourceUnitCacheTable::StaticClass());
-	
+
+	CreateTableData(EMS_TableDataType::Item, TEXT("/Game/TableData/Item.Item"), UMS_ItemCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::SaleStand, TEXT("/Game/TableData/SaleStand.SaleStand"), UMS_SaleStandCacheTable::StaticClass());
 }
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)
