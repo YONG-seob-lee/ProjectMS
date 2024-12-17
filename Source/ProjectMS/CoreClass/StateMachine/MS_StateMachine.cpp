@@ -24,9 +24,9 @@ void UMS_StateMachine::Tick(float aDeltaTime)
 
 void UMS_StateMachine::RegisterState(int8 aIndex, const FName& aName, const TSubclassOf<UMS_StateBase>& aSceneType, UObject* aOuter)
 {
-	if (EntireState.Find(aIndex) != nullptr)
+	if (EntireState.Contains(aIndex))
 	{
-		MS_CHECK(false);
+		MS_Ensure(false);
 		return;
 	}
 

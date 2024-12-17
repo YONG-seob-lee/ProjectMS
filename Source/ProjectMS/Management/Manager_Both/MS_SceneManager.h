@@ -42,6 +42,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	void InitRootWidget();
 	
+	struct FMS_Level* GetCurrentLevelDate();
+	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 
 private:
@@ -77,13 +79,17 @@ private:
 	float FadeProgressRate = 0.0f;
 
 	TWeakObjectPtr<class UMS_RootWidget> RootWidget = nullptr;
-	
-	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
 
 	UPROPERTY()
 	TObjectPtr<class UMS_LevelCacheTable> LevelTable = nullptr;
 
+	
 public:
+	// Delegate
+	FMS_OnLevelLoadedDelegate OnLevelLoadedDelegate = {};
+
+	
+	// Instance
 	inline static TObjectPtr<UMS_SceneManager> SceneManager = nullptr;
 	static UMS_SceneManager* GetInstance();
 	

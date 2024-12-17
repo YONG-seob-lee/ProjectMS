@@ -20,10 +20,11 @@ UENUM()
 enum class EMS_ModeState : uint8
 {
 	None = 0,
-	
-	Construct = 1,
-	StaffManagement = 2,
-	CustomerManagement = 3,
+
+	Normal = 1,
+	Construct = 2,
+	StaffManagement = 3,
+	CustomerManagement = 4,
 };
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnChangeModeDelegate, EMS_ModeState, EMS_ControllerModeType);
@@ -42,14 +43,14 @@ public:
 	static UMS_ModeManager* GetInstance();
 
 	// Life Cycle
-	virtual void BuiltInInitialize() override {}
-	virtual void Initialize() override {}
-	virtual void PostInitialize() override {}
-	virtual void PreFinalize() override {}
-	virtual void Finalize() override {}
-	virtual void BuiltInFinalize() override {}
+	virtual void BuiltInInitialize() override;
+	virtual void Initialize() override;
+	virtual void PostInitialize() override;
+	virtual void PreFinalize() override;
+	virtual void Finalize() override;
+	virtual void BuiltInFinalize() override;
 
-	virtual void Tick(float aDeltaTime) {}
+	virtual void Tick(float aDeltaTime);
 
 	
 public:
@@ -67,6 +68,9 @@ private:
 
 public:
 	void RegisterModeState(EMS_ModeState aModeState, const FName& aName, TSubclassOf<class UMS_ModeStateBase> aClassType);
+
+	void UnregisterModeStates();
+
 	TObjectPtr<UMS_ModeStateBase> GetCurrentModeState() const;
 	EMS_ModeState GetCurrentModeStateId() const;
 	

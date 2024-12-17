@@ -13,15 +13,32 @@ UCLASS()
 class PROJECTMS_API AMS_GameState : public AGameState
 {
 	GENERATED_BODY()
+	
 public:
+	AMS_GameState(const FObjectInitializer& aObjectInitializer);
+
+	virtual void PreInitializeComponents() override;
+	virtual void PostInitializeComponents() override;
 
 protected:
-	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
-	
+
+
 private:
 	void RegisterManagement();
+
+	void BindOnLevelLoadComplete();
+
+	UFUNCTION()
+	void OnLevelLoadComplete();
+
+	void ChangeModeHelper();
 	
+
+private:
 	UPROPERTY()
 	TObjectPtr<class UMS_ManagementBoth> ManagementBoth = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_LevelModeHelper> LevelModeHelper;
 };

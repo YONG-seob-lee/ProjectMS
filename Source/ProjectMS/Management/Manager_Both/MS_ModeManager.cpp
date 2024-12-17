@@ -19,6 +19,35 @@ UMS_ModeManager* UMS_ModeManager::GetInstance()
 	return ModeManager;
 }
 
+void UMS_ModeManager::BuiltInInitialize()
+{
+}
+
+void UMS_ModeManager::Initialize()
+{
+	CreateModeStateMachine();
+}
+
+void UMS_ModeManager::PostInitialize()
+{
+}
+
+void UMS_ModeManager::PreFinalize()
+{
+}
+
+void UMS_ModeManager::Finalize()
+{
+}
+
+void UMS_ModeManager::BuiltInFinalize()
+{
+}
+
+void UMS_ModeManager::Tick(float aDeltaTime)
+{
+}
+
 void UMS_ModeManager::ChangeControllerMode(EMS_ControllerModeType aControllerModeType)
 {
 	ControllerModeType = aControllerModeType;
@@ -63,6 +92,14 @@ void UMS_ModeManager::RegisterModeState(EMS_ModeState aModeState, const FName& a
 	MS_CHECK(ModeStateMachine);
 	
 	ModeStateMachine->RegisterState(static_cast<int8>(aModeState), aName, aClassType);
+}
+
+void UMS_ModeManager::UnregisterModeStates()
+{
+	if (ModeStateMachine)
+	{
+		ModeStateMachine->UnRegisterStates();
+	}
 }
 
 TObjectPtr<UMS_ModeStateBase> UMS_ModeManager::GetCurrentModeState() const

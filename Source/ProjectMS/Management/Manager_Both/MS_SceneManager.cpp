@@ -42,6 +42,18 @@ void UMS_SceneManager::InitRootWidget()
 	RootWidget = gWidgetMng.GetRootWidget();
 }
 
+FMS_Level* UMS_SceneManager::GetCurrentLevelDate()
+{
+	MS_CHECK(NewCommand);
+	
+	if(LevelTable)
+	{
+		return LevelTable->GetLevelData(NewCommand->GetLevelType());
+	}
+
+	return nullptr;
+}
+
 void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
 {
 	MS_CHECK(aCommand);

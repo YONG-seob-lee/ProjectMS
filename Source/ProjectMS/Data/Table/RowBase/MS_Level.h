@@ -2,7 +2,8 @@
     
 #include "CoreMinimal.h"
 #include "MS_Level.generated.h"
-    
+
+
 USTRUCT()
 struct FMS_Level: public FTableRowBase
 {
@@ -16,4 +17,6 @@ public:
 	int32 LevelKey = 0;
 	UPROPERTY(EditAnywhere)
 	FName PrimitiveWidgetName = FName();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UMS_LevelModeHelper> LevelModeHelperClass;
 };
