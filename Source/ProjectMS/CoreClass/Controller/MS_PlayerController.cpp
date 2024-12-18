@@ -37,6 +37,7 @@ void AMS_PlayerController::BeginPlay()
 
 void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	UnRegisterManagement();
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -66,4 +67,13 @@ void AMS_PlayerController::RegisterManagement()
 	ManagementClient = NewObject<UMS_ManagementClient>(this);
 	MS_CHECK(ManagementClient);
 	ManagementClient->Initialize();
+}
+
+void AMS_PlayerController::UnRegisterManagement()
+{
+	if(ManagementClient)
+	{
+		ManagementClient->Finalize();
+		ManagementClient = nullptr;
+	}
 }

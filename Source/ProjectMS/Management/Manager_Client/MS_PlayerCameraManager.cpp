@@ -37,6 +37,11 @@ void AMS_PlayerCameraManager::BeginPlay()
 	AdjustPostProcessEffect(CameraEffect->GetCameraPostProcessEffect());
 }
 
+void AMS_PlayerCameraManager::Destroyed()
+{
+	Super::Destroyed();
+}
+
 void AMS_PlayerCameraManager::FadeInCamera(float aDuration, EMS_InterpolationType aInterpolationType)
 {
 }

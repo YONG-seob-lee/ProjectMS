@@ -35,6 +35,16 @@ void AMS_GameState::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AMS_GameState::Destroyed()
+{
+	if(ManagementBoth)
+	{
+		ManagementBoth->Finalize();
+		ManagementBoth = nullptr;
+	}
+	Super::Destroyed();
+}
+
 void AMS_GameState::RegisterManagement()
 {
 	if (ManagementBoth)

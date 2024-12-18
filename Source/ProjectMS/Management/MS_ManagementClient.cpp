@@ -27,3 +27,25 @@ void UMS_ManagementClient::Initialize()
 	
 	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
 }
+
+void UMS_ManagementClient::Finalize()
+{
+	if(InputManager)
+	{
+		InputManager->Finalize();
+		InputManager = nullptr;
+	}
+	
+	if(WidgetManager)
+	{
+		WidgetManager->Finalize();
+		WidgetManager = nullptr;
+	}
+	
+	if(CameraManager)
+	{
+		CameraManager->Destroyed();
+	}
+	
+	Super::Finalize();
+}

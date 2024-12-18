@@ -20,6 +20,7 @@ public:
 	virtual void SetupInputComponent() override;
 
 	void RegisterManagement();
+	void UnRegisterManagement();
 
 private:	
 	

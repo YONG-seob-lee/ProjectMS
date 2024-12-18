@@ -34,6 +34,7 @@ public:
 	AMS_PlayerCameraManager();
 
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 	// DEBUG
 	UFUNCTION(BlueprintCallable) void DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);

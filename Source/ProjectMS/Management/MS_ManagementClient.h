@@ -15,7 +15,8 @@ class PROJECTMS_API UMS_ManagementClient : public UMS_ManagementBase
 	GENERATED_BODY()
 public:
 	virtual void Initialize() override;
-
+	virtual void Finalize() override;
+	
 private:
 	UPROPERTY()
 	TObjectPtr<class UMS_InputManager> InputManager = nullptr;

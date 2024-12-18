@@ -28,3 +28,32 @@ void UMS_ManagementBoth::Initialize()
 	MS_CHECK(ModeManager);
 	ModeManager->Initialize();
 }
+
+void UMS_ManagementBoth::Finalize()
+{
+	if(TableManager)
+	{
+		TableManager->Finalize();
+		TableManager = nullptr;
+	}
+
+	if(SceneManager)
+	{
+		SceneManager->Finalize();
+		SceneManager = nullptr;
+	}
+
+	if(UnitManager)
+	{
+		UnitManager->Finalize();
+		UnitManager = nullptr;
+	}
+
+	if(ModeManager)
+	{
+		ModeManager->Finalize();
+		ModeManager = nullptr;
+	}
+	
+	Super::Finalize();
+}

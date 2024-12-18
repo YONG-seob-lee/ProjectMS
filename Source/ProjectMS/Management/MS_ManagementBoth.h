@@ -15,6 +15,7 @@ class PROJECTMS_API UMS_ManagementBoth : public UMS_ManagementBase
 	GENERATED_BODY()
 public:
 	virtual void Initialize() override;
+	virtual void Finalize() override;
 	
 private:
 	UPROPERTY()

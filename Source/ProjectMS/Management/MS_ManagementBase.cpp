@@ -10,6 +10,7 @@ void UMS_ManagementBase::Initialize()
 
 void UMS_ManagementBase::Finalize()
 {
+	
 }
 
 void UMS_ManagementBase::PostInitialize()
