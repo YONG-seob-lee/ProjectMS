@@ -63,7 +63,6 @@ void UMS_UnitBase::CreateUnitStateMachine()
 {
 	UnitStateMachine = MS_NewObject<UMS_StateMachine>(this, UMS_StateMachine::StaticClass());
 	MS_CHECK(UnitStateMachine);
-	UnitStateMachine->AddToRoot();
 	UnitStateMachine->Create();
 }
 

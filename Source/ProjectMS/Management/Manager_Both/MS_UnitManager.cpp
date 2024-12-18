@@ -23,7 +23,6 @@ void UMS_UnitManager::Finalize()
 TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition, const FRotator& aRotator)
 {
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, aUnitType);
-	Unit->AddToRoot();
 	Unit->Initialize();
 	
 	if(Unit->CreateUnit(aUnitTableId, aPosition, aRotator) == false)
@@ -56,7 +55,6 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 a
 	}
 	
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, *UnitClassType);
-	Unit->AddToRoot();
 	Unit->Initialize();
 	
 	if(Unit->CreateUnit(aUnitTableId, aPosition, aRotator) == false)
