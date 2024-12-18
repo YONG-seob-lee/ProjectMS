@@ -27,4 +27,6 @@ public:
 	int32 PriceMin = 0;
 	UPROPERTY(EditAnywhere)
 	int32 PriceMax = 0;
+	UPROPERTY(EditAnywhere)
+	int32 PathFile = 0;
 };

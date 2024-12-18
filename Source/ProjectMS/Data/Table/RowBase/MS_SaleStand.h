@@ -27,4 +27,6 @@ public:
 	int32 SlotCount = 0;
 	UPROPERTY(EditAnywhere)
 	int32 Price = 0;
+	UPROPERTY(EditAnywhere)
+	int32 PathFile = 0;
 };
