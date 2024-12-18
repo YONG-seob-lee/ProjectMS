@@ -81,6 +81,7 @@ public:
 private:
 	inline static TObjectPtr<UMS_ModeManager> ModeManager = nullptr;
 
+	UPROPERTY()
 	TObjectPtr<class UMS_StateMachine> ModeStateMachine;
 
 	EMS_ControllerModeType ControllerModeType;

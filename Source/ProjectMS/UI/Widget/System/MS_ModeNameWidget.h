@@ -18,6 +18,7 @@ class PROJECTMS_API UMS_ModeNameWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override; 
 	
 	void OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
 	

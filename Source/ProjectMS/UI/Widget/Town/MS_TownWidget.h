@@ -25,7 +25,7 @@ class PROJECTMS_API UMS_TownWidget : public UMS_Widget
 public:
 	static FName GetWidgetName() { return TEXT("Town"); }
 	virtual void NativeConstruct() override;
-
+	virtual void NativeDestruct() override;
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 private:
 	void OnClickedDefaultButton();

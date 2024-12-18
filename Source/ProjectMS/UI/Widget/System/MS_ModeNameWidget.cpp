@@ -15,6 +15,12 @@ void UMS_ModeNameWidget::NativeConstruct()
 	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_ModeNameWidget::OnChangeMode);
 }
 
+void UMS_ModeNameWidget::NativeDestruct()
+{
+	gModeMng.OnChangeModeDelegate.RemoveAll(this);
+	Super::NativeDestruct();
+}
+
 void UMS_ModeNameWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
 	FString ModeStateName;

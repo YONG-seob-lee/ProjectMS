@@ -51,6 +51,12 @@ bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, const FVector& aPos, const FRo
 
 void UMS_UnitBase::DestroyUnit()
 {
+	if(UnitStateMachine)
+	{
+		UnitStateMachine->Destroy();
+		UnitStateMachine->RemoveFromRoot();
+		UnitStateMachine = nullptr;
+	}
 }
 
 void UMS_UnitBase::CreateUnitStateMachine()

@@ -12,6 +12,7 @@ void UMS_StateMachine::Create()
 
 void UMS_StateMachine::Destroy()
 {
+	UnRegisterStates();
 }
 
 void UMS_StateMachine::Tick(float aDeltaTime)

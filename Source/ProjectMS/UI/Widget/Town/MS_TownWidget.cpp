@@ -24,6 +24,12 @@ void UMS_TownWidget::NativeConstruct()
 	}
 }
 
+void UMS_TownWidget::NativeDestruct()
+{
+	gModeMng.OnChangeModeDelegate.RemoveAll(this);
+	Super::NativeDestruct();
+}
+
 void UMS_TownWidget::OnAnimFinished(const FName& aAnimName)
 {
 	Super::OnAnimFinished(aAnimName);
