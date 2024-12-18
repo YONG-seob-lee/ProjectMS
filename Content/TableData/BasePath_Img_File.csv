@@ -1,4 +1,5 @@
 Id,Directory_Table_Id,Img_File_Name,Img_File_Local
-1,1001,MarketButtonImage,FALSE
-2,1001,HamburgerButtonImage,FALSE
-3,1001,ModalImage,FALSE
+1,1001,MartIcon,FALSE
+2,1001,BoardIcon,FALSE
+3,1001,SettingIcon,FALSE
+4,1001,MenuIcon,FALSE

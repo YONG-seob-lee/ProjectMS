@@ -27,22 +27,30 @@ void UMS_ContentsPartWidget::NativeConstruct()
 
 	if(const TObjectPtr<UMS_ContentButtonWidget> CommandModeButton = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(2)))
 	{
-		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 2);
-		if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
-		{
-			CommandModeButton->SetIconImage(IconImage);
-		}
-		CommandModeButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickHamburgerButton, CommandModeButton);
+		CommandModeButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+			{
+				gWidgetMng.ShowToastMessage(TEXT(""));
+			});
+		// const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 2);
+		// if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
+		// {
+		// 	CommandModeButton->SetIconImage(IconImage);
+		// }
+		// CommandModeButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickHamburgerButton, CommandModeButton);
 	}
 
 	if(const TObjectPtr<UMS_ContentButtonWidget> ModalButton = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(4)))
 	{
-		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 3);
-		if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
-		{
-			ModalButton->SetIconImage(IconImage);
-		}
-		ModalButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickModalButton);
+		ModalButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+			{
+				gWidgetMng.ShowToastMessage(TEXT(""));
+			});
+		// const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, 3);
+		// if(UTexture2D* IconImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
+		// {
+		// 	ModalButton->SetIconImage(IconImage);
+		// }
+		// ModalButton->GetOnClickedDelegate().AddUObject(this, &UMS_ContentsPartWidget::OnClickModalButton);
 	}
 
 	if(const TObjectPtr<UMS_ContentButtonWidget> ContentButtonWidget = Cast<UMS_ContentButtonWidget>(CPP_HorizontalBox->GetChildAt(6)))
