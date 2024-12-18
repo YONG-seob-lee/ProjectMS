@@ -66,7 +66,7 @@ void UMS_ModeManager::ChangeControllerMode(EMS_ControllerModeType aControllerMod
 		}
 	}
 
-	OnChangeModeDelegate.Broadcast(ModeStateMachine == nullptr ? EMS_ModeState::None : GetCurrentModeStateId()
+	OnChangeModeDelegate.Broadcast(!IsValid(ModeStateMachine) ? EMS_ModeState::None : GetCurrentModeStateId()
 		, ControllerModeType);
 }
 
@@ -84,16 +84,15 @@ void UMS_ModeManager::CreateModeStateMachine()
 {
 	ModeStateMachine = MS_NewObject<UMS_StateMachine>(this, UMS_StateMachine::StaticClass());
 	MS_CHECK(ModeStateMachine);
-	ModeStateMachine->AddToRoot();
 	ModeStateMachine->Create();
 }
 
 void UMS_ModeManager::DestroyModeStateMachine()
 {
-	if (ModeStateMachine)
+	if (IsValid(ModeStateMachine))
 	{
 		ModeStateMachine->Destroy();
-		ModeStateMachine->RemoveFromRoot();
+		MS_DeleteObject(ModeStateMachine);
 		ModeStateMachine = nullptr;
 	}
 }
@@ -107,7 +106,7 @@ void UMS_ModeManager::RegisterModeState(EMS_ModeState aModeState, const FName& a
 
 void UMS_ModeManager::UnregisterModeStates()
 {
-	if (ModeStateMachine)
+	if (!IsValid(ModeStateMachine))
 	{
 		ModeStateMachine->UnRegisterStates();
 	}
@@ -122,7 +121,7 @@ TObjectPtr<UMS_ModeStateBase> UMS_ModeManager::GetCurrentModeState() const
 
 EMS_ModeState UMS_ModeManager::GetCurrentModeStateId() const
 {
-	if (GetCurrentModeState() != nullptr)
+	if (!IsValid(GetCurrentModeState()))
 	{
 		return static_cast<EMS_ModeState>(GetCurrentModeState()->GetStateIndex());
 	}
@@ -132,7 +131,7 @@ EMS_ModeState UMS_ModeManager::GetCurrentModeStateId() const
 
 void UMS_ModeManager::ChangeState(EMS_ModeState aModeState)
 {
-	if(ModeStateMachine == nullptr)
+	if(!IsValid(ModeStateMachine))
 	{
 		return;
 	}

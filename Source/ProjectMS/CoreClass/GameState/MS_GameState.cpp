@@ -37,23 +37,31 @@ void AMS_GameState::BeginPlay()
 
 void AMS_GameState::Destroyed()
 {
-	if(ManagementBoth)
-	{
-		ManagementBoth->Finalize();
-		ManagementBoth = nullptr;
-	}
+	DestroyModeHelper();
+	
+	DestroyManagement();
+	
 	Super::Destroyed();
 }
 
 void AMS_GameState::RegisterManagement()
 {
-	if (ManagementBoth)
+	if (IsValid(ManagementBoth))
 	{
 		return;
 	}
 	
 	ManagementBoth = MS_NewObject<UMS_ManagementBoth>(this);
 	ManagementBoth->Initialize();
+}
+
+void AMS_GameState::DestroyManagement()
+{
+	if(IsValid(ManagementBoth))
+	{
+		ManagementBoth->Finalize();
+		ManagementBoth = nullptr;
+	}
 }
 
 void AMS_GameState::BindOnLevelLoadComplete()
@@ -68,17 +76,25 @@ void AMS_GameState::OnLevelLoadComplete()
 
 void AMS_GameState::ChangeModeHelper()
 {
-	if (LevelModeHelper)
-	{
-		LevelModeHelper->Finalize();
-		MS_DeleteObject(LevelModeHelper);
-		return;
-	}
-	
+	DestroyModeHelper();
+	CreateModeHelper();
+}
+
+void AMS_GameState::CreateModeHelper()
+{
 	FMS_Level* LevelData = gSceneMng.GetCurrentLevelData();
 	if (LevelData && LevelData->LevelModeHelperClass != nullptr)
 	{
 		LevelModeHelper = MS_NewObject<UMS_LevelModeHelper>(this, LevelData->LevelModeHelperClass);
 		LevelModeHelper->Initialize();
+	}
+}
+
+void AMS_GameState::DestroyModeHelper()
+{
+	if (IsValid(LevelModeHelper))
+	{
+		LevelModeHelper->Finalize();
+		MS_DeleteObject(LevelModeHelper);
 	}
 }

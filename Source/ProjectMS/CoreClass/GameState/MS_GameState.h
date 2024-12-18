@@ -26,6 +26,7 @@ protected:
 
 private:
 	void RegisterManagement();
+	void DestroyManagement();
 
 	void BindOnLevelLoadComplete();
 
@@ -33,7 +34,9 @@ private:
 	void OnLevelLoadComplete();
 
 	void ChangeModeHelper();
-	
+
+	void CreateModeHelper();
+	void DestroyModeHelper();
 
 private:
 	UPROPERTY()

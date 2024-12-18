@@ -33,8 +33,7 @@ void UMS_StateMachine::RegisterState(int8 aIndex, const FName& aName, const TSub
 
 	const TObjectPtr<UObject> CustomOuter = aOuter != nullptr ? aOuter : this;
 	TObjectPtr<UMS_StateBase> State = MS_NewObject<UMS_StateBase>(CustomOuter, aSceneType);
-
-	State->AddToRoot();
+	
 	State->Initialize(aIndex, aName);
 	EntireState.Emplace(aIndex, State);
 }
@@ -46,8 +45,7 @@ void UMS_StateMachine::UnRegisterStates()
 		if (State.Value != nullptr)
 		{
 			State.Value->Finalize();
-			State.Value->RemoveFromRoot();
-			State.Value = nullptr;
+			MS_DeleteObject(State.Value);
 		}
 	}
 
