@@ -11,7 +11,7 @@ AMS_Actor::AMS_Actor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	/*StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
 	if(StaticMeshComponent)
 	{
 		
@@ -27,7 +27,7 @@ AMS_Actor::AMS_Actor()
 		TestSphere->SetCollisionProfileName(TEXT("NoCollision"));
 		TestSphere->SetupAttachment(RootComponent);
 		StaticMeshComponent->SetupAttachment(TestSphere);
-	}
+	}*/
 }
 
 // Called when the game starts or when spawned
@@ -56,9 +56,9 @@ void AMS_Actor::Initialize()
 
 void AMS_Actor::Finalize()
 {
-	if(TestSphere)
+	/*if(TestSphere)
 	{
 		TestSphere->Deactivate();
-	}
+	}*/
 }
 

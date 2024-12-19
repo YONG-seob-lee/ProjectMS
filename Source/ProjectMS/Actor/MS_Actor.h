@@ -27,11 +27,11 @@ public:
 	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return UnitOwner; }
 
 private:
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent = nullptr;
+	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<class UStaticMeshComponent> StaticMeshComponent = nullptr;
 	
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USphereComponent> TestSphere = nullptr;
+	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<class USphereComponent> TestSphere = nullptr;
 	
 	TWeakObjectPtr<UObject> UnitOwner = nullptr;
 };
