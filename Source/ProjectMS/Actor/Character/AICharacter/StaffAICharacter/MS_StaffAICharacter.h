@@ -18,7 +18,6 @@ UENUM(BlueprintType) enum class EMS_StaffAIOperatePattern : uint8
 	Drop				UMETA(DisplayName = "Drop"),
 };
 
-
 UCLASS() class PROJECTMS_API AMS_StaffAICharacter : public AMS_AICharacter
 {
 	GENERATED_BODY()
@@ -32,6 +31,6 @@ public:
 
 	// Property
 public:
-	EMS_StaffAIObservePattern StaffAIObservePattern = EMS_StaffAIObservePattern::Undefined;
-	EMS_StaffAIOperatePattern StaffAIOperatePattern = EMS_StaffAIOperatePattern::Undefined;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffAIObservePattern StaffAIObservePattern = EMS_StaffAIObservePattern::Undefined;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffAIOperatePattern StaffAIOperatePattern = EMS_StaffAIOperatePattern::Undefined;
 };

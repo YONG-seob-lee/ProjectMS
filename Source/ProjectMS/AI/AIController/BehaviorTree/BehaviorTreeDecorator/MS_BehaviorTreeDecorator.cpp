@@ -9,39 +9,39 @@ UMS_BehaviorTreeDecorator::UMS_BehaviorTreeDecorator()
 	bNotifyProcessed = true;
 }
 
-bool UMS_BehaviorTreeDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+bool UMS_BehaviorTreeDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) const
 {
-	bool Result = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
+	bool Result = Super::CalculateRawConditionValue(aOwnerComp, aNodeMemory);
 
 	return Result;
 }
 
-void UMS_BehaviorTreeDecorator::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+void UMS_BehaviorTreeDecorator::OnBecomeRelevant(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {
-	Super::OnBecomeRelevant(OwnerComp, NodeMemory);
+	Super::OnBecomeRelevant(aOwnerComp, aNodeMemory);
 
 }
 
-void UMS_BehaviorTreeDecorator::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+void UMS_BehaviorTreeDecorator::OnCeaseRelevant(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {
-	Super::OnCeaseRelevant(OwnerComp, NodeMemory);
+	Super::OnCeaseRelevant(aOwnerComp, aNodeMemory);
 
 }
 
-void UMS_BehaviorTreeDecorator::OnNodeActivation(FBehaviorTreeSearchData& SearchData)
+void UMS_BehaviorTreeDecorator::OnNodeActivation(FBehaviorTreeSearchData& aSearchData)
 {
-	Super::OnNodeActivation(SearchData);
+	Super::OnNodeActivation(aSearchData);
 
 }
 
-void UMS_BehaviorTreeDecorator::OnNodeDeactivation(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type NodeResult)
+void UMS_BehaviorTreeDecorator::OnNodeDeactivation(FBehaviorTreeSearchData& aSearchData, EBTNodeResult::Type aNodeResult)
 {
-	Super::OnNodeDeactivation(SearchData, NodeResult);
+	Super::OnNodeDeactivation(aSearchData, aNodeResult);
 
 }
 
-void UMS_BehaviorTreeDecorator::OnNodeProcessed(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type& NodeResult)
+void UMS_BehaviorTreeDecorator::OnNodeProcessed(FBehaviorTreeSearchData& aSearchData, EBTNodeResult::Type& aNodeResult)
 {
-	Super::OnNodeProcessed(SearchData, NodeResult);
+	Super::OnNodeProcessed(aSearchData, aNodeResult);
 
 }

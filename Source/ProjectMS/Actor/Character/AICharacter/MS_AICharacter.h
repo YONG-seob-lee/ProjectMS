@@ -50,5 +50,5 @@ public:
 
 	// Property
 public:
-	EMS_AIBehaviorPattern AIBehaviorPattern = EMS_AIBehaviorPattern::Undefined;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_AIBehaviorPattern AIBehaviorPattern = EMS_AIBehaviorPattern::Undefined;
 };

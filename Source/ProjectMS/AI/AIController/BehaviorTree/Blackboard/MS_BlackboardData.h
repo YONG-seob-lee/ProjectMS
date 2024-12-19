@@ -18,6 +18,7 @@ public:
 protected:
 	void AddEntryAsBool(const FName& aEntryName);
 	void AddEntryAsInt(const FName& aEntryName);
+	void AddEntryAsEnum(const FName& aEntryName, const FString& aEnumName);
 	void AddEntryAsFloat(const FName& aEntryName);
 	void AddEntryAsString(const FName& aEntryName);
 	void AddEntryAsVector(const FName& aEntryName);
