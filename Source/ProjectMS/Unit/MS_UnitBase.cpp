@@ -54,7 +54,6 @@ void UMS_UnitBase::DestroyUnit()
 	if(UnitStateMachine)
 	{
 		UnitStateMachine->Destroy();
-		UnitStateMachine->RemoveFromRoot();
 		UnitStateMachine = nullptr;
 	}
 }

@@ -87,7 +87,6 @@ void UMS_UnitManager::DestroyAllUnits()
 			continue;
 		}
 
-		Unit.Value->RemoveFromRoot();
 		Unit.Value->Finalize();
 		Unit.Value->MarkAsGarbage();
 		Unit.Value = nullptr;

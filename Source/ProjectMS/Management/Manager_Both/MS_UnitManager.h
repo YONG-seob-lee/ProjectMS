@@ -33,7 +33,8 @@ private:
 	float LodScale = 1.f;
 	bool bOutLineModeOn = true;
 
-	TMap<MS_Handle, TObjectPtr<UMS_UnitBase>> Units;
+	UPROPERTY()
+	TMap<int32, TObjectPtr<UMS_UnitBase>> Units;
 
 public:
 	inline static TObjectPtr<UMS_UnitManager> UnitManager = nullptr;
