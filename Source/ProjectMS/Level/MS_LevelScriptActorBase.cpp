@@ -10,7 +10,7 @@
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
-#include "Unit/MS_BasePlayer.h"
+#include "Unit/MS_BasePlayerUnit.h"
 #include "Utility/MS_Define.h"
 
 
@@ -27,7 +27,7 @@ void AMS_LevelScriptActorBase::PostEditChangeProperty(FPropertyChangedEvent& Pro
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	static bool DuplicatedFunctionCallFlag = false;
-	FName ChangedMemberPropertyName = (PropertyChangedEvent.MemberProperty != nullptr ? PropertyChangedEvent.MemberProperty->GetFName() : NAME_None);
+	const FName ChangedMemberPropertyName = (PropertyChangedEvent.MemberProperty != nullptr ? PropertyChangedEvent.MemberProperty->GetFName() : NAME_None);
 	if (ChangedMemberPropertyName == FName("BaseLayerLevelCollectionSwitch"))
 	{
 		DuplicatedFunctionCallFlag = DuplicatedFunctionCallFlag == false ? true : false;
@@ -196,7 +196,7 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	const TObjectPtr<UMS_UnitBase> Player = gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, UMS_BasePlayer::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation());
+	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
 	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacterBase())
@@ -204,7 +204,7 @@ TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr
 		CharacterBase->GetCharacterRootComponent()->ComponentTags.Emplace(FName("Title"));
 	}
 
-	//UITT_InstUtil::AssignUnitHandle(gUnitMng.GetUnitHandle(Cody));
+	//AssignUnitHandle(gUnitMng.GetUnitHandle(Cody));
 
 	return Player;
 }

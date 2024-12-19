@@ -1,12 +1,12 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "MS_Actor.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "MS_Prop.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Prop : public AActor
+class PROJECTMS_API AMS_Prop : public AMS_Actor
 {
 	GENERATED_BODY()
 

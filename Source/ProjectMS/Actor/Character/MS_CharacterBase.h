@@ -44,9 +44,17 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(UInputComponent* aPlayerInputComponent);
+	virtual void SetupPlayerInputComponent(UInputComponent* aPlayerInputComponent) override;
+
+	void Create(const FString& aLabelName);
+	void Destroy();
+
+	void Initialize();
+	void Finalize();
 	
 	FORCEINLINE TObjectPtr<USceneComponent> GetCharacterRootComponent() const { return RootComponent; }
+	FORCEINLINE void SetOwnerUnitBase(const TObjectPtr<UObject>& aOwner) { UnitOwner = aOwner; }
+	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return UnitOwner; }
 	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine);
 
@@ -54,4 +62,12 @@ private:
 	
 	UPROPERTY(Category = AITT_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FMS_CharacterLodValues LodValues = FMS_CharacterLodValues();
+
+	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMeshComponent> RootSkeletalMeshComponent = nullptr;
+	
+	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USphereComponent> TestSphere = nullptr;
+	
+	TWeakObjectPtr<UObject> UnitOwner = nullptr;
 };

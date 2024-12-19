@@ -69,6 +69,23 @@ static TObjectPtr<UObject> LoadObjectFromFile(FStreamableManager& aAssetLoader, 
  return ResultObject;
 }
 
+static FString GetBPNameFromFullPath(const FString& FullPath)
+{
+ if(FullPath.IsEmpty())
+ {
+  return FString();
+ }
+
+ int32 LastPoint = 0;
+ int32 LastSlash = 0;
+ constexpr TCHAR Point = '.';
+ constexpr TCHAR Slash = '/';
+ FullPath.FindLastChar(Point, LastPoint);
+ FullPath.FindLastChar(Slash, LastSlash);
+
+ return FullPath.Mid(LastSlash + 1, LastPoint - LastSlash - 1);
+}
+
 // Widget
 
 static double ConvertFadeAnimationCurveValue(double aProgressRate, EMS_FadeAnimationCurveType aFadeAnimationCurveType)

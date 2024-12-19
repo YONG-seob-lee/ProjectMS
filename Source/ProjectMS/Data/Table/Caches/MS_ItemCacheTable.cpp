@@ -13,3 +13,14 @@ void UMS_ItemCacheTable::Finalize()
 {
 	Super::Finalize();
 }
+
+FMS_Item* UMS_ItemCacheTable::GetItem(int32 aItemId)
+{
+	FMS_Item** ItemData = ItemDatas.Find(aItemId);
+	if(!ItemData)
+	{
+		return nullptr;
+	}
+	
+	return *ItemData;
+}

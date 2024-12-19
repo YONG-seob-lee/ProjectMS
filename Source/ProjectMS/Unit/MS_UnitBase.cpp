@@ -4,8 +4,8 @@
 #include "MS_UnitBase.h"
 
 #include "UnitState/MS_UnitStateBase.h"
-#include "CoreClass/Controller/MS_PlayerController.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
+#include "Manager_Both/MS_UnitManager.h"
 
 void UMS_UnitBase::Initialize()
 {
@@ -24,27 +24,9 @@ void UMS_UnitBase::Tick(float aDeltaTime)
 {
 }
 
-bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, const FVector& aPos, const FRotator& aRot)
+bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, const FVector& aPosition, const FRotator& aRotator)
 {
 	UnitHandle = aUnitTableId;
-	// UnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EITT_TableDataType::Resource_Unit, ResourceUnitTableId);
-	// if(ResourceUnitData == nullptr)
-	// {
-	// 	return false;
-	// }
-
-	// const FString BPPath = gTableMng.GetPath(EITT_TableDataType::BasePath_BP_File, ResourceUnitData->Base_Path, true);
-	// if(const TObjectPtr<AITT_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, Pos, Rot))
-	// {
-	// 	CharacterBase = NewCharacter;
-	// 	CharacterBase->SetOwnerUnitBase(this);
-	// 	
-	// 	if(const TObjectPtr<UITT_AnimInstance> AnimInstance = Cast<UITT_AnimInstance>(GetAnimInstance()))
-	// 	{
-	// 		AnimInstance->SetMoveSpeedInfo(ResourceUnitData->WalkSpeed, ResourceUnitData->RunSpeed);
-	// 		AnimInstance->InitializeAnimation();
-	// 	}
-	// }
 	
 	return true;
 }
@@ -77,14 +59,6 @@ TObjectPtr<UMS_StateBase> UMS_UnitBase::GetCurrentUnitState() const
 	MS_CHECK(UnitStateMachine);
 
 	return UnitStateMachine->GetCurrentState();
-}
-
-void UMS_UnitBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const
-{
-	if(Character)
-	{
-		Character->SetLodScaleValues(aCullDistanceScale, aOutLineCullDistanceScale, bVisibleOutLine);
-	}
 }
 
 void UMS_UnitBase::ChangeState(EMS_UnitState aUnitState) const

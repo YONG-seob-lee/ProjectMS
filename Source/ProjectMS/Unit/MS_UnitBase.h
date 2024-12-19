@@ -30,28 +30,20 @@ public:
 	virtual void PostInitialize();
 	virtual void Tick(float aDeltaTime);
 	
-	virtual bool CreateUnit(int32 aUnitTableId, const FVector& aPos = FVector::ZeroVector, const FRotator& aRot = FRotator::ZeroRotator);
+	virtual bool CreateUnit(int32 aUnitTableId, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	virtual void DestroyUnit();
 	
 	FORCEINLINE void SetUnitHandle(MS_Handle aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
-	FORCEINLINE TObjectPtr<AMS_CharacterBase> GetCharacterBase() const { return Character; }
 
 	void CreateUnitStateMachine();
 	void RegisterUnitState(EMS_UnitState aState, const FName& aName, TSubclassOf<class UMS_StateBase> aClassType);
 	TObjectPtr<UMS_StateBase> GetCurrentUnitState() const;
-
-	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
 	
 protected:
 	virtual void ChangeState(EMS_UnitState aUnitState) const;
 	
 	MS_Handle UnitHandle = InvalidUnitHandle;
-	
-	FMS_ResourceUnit* UnitData = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<AMS_CharacterBase> Character = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_StateMachine> UnitStateMachine = nullptr;

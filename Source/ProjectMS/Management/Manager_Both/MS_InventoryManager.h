@@ -8,6 +8,15 @@
 #include "Table/RowBase/MS_SaleStand.h"
 #include "MS_InventoryManager.generated.h"
 
+// 임시
+struct FPacketItemDatas
+{
+public:
+	int32 ItemId = 0;
+	FVector Vector;
+	FRotator Rotator;
+};
+
 UENUM()
 enum class EMS_ItemType : uint8
 {
@@ -49,6 +58,8 @@ public:
 
 	virtual void Tick(float aDeltaTime) override;
 
+	void CreateItem(int32 aItemId);
+	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
 private:
 	TMap<int32, FMS_Item*> Items = {};
 	TMap<int32, FMS_SaleStand*> Stand = {};

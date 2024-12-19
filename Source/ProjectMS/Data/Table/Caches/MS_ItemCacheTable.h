@@ -17,6 +17,9 @@ class PROJECTMS_API UMS_ItemCacheTable : public UMS_CacheTable
 public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
+
+	FMS_Item* GetItem(int32 aItemId);
+	
 private:
 	TMap<int32, FMS_Item*> ItemDatas; 
 };
