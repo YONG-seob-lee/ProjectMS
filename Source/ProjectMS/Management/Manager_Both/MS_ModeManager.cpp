@@ -106,7 +106,7 @@ void UMS_ModeManager::RegisterModeState(EMS_ModeState aModeState, const FName& a
 
 void UMS_ModeManager::UnregisterModeStates()
 {
-	if (!IsValid(ModeStateMachine))
+	if (IsValid(ModeStateMachine))
 	{
 		ModeStateMachine->UnRegisterStates();
 	}
@@ -121,7 +121,7 @@ TObjectPtr<UMS_ModeStateBase> UMS_ModeManager::GetCurrentModeState() const
 
 EMS_ModeState UMS_ModeManager::GetCurrentModeStateId() const
 {
-	if (!IsValid(GetCurrentModeState()))
+	if (IsValid(GetCurrentModeState()))
 	{
 		return static_cast<EMS_ModeState>(GetCurrentModeState()->GetStateIndex());
 	}
