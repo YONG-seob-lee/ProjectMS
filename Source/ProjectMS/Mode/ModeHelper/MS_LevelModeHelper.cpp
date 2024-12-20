@@ -3,7 +3,7 @@
 
 #include "MS_LevelModeHelper.h"
 
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 
 
 UMS_LevelModeHelper::UMS_LevelModeHelper()

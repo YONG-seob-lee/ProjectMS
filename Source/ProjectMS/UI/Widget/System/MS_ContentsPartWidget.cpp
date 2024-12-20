@@ -5,7 +5,7 @@
 
 #include "MS_ContentButtonWidget.h"
 #include "MS_Define.h"
-#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/WidgetComponent/MS_HorizontalBox.h"
 

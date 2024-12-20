@@ -19,6 +19,9 @@ public:
 	
 private:
 	UPROPERTY()
+	TObjectPtr<class UMS_SceneManager> SceneManager = nullptr;
+	
+	UPROPERTY()
 	TObjectPtr<class UMS_InputManager> InputManager = nullptr;
 	
 	UPROPERTY()
@@ -26,4 +29,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class AMS_PlayerCameraManager> CameraManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_ModeManager> ModeManager = nullptr;
 };

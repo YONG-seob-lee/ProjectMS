@@ -1,7 +1,7 @@
 ﻿#include "MS_InMarketNormalWidget.h"
 
 #include "Button/MS_Button.h"
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 
 
 void UMS_InMarketNormalWidget::NativeOnInitialized()

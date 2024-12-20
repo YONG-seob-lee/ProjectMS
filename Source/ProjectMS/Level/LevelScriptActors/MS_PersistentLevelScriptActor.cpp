@@ -4,7 +4,7 @@
 #include "Level/LevelScriptActors/MS_PersistentLevelScriptActor.h"
 
 #include "MS_Define.h"
-#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Persistent/MS_PersistentWidget.h"
 

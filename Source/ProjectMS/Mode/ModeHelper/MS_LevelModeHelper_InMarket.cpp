@@ -3,7 +3,7 @@
 
 #include "MS_LevelModeHelper_InMarket.h"
 
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Mode/ModeState/MS_ModeState_Construct.h"
 #include "Mode/ModeState/MS_ModeState_Normal.h"
 

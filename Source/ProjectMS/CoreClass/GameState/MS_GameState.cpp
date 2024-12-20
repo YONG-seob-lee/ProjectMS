@@ -5,7 +5,7 @@
 
 #include "MS_Define.h"
 #include "MS_ManagementBoth.h"
-#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Mode/ModeHelper/MS_LevelModeHelper.h"
 #include "Table/RowBase/MS_Level.h"
 

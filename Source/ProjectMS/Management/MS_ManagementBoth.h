@@ -22,11 +22,5 @@ private:
 	TObjectPtr<class UMS_TableManager> TableManager = nullptr;
 	
 	UPROPERTY()
-	TObjectPtr<class UMS_SceneManager> SceneManager = nullptr;
-	
-	UPROPERTY()
 	TObjectPtr<class UMS_UnitManager> UnitManager = nullptr;
-	
-	UPROPERTY()
-	TObjectPtr<class UMS_ModeManager> ModeManager = nullptr;
 };

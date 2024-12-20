@@ -6,7 +6,7 @@
 #include "MS_ExtensionButtonWidget.h"
 #include "Components/CanvasPanel.h"
 #include "Components/VerticalBoxSlot.h"
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/WidgetComponent/MS_VerticalBox.h"
 

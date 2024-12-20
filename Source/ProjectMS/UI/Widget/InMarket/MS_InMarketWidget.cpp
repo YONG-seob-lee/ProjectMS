@@ -2,7 +2,7 @@
 
 #include "MS_Define.h"
 #include "MS_InMarketModeWidget.h"
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 

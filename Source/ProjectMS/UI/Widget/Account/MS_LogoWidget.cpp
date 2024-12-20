@@ -6,7 +6,7 @@
 #include "MS_AccountWidget.h"
 #include "MS_Define.h"
 #include "Button/MS_Button.h"
-#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 
 void UMS_LogoWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
 {

@@ -4,7 +4,7 @@
 #include "MS_ExtensionButtonWidget.h"
 
 #include "Button/MS_Button.h"
-#include "Manager_Both/MS_ModeManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ExtensionButtonWidget::NativeConstruct()

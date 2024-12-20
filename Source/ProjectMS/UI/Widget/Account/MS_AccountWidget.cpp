@@ -6,7 +6,7 @@
 #include "MS_Define.h"
 #include "Button/MS_AccountButton.h"
 #include "Button/MS_AccountStartButton.h"
-#include "Manager_Both/MS_SceneManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 namespace ButtonIndex

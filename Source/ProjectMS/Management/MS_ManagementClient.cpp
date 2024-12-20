@@ -6,13 +6,22 @@
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ManagementClient::Initialize()
 {
 	Super::Initialize();
+
+	SceneManager = MS_NewObject<UMS_SceneManager>(this);
+	MS_CHECK(SceneManager);
+	SceneManager->Initialize();
 	
+	ModeManager = MS_NewObject<UMS_ModeManager>(this);
+	MS_CHECK(ModeManager);
+	ModeManager->Initialize();
 	
 	InputManager = MS_NewObject<UMS_InputManager>(this);
 	MS_CHECK(InputManager);
@@ -30,6 +39,18 @@ void UMS_ManagementClient::Initialize()
 
 void UMS_ManagementClient::Finalize()
 {
+	if(SceneManager)
+	{
+		SceneManager->Finalize();
+		SceneManager = nullptr;
+	}
+	
+	if(ModeManager)
+	{
+		ModeManager->Finalize();
+		ModeManager = nullptr;
+	}
+	
 	if(InputManager)
 	{
 		InputManager->Finalize();
