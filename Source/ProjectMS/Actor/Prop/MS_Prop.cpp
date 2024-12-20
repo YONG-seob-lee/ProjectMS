@@ -12,9 +12,6 @@ AMS_Prop::AMS_Prop()
 	: PropType(EMS_PropType::None), TableIndex(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	// Component
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 }
 
 void AMS_Prop::PostInitializeComponents()

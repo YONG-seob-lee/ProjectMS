@@ -14,9 +14,16 @@ class PROJECTMS_API AMS_Prop_Structure : public AMS_Prop
 public:
 	AMS_Prop_Structure();
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+	// Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class UMeshComponent*> MeshComponents;
 };

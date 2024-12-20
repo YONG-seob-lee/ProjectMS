@@ -41,6 +41,8 @@ enum class EMS_PurposeType : uint8
 	Cashier = 1,
 	BeforePayment = 2,
 	AfterPayment = 3,
+
+	UseStorage = 4,
 };
 
 // GridDatas

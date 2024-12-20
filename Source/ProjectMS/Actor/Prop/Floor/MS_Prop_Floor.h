@@ -23,6 +23,9 @@ public:
 
 protected:
 	// Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UMeshComponent* MeshComponent;
+	
 	/*
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

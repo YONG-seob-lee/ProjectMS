@@ -29,8 +29,6 @@ public:
 
 
 	// Component :: Getter
-	class UMeshComponent* GetMeshComponent() const { return MeshComponent; }
-
 	TArray<class UMS_PropSpaceComponent*> GetPropSpaceComponents() const { return PropSpaceComponents; }
 
 	
@@ -48,9 +46,6 @@ protected:
 
 	
 	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UMeshComponent* MeshComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMS_PropSpaceComponent*> PropSpaceComponents;
 

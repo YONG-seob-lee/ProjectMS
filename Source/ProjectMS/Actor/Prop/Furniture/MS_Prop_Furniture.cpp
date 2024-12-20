@@ -12,6 +12,14 @@ AMS_Prop_Furniture::AMS_Prop_Furniture()
 	PropType = EMS_PropType::Furniture;
 }
 
+void AMS_Prop_Furniture::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	// Component
+	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
+}
+
 void AMS_Prop_Furniture::BeginPlay()
 {
 	Super::BeginPlay();

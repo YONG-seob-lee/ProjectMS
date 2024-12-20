@@ -17,6 +17,8 @@ AMS_Prop_Floor::AMS_Prop_Floor()
 	PropType = EMS_PropType::Floor;
 
 	// Component
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	
 	/*
 #if WITH_EDITORONLY_DATA
 	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
