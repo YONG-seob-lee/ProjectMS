@@ -31,11 +31,11 @@ public:
 	// Component :: Getter
 	class UMeshComponent* GetMeshComponent() const { return MeshComponent; }
 
-	TArray<class UMS_GridBoxComponent*> GetGridBoxComponents() const { return GridBoxComponents; }
+	TArray<class UMS_PropSpaceComponent*> GetPropSpaceComponents() const { return PropSpaceComponents; }
 
 	
 	// Zone Data :: Setter
-	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aZoneGridPosition);
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone);
 
 	
 protected:
@@ -52,7 +52,7 @@ protected:
 	class UMeshComponent* MeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UMS_GridBoxComponent*> GridBoxComponents;
+	TArray<class UMS_PropSpaceComponent*> PropSpaceComponents;
 
 	
 	// Zone Data
@@ -60,5 +60,5 @@ protected:
 	TWeakObjectPtr<class AMS_Zone> OwnerZone;
 
 	UPROPERTY()
-	FIntVector2 ZoneGridPosition;
+	FVector PropCenterLocationInZone;
 };

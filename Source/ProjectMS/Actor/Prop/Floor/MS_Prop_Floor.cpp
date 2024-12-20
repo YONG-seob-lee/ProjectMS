@@ -22,7 +22,7 @@ AMS_Prop_Floor::AMS_Prop_Floor()
 	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
 	WidgetComponent_ShowGridNum->SetupAttachment(MeshComponent);
 #endif
-	*/
+*/
 }
 
 void AMS_Prop_Floor::BeginPlay()
@@ -35,9 +35,9 @@ void AMS_Prop_Floor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FIntVector2& aZoneGridPosition)
+void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
 {
-	Super::SetZoneData(aOwnerZone, aZoneGridPosition);
+	Super::SetZoneData(aOwnerZone, aPropCenterLocationInZone);
 
 	/*
 #if WITH_EDITORONLY_DATA
@@ -45,15 +45,17 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FInt
 	{
 		if (UMS_EditorTextWidget* EditorTextWidget = Cast<UMS_EditorTextWidget>(WidgetComponent_ShowGridNum->GetWidget()))
 		{
+			FIntVector ZoneGridPosition = FIntVector((PropCenterLocationInZone - MS_GridSize / 2.f) / MS_GridSize);
+			
 			if (OwnerZone != nullptr)
 			{
 				int32 OwnerZoneIndex = OwnerZone->GetZoneIndex();
-				EditorTextWidget->SetText(FString::FromInt(OwnerZoneIndex) + FString(" - ") +
-					FString::FromInt(ZoneGridPosition.X) + FString(" , ") + FString::FromInt(ZoneGridPosition.Y));
+				EditorTextWidget->SetText(FString::FromInt(OwnerZoneIndex) + FString("-") +
+					FString::FromInt(ZoneGridPosition.X) + FString(",") + FString::FromInt(ZoneGridPosition.Y));
 			}
 		}
 	}
 #endif
-	*/
+*/
 }
 

@@ -23,10 +23,25 @@ UENUM(BlueprintType)
 enum class EMS_PropSpaceType : uint8
 {
 	None = 0,
+	
 	ShapeSpace = 1,
 	FreeSpace = 2,
+	StaffSpace = 3,
+	
+	PuposefulCustomerSpace = 4,
+	PuposefulStaffSpace = 5,
+	PuposefulCustomerAndStaffSpace = 6,
 };
 
+UENUM(BlueprintType)
+enum class EMS_PurposeType : uint8
+{
+	None = 0,
+
+	Cashier = 1,
+	BeforePayment = 2,
+	AfterPayment = 3,
+};
 
 // GridDatas
 USTRUCT(BlueprintType)
@@ -70,6 +85,9 @@ public:
 
 	UPROPERTY()
 	TWeakObjectPtr<AActor> Object;
+
+	UPROPERTY()
+	TWeakObjectPtr<class UMS_PropSpaceComponent> PropSpaceComponent;
 };
 
 

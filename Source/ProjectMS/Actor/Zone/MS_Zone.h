@@ -30,10 +30,11 @@ private:
 
 
 public:
+	bool IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const;
 	bool IsWorldGridContained(const FIntVector2& aInWorldGridPosition, FIntVector2& aOutZoneGridPosition) const;
 
 	void RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aFloor);
-	void RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aObject);
+	void RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
 
 
 	// Setter
@@ -63,6 +64,9 @@ private:
 	UPROPERTY()
 	FVector ZoneLocation;
 
+	UPROPERTY()
+	FVector ZoneSize;
+	
 	UPROPERTY()
 	FIntVector ZoneGridNum;
 

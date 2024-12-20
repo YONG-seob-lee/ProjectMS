@@ -3,7 +3,7 @@
 
 #include "MS_Prop.h"
 
-#include "Component/Prop/Grid/MS_GridBoxComponent.h"
+#include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "Zone/MS_Zone.h"
 
@@ -22,7 +22,7 @@ void AMS_Prop::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	// Component
-	GetComponents(UMS_GridBoxComponent::StaticClass(), GridBoxComponents);
+	GetComponents(UMS_PropSpaceComponent::StaticClass(), PropSpaceComponents);
 }
 
 void AMS_Prop::BeginPlay()
@@ -36,10 +36,10 @@ void AMS_Prop::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FIntVector2& aZoneGridPosition)
+void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
 {
 	OwnerZone = aOwnerZone;
 
-	ZoneGridPosition = aZoneGridPosition;
+	PropCenterLocationInZone = aPropCenterLocationInZone;
 }
 

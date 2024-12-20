@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_ConstructibleLevelScriptActorBase_Indoor.h"
+#include "Level/MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_InMarketLevelScriptActor.generated.h"
 
 UCLASS()

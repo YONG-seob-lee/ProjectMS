@@ -4,6 +4,7 @@
 #include "MS_Zone.h"
 
 #include "MS_Define.h"
+#include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
 
@@ -38,7 +39,9 @@ void AMS_Zone::InitializeZoneData()
 {
 	MS_CHECK(ZoneBoxComponent);
 	
-	ZoneLocation = ZoneBoxComponent->GetComponentLocation() - ZoneBoxComponent->GetScaledBoxExtent();
+	ZoneLocation = ZoneBoxComponent->GetComponentLocation() - ZoneBoxComponent->GetUnscaledBoxExtent();
+	ZoneSize = ZoneBoxComponent->GetUnscaledBoxExtent() * 2.f;
+	
 	ZoneGridNum = FIntVector(ZoneBoxComponent->GetScaledBoxExtent() * 2.f / MS_GridSize);
 	ZoneWorldGridPosition = FIntVector(ZoneLocation / MS_GridSize);
 
@@ -59,6 +62,21 @@ void AMS_Zone::CreateGrids()
 			Grids.Emplace(ZoneGridPosition, FMS_GridData(this, ZoneGridPosition, WorldGridPosition));
 		}
 	}
+}
+
+bool AMS_Zone::IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const
+{
+	if (aInWorldLocation.X >= ZoneLocation.X
+	&& aInWorldLocation.Y >= ZoneLocation.Y
+	&& aInWorldLocation.X < ZoneLocation.X + ZoneSize.X
+	&& aInWorldLocation.Y < ZoneLocation.Y + ZoneSize.Y)
+	{
+		aOutZoneLocation = aInWorldLocation - ZoneLocation;
+
+		return true;
+	}
+
+	return false;
 }
 
 bool AMS_Zone::IsWorldGridContained(const FIntVector2& aInWorldGridPosition, FIntVector2& aOutZoneGridPosition) const
@@ -104,7 +122,7 @@ void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakOb
 	}
 }
 
-void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aObject)
+void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<UMS_PropSpaceComponent> aPropSpaceComponent)
 {
 	if (Grids.Contains(aZoneGridPosition))
 	{
@@ -112,11 +130,23 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 
 		if (GridData.Object == nullptr)
 		{
-			GridData.Object = aObject;
+			GridData.Object = aPropSpaceComponent->GetOwner();
 		}
 		else
 		{
 			MS_LOG_Verbosity(Error, TEXT("Object data alreay exists [Zone %d - X : %d, Y : %d]"),
+				ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+
+			MS_Ensure(false);
+		}
+
+		if (GridData.PropSpaceComponent == nullptr)
+		{
+			GridData.PropSpaceComponent = aPropSpaceComponent;
+		}
+		else
+		{
+			MS_LOG_Verbosity(Error, TEXT("PropSpaceComponent data alreay exists [Zone %d - X : %d, Y : %d]"),
 				ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
 
 			MS_Ensure(false);
