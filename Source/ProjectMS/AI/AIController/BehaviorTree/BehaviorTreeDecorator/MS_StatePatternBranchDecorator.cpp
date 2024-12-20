@@ -49,6 +49,8 @@ void UMS_StatePatternBranchDecorator::OnNodeProcessed(FBehaviorTreeSearchData& a
 FString UMS_StatePatternBranchDecorator::GetStaticDescription() const
 {
 	Super::GetStaticDescription();
+
+	return FString();
 }
 
 void UMS_StatePatternBranchDecorator::PostEditChangeProperty(FPropertyChangedEvent& aPropertyChangedEvent)
