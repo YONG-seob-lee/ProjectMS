@@ -3,8 +3,7 @@
 
 #include "MS_InventoryManager.h"
 
-#include "MS_TableManager.h"
-#include "MS_UnitManager.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 
 UMS_InventoryManager::UMS_InventoryManager()

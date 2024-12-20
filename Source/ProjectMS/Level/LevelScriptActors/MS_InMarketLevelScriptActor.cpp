@@ -3,7 +3,8 @@
 
 #include "MS_InMarketLevelScriptActor.h"
 
-#include "Manager_Both/MS_InventoryManager.h"
+#include "Manager_Client/MS_InventoryManager.h"
+
 
 AMS_InMarketLevelScriptActor::AMS_InMarketLevelScriptActor()
 {

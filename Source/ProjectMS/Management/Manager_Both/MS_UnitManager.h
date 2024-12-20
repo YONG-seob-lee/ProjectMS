@@ -15,6 +15,7 @@ enum EMS_UnitType
 	BasePlayer = 1,
 	Item = 2,
 	Furniture = 3,
+	Prop = 4,
 };
 /**
  * 

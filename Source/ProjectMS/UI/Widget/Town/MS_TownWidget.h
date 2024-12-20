@@ -35,7 +35,7 @@ private:
 	TObjectPtr<class UMS_ContentsPartWidget> CPP_ContentsPart = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_SettingButtonWidget> CPP_SettingButton = nullptr;
+	TObjectPtr<class UMS_MenuButtonWidget> CPP_MenuButton = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ManagerButtonWidget> CPP_ManagerButton = nullptr;

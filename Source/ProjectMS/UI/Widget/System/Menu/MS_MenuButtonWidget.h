@@ -4,19 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_SettingButtonWidget.generated.h"
+#include "MS_MenuButtonWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_SettingButtonWidget : public UMS_Widget
+class PROJECTMS_API UMS_MenuButtonWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
 
 private:
+	void OnClickSettingButton();
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_SettingButton = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_MenuExpanderPanel = nullptr;
 };
