@@ -30,6 +30,8 @@ public:
 
 	// Component :: Getter
 	TArray<class UMS_PropSpaceComponent*> GetPropSpaceComponents() const { return PropSpaceComponents; }
+	
+	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
 
 	
 	// Zone Data :: Setter
@@ -48,7 +50,6 @@ protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMS_PropSpaceComponent*> PropSpaceComponents;
-
 	
 	// Zone Data
 	UPROPERTY()

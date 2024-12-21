@@ -28,9 +28,9 @@ enum class EMS_PropSpaceType : uint8
 	FreeSpace = 2,
 	StaffSpace = 3,
 	
-	PuposefulCustomerSpace = 4,
-	PuposefulStaffSpace = 5,
-	PuposefulCustomerAndStaffSpace = 6,
+	PurposefulCustomerSpace = 4,
+	PurposefulStaffSpace = 5,
+	PurposefulCustomerAndStaffSpace = 6,
 };
 
 UENUM(BlueprintType)
@@ -43,6 +43,8 @@ enum class EMS_PurposeType : uint8
 	AfterPayment = 3,
 
 	UseStorage = 4,
+	
+	Any = 100,	// != None
 };
 
 // GridDatas
