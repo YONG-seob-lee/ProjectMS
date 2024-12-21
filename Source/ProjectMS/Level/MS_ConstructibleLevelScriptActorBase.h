@@ -26,6 +26,9 @@ protected:
 
 	
 protected:
+	UPROPERTY()
+	bool HasBegun;
+	
 	UPROPERTY(EditAnywhere)
 	TMap<int32, TObjectPtr<class AMS_Zone>> Zones;
 };

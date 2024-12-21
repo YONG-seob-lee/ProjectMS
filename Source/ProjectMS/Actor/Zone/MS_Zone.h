@@ -49,6 +49,8 @@ public:
 	
 	const FIntVector& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
+	void ShowDebugZoneData();
+
 	
 protected:
 	// Components

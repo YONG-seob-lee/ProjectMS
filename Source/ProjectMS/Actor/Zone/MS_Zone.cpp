@@ -40,10 +40,14 @@ void AMS_Zone::InitializeZoneData()
 	MS_CHECK(ZoneBoxComponent);
 	
 	ZoneLocation = ZoneBoxComponent->GetComponentLocation() - ZoneBoxComponent->GetUnscaledBoxExtent();
+	
 	ZoneSize = ZoneBoxComponent->GetUnscaledBoxExtent() * 2.f;
 	
-	ZoneGridNum = FIntVector(ZoneBoxComponent->GetScaledBoxExtent() * 2.f / MS_GridSize);
-	ZoneWorldGridPosition = FIntVector(ZoneLocation / MS_GridSize);
+	ZoneGridNum = FIntVector(FMath::RoundToInt32(ZoneSize.X / MS_GridSize.X),
+		FMath::RoundToInt32(ZoneSize.Y / MS_GridSize.Y), FMath::RoundToInt32(ZoneSize.Z / MS_GridSize.Z));
+	
+	ZoneWorldGridPosition = FIntVector(FMath::RoundToInt32(ZoneLocation.X / MS_GridSize.X),
+		FMath::RoundToInt32(ZoneLocation.Y / MS_GridSize.Y), FMath::RoundToInt32(ZoneLocation.Z / MS_GridSize.Z));
 
 	CreateGrids();
 }
@@ -159,5 +163,27 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 
 		MS_Ensure(false);
 	}
+}
+
+void AMS_Zone::ShowDebugZoneData()
+{
+#if WITH_EDITOR
+	for (int i = 0; i < ZoneGridNum.Y; ++i)
+	{
+		for (int j = 0; j < ZoneGridNum.X; ++j)
+		{
+			if (FMS_GridData* pGrid = Grids.Find(FIntVector2(j, i)))
+			{
+				if (pGrid->Object != nullptr && pGrid->PropSpaceComponent != nullptr)
+				{
+					MS_LOG_Verbosity(Warning, TEXT("ZoneGrid %d-%d,%d : %s, SpaceType : %d, PurposeType : %d"),
+						ZoneIndex, j, i, *pGrid->Object->GetName(),
+						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropSpaceType()),
+						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropPurposeSpaceType()));
+				}
+			}
+		}
+	}
+#endif
 }
 

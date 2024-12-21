@@ -47,7 +47,8 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, cons
 	{
 		if (UMS_EditorTextWidget* EditorTextWidget = Cast<UMS_EditorTextWidget>(WidgetComponent_ShowGridNum->GetWidget()))
 		{
-			FIntVector ZoneGridPosition = FIntVector((PropCenterLocationInZone - MS_GridSize / 2.f) / MS_GridSize);
+			FVector FZoneGridPosition = FVector((PropCenterLocationInZone - MS_GridSize / 2.f) / MS_GridSize);
+			FIntVector ZoneGridPosition = FIntVector(FMath::RoundToInt32(FZoneGridPosition.X), FMath::RoundToInt32(FZoneGridPosition.Y), FMath::RoundToInt32(FZoneGridPosition.Z));
 			
 			if (OwnerZone != nullptr)
 			{
