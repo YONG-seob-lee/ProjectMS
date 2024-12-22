@@ -43,10 +43,10 @@ public:
 
 	// Component
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class USceneComponent* SceneComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UCapsuleComponent* CollisionCapsuleComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class USkeletalMeshComponent* SkeletalMeshComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UCharacterMovementComponent* CharacterMovementComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UCapsuleComponent> CollisionCapsuleComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USkeletalMeshComponent> SkeletalMeshComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UCharacterMovementComponent> CharacterMovementComponent = nullptr;
 
 	// Property
 public:

@@ -10,4 +10,8 @@ UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Actor
 	
 public:
 	AMS_Storage();
+
+	// Component
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) class USceneComponent* RootSceneComponent = nullptr;
 };

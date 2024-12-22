@@ -26,12 +26,12 @@ public:
 
 	// Component
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class USceneComponent* SceneComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UBehaviorTreeComponent* BehaviorTreeComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UBlackboardComponent* BlackboardComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UBehaviorTreeComponent> BehaviorTreeComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UBlackboardComponent> BlackboardComponent = nullptr;
 
 	// Instance
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* BehaviorTree = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBlackboardData* BlackboardData = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<UBehaviorTree> BehaviorTree = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<UBlackboardData> BlackboardData = nullptr;
 };
