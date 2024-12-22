@@ -18,6 +18,6 @@ public:
 
 	// Instance
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class AMS_Storage> OwnerStorage = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class AMS_Prop_Storage> OwnerStorage = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class AMS_StaffAICharacter> AIWorkerInst = nullptr;
 };
