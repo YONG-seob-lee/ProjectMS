@@ -3,6 +3,9 @@
 #include "MS_ManagementClient.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
+#include "Manager_Client/MS_SceneManager.h"
+#include "Mode/ModeHelper/MS_LevelModeHelper.h"
+#include "Table/RowBase/MS_Level.h"
 
 #if WITH_EDITOR
 #include "LevelEditor.h"
@@ -21,11 +24,18 @@ AMS_PlayerController::AMS_PlayerController()
 	bEnableTouchOverEvents = true;
 }
 
+void AMS_PlayerController::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+
+	RegisterManagement();
+}
+
 void AMS_PlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	RegisterManagement();
+	BindOnLevelLoadComplete();
 }
 
 void AMS_PlayerController::BeginPlay()
@@ -37,7 +47,10 @@ void AMS_PlayerController::BeginPlay()
 
 void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	DestroyModeHelper();
+	
 	UnRegisterManagement();
+	
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -58,7 +71,6 @@ void AMS_PlayerController::SetupInputComponent()
 
 void AMS_PlayerController::RegisterManagement()
 {
-	// BeginPlay
 	if(ManagementClient)
 	{
 		return;
@@ -75,5 +87,40 @@ void AMS_PlayerController::UnRegisterManagement()
 	{
 		ManagementClient->Finalize();
 		ManagementClient = nullptr;
+	}
+}
+
+void AMS_PlayerController::BindOnLevelLoadComplete()
+{
+	gSceneMng.OnLevelLoadedDelegate.AddDynamic(this, &AMS_PlayerController::OnLevelLoadComplete);
+}
+
+void AMS_PlayerController::OnLevelLoadComplete()
+{
+	ChangeModeHelper();
+}
+
+void AMS_PlayerController::ChangeModeHelper()
+{
+	DestroyModeHelper();
+	CreateModeHelper();
+}
+
+void AMS_PlayerController::CreateModeHelper()
+{
+	FMS_Level* LevelData = gSceneMng.GetCurrentLevelData();
+	if (LevelData && LevelData->LevelModeHelperClass != nullptr)
+	{
+		LevelModeHelper = MS_NewObject<UMS_LevelModeHelper>(this, LevelData->LevelModeHelperClass);
+		LevelModeHelper->Initialize();
+	}
+}
+
+void AMS_PlayerController::DestroyModeHelper()
+{
+	if (IsValid(LevelModeHelper))
+	{
+		LevelModeHelper->Finalize();
+		MS_DeleteObject(LevelModeHelper);
 	}
 }

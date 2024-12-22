@@ -27,21 +27,9 @@ protected:
 private:
 	void RegisterManagement();
 	void DestroyManagement();
-
-	void BindOnLevelLoadComplete();
-
-	UFUNCTION()
-	void OnLevelLoadComplete();
-
-	void ChangeModeHelper();
-
-	void CreateModeHelper();
-	void DestroyModeHelper();
+	
 
 private:
 	UPROPERTY()
 	TObjectPtr<class UMS_ManagementBoth> ManagementBoth = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<class UMS_LevelModeHelper> LevelModeHelper;
 };

@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "MS_ManagementBoth.h"
+#include "GameFramework/GameSession.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Mode/ModeHelper/MS_LevelModeHelper.h"
 #include "Table/RowBase/MS_Level.h"
@@ -26,8 +27,6 @@ void AMS_GameState::PreInitializeComponents()
 void AMS_GameState::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	BindOnLevelLoadComplete();
 }
 
 void AMS_GameState::BeginPlay()
@@ -37,8 +36,6 @@ void AMS_GameState::BeginPlay()
 
 void AMS_GameState::Destroyed()
 {
-	DestroyModeHelper();
-	
 	DestroyManagement();
 	
 	Super::Destroyed();
@@ -61,40 +58,5 @@ void AMS_GameState::DestroyManagement()
 	{
 		ManagementBoth->Finalize();
 		ManagementBoth = nullptr;
-	}
-}
-
-void AMS_GameState::BindOnLevelLoadComplete()
-{
-	gSceneMng.OnLevelLoadedDelegate.AddDynamic(this, &AMS_GameState::OnLevelLoadComplete);
-}
-
-void AMS_GameState::OnLevelLoadComplete()
-{
-	ChangeModeHelper();
-}
-
-void AMS_GameState::ChangeModeHelper()
-{
-	DestroyModeHelper();
-	CreateModeHelper();
-}
-
-void AMS_GameState::CreateModeHelper()
-{
-	FMS_Level* LevelData = gSceneMng.GetCurrentLevelData();
-	if (LevelData && LevelData->LevelModeHelperClass != nullptr)
-	{
-		LevelModeHelper = MS_NewObject<UMS_LevelModeHelper>(this, LevelData->LevelModeHelperClass);
-		LevelModeHelper->Initialize();
-	}
-}
-
-void AMS_GameState::DestroyModeHelper()
-{
-	if (IsValid(LevelModeHelper))
-	{
-		LevelModeHelper->Finalize();
-		MS_DeleteObject(LevelModeHelper);
 	}
 }

@@ -11,6 +11,8 @@ UCLASS() class PROJECTMS_API AMS_PlayerController : public APlayerController
 
 public:
 	AMS_PlayerController();
+	
+	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
 	
 	virtual void BeginPlay() override;
@@ -22,10 +24,24 @@ public:
 	void RegisterManagement();
 	void UnRegisterManagement();
 
+	void BindOnLevelLoadComplete();
+
+	UFUNCTION()
+	void OnLevelLoadComplete();
+
+	void ChangeModeHelper();
+
+	void CreateModeHelper();
+	void DestroyModeHelper();
+
+	
 private:	
 	
 	UPROPERTY()
 	TObjectPtr<UMS_UnitBase> UnitBase = nullptr;
 	UPROPERTY()
 	TObjectPtr<class UMS_ManagementClient> ManagementClient = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<class UMS_LevelModeHelper> LevelModeHelper;
 };
