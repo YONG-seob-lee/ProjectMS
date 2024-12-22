@@ -12,4 +12,5 @@ public:
 	UMS_MoveToLocationTask();
 
 	virtual FString GetStaticDescription() const override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

@@ -1,14 +1,33 @@
 #include "AI/AIController/StaffAIController/DisplayStaffAIController/MS_DisplayStaffAIController.h"
 
 #include "AI/AIController/StaffAIController/DisplayStaffAIController/BehaviorTree/Blackboard/MS_DisplayStaffBlackboardData.h"
+#include "Actor/Character/AICharacter/StaffAICharacter/DisplayStaffAICharacter/MS_DisplayStaffAICharacter.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Actor/Prop/Storage/MS_Prop_Storage.h"
 
 AMS_DisplayStaffAIController::AMS_DisplayStaffAIController()
 {
-	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviorTreeObjectFinder(TEXT("/Game/AI/AIController/StaffAIController/ShelfStaffAIController/BehaviorTree/BP_ShelfStaffBehaviorTree"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviorTreeObjectFinder(TEXT("/Game/AI/AIController/StaffAIController/DisplayStaffAIController/BehaviorTree/BP_DisplayStaffBehaviorTree"));
 
 	MS_CHECK(BehaviorTreeObjectFinder.Object);
 
 	BehaviorTree = BehaviorTreeObjectFinder.Object;
 	BlackboardData = NewObject<UMS_DisplayStaffBlackboardData>(BehaviorTree, UMS_DisplayStaffBlackboardData::StaticClass(), TEXT("DisplayStaffBlackboardData"), RF_Transient);
 	BehaviorTree->BlackboardAsset = BlackboardData;
+}
+
+void AMS_DisplayStaffAIController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), 2);
+	TArray<AActor*> Actors = {};
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop_Storage::StaticClass(), Actors);
+	AMS_Prop_Storage* TempStorage = nullptr;
+	if (Actors.Num() > 0)
+	{
+		TempStorage = Cast<AMS_Prop_Storage>(Actors[0]);
+		BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->GetActorLocation());
+	}
 }
