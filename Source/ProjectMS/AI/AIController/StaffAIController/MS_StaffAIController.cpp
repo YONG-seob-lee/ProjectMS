@@ -8,9 +8,9 @@ AMS_StaffAIController::AMS_StaffAIController()
 
 	MS_CHECK(BehaviorTreeObjectFinder.Object);
 
-	DefaultBehaviorTree = BehaviorTreeObjectFinder.Object;
-	BlackboardData = NewObject<UMS_StaffBlackboardData>(DefaultBehaviorTree, UMS_StaffBlackboardData::StaticClass(), TEXT("BP_StaffBlackboardData"), RF_Transient);
-	DefaultBehaviorTree->BlackboardAsset = BlackboardData;
+	BehaviorTree = BehaviorTreeObjectFinder.Object;
+	BlackboardData = NewObject<UMS_StaffBlackboardData>(BehaviorTree, UMS_StaffBlackboardData::StaticClass(), TEXT("BP_StaffBlackboardData"), RF_Transient);
+	BehaviorTree->BlackboardAsset = BlackboardData;
 }
 
 void AMS_StaffAIController::OnPossess(APawn* aInPawn)

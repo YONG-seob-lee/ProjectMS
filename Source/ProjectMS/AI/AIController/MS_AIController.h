@@ -32,6 +32,6 @@ public:
 
 	// Instance
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* DefaultBehaviorTree = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBehaviorTree* BehaviorTree = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UBlackboardData* BlackboardData = nullptr;
 };

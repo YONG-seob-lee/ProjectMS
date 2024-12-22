@@ -9,9 +9,9 @@ AMS_AIController::AMS_AIController()
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviorTreeObjectFinder(TEXT("/Game/AI/AIController/BehaviorTree/BP_AIBehaviorTree"));
 	MS_CHECK(BehaviorTreeObjectFinder.Object);
 
-	DefaultBehaviorTree = BehaviorTreeObjectFinder.Object;
-	BlackboardData = NewObject<UMS_BlackboardData>(DefaultBehaviorTree, UMS_BlackboardData::StaticClass(), TEXT("BP_AIBehaviorTree"), RF_Transient);
-	DefaultBehaviorTree->BlackboardAsset = BlackboardData;
+	BehaviorTree = BehaviorTreeObjectFinder.Object;
+	BlackboardData = NewObject<UMS_BlackboardData>(BehaviorTree, UMS_BlackboardData::StaticClass(), TEXT("BP_AIBehaviorTree"), RF_Transient);
+	BehaviorTree->BlackboardAsset = BlackboardData;
 }
 
 void AMS_AIController::PostInitializeComponents()
@@ -41,7 +41,7 @@ void AMS_AIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)
 
 void AMS_AIController::ExecuteBehaviorTree()
 {
-	RunBehaviorTree(DefaultBehaviorTree);
+	RunBehaviorTree(BehaviorTree);
     BlackboardComponent = GetBlackboardComponent();
     BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(GetBrainComponent());
 
