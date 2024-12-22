@@ -9,7 +9,7 @@ UMS_BlackboardData::UMS_BlackboardData()
 {
     AddEntryAsObject(FName(TEXT("OwnerCharacter")), AMS_AICharacter::StaticClass());
     AddEntryAsObject(FName(TEXT("OwnerController")), AMS_AIController::StaticClass());
-    AddEntryAsEnum(FName("AIStatePattern"), TEXT("EMS_AIBehaviorPattern"));
+    AddEntryAsEnum(FName("AIBehaviorPattern"), TEXT("EMS_AIBehaviorPattern"));
 }
 
 void UMS_BlackboardData::AddEntryAsBool(const FName& aEntryName)

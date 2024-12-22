@@ -7,11 +7,11 @@
 UENUM(BlueprintType) enum class EMS_AIBehaviorPattern : uint8
 {
 	Undefined		UMETA(DisplayName = "Undefined"),
+	Idle			UMETA(DisplayName = "Idle"),
 	Navigate		UMETA(DisplayName = "Navigate"),
 	Operate			UMETA(DisplayName = "Operate"),
 	Observe			UMETA(DisplayName = "Observe"),
-	Interact		UMETA(DisplayName = "Operate"),
-	Idle			UMETA(DisplayName = "Idle")
+	Interact		UMETA(DisplayName = "Interact")
 };
 
 /* AIBehaviorPattern

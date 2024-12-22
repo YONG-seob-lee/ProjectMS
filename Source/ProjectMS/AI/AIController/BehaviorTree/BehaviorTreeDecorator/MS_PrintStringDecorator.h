@@ -11,10 +11,10 @@ UCLASS() class PROJECTMS_API UMS_PrintStringDecorator : public UMS_BehaviorTreeD
 public:
 	UMS_PrintStringDecorator();
 
-	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
-	virtual void OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual void OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual void OnNodeActivation(FBehaviorTreeSearchData& SearchData) override;
-	virtual void OnNodeDeactivation(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type NodeResult) override;
-	virtual void OnNodeProcessed(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type& NodeResult) override;
+	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) const override;
+	virtual void OnBecomeRelevant(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
+	virtual void OnCeaseRelevant(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
+	virtual void OnNodeActivation(FBehaviorTreeSearchData& aSearchData) override;
+	virtual void OnNodeDeactivation(FBehaviorTreeSearchData& aSearchData, EBTNodeResult::Type aNodeResult) override;
+	virtual void OnNodeProcessed(FBehaviorTreeSearchData& aSearchData, EBTNodeResult::Type& aNodeResult) override;
 };

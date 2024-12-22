@@ -4,13 +4,13 @@
 #include "Actor/Character/AICharacter/MS_AICharacter.h"
 #include "MS_StaffAICharacter.generated.h"
 
-UENUM(BlueprintType) enum class EMS_StaffAIObservePattern : uint8
+UENUM(BlueprintType) enum class EMS_StaffObservePattern : uint8
 {
 	Undefined			UMETA(DisplayName = "Undefined"),
 	Inspection			UMETA(DisplayName = "Inspection")
 };
 
-UENUM(BlueprintType) enum class EMS_StaffAIOperatePattern : uint8
+UENUM(BlueprintType) enum class EMS_StaffOperatePattern : uint8
 {
 	Undefined			UMETA(DisplayName = "Undefined"),
 	Fetch				UMETA(DisplayName = "Fetch"),
@@ -31,6 +31,6 @@ public:
 
 	// Property
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffAIObservePattern StaffAIObservePattern = EMS_StaffAIObservePattern::Undefined;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffAIOperatePattern StaffAIOperatePattern = EMS_StaffAIOperatePattern::Undefined;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffObservePattern StaffAIObservePattern = EMS_StaffObservePattern::Undefined;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffOperatePattern StaffAIOperatePattern = EMS_StaffOperatePattern::Undefined;
 };

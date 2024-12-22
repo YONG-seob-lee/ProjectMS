@@ -11,9 +11,9 @@ UCLASS() class PROJECTMS_API UMS_BehaviorTreeTask : public UBTTaskNode
 public:
 	UMS_BehaviorTreeTask();
 
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual EBTNodeResult::Type AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-	virtual void OnMessage(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, FName Message, int32 RequestID, bool bSuccess) override;
-	virtual void OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
+	virtual EBTNodeResult::Type AbortTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* aNodeMemory, float aDeltaSeconds) override;
+	virtual void OnMessage(UBehaviorTreeComponent& OwnerComp, uint8* aNodeMemory, FName aMessage, int32 aRequestID, bool abSuccess) override;
+	virtual void OnTaskFinished(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, EBTNodeResult::Type aTaskResult) override;
 };
