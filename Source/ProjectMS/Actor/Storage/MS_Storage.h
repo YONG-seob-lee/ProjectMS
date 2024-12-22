@@ -10,5 +10,4 @@ UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Actor
 	
 public:
 	AMS_Storage();
-
 };
