@@ -21,11 +21,4 @@ public:
 	virtual void NativeDestruct() override;
 	
 	void OnShow();
-
-private:
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_TestBTN1;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_TestBTN2;
 };
