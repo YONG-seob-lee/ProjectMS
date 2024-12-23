@@ -5,10 +5,6 @@
 
 #include "MS_Define.h"
 #include "MS_ManagementBoth.h"
-#include "GameFramework/GameSession.h"
-#include "Manager_Client/MS_SceneManager.h"
-#include "Mode/ModeHelper/MS_LevelModeHelper.h"
-#include "Table/RowBase/MS_Level.h"
 
 
 AMS_GameState::AMS_GameState(const FObjectInitializer& aObjectInitializer)
@@ -34,11 +30,10 @@ void AMS_GameState::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_GameState::Destroyed()
+void AMS_GameState::FinishDestroy()
 {
 	DestroyManagement();
-	
-	Super::Destroyed();
+	Super::FinishDestroy();
 }
 
 void AMS_GameState::RegisterManagement()
