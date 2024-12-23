@@ -6,6 +6,7 @@
 #include "Widget/MS_Widget.h"
 #include "MS_MenuButtonWidget.generated.h"
 
+
 /**
  * 
  */
@@ -20,8 +21,11 @@ private:
 	void OnClickSettingButton();
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_SettingButton = nullptr;
+	TObjectPtr<class UMS_Button> CPP_MenuButton = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_MenuExpanderPanel = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_TileView> CPP_MenuList = nullptr;
 };

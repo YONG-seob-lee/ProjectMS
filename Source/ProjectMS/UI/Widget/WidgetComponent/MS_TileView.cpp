@@ -2,3 +2,8 @@
 
 
 #include "MS_TileView.h"
+
+void UMS_TileView::SetElements(const TArray<TObjectPtr<UObject>>& aListData)
+{
+	SetListItems(aListData);
+}

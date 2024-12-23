@@ -29,6 +29,7 @@ enum class EMS_TableDataType : uint8
 
 	Item							UMETA(DisplayName = "Item"),
 	SaleStand						UMETA(DisplayName = "SaleStand"),
+	MenuElement						UMETA(DisplayName = "MenuElement"),
 };
 
 USTRUCT()

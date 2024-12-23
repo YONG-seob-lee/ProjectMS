@@ -10,6 +10,7 @@
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_LevelCacheTable.h"
+#include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Table/Caches/MS_SaleStandCacheTable.h"
@@ -259,6 +260,7 @@ void UMS_TableManager::MakeTableStructData()
 
 	CreateTableData(EMS_TableDataType::Item, TEXT("/Game/TableData/Item.Item"), UMS_ItemCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::SaleStand, TEXT("/Game/TableData/SaleStand.SaleStand"), UMS_SaleStandCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::MenuElement, TEXT("/Game/TableData/MenuElement.MenuElement"), UMS_MenuElementCacheTable::StaticClass());
 }
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)

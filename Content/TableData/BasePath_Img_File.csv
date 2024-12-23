@@ -3,3 +3,13 @@ Id,Directory_Table_Id,Img_File_Name,Img_File_Local
 2,1001,BoardIcon,FALSE
 3,1001,SettingIcon,FALSE
 4,1001,MenuIcon,FALSE
+5,1002,dollar,FALSE
+6,1002,envelope,FALSE
+7,1002,heart,FALSE
+8,1002,play,FALSE
+9,1002,portrait,FALSE
+10,1002,running,FALSE
+11,1002,search,FALSE
+12,1002,star,FALSE
+13,1002,user,FALSE
+14,1002,users,FALSE

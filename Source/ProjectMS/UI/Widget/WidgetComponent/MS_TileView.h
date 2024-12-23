@@ -13,4 +13,6 @@ UCLASS()
 class PROJECTMS_API UMS_TileView : public UTileView
 {
 	GENERATED_BODY()
+public:
+	void SetElements(const TArray<TObjectPtr<UObject>>& aListData);
 };
