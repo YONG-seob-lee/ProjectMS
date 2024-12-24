@@ -8,21 +8,18 @@ UENUM(BlueprintType) enum class EMS_AIBehaviorPattern : uint8
 {
 	Undefined		UMETA(DisplayName = "Undefined"),
 	Idle			UMETA(DisplayName = "Idle"),
-	Navigate		UMETA(DisplayName = "Navigate"),
-	Operate			UMETA(DisplayName = "Operate"),
 	Observe			UMETA(DisplayName = "Observe"),
+	Operate			UMETA(DisplayName = "Operate"),
 	Interact		UMETA(DisplayName = "Interact")
 };
 
 /* AIBehaviorPattern
 * 
-*	Navigate: Move to location
+*	Observe: Identify the situation and determine the required task
+*	Ex: Find empty storage
 *
 *	Operate: Manipulate the environment or interact with objects
 *	Ex: Pick up the items from the storage
-* 
-*	Observe: Identify the situation and determine the required task
-*	Ex: Find empty storage
 * 
 *	Interact: Tasks that interact with other AIs or objects
 *	Ex: Payment, cooperation, conversation with customers.
