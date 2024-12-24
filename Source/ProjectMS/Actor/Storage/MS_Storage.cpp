@@ -3,19 +3,25 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-#include "Component/Prop/MS_StorageOperationSpotComponent.h"
+#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
+
 
 AMS_Storage::AMS_Storage()
 {
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	StorageStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
-	OperationSpotComponent = CreateDefaultSubobject<UMS_StorageOperationSpotComponent>(TEXT("OperationSpotComponent"));
-
 	SetRootComponent(SceneComponent);
-	StorageStaticMeshComponent->SetupAttachment(SceneComponent);
-	OperationSpotComponent->SetupAttachment(SceneComponent);
 
-	OperationSpotComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
+	StorageStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
+	StorageStaticMeshComponent->SetupAttachment(SceneComponent);
+
+	StorageBayComponent = CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("StorageBayComponent"));
+	StorageBayComponent->SetupAttachment(SceneComponent);
+	StorageBayComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
+
+	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
+	StorageAssemblyAreaComponent->SetupAttachment(SceneComponent);
+	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-75.0f, 0.0f, 0.0f));
 }
 
 void AMS_Storage::PostInitializeComponents()

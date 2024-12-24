@@ -15,4 +15,8 @@ public:
 	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type aEndPlayReason) override;
+
+	// Instance
+public:
+	TObjectPtr<class AMS_StaffAICharacter> StaffAICharacter = nullptr;
 };

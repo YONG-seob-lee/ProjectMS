@@ -33,4 +33,6 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffObservePattern StaffAIObservePattern = EMS_StaffObservePattern::Undefined;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_StaffOperatePattern StaffAIOperatePattern = EMS_StaffOperatePattern::Undefined;
+
+	int TargetStorageBayOrder = INT_MIN;
 };

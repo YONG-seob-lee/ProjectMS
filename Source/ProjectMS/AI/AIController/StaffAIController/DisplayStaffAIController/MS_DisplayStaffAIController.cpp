@@ -5,6 +5,8 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Actor/Storage/MS_Storage.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
+#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
 
 AMS_DisplayStaffAIController::AMS_DisplayStaffAIController()
 {
@@ -28,6 +30,6 @@ void AMS_DisplayStaffAIController::BeginPlay()
 	if (Actors.Num() > 0)
 	{
 		TempStorage = Cast<AMS_Storage>(Actors[0]);
-		BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->GetActorLocation());
+		BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(0, StaffAICharacter));
 	}
 }
