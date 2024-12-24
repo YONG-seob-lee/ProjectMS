@@ -20,18 +20,3 @@ EBTNodeResult::Type UMS_PrintTextTask::AbortTask(UBehaviorTreeComponent& aOwnerC
 
 	return Result;
 }
-
-void UMS_PrintTextTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds)
-{
-	Super::TickTask(aOwnerComp, aNodeMemory, aDeltaSeconds);
-}
-
-void UMS_PrintTextTask::OnMessage(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, FName aMessage, int32 aRequestID, bool abSuccess)
-{
-	Super::OnMessage(aOwnerComp, aNodeMemory, aMessage, aRequestID, abSuccess);
-}
-
-void UMS_PrintTextTask::OnTaskFinished(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, EBTNodeResult::Type aTaskResult)
-{
-	Super::OnTaskFinished(aOwnerComp, aNodeMemory, aTaskResult);
-}

@@ -23,7 +23,7 @@ FString UMS_MoveToLocationTask::GetStaticDescription() const
 	return Result;
 }
 
-EBTNodeResult::Type UMS_MoveToLocationTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UMS_MoveToLocationTask::ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {
-	return Super::ExecuteTask(OwnerComp, NodeMemory);
+	return Super::ExecuteTask(aOwnerComp, aNodeMemory);
 }

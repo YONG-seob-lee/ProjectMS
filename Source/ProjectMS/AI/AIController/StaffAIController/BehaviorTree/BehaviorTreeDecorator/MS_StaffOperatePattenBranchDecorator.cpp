@@ -1,4 +1,4 @@
-#include "AI/AIController/StaffAIController/BehaviorTree/Decorator/MS_StaffOperatePattenBranchDecorator.h"
+#include "AI/AIController/StaffAIController/BehaviorTree/BehaviorTreeDecorator/MS_StaffOperatePattenBranchDecorator.h"
 
 UMS_StaffOperatePattenBranchDecorator::UMS_StaffOperatePattenBranchDecorator()
 {

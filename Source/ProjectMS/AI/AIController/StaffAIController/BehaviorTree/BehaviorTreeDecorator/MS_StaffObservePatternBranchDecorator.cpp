@@ -1,4 +1,4 @@
-#include "AI/AIController/StaffAIController/BehaviorTree/Decorator/MS_StaffObservePatternBranchDecorator.h"
+#include "AI/AIController/StaffAIController/BehaviorTree/BehaviorTreeDecorator/MS_StaffObservePatternBranchDecorator.h"
 
 UMS_StaffObservePatternBranchDecorator::UMS_StaffObservePatternBranchDecorator()
 {
