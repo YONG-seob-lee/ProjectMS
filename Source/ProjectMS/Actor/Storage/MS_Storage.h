@@ -1,15 +1,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Prop/MS_Prop.h"
-#include "MS_Prop_Storage.generated.h"
+#include "Actor/MS_Actor.h"
+#include "MS_Storage.generated.h"
 
-UCLASS() class PROJECTMS_API AMS_Prop_Storage : public AMS_Prop
+UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Actor
 {
 	GENERATED_BODY()
 	
 public:
-	AMS_Prop_Storage();
+	AMS_Storage();
 
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;

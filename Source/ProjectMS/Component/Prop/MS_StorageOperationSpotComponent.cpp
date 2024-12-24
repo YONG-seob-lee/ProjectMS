@@ -3,7 +3,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
 
-#include "Actor/Prop/Storage/MS_Prop_Storage.h"
+#include "Actor/Storage/MS_Storage.h"
 
 UMS_StorageOperationSpotComponent::UMS_StorageOperationSpotComponent()
 {
@@ -22,7 +22,7 @@ void UMS_StorageOperationSpotComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	OwnerStorage = Cast<AMS_Prop_Storage>(GetOwner());
+	OwnerStorage = Cast<AMS_Storage>(GetOwner());
 	MS_CHECK(OwnerStorage);
 }
 

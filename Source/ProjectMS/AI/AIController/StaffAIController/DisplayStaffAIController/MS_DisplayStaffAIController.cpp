@@ -4,7 +4,7 @@
 #include "Actor/Character/AICharacter/StaffAICharacter/DisplayStaffAICharacter/MS_DisplayStaffAICharacter.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "Actor/Prop/Storage/MS_Prop_Storage.h"
+#include "Actor/Storage/MS_Storage.h"
 
 AMS_DisplayStaffAIController::AMS_DisplayStaffAIController()
 {
@@ -23,11 +23,11 @@ void AMS_DisplayStaffAIController::BeginPlay()
 
 	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), 2);
 	TArray<AActor*> Actors = {};
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop_Storage::StaticClass(), Actors);
-	AMS_Prop_Storage* TempStorage = nullptr;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Storage::StaticClass(), Actors);
+	AMS_Storage* TempStorage = nullptr;
 	if (Actors.Num() > 0)
 	{
-		TempStorage = Cast<AMS_Prop_Storage>(Actors[0]);
+		TempStorage = Cast<AMS_Storage>(Actors[0]);
 		BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->GetActorLocation());
 	}
 }
