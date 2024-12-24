@@ -18,6 +18,7 @@ AMS_AICharacter::AMS_AICharacter()
 	CollisionCapsuleComponent->SetupAttachment(SceneComponent);
 	CollisionCapsuleComponent->SetCapsuleRadius(20.0f);
 	CollisionCapsuleComponent->SetCapsuleHalfHeight(50.0f);
+	CollisionCapsuleComponent->SetCollisionProfileName(TEXT("StaffCollisionPreset"));
 
 	SkeletalMeshComponent = GetMesh();
 	SkeletalMeshComponent->SetupAttachment(CollisionCapsuleComponent);

@@ -5,6 +5,7 @@
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Actor/Storage/MS_Storage.h"
+#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
 
 UMS_StorageBayComponent::UMS_StorageBayComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -139,7 +140,7 @@ void UMS_StorageBayComponent::UndeployWorker()
 
 	AMS_StaffAICharacter* Target = Cast<AMS_StaffAICharacter>(AttachChildComponentArray[0]->GetOwner());
 	Target->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
-	// Target->SetActorLocation(OwnerInst->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(BayOrder, Target));
+	Target->SetActorLocation(OwnerStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(BayOrder, Target));
 	Target->CollisionCapsuleComponent->SetCollisionProfileName("StaffCollisionPreset");
 	Target->TargetStorageBayOrder = INT_MIN;
 	OccupancyFlag = false;

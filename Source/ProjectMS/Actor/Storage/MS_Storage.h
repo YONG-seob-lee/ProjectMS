@@ -21,5 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UStaticMeshComponent> StorageStaticMeshComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UMS_StorageAssemblyAreaComponent> StorageAssemblyAreaComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UMS_StorageBayComponent> StorageBayComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<class UMS_StorageBayComponent*> BayComponentArray = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<class UMS_StorageSlotComponent*> SlotComponentArray = {};
 };
