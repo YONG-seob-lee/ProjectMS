@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_BehaviorTreeTask.h"
+#include "AI/AIController/BehaviorTree/Task/MS_BehaviorTreeTask.h"
 #include "MS_SeekUntilAvailableBayTask.generated.h"
 
 UCLASS() class PROJECTMS_API UMS_SeekUntilAvailableBayTask : public UMS_BehaviorTreeTask

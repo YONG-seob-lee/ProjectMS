@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeService/MS_PrintStringService.h"
+#include "AI/AIController/BehaviorTree/Service/MS_PrintStringService.h"
 
 UMS_PrintStringService::UMS_PrintStringService()
 {

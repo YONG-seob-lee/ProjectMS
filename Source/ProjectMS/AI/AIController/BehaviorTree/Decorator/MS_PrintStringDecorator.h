@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AIController/BehaviorTree/BehaviorTreeDecorator/MS_BehaviorTreeDecorator.h"
+#include "AI/AIController/BehaviorTree/Decorator/MS_BehaviorTreeDecorator.h"
 #include "MS_PrintStringDecorator.generated.h"
 
 UCLASS() class PROJECTMS_API UMS_PrintStringDecorator : public UMS_BehaviorTreeDecorator

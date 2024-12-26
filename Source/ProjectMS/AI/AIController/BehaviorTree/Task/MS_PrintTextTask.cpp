@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_PrintTextTask.h"
+#include "AI/AIController/BehaviorTree/Task/MS_PrintTextTask.h"
 
 UMS_PrintTextTask::UMS_PrintTextTask()
 {

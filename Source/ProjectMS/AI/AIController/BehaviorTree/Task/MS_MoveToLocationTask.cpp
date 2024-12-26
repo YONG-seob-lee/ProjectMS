@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_MoveToLocationTask.h"
+#include "AI/AIController/BehaviorTree/Task/MS_MoveToLocationTask.h"
 
 UMS_MoveToLocationTask::UMS_MoveToLocationTask()
 {

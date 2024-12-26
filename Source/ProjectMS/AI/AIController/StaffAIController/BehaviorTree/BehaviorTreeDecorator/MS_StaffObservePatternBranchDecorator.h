@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AIController/BehaviorTree/BehaviorTreeDecorator/MS_BehaviorTreeDecorator.h"
+#include "AI/AIController/BehaviorTree/Decorator/MS_BehaviorTreeDecorator.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "MS_StaffObservePatternBranchDecorator.generated.h"
 

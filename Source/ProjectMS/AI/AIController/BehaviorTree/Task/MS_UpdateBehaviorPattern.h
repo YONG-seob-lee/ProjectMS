@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_BehaviorTreeTask.h"
+#include "AI/AIController/BehaviorTree/Task/MS_BehaviorTreeTask.h"
 #include "MS_UpdateBehaviorPattern.generated.h"
 
 UCLASS() class PROJECTMS_API UMS_UpdateBehaviorPattern : public UMS_BehaviorTreeTask

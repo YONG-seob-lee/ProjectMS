@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_BehaviorTreeTask.h"
+#include "AI/AIController/BehaviorTree/Task/MS_BehaviorTreeTask.h"
 
 UMS_BehaviorTreeTask::UMS_BehaviorTreeTask()
 {

@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeTask/MS_UpdateBehaviorPattern.h"
+#include "AI/AIController/BehaviorTree/Task/MS_UpdateBehaviorPattern.h"
 
 UMS_UpdateBehaviorPattern::UMS_UpdateBehaviorPattern()
 {

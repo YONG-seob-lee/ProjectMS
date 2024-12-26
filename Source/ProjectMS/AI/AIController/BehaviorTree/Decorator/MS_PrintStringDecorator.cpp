@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeDecorator/MS_PrintStringDecorator.h"
+#include "AI/AIController/BehaviorTree/Decorator/MS_PrintStringDecorator.h"
 
 UMS_PrintStringDecorator::UMS_PrintStringDecorator()
 {

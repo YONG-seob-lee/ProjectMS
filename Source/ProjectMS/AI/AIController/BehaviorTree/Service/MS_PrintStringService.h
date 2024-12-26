@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AIController/BehaviorTree/BehaviorTreeService/MS_BehaviorTreeService.h"
+#include "AI/AIController/BehaviorTree/Service/MS_BehaviorTreeService.h"
 #include "MS_PrintStringService.generated.h"
 
 UCLASS() class PROJECTMS_API UMS_PrintStringService : public UMS_BehaviorTreeService

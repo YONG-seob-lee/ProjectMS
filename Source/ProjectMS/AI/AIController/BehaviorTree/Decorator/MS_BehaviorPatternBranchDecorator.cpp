@@ -1,4 +1,4 @@
-#include "AI/AIController/BehaviorTree/BehaviorTreeDecorator/MS_BehaviorPatternBranchDecorator.h"
+#include "AI/AIController/BehaviorTree/Decorator/MS_BehaviorPatternBranchDecorator.h"
 
 #include "BehaviorTree/Blackboard/BlackboardKeyType.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Enum.h"
