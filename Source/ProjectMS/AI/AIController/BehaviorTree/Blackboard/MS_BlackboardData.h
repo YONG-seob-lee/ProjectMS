@@ -13,7 +13,7 @@ public:
 	UMS_BlackboardData();
 	
 public:
-	void AddEntryAsMap(const FName& EntryName);
+	void AddEntryAsMap(const FName& aEntryName);
 
 protected:
 	void AddEntryAsBool(const FName& aEntryName);

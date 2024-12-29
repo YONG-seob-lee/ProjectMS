@@ -145,17 +145,17 @@ void UMS_BlackboardData::AddEntryAsObject(const FName& aEntryName, const TSubcla
     Keys.Add(BlackboardEntry);
 }
 
-void UMS_BlackboardData::AddEntryAsMap(const FName& EntryName)
+void UMS_BlackboardData::AddEntryAsMap(const FName& aEntryName)
 {
-    if (EntryName.IsNone())
+    if (aEntryName.IsNone())
     {
         return;
     }
 
     FBlackboardEntry BlackboardEntry;
-    BlackboardEntry.EntryName = EntryName;
+    BlackboardEntry.EntryName = aEntryName;
 
-    BlackboardEntry.KeyType = NewObject<UMS_BlackboardKeyType_Map>(this, UMS_BlackboardKeyType_Map::StaticClass(), FName(*FString::Printf(TEXT("BlackboardKeyType_%s"), *EntryName.ToString())));
+    BlackboardEntry.KeyType = NewObject<UMS_BlackboardKeyType_Map>(this, UMS_BlackboardKeyType_Map::StaticClass(), FName(*FString::Printf(TEXT("BlackboardKeyType_%s"), *aEntryName.ToString())));
     if (BlackboardEntry.KeyType)
     {
         Keys.Add(BlackboardEntry);

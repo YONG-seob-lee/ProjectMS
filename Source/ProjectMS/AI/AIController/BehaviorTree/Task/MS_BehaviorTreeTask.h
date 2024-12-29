@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Utility/MS_Define.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "MS_BehaviorTreeTask.generated.h"

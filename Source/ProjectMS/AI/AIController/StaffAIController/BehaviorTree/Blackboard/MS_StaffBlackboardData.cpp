@@ -13,4 +13,6 @@ UMS_StaffBlackboardData::UMS_StaffBlackboardData()
     AddEntryAsVector(FName(TEXT("TargetLocation")));
     AddEntryAsObject(FName(TEXT("TargetStorage")), AMS_Storage::StaticClass());
 
+    AddEntryAsVector(FName(TEXT("StorageBayAdjacentLocation")));
+    AddEntryAsInt(FName(TEXT("StorageBayOrder")));
 }

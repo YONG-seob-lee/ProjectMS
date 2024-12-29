@@ -30,6 +30,8 @@ void AMS_DisplayStaffAIController::BeginPlay()
 	if (Actors.Num() > 0)
 	{
 		TempStorage = Cast<AMS_Storage>(Actors[0]);
-		BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(0, StaffAICharacter));
+		BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehvaiorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Observe));
+		BlackboardComponent->SetValueAsEnum(FName(TEXT("StaffObservePattern")), static_cast<uint8>(EMS_StaffObservePattern::Inspection));
+		// BlackboardComponent->SetValueAsVector(FName(TEXT("TargetLocation")), TempStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(0, StaffAICharacter));
 	}
 }

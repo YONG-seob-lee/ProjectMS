@@ -46,6 +46,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UCharacterMovementComponent> CharacterMovementComponent = nullptr;
 
 	// Property
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_AIBehaviorPattern AIBehaviorPattern = EMS_AIBehaviorPattern::Undefined;
+//public:
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI") EMS_AIBehaviorPattern AIBehaviorPattern = EMS_AIBehaviorPattern::Undefined;
 };

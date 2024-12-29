@@ -3,10 +3,6 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
-#include "Component/Storage/MS_StorageBayComponent.h"
-#include "Component/Storage/MS_StorageSlotComponent.h"
-
 AMS_Storage::AMS_Storage()
 {
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
@@ -19,16 +15,15 @@ AMS_Storage::AMS_Storage()
 	StorageAssemblyAreaComponent->SetupAttachment(GetRootComponent());
 	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-75.0f, 0.0f, 0.0f));
 
-	int BayComponentIndex = INT_MIN;
-	BayComponentIndex = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("NO1StorageBayComponent")));
-	BayComponentArray[BayComponentIndex]->SetupAttachment(GetRootComponent());
-	BayComponentArray[BayComponentIndex]->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
-	BayComponentArray[BayComponentIndex]->BayOrder = BayComponentIndex;
+	BayComponentIndexSize = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("No1StorageBayComponent")));
+	BayComponentArray[BayComponentIndexSize]->SetupAttachment(GetRootComponent());
+	BayComponentArray[BayComponentIndexSize]->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
+	BayComponentArray[BayComponentIndexSize]->BayOrder = BayComponentIndexSize;
 
-	int SlotComponentIndex = INT_MIN;
-	SlotComponentIndex = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("NO1StorageSlotComponent")));
-	SlotComponentArray[SlotComponentIndex]->SetupAttachment(GetRootComponent());
-	SlotComponentArray[SlotComponentIndex]->SlotOrder = SlotComponentIndex;
+	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No1StorageSlotComponent")));
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
+	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
+
 }
 
 void AMS_Storage::PostInitializeComponents()

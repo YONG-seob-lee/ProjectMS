@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Actor/MS_Actor.h"
+#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
+#include "Component/Storage/MS_StorageSlotComponent.h"
 #include "MS_Storage.generated.h"
 
 UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Actor
@@ -23,4 +26,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UMS_StorageAssemblyAreaComponent> StorageAssemblyAreaComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<class UMS_StorageBayComponent*> BayComponentArray = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<class UMS_StorageSlotComponent*> SlotComponentArray = {};
+
+	// Property
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int SlotComponentIndexSize = INT_MIN;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int BayComponentIndexSize = INT_MIN;
 };

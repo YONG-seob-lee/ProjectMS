@@ -1,7 +1,9 @@
 #include "AI/AIController/StaffAIController/BehaviorTree/BehaviorTreeTask/MS_SeekUntilAvailableBayTask.h"
 
-#include "Actor/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "Actor/Storage/MS_Storage.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
+#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
 
 UMS_SeekUntilAvailableBayTask::UMS_SeekUntilAvailableBayTask()
 {
@@ -30,7 +32,17 @@ void UMS_SeekUntilAvailableBayTask::TickTask(UBehaviorTreeComponent& aOwnerComp,
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	AMS_Storage* TargetStorage = Cast<AMS_Storage>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(StorageKey.SelectedKeyName));
 
-	UE_LOG(LogTemp, Warning, TEXT("Selected key Name %s"), *StorageKey.SelectedKeyName.ToString())
+	for (int i = 0; i < TargetStorage->BayComponentArray.Num(); i++)
+	{
+		if (TargetStorage->BayComponentArray[i]->ReservationFlag == false && TargetStorage->BayComponentArray[i]->OccupancyFlag == false)
+		{
+			TargetStorage->BayComponentArray[i]->ReserveWorker(OwnerCharacter);
+
+			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageBayOrder")), TargetStorage->BayComponentArray[i]->BayOrder);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("StorageBayAdjacentLocation")), TargetStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(TargetStorage->BayComponentArray[i]->BayOrder, OwnerCharacter));
+		}
+	}
+	FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
 }
 
 void UMS_SeekUntilAvailableBayTask::OnMessage(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, FName aMessage, int32 aRequestID, bool abSuccess)
