@@ -18,6 +18,7 @@ public:
 	
 private:
 	void OnClickedStartButton();
+	void OnFinishedTransition();
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_StartButton = nullptr;

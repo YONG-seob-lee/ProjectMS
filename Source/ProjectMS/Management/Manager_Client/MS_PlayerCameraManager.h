@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable) void ShakeCamera(float aIntensity, float aDuration);
 
 	UFUNCTION(BlueprintCallable) void InitializeViewCamera();
-	FORCEINLINE void SwitchViewCamera(EMS_ViewCameraType aViewCameraType);
+	FORCEINLINE void SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam = FViewTargetTransitionParams());
 	FORCEINLINE void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
 
 	UFUNCTION() void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
@@ -70,6 +70,8 @@ public:
 	UFUNCTION() void PanRight(const FInputActionValue& aValue);
 
 	UFUNCTION(BlueprintCallable) void GenerateInertiaForce(FVector aMagnitude);
+	
+	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
 
 	// Property
 private:
@@ -85,6 +87,8 @@ private:
 	float CameraInertiaForce = 0.0f;
 	FTimerHandle CameraInertiaTimerHandle = {};
 
+	FTimerHandle CameraTransitionTimerHandle = {};
+	FSimpleDelegate OnFinishedCameraTransition = {};
 	// DEBUG
 	FTimerHandle CameraRotationTimerHandle = {};
 	FRotator TargetCameraRotation = {};

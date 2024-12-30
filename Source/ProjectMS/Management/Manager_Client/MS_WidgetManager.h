@@ -43,6 +43,7 @@ public:
 	void HideRotateWidget() const;
 	
 	void ShowModalWidget(FMS_ModalData* aModalData, bool bShow = true) const;
+	void ShowGeneralWidget(bool bShow) const;
 
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

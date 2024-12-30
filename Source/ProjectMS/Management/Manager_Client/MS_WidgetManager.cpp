@@ -166,6 +166,11 @@ void UMS_WidgetManager::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /*
 	RootWidget->ShowModalWidget(aModalData, bShow);
 }
 
+void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
+{
+	RootWidget->ShowGeneralWidget(bShow);
+}
+
 void UMS_WidgetManager::CreateRoot()
 {
 	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));

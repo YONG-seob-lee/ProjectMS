@@ -39,6 +39,7 @@ public:
 	void ShowRotateWidget() const;
 	void ShowModalWidget(struct FMS_ModalData* aModalData, bool bShow = true) const;
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
+	void ShowGeneralWidget(bool bShow) const;
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;

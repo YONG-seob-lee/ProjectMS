@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Button/MS_GeneralButton.h"
 #include "Widget/MS_Widget.h"
 #include "MS_GeneralWidget.generated.h"
 
@@ -22,9 +23,13 @@ class PROJECTMS_API UMS_GeneralWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	void SetType(EMS_GeneralWidgetType aType) const;
+	virtual void NativeConstruct() override;
+	
+	void SetType(EMS_GeneralWidgetType aType);
 	
 private:
+	void OnClickedRightButton();
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_LeftPanel = nullptr;
 	
@@ -45,4 +50,6 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_ExpanderButton = nullptr;
+
+	EMS_GeneralButtonType RightButtonType = EMS_GeneralButtonType::None;
 };

@@ -5,11 +5,21 @@
 
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
-void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
+void UMS_GeneralWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	CPP_LeftButton->SetVisibility(ESlateVisibility::Visible);
+	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
+	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
+}
+
+void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 {
 	switch (aType)
 	{
@@ -18,6 +28,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
+			RightButtonType = EMS_GeneralButtonType::Setting;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			break;
 		}
@@ -27,7 +38,8 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Schedule);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
-			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Visible);
+			RightButtonType = EMS_GeneralButtonType::Menu;
+			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			break;
 		}
@@ -37,6 +49,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
+			RightButtonType = EMS_GeneralButtonType::Menu;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			
@@ -56,7 +69,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
-			
+			RightButtonType = EMS_GeneralButtonType::None;
 			if(CPP_MenuTileView)
 			{
 				const TObjectPtr<UMS_MenuElementCacheTable> MenuElement = Cast<UMS_MenuElementCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::MenuElement));
@@ -68,5 +81,28 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType) const
 			}
 			break;
 		}
+	}
+}
+
+void UMS_GeneralWidget::OnClickedRightButton()
+{
+	if(RightButtonType == EMS_GeneralButtonType::Setting)
+	{
+		gWidgetMng.ShowModalWidget(nullptr, true);
+	}
+	else if(RightButtonType == EMS_GeneralButtonType::Menu)
+	{
+		if(CPP_MenuExpanderPanel->IsVisible())
+		{
+			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+	else
+	{
+		gWidgetMng.ShowToastMessage(TEXT(""));
 	}
 }

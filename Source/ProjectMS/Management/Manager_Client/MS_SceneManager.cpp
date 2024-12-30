@@ -77,7 +77,6 @@ void UMS_SceneManager::StartFade()
 	}
 	
 	RootWidget->SetContentWidgetRender(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle());
-	RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 	
 	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &UMS_SceneManager::ProcessFade, 0.01f, true);
 }
@@ -112,8 +111,13 @@ void UMS_SceneManager::EndFade()
 	{
 		// 위젯 변경만	
 		gWidgetMng.RefreshContentWidget();
-		gWidgetMng.Create_Widget(NewCommand->GetNextWidgetName());
-		
+
+		if(NewCommand->GetNextWidgetName() != FName(TEXT("None")))
+		{
+			gWidgetMng.Create_Widget(NewCommand->GetNextWidgetName());
+		}
+
+		RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 		if(NewCommand->OnFadeEventDelegate.IsBound())
 		{
 			NewCommand->OnFadeEventDelegate.Execute();
@@ -137,6 +141,7 @@ void UMS_SceneManager::EndFade()
 		{
 			RootWidget->ActivatePreventionCover(false);
 			RootWidget->ResetCanvasZOrder();
+			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 			LevelChangeStep = EMS_FadeStep::Finished;
 		}
 	}

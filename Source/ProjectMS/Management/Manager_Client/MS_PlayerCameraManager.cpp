@@ -139,7 +139,7 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 	ViewCameraMap.Add(EMS_ViewCameraType::QuarterView, GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
 
 	ActorSpawnParameters.Name = TEXT("SideViewCamera");
-	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
+	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector(-300.f, 0.f, 100.f), FVector::OneVector), ActorSpawnParameters));
 
 	for (const TPair<EMS_ViewCameraType, TObjectPtr<AMS_ViewCamera>>& PairMap : ViewCameraMap)
 	{
@@ -147,7 +147,7 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 	}
 }
 
-void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType)
+void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam /* = FViewTargetTransitionParams() */)
 {
 	TObjectPtr<AMS_ViewCamera> TempViewCamera = ViewCameraMap.Find(aViewCameraType)->Get();
 
@@ -169,8 +169,21 @@ void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraTyp
 
 	ViewCamera = TempViewCamera;
 	ViewCameraType = aViewCameraType;
+
+	if(aTransitionParam.BlendTime > 0.f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(CameraTransitionTimerHandle, [this]()
+		{
+			if(OnFinishedCameraTransition.IsBound())
+			{
+				OnFinishedCameraTransition.Execute();
+				OnFinishedCameraTransition.Unbind();
+			}
+		}, aTransitionParam.BlendTime, false);
+		
+	}
 	
-	SetViewTarget(ViewCamera.Get());
+	SetViewTarget(ViewCamera.Get(), aTransitionParam);
 }
 
 void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeType)

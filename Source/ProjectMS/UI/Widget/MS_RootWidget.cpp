@@ -229,17 +229,17 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 	}
 	else if(aLevelType == EMS_LevelType::LobbyLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
 	}
 	else if(aLevelType == EMS_LevelType::TownLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
 	}
 	else if(aLevelType == EMS_LevelType::MarketLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Market);
 	}
 	else
@@ -247,4 +247,10 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
+}
+
+void UMS_RootWidget::ShowGeneralWidget(bool bShow) const
+{
+	CPP_GeneralWidget->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
 }
