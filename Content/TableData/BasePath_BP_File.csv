@@ -9,6 +9,7 @@ Id,Directory_Table_Id,BP_File_Name
 8,407,LobbyWidget
 9,408,TownWidget
 10,409,MarketWidget
+11,410,InMarketWidget
 4001,5001,SM_FUR_COT_A
 4002,5001,SM_FUR_COT_B
 4003,5001,SM_FUR_DIS_A

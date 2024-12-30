@@ -13,6 +13,7 @@ Id,Directory
 407,UI/Widget/Town/Lobby
 408,UI/Widget/Town
 409,UI/Widget/Market
+410,UI/Widget/InMarket
 1001,UI/Image/Icon
 1002,UI/Image/Icon/Dummy
 5001,3D/StaticMesh

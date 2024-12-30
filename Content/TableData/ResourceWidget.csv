@@ -9,3 +9,4 @@ Index,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 8,Lobby,100,8,FALSE,0
 9,Town,100,9,FALSE,0
 10,Market,100,10,FALSE,0
+11,InMarket,100,11,FALSE,0
