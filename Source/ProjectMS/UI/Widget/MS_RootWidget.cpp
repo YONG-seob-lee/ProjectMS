@@ -4,6 +4,7 @@
 #include "MS_RootWidget.h"
 
 #include "MS_Define.h"
+#include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
@@ -36,9 +37,11 @@ void UMS_RootWidget::NativeOnInitialized()
 	MS_CHECK(CanvasPanelSlot);
 	CanvasPanelSlot->SetZOrder(1000);
 	
-	CPP_LoadingPanel->SetVisibility(ESlateVisibility::Hidden);
-	CPP_MessagePanel->SetVisibility(ESlateVisibility::Hidden);
-	CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
+	CPP_LoadingPanel->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_RotateWidget->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_ModalWidget->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMS_RootWidget::OnRuntimeInitialize()
@@ -201,30 +204,47 @@ void UMS_RootWidget::ShowToastMessage(const FString& Message) const
 
 void UMS_RootWidget::ShowRotateWidget() const
 {
-	CPP_InterfaceWidgetSwitcher->SetActiveWidgetIndex(InterfaceType::Rotate);
-	
-	if(CPP_InterfacePanel->IsVisible())
-	{
-		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
-		CPP_RotateWidget->SetVisibility(ESlateVisibility::Collapsed);	
-	}
-	else
-	{
-		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Visible);
-		CPP_RotateWidget->SetVisibility(ESlateVisibility::Visible);
-	}
+	CPP_RotateWidget->SetVisibility(CPP_RotateWidget->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);	
 }
 
 void UMS_RootWidget::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
 {
 	if(bShow)
 	{
-		CPP_InterfaceWidgetSwitcher->SetActiveWidgetIndex(InterfaceType::Modal);
-		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Visible);
+		CPP_ModalWidget->SetVisibility(ESlateVisibility::Visible);
 		CPP_ModalWidget->SetModal(aModalData);	
 	}
 	else
 	{
-		CPP_InterfacePanel->SetVisibility(ESlateVisibility::Hidden);
+		CPP_ModalWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
+{
+	if(aLevelType < EMS_LevelType::LobbyLevel)
+	{
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
+		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
+	}
+	else if(aLevelType == EMS_LevelType::LobbyLevel)
+	{
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
+	}
+	else if(aLevelType == EMS_LevelType::TownLevel)
+	{
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
+	}
+	else if(aLevelType == EMS_LevelType::MarketLevel)
+	{
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Market);
+	}
+	else
+	{
+		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
+		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
 }

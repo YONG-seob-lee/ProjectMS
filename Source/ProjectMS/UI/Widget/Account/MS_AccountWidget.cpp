@@ -46,7 +46,7 @@ void UMS_AccountWidget::OnClickAccountButton()
 void UMS_AccountWidget::OnClickStartButton()
 {	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::TownLevel);
+	Command->SetLevelType(EMS_LevelType::LobbyLevel);
 	Command->SetPreviousLevelType(EMS_LevelType::AccountLevel);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);

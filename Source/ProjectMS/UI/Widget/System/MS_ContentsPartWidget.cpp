@@ -75,8 +75,8 @@ void UMS_ContentsPartWidget::OnClickMarketButton()
 	
 	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::InMarketLevel);
-	Command->SetPreviousLevelType(EMS_LevelType::TownLevel);
+	Command->SetLevelType(EMS_LevelType::MarketLevel);
+	Command->SetPreviousLevelType(EMS_LevelType::LobbyLevel);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);

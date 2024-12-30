@@ -14,9 +14,9 @@ enum class EMS_LevelType
 	None = 0,
 	PersistenceLevel = 1,
 	AccountLevel = 2,
-	TownLevel = 3,
-	MarketLevel = 4,
-	InMarketLevel = 5,
+	LobbyLevel = 3,
+	TownLevel = 4,
+	MarketLevel = 5,
 
 	
 	PracticeLevel_01 = 1000,

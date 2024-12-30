@@ -77,6 +77,7 @@ void UMS_SceneManager::StartFade()
 	}
 	
 	RootWidget->SetContentWidgetRender(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle());
+	RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 	
 	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &UMS_SceneManager::ProcessFade, 0.01f, true);
 }

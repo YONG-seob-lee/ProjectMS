@@ -24,25 +24,4 @@ class PROJECTMS_API UMS_TownWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	static FName GetWidgetName() { return TEXT("Town"); }
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	virtual void OnAnimFinished(const FName& aAnimName) override;
-private:
-	void OnClickedDefaultButton();
-	void OnChangeMode(EMS_ModeState aMode, EMS_ControllerModeType);
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ContentsPartWidget> CPP_ContentsPart = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_MenuButtonWidget> CPP_MenuButton = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ManagerButtonWidget> CPP_ManagerButton = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ModeNameWidget> CPP_ModeName = nullptr;
-
-	FTimerHandle OnSetTimerHandle;
-	bool IsShowModePanel = false;
 };
