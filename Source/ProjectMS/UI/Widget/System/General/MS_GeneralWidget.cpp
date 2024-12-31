@@ -15,6 +15,7 @@ void UMS_GeneralWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	CPP_LeftButton->SetVisibility(ESlateVisibility::Visible);
+	CPP_LeftButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedLeftButton);
 	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
 }
@@ -41,6 +42,16 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			RightButtonType = EMS_GeneralButtonType::Menu;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
+			
+			if(CPP_MenuTileView)
+			{
+				const TObjectPtr<UMS_MenuElementCacheTable> MenuElement = Cast<UMS_MenuElementCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::MenuElement));
+				MS_CHECK(MenuElement);
+
+				TArray<TObjectPtr<UMS_MenuElementData>> Elements;
+				MenuElement->GetMenuData(Elements);
+				CPP_MenuTileView->SetListItems(TArray<UObject*>(Elements));
+			}
 			break;
 		}
 	case EMS_GeneralWidgetType::Market:
@@ -50,7 +61,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
 			RightButtonType = EMS_GeneralButtonType::Menu;
-			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Visible);
+			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			
 			if(CPP_MenuTileView)
@@ -70,15 +81,6 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			RightButtonType = EMS_GeneralButtonType::None;
-			if(CPP_MenuTileView)
-			{
-				const TObjectPtr<UMS_MenuElementCacheTable> MenuElement = Cast<UMS_MenuElementCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::MenuElement));
-				MS_CHECK(MenuElement);
-
-				TArray<TObjectPtr<UMS_MenuElementData>> Elements;
-				MenuElement->GetMenuData(Elements);
-				CPP_MenuTileView->SetListItems(TArray<UObject*>(Elements));
-			}
 			break;
 		}
 	}

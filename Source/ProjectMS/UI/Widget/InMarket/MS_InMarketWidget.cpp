@@ -2,6 +2,7 @@
 
 #include "MS_Define.h"
 #include "MS_InMarketModeWidget.h"
+#include "MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -18,6 +19,8 @@ void UMS_InMarketWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
+
+	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UMS_InMarketWidget::NativeDestruct()
@@ -32,27 +35,27 @@ void UMS_InMarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerMo
 
 void UMS_InMarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
 {
-	if (CPP_ModeWidgetSwitcher)
-	{
-		if (int32* Id = ModeStateToWidgetSwitcherId.Find(aModeState))
-		{
-			CPP_ModeWidgetSwitcher->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			
-			CPP_ModeWidgetSwitcher->SetActiveWidgetIndex(*Id);
-
-			if (UWidget* Child = CPP_ModeWidgetSwitcher->GetChildAt(*Id))
-			{
-				if (UMS_InMarketModeWidget* ChildModeWidget = Cast<UMS_InMarketModeWidget>(Child))
-				{
-					ChildModeWidget->OnShow();
-				}
-			}
-		}
-		else
-		{
-			CPP_ModeWidgetSwitcher->SetVisibility(ESlateVisibility::Collapsed);
-
-			MS_LOG_Verbosity(Warning, TEXT("No ModeState found in ModeStateToWidgetSwitcherId [ModeState : %d]"), static_cast<int32>(aModeState));
-		}
-	}
+	// if (CPP_ModeWidgetSwitcher)
+	// {
+	// 	if (int32* Id = ModeStateToWidgetSwitcherId.Find(aModeState))
+	// 	{
+	// 		CPP_ModeWidgetSwitcher->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	// 		
+	// 		CPP_ModeWidgetSwitcher->SetActiveWidgetIndex(*Id);
+	//
+	// 		if (UWidget* Child = CPP_ModeWidgetSwitcher->GetChildAt(*Id))
+	// 		{
+	// 			if (UMS_InMarketModeWidget* ChildModeWidget = Cast<UMS_InMarketModeWidget>(Child))
+	// 			{
+	// 				ChildModeWidget->OnShow();
+	// 			}
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		CPP_ModeWidgetSwitcher->SetVisibility(ESlateVisibility::Collapsed);
+	//
+	// 		MS_LOG_Verbosity(Warning, TEXT("No ModeState found in ModeStateToWidgetSwitcherId [ModeState : %d]"), static_cast<int32>(aModeState));
+	// 	}
+	// }
 }

@@ -18,7 +18,7 @@ class PROJECTMS_API UMS_InMarketWidget : public UMS_Widget
 	GENERATED_BODY()
 
 public:
-	static FName GetWidgetName() { return TEXT("InMarket"); }
+	static FName GetWidgetName() { return TEXT("Market"); }
 
 	virtual void NativeOnInitialized() override;
 	
@@ -36,11 +36,5 @@ private:
 	TMap<EMS_ModeState, int32> ModeStateToWidgetSwitcherId;
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_WidgetSwitcher> CPP_ModeWidgetSwitcher = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_InMarketNormalWidget> CPP_NormalModeWidet = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_InMarketConstructWidget> CPP_ConstructModeWidet = nullptr;
+	TObjectPtr<class UMS_MarketExpanderWidget> CPP_ExpanderWidget;
 };

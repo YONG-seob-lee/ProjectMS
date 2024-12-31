@@ -23,7 +23,7 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Setting));
 			CPP_Image->SetBrushFromTexture(Image);
-			GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedSettingButton);
+			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedSettingButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Menu:
@@ -31,7 +31,7 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Menu));
 			CPP_Image->SetBrushFromTexture(Image);
-			GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedMenuButton);
+			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedMenuButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Schedule:
@@ -39,7 +39,7 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Schedule));
 			CPP_Image->SetBrushFromTexture(Image);
-			GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedScheduleButton);
+			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedScheduleButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Manage:
@@ -47,7 +47,7 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Manage));
 			CPP_Image->SetBrushFromTexture(Image);
-			GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedManageButton);
+			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedManageButton);
 			break;
 		}
 	default:
