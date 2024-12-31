@@ -28,7 +28,9 @@ public:
 	void SetType(EMS_GeneralWidgetType aType);
 	
 private:
+	void OnClickedLeftButton();
 	void OnClickedRightButton();
+	void OnClickedExpanderButton();
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_LeftPanel = nullptr;
@@ -51,5 +53,6 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_ExpanderButton = nullptr;
 
+	EMS_GeneralButtonType LeftButtonType = EMS_GeneralButtonType::None;
 	EMS_GeneralButtonType RightButtonType = EMS_GeneralButtonType::None;
 };

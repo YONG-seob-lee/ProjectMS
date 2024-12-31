@@ -84,6 +84,22 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 	}
 }
 
+void UMS_GeneralWidget::OnClickedLeftButton()
+{
+	if(LeftButtonType == EMS_GeneralButtonType::Schedule)
+	{
+		gWidgetMng.ShowModalWidget(nullptr, true);
+	}
+	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
+	{
+		gWidgetMng.ShowModalWidget(nullptr, true);
+	}
+	else
+	{
+		gWidgetMng.ShowToastMessage(TEXT(""));
+	}
+}
+
 void UMS_GeneralWidget::OnClickedRightButton()
 {
 	if(RightButtonType == EMS_GeneralButtonType::Setting)
@@ -105,4 +121,9 @@ void UMS_GeneralWidget::OnClickedRightButton()
 	{
 		gWidgetMng.ShowToastMessage(TEXT(""));
 	}
+}
+
+void UMS_GeneralWidget::OnClickedExpanderButton()
+{
+	gWidgetMng.ShowModalWidget(nullptr, true);
 }

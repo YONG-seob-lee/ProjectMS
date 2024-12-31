@@ -15,8 +15,13 @@ class PROJECTMS_API AMS_Building : public AMS_Prop
 	GENERATED_BODY()
 public:
 	AMS_Building();
-
+	
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+	virtual bool HasInteractionComponent() override;
+	virtual void OnPressDownEvent() override;
+	virtual void OnPressUpEvent() override;
+	virtual void LaunchEvent() override;
 	
 private:
 	void UpdateFloorSize();
@@ -41,5 +46,5 @@ private:
 	TObjectPtr<UStaticMeshComponent> BuildingRear = nullptr;
 
 	UPROPERTY()
-	TArray<TObjectPtr<UStaticMeshComponent>> MiddleArray;
+	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
 };

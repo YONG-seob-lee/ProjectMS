@@ -3,6 +3,9 @@
 
 #include "MS_TownLevelScriptActor.h"
 
+#include "MS_Actor.h"
+#include "Manager_Client/MS_InputManager.h"
+
 
 // Sets default values
 AMS_TownLevelScriptActor::AMS_TownLevelScriptActor()
@@ -15,12 +18,50 @@ AMS_TownLevelScriptActor::AMS_TownLevelScriptActor()
 void AMS_TownLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
+	gInputMng.OnPointerDownDelegate.AddDynamic(this, &AMS_TownLevelScriptActor::OnPressDownEvent);
+	gInputMng.OnPointerUpDelegate.AddDynamic(this, &AMS_TownLevelScriptActor::OnPressUpEvent);
 }
 
 // Called every frame
 void AMS_TownLevelScriptActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AMS_TownLevelScriptActor::Destroyed()
+{
+	gInputMng.OnPointerDownDelegate.RemoveAll(this);
+	gInputMng.OnPointerUpDelegate.RemoveAll(this);
+	Super::Destroyed();
+}
+
+void AMS_TownLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, AActor* aPointerDownActor)
+{
+	if(aPointerDownActor)
+	{
+		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(aPointerDownActor))
+		{
+			if(TargetActor->HasInteractionComponent())
+			{
+				TargetActor->OnPressDownEvent();
+			}
+		}
+	}
+}
+
+void AMS_TownLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, AActor* aPointerUpActor)
+{
+	if(aPointerUpActor)
+	{
+		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(aPointerUpActor))
+		{
+			if(TargetActor->HasInteractionComponent())
+			{
+				TargetActor->OnPressUpEvent();
+			}
+		}
+	}
 }
 

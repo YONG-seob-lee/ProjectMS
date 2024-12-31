@@ -25,7 +25,12 @@ public:
 	
 	FORCEINLINE void SetOwnerUnitBase(const TObjectPtr<UObject>& aOwner) { UnitOwner = aOwner; }
 	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return UnitOwner; }
-
+	
+	virtual bool HasInteractionComponent() { return false; }
+	virtual void OnPressDownEvent() {}
+	virtual void OnPressUpEvent() {}
+	virtual void LaunchEvent() {}
+	
 private:
 	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	// TObjectPtr<class UStaticMeshComponent> StaticMeshComponent = nullptr;
