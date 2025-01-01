@@ -3,7 +3,7 @@
 
 #include "MS_Building.h"
 
-#include "ActorComponent/MS_InteractionComponent.h"
+#include "Component/Actor/MS_InteractionComponent.h"
 #include "Manager_Client/MS_SceneManager.h"
 
 AMS_Building::AMS_Building()
