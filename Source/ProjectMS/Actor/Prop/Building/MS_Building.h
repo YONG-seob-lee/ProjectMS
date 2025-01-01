@@ -45,6 +45,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Floor", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> BuildingRear = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
 };

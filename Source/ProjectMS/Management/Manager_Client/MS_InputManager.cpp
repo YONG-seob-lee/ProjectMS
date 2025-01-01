@@ -120,17 +120,13 @@ void UMS_InputManager::HandlePointerDown(const FInputActionValue& aValue)
 	PointerDownTimestamp = FDateTime::UtcNow().GetTicks();
 	PointerDownPosition = AcquirePointerPositionOnViewport();
 
-	FHitResult HitResult = {};
-	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
-	{
-		PointerDownActor = HitResult.GetActor();
-	}
-	else
-	{
-		PointerDownActor = nullptr;
-	}
+	FHitResult InteractableHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	
+	FHitResult SpaceHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
-	OnPointerDownDelegate.Broadcast(PointerDownPosition, PointerDownActor);
+	OnPointerDownDelegate.Broadcast(PointerDownPosition, InteractableHitResult, SpaceHitResult);
 
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
 	MS_CHECK(CommonTable);
@@ -149,17 +145,13 @@ void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
 	PointerUpTimestamp = FDateTime::UtcNow().GetTicks();
 	PointerUpPosition = AcquirePointerPositionOnViewport();
 
-	FHitResult HitResult = {};
-	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
-	{
-		PointerUpActor = HitResult.GetActor();
-	}
-	else
-	{
-		PointerUpActor = nullptr;
-	}
-
-	OnPointerUpDelegate.Broadcast(PointerUpPosition, PointerUpActor);
+	FHitResult InteractableHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	
+	FHitResult SpaceHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+	
+	OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult, SpaceHitResult);
 
 	GetWorld()->GetTimerManager().ClearTimer(HandlePointerHoldTimerHandle);
 	PointerDownUpIntervalTime = (PointerUpTimestamp - PointerDownTimestamp) / IntervalTimeValue::Separation;
@@ -171,20 +163,13 @@ void UMS_InputManager::HandlePointerHold()
 {
 	PointerHoldPosition = AcquirePointerPositionOnViewport();
 
-	FHitResult HitResult = {};
-	if (GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult) == true)
-	{
-		if (PointerDownActor != nullptr && PointerDownActor == HitResult.GetActor())
-		{
-			PointerHoldActor = HitResult.GetActor();
-		}
-	}
-	else
-	{
-		PointerHoldActor = nullptr;
-	}
+	FHitResult InteractableHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	
+	FHitResult SpaceHitResult = {};
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
-	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, PointerHoldActor);
+	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, InteractableHitResult, SpaceHitResult);
 }
 
 void UMS_InputManager::HandlePointerClick()
@@ -198,16 +183,13 @@ void UMS_InputManager::HandlePointerClick()
 		PointerClickTimestamp = FDateTime::UtcNow().GetTicks();
 		PointerClickPosition = AcquirePointerPositionOnViewport();
 
-		if (PointerDownActor != nullptr && PointerUpActor != nullptr && PointerDownActor == PointerUpActor)
-		{
-			PointerClickActor = PointerUpActor;
-		}
-		else
-		{
-			PointerClickActor = nullptr;
-		}
+		FHitResult InteractableHitResult = {};
+		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	
+		FHitResult SpaceHitResult = {};
+		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
-		OnPointerClickDelegate.Broadcast(PointerClickPosition, PointerClickActor);
+		OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult, SpaceHitResult);
 	}
 }
 
@@ -322,8 +304,12 @@ bool UMS_InputManager::GetHitResultUnderCursor(ECollisionChannel TraceChannel, b
 
 	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
 	MS_CHECK(PlayerController);
-
+	
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 	return PlayerController->GetHitResultUnderCursor(TraceChannel, bTraceComplex, HitResult);
+#else
+	return PlayerController->GetHitResultUnderFinger(ETouchIndex::Type::Touch1, TraceChannel, bTraceComplex, HitResult);
+#endif
 }
 
 UMS_InputManager* UMS_InputManager::GetInstance()

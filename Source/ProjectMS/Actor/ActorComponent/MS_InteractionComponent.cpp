@@ -6,24 +6,16 @@
 #include "MS_Actor.h"
 #include "MS_Define.h"
 
-// Sets default values for this component's properties
+
 UMS_InteractionComponent::UMS_InteractionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
-// Called when the game starts
 void UMS_InteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 void UMS_InteractionComponent::PostLoad()
@@ -33,14 +25,10 @@ void UMS_InteractionComponent::PostLoad()
 	Actor = Cast<AActor>(GetOuter());
 }
 
-
-// Called every frame
 void UMS_InteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                              FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UMS_InteractionComponent::OnPressedEvent()

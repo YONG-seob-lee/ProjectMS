@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/BoxComponent.h"
 #include "MS_InteractionComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PROJECTMS_API UMS_InteractionComponent : public UActorComponent
+class PROJECTMS_API UMS_InteractionComponent : public UBoxComponent
 {
 	GENERATED_BODY()
 

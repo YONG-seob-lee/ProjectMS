@@ -37,11 +37,12 @@ void AMS_TownLevelScriptActor::Destroyed()
 	Super::Destroyed();
 }
 
-void AMS_TownLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, AActor* aPointerDownActor)
+void AMS_TownLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult)
 {
-	if(aPointerDownActor)
+	AActor* PointerDownActor = aInteractableHitResult.GetActor();
+	if(IsValid(PointerDownActor))
 	{
-		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(aPointerDownActor))
+		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(PointerDownActor))
 		{
 			if(TargetActor->HasInteractionComponent())
 			{
@@ -51,11 +52,12 @@ void AMS_TownLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, 
 	}
 }
 
-void AMS_TownLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, AActor* aPointerUpActor)
+void AMS_TownLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult)
 {
-	if(aPointerUpActor)
+	AActor* PointerUpActor = aInteractableHitResult.GetActor();
+	if(IsValid(PointerUpActor))
 	{
-		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(aPointerUpActor))
+		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(PointerUpActor))
 		{
 			if(TargetActor->HasInteractionComponent())
 			{

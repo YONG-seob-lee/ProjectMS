@@ -8,10 +8,16 @@
 
 AMS_Building::AMS_Building()
 {
+	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
+	if (InteractionComponent)
+	{
+		SetRootComponent(InteractionComponent);
+	}
+	
 	BuildingFront = CreateDefaultSubobject<UStaticMeshComponent>("BuildingFront");
 	if(BuildingFront)
 	{
-		SetRootComponent(BuildingFront);
+		BuildingFront->AttachToComponent(InteractionComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
 
 	BuildingMiddle = CreateDefaultSubobject<UStaticMeshComponent>("BuildingMid");
@@ -25,8 +31,6 @@ AMS_Building::AMS_Building()
 	{
 		BuildingRear->AttachToComponent(BuildingFront, FAttachmentTransformRules::KeepRelativeTransform);
 	}
-
-	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
 	
 	SetFloor(Floor);
 }

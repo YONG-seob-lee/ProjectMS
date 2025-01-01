@@ -19,7 +19,8 @@ public:
 
 private:
 	UFUNCTION()
-	void OnPressDownEvent(FVector2D aPointerDownPosition, AActor* aPointerDownActor);
+	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+	
 	UFUNCTION()
-	void OnPressUpEvent(FVector2D aPointerUpPosition, AActor* aPointerUpActor);
+	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
 };
