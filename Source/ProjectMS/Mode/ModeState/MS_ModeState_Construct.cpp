@@ -57,10 +57,10 @@ void UMS_ModeState_Construct::OnMouseRightButtonGlide(const FVector2D& aPosition
 	Super::OnMouseRightButtonGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
 }
 
-void UMS_ModeState_Construct::OnInputPointerHold(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
+void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
 	const FHitResult& aSpaceHitResult)
 {
-	Super::OnInputPointerHold(aPosition, aInteractableHitResult, aSpaceHitResult);
+	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult, aSpaceHitResult);
 }
 
 void UMS_ModeState_Construct::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,

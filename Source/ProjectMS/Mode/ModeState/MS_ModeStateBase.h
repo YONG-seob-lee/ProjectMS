@@ -43,7 +43,7 @@ public:
 	virtual void OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend);
 
 	UFUNCTION()
-	virtual void OnInputPointerHold(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
 
 	UFUNCTION()
 	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);

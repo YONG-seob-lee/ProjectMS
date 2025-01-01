@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerUpDelegate, FVector2D,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerMoveDelegate, FVector2D, aPointerMovePosition, FVector2D, aPointerMovePositionDelta, FVector2D, aPointerMovePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnMouseRightButtonGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerHoldDelegate, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FXOnPointerHoldDelegate, float, aElapsedTime, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerClickDelegate, FVector2D, aPointerClickPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FXOnPinchActionDelegate, float, aPinchValue);
 /**
@@ -27,7 +27,8 @@ public:
 
 	virtual void Initialize() override;
 	virtual void Finalize() override;
-
+	virtual void Tick(float aDeltaTime) override;
+	
 	void SetupInputComponent(const TObjectPtr<UInputComponent>& aInputComponent, const TObjectPtr<ULocalPlayer>& aLocalPlayer);
 	
 /* Input */
@@ -74,6 +75,7 @@ private:
 	UPROPERTY() FVector2D PointerGlidePositionDeltaTrend = { -FLT_MAX, -FLT_MAX };
 
 	FTimerHandle HandlePointerHoldTimerHandle = {};
+	float ElapsedHoldTime;
 	UPROPERTY() FVector2D PointerHoldPosition = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() AActor* PointerHoldActor = nullptr;
 

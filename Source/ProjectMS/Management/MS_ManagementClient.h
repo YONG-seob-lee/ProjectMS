@@ -16,6 +16,8 @@ class PROJECTMS_API UMS_ManagementClient : public UMS_ManagementBase
 public:
 	virtual void Initialize() override;
 	virtual void Finalize() override;
+	virtual void PostInitialize() override;
+	virtual void Tick(float aDeltaTime) override;
 	
 private:
 	UPROPERTY()

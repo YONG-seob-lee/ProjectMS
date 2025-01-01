@@ -70,3 +70,43 @@ void UMS_ManagementClient::Finalize()
 	
 	Super::Finalize();
 }
+
+void UMS_ManagementClient::PostInitialize()
+{
+	Super::PostInitialize();
+
+	if(SceneManager)
+	{
+		SceneManager->PostInitialize();
+	}
+	
+	if(ModeManager)
+	{
+		ModeManager->PostInitialize();
+	}
+	
+	if(InputManager)
+	{
+		InputManager->PostInitialize();
+	}
+	
+	if(WidgetManager)
+	{
+		WidgetManager->PostInitialize();
+	}
+}
+
+void UMS_ManagementClient::Tick(float aDeltaTime)
+{
+	Super::Tick(aDeltaTime);
+	
+	if(ModeManager)
+	{
+		ModeManager->Tick(aDeltaTime);
+	}
+	
+	if(InputManager)
+	{
+		InputManager->Tick(aDeltaTime);
+	}
+}

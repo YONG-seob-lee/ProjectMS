@@ -3,6 +3,9 @@
 
 #include "MS_ModeState_Normal.h"
 
+#include "Manager_Client/MS_ModeManager.h"
+#include "Prop/MS_Prop.h"
+
 UMS_ModeState_Normal::UMS_ModeState_Normal()
 {
 }
@@ -62,10 +65,21 @@ void UMS_ModeState_Normal::OnMouseRightButtonGlide(const FVector2D& aPosition, c
 	Super::OnMouseRightButtonGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
 }
 
-void UMS_ModeState_Normal::OnInputPointerHold(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
+void UMS_ModeState_Normal::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
 	const FHitResult& aSpaceHitResult)
 {
-	Super::OnInputPointerHold(aPosition, aInteractableHitResult, aSpaceHitResult);
+	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult, aSpaceHitResult);
+	
+	if (aElapsedTime >= MoveToDetailModeTime)
+	{
+		if (AActor* InteractActor = aInteractableHitResult.GetActor())
+		{
+			if (InteractActor->IsA(AMS_Prop::StaticClass()))
+			{
+				gModeMng.ChangeState(EMS_ModeState::Construct);
+			}
+		}
+	}
 }
 
 void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,

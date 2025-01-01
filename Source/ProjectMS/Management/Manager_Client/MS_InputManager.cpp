@@ -73,6 +73,16 @@ void UMS_InputManager::Finalize()
 	Super::Finalize();
 }
 
+void UMS_InputManager::Tick(float aDeltaTime)
+{
+	Super::Tick(aDeltaTime);
+
+	if (PointerPressFlag == true || MouseRightButtonPressFlag == true)
+	{
+		ElapsedHoldTime += aDeltaTime;
+	}
+}
+
 void UMS_InputManager::SetupInputComponent(const TObjectPtr<UInputComponent>& aInputComponent, const TObjectPtr<ULocalPlayer>& aLocalPlayer)
 {
 	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(aLocalPlayer);
@@ -138,8 +148,9 @@ void UMS_InputManager::HandlePointerDown(const FInputActionValue& aValue)
 
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
 	MS_CHECK(CommonTable);
-	
-	GetWorld()->GetTimerManager().SetTimer(HandlePointerHoldTimerHandle, this, &UMS_InputManager::HandlePointerHold, CommonTable->GetParameter02(CommonContents::POINTER_HOLD_DELAY));
+
+	ElapsedHoldTime = 0.f;
+	GetWorld()->GetTimerManager().SetTimer(HandlePointerHoldTimerHandle, this, &UMS_InputManager::HandlePointerHold, CommonTable->GetParameter02(CommonContents::POINTER_HOLD_DELAY), true);
 }
 
 void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
@@ -167,6 +178,7 @@ void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
 	
 	OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult, SpaceHitResult);
 
+	ElapsedHoldTime = 0.f;
 	GetWorld()->GetTimerManager().ClearTimer(HandlePointerHoldTimerHandle);
 	PointerDownUpIntervalTime = (PointerUpTimestamp - PointerDownTimestamp) / IntervalTimeValue::Separation;
 
@@ -175,6 +187,8 @@ void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
 
 void UMS_InputManager::HandlePointerHold()
 {
+	MS_LOG_Verbosity(Warning, TEXT("ElapsedHoldTime : %f"), ElapsedHoldTime);
+	
 	PointerHoldPosition = AcquirePointerPositionOnViewport();
 
 	FHitResult InteractableHitResult = {};
@@ -186,10 +200,10 @@ void UMS_InputManager::HandlePointerHold()
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
 	if (IsValid(CurrentModeState))
 	{
-		CurrentModeState->OnInputPointerHold(PointerHoldPosition, InteractableHitResult, SpaceHitResult);
+		CurrentModeState->OnInputPointerHold(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult, SpaceHitResult);
 	}
 	
-	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, InteractableHitResult, SpaceHitResult);
+	OnPointerHoldDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult, SpaceHitResult);
 }
 
 void UMS_InputManager::HandlePointerClick()

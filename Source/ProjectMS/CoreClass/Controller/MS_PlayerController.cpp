@@ -57,6 +57,8 @@ void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AMS_PlayerController::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+
+	ManagementClient->Tick(aDeltaTime);
 }
 
 void AMS_PlayerController::SetupInputComponent()
@@ -79,6 +81,7 @@ void AMS_PlayerController::RegisterManagement()
 	ManagementClient = NewObject<UMS_ManagementClient>(this);
 	MS_CHECK(ManagementClient);
 	ManagementClient->Initialize();
+	ManagementClient->PostInitialize();
 }
 
 void AMS_PlayerController::UnRegisterManagement()

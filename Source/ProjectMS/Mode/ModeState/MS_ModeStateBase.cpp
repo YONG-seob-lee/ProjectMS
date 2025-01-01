@@ -53,7 +53,7 @@ void UMS_ModeStateBase::OnMouseRightButtonGlide(const FVector2D& aPosition, cons
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerHold(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
+void UMS_ModeStateBase::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
 	const FHitResult& aSpaceHitResult)
 {
 }
