@@ -27,10 +27,27 @@ protected:
 	virtual void Exit() override;
 
 public:
-	virtual void OnInputPointerDown();
-	virtual void OnInputPointerUp();
-	virtual void OnInputPointerMove();
-	virtual void OnInputPointerHold();
-	virtual void OnInputPointerClick();
-	virtual void OnInputPointerGlide();
+	UFUNCTION()
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+	
+	UFUNCTION()
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+
+	UFUNCTION()
+	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend);
+
+	UFUNCTION()
+	virtual void OnInputPointerGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend);
+
+	UFUNCTION()
+	virtual void OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend);
+
+	UFUNCTION()
+	virtual void OnInputPointerHold(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+
+	UFUNCTION()
+	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+
+	UFUNCTION()
+	virtual void OnPinchAction(float aPinchValue);
 };

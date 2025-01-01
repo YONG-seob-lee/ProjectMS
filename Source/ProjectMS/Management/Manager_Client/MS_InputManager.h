@@ -50,7 +50,7 @@ public:
 	// Property
 private:
 	
-	bool GetHitResultUnderCursor(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
+	bool GetHitResultUnderPointerPostion(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 	
 	UPROPERTY() bool PointerPressFlag = false;
 

@@ -8,8 +8,10 @@
 #include "InputMappingContext.h"
 #include "InputActionValue.h"
 #include "MS_Define.h"
+#include "MS_ModeManager.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_TableManager.h"
+#include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 
 namespace InputInstancePath
@@ -121,11 +123,17 @@ void UMS_InputManager::HandlePointerDown(const FInputActionValue& aValue)
 	PointerDownPosition = AcquirePointerPositionOnViewport();
 
 	FHitResult InteractableHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
 	FHitResult SpaceHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
+	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+	if (IsValid(CurrentModeState))
+	{
+		CurrentModeState->OnInputPointerDownEvent(PointerDownPosition, InteractableHitResult, SpaceHitResult);
+	}
+	
 	OnPointerDownDelegate.Broadcast(PointerDownPosition, InteractableHitResult, SpaceHitResult);
 
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
@@ -146,10 +154,16 @@ void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
 	PointerUpPosition = AcquirePointerPositionOnViewport();
 
 	FHitResult InteractableHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
 	FHitResult SpaceHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+
+	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+	if (IsValid(CurrentModeState))
+	{
+		CurrentModeState->OnInputPointerUpEvent(PointerUpPosition, InteractableHitResult, SpaceHitResult);
+	}
 	
 	OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult, SpaceHitResult);
 
@@ -164,11 +178,17 @@ void UMS_InputManager::HandlePointerHold()
 	PointerHoldPosition = AcquirePointerPositionOnViewport();
 
 	FHitResult InteractableHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
 	FHitResult SpaceHitResult = {};
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
+	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+	if (IsValid(CurrentModeState))
+	{
+		CurrentModeState->OnInputPointerHold(PointerHoldPosition, InteractableHitResult, SpaceHitResult);
+	}
+	
 	OnPointerHoldDelegate.Broadcast(PointerHoldPosition, InteractableHitResult, SpaceHitResult);
 }
 
@@ -184,11 +204,17 @@ void UMS_InputManager::HandlePointerClick()
 		PointerClickPosition = AcquirePointerPositionOnViewport();
 
 		FHitResult InteractableHitResult = {};
-		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+		GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
 		FHitResult SpaceHitResult = {};
-		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
+		GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
+		UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+		if (IsValid(CurrentModeState))
+		{
+			CurrentModeState->OnInputPointerClick(PointerClickPosition, InteractableHitResult, SpaceHitResult);
+		}
+		
 		OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult, SpaceHitResult);
 	}
 }
@@ -220,6 +246,12 @@ void UMS_InputManager::HandlePointerMove()
 	}
 	PointerMovePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
 
+	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+	if (IsValid(CurrentModeState))
+	{
+		CurrentModeState->OnInputPointerMove(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
+	}
+	
 	OnPointerMoveDelegate.Broadcast(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
 	
 	HandlePointerGlide();
@@ -256,12 +288,24 @@ void UMS_InputManager::HandlePointerGlide()
 
 		if (PointerPressFlag == true)
 		{
+			UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+			if (IsValid(CurrentModeState))
+			{
+				CurrentModeState->OnInputPointerGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+			}
+			
 			OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 		}
 
 		// DEBUG
 		if (MouseRightButtonPressFlag == true)
 		{
+			UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+			if (IsValid(CurrentModeState))
+			{
+				CurrentModeState->OnMouseRightButtonGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
+			}
+			
 			OnMouseRightButtonGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 		}
 	}
@@ -276,6 +320,12 @@ void UMS_InputManager::HandlePointerGlide()
 
 void UMS_InputManager::HandlePinchAction(const FInputActionValue& aValue)
 {
+	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+	if (IsValid(CurrentModeState))
+	{
+		CurrentModeState->OnPinchAction(aValue.Get<float>());
+	}
+	
 	OnPinchActionDelegate.Broadcast(aValue.Get<float>());
 }
 
@@ -297,7 +347,7 @@ void UMS_InputManager::HandleMouseRightButtonUp(const FInputActionValue& aValue)
 	MouseRightButtonPressFlag = false;
 }
 
-bool UMS_InputManager::GetHitResultUnderCursor(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
+bool UMS_InputManager::GetHitResultUnderPointerPostion(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	MS_CHECK(World);
