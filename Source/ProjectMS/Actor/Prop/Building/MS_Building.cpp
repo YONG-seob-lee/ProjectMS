@@ -8,22 +8,29 @@
 
 AMS_Building::AMS_Building()
 {
-	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
-	if (InteractionComponent)
-	{
-		SetRootComponent(InteractionComponent);
-	}
-	
 	BuildingFront = CreateDefaultSubobject<UStaticMeshComponent>("BuildingFront");
 	if(BuildingFront)
 	{
-		BuildingFront->AttachToComponent(InteractionComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		SetRootComponent(BuildingFront);
 	}
 
 	BuildingMiddle = CreateDefaultSubobject<UStaticMeshComponent>("BuildingMid");
 	if(BuildingMiddle)
 	{
 		BuildingMiddle->AttachToComponent(BuildingFront, FAttachmentTransformRules::KeepRelativeTransform);
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_1"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_2"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_3"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_4"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_5"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_6"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_7"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_8"));
+		MiddleArray.Emplace(CreateDefaultSubobject<UStaticMeshComponent>("Middle_9"));
+	}
+	for(const auto& Middle : MiddleArray)
+	{
+		Middle->SetVisibility(false, true);
 	}
 	
 	BuildingRear = CreateDefaultSubobject<UStaticMeshComponent>("BuildingRear");
@@ -31,7 +38,7 @@ AMS_Building::AMS_Building()
 	{
 		BuildingRear->AttachToComponent(BuildingFront, FAttachmentTransformRules::KeepRelativeTransform);
 	}
-	
+
 	SetFloor(Floor);
 }
 
@@ -111,30 +118,28 @@ void AMS_Building::SetFloor(int32 aFloor)
 			BuildingRear->SetVisibility(true, true);
 			BuildingMiddle->SetVisibility(true, true);
 
-			TArray<USceneComponent*> ChildComponent = BuildingMiddle->GetAttachChildren();
-			for(int32 i = 0; i < ChildComponent.Num(); i++)
+			for(const auto& Middle : MiddleArray)
 			{
-				if(ChildComponent[i] == nullptr)
-				{
-					continue;
-				}
-				ChildComponent[i]->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
-				MS_DeleteObject(ChildComponent[i]);
+				Middle->SetVisibility(false, true);
 			}
-			
-			for(int32 i = 1 ;i < aFloor ; i++)
+
+			for(int32 i = 0 ; i < aFloor - 2 ; i++)
 			{
-				if(UStaticMeshComponent* ExtraMidMesh = MS_NewObject<UStaticMeshComponent>(this))
+				if(MiddleArray.IsValidIndex(i))
 				{
-					ExtraMidMesh->SetStaticMesh(BuildingMiddle->GetStaticMesh());
-					ExtraMidMesh->AttachToComponent(BuildingMiddle, FAttachmentTransformRules::KeepRelativeTransform);
-					ExtraMidMesh->SetRelativeLocation(FVector(0.f, 0.f, MiddleSizeZ * (i - 1)));
+					MiddleArray[i]->SetStaticMesh(BuildingMiddle->GetStaticMesh());
+					MiddleArray[i]->SetVisibility(true,  true);
+					MiddleArray[i]->AttachToComponent(BuildingMiddle, FAttachmentTransformRules::KeepRelativeTransform);
+					MiddleArray[i]->SetRelativeLocation(FVector(0.f, 0.f, MiddleSizeZ * (i + 1)));
 				}
 			}
 			
 			BuildingMiddle->SetRelativeLocation(FVector(0.f, 0.f, MiddleStartLocationZ));
 
-			BuildingRear->SetRelativeLocation(FVector(0.f, 0.f, MiddleStartLocationZ + MiddleSizeZ * (aFloor - 1)));
+			if(aFloor <= MiddleArray.Num() + 2)
+			{
+				BuildingRear->SetRelativeLocation(FVector(0.f, 0.f, MiddleStartLocationZ + MiddleSizeZ * (aFloor - 1)));
+			}
 			
 			break;
 		}

@@ -29,7 +29,7 @@ void UMS_InMarketWidget::NativeConstruct()
 		for(int32 i = 0 ; i < 10 ; i++)
 		{
 			UMS_ConstructCategoryElementData* Data = MS_NewObject<UMS_ConstructCategoryElementData>(this);
-			Data->SetElementName(TEXT("건설모드"));
+			Data->SetElementName(FText::Format(FText::FromString(TEXT("건설목록\'{0}\'")), i).ToString());
 			ConstructCategoryElements.Emplace(Data);
 
 			UMS_ConstructItemElement* ItemData = MS_NewObject<UMS_ConstructItemElement>(this);

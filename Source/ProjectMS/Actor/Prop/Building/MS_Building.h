@@ -15,7 +15,6 @@ class PROJECTMS_API AMS_Building : public AMS_Prop
 	GENERATED_BODY()
 public:
 	AMS_Building();
-	
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	virtual bool HasInteractionComponent() override;
@@ -44,7 +43,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Floor", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> BuildingRear = nullptr;
-
+	
+	UPROPERTY()
+	TArray<TObjectPtr<UStaticMeshComponent>> MiddleArray;
+	
 	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
 };
