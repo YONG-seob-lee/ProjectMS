@@ -19,12 +19,10 @@ enum class EMS_ControllerModeType : uint8
 UENUM()
 enum class EMS_ModeState : uint8
 {
-	None = 0,
-
-	Normal = 1,
-	Construct = 2,
-	StaffManagement = 3,
-	CustomerManagement = 4,
+	Normal = 0,
+	Construct = 1,
+	StaffManagement = 2,
+	CustomerManagement = 3,
 };
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnChangeModeDelegate, EMS_ModeState, EMS_ControllerModeType);

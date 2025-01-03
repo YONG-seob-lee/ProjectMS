@@ -4,6 +4,8 @@
 #include "MS_InMarketModeWidget.h"
 #include "MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
+#include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 
@@ -21,6 +23,22 @@ void UMS_InMarketWidget::NativeConstruct()
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
 
 	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::Visible);
+
+	if(CPP_ExpanderWidget)
+	{
+		for(int32 i = 0 ; i < 10 ; i++)
+		{
+			UMS_ConstructCategoryElementData* Data = MS_NewObject<UMS_ConstructCategoryElementData>(this);
+			Data->SetElementName(TEXT("건설모드"));
+			ConstructCategoryElements.Emplace(Data);
+
+			UMS_ConstructItemElement* ItemData = MS_NewObject<UMS_ConstructItemElement>(this);
+			ItemData->SetElementName(FText::Format(FText::FromString(TEXT("매대\'{0}\'")), i).ToString());
+			ConstructItemElements.Emplace(ItemData);
+		}
+		
+		CPP_ExpanderWidget->SetListItems(ConstructCategoryElements, ConstructItemElements);
+	}
 }
 
 void UMS_InMarketWidget::NativeDestruct()

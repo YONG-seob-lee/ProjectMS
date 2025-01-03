@@ -66,7 +66,7 @@ void UMS_ModeManager::ChangeControllerMode(EMS_ControllerModeType aControllerMod
 		}
 	}
 
-	OnChangeModeDelegate.Broadcast(!IsValid(ModeStateMachine) ? EMS_ModeState::None : GetCurrentModeStateId()
+	OnChangeModeDelegate.Broadcast(!IsValid(ModeStateMachine) ? EMS_ModeState::Normal : GetCurrentModeStateId()
 		, ControllerModeType);
 }
 
@@ -126,7 +126,7 @@ EMS_ModeState UMS_ModeManager::GetCurrentModeStateId() const
 		return static_cast<EMS_ModeState>(GetCurrentModeState()->GetStateIndex());
 	}
 
-	return EMS_ModeState::None;
+	return EMS_ModeState::Normal;
 }
 
 void UMS_ModeManager::ChangeState(EMS_ModeState aModeState)

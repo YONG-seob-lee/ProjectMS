@@ -37,4 +37,11 @@ private:
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_MarketExpanderWidget> CPP_ExpanderWidget;
+
+	// 일단 임시
+	UPROPERTY()
+	TArray<TObjectPtr<class UMS_ConstructCategoryElementData>> ConstructCategoryElements;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UMS_ConstructItemElement>> ConstructItemElements;
 };

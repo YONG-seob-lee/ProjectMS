@@ -28,11 +28,6 @@ void UMS_ModeNameWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerMo
 	
 	switch(aModeState)
 	{
-	case EMS_ModeState::None:
-		{
-			ModeStateName = FString("None");
-			break;
-		}
 	case EMS_ModeState::Construct:
 		{
 			ModeStateName = FString("Construct");
