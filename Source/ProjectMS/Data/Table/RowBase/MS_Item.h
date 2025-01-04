@@ -14,7 +14,7 @@ struct FMS_Item : public FTableRowBase
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	int32 Index = 0;
+	int32 Id = 0;
 	UPROPERTY(EditAnywhere)
 	int32 ItemType = 0;
 	UPROPERTY(EditAnywhere)
@@ -22,7 +22,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 StorageType = 0;
 	UPROPERTY(EditAnywhere)
+	int32 TemperatureType = 0;
+	UPROPERTY(EditAnywhere)
 	int32 TakeMinCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 TakeMaxCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 Volume = 0;
 	UPROPERTY(EditAnywhere)
 	int32 PriceMin = 0;
 	UPROPERTY(EditAnywhere)

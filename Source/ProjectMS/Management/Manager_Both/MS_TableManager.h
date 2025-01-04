@@ -28,7 +28,7 @@ enum class EMS_TableDataType : uint8
 	Env_Prop_FloorTile				UMETA(DisplayName = "Env_Prop_FloorTile"),
 
 	Item							UMETA(DisplayName = "Item"),
-	SaleStand						UMETA(DisplayName = "SaleStand"),
+	Storage						UMETA(DisplayName = "SaleStand"),
 	MenuElement						UMETA(DisplayName = "MenuElement"),
 };
 

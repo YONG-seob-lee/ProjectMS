@@ -1,4 +1,4 @@
-Index,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
+Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 1,Root,100,1,FALSE,0
 2,Persistent,100,2,FALSE,0
 3,Practice_01,100,3,FALSE,0

@@ -1,4 +1,4 @@
-﻿Index,Contents,Parameter01,Parameter02
+﻿Id,Contents,Parameter01,Parameter02
 1,POINTER_HOLD_DELAY,,0.35f
 2,POINTER_CLICK_DELAY,,0.25f
 3,POINTER_DOUBLE_CLICK_DELAY,,0.25f

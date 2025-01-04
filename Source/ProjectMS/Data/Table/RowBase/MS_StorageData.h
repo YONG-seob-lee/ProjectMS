@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_SaleStand.generated.h"
+#include "MS_StorageData.generated.h"
 
 /**
  * 
  */
 USTRUCT()
-struct FMS_SaleStand : public FTableRowBase
+struct FMS_StorageData : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
@@ -18,15 +18,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 StorageType = 0;
 	UPROPERTY(EditAnywhere)
+	int32 TemperatureType = 0;
+	UPROPERTY(EditAnywhere)
 	FName StandName = FName();
 	UPROPERTY(EditAnywhere)
 	int32 StandLv = 0;
-	UPROPERTY(EditAnywhere)
-	int32 FloorCount = 0;
 	UPROPERTY(EditAnywhere)
 	int32 SlotCount = 0;
 	UPROPERTY(EditAnywhere)
 	int32 Price = 0;
 	UPROPERTY(EditAnywhere)
 	int32 PathFile = 0;
+	UPROPERTY(EditAnywhere)
+	int32 ImagePath = 0;
+	UPROPERTY(EditAnywhere)
+	FString Desc = FString();
 };

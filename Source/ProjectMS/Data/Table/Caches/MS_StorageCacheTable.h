@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Table/MS_CacheTable.h"
-#include "Table/RowBase/MS_SaleStand.h"
-#include "MS_SaleStandCacheTable.generated.h"
+#include "Table/RowBase/MS_StorageData.h"
+#include "MS_StorageCacheTable.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_SaleStandCacheTable : public UMS_CacheTable
+class PROJECTMS_API UMS_StorageCacheTable : public UMS_CacheTable
 {
 	GENERATED_BODY()
 public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
 private:
-	TMap<int32, FMS_SaleStand*> SaleStandDatas; 
+	TMap<int32, FMS_StorageData*> SaleStandDatas; 
 };

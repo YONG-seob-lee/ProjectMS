@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
 #include "Table/RowBase/MS_Item.h"
-#include "Table/RowBase/MS_SaleStand.h"
+#include "Table/RowBase/MS_StorageData.h"
 #include "MS_InventoryManager.generated.h"
 
 // 임시
@@ -62,7 +62,7 @@ public:
 	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
 private:
 	TMap<int32, FMS_Item*> Items = {};
-	TMap<int32, FMS_SaleStand*> Stand = {};
+	TMap<int32, FMS_StorageData*> Stand = {};
 	
 public:
 	inline static TObjectPtr<UMS_InventoryManager> InventoryManager = nullptr;
