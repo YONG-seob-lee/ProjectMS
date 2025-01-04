@@ -6,7 +6,9 @@
 #include "MS_ManagerBase.h"
 #include "Table/RowBase/MS_Item.h"
 #include "Table/RowBase/MS_StorageData.h"
-#include "MS_InventoryManager.generated.h"
+#include "MS_ItemManager.generated.h"
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnClickedItem, int32, int32); /* ItemId, ItemType */
 
 // 임시
 struct FPacketItemDatas
@@ -21,12 +23,15 @@ UENUM()
 enum class EMS_ItemType : uint8
 {
 	Undefined = 0,
+	Money,
+	Cash,
 	Fruit,
 	Fish,
 	Beverage,
 	Frozen,
 	Snack,
-	FrozenSnack
+	FrozenSnack,
+	Storage
 };
 
 UENUM()
@@ -41,12 +46,12 @@ enum class EMS_StorageType : uint8
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_InventoryManager : public UMS_ManagerBase
+class PROJECTMS_API UMS_ItemManager : public UMS_ManagerBase
 {
 	GENERATED_BODY()
 	
-	UMS_InventoryManager();
-	virtual ~UMS_InventoryManager() override;
+	UMS_ItemManager();
+	virtual ~UMS_ItemManager() override;
 
 public:
 	virtual void BuiltInInitialize() override;
@@ -60,13 +65,16 @@ public:
 
 	void CreateItem(int32 aItemId);
 	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
+
+	FMS_OnClickedItem OnClickedItemDelegate;
 private:
 	TMap<int32, FMS_Item*> Items = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
 	
 public:
-	inline static TObjectPtr<UMS_InventoryManager> InventoryManager = nullptr;
-	static UMS_InventoryManager* GetInstance();
+	inline static TObjectPtr<UMS_ItemManager> InventoryManager = nullptr;
+	static UMS_ItemManager* GetInstance();
+
 	
-#define gInvenMng (*UMS_InventoryManager::GetInstance())
+#define gItemMng (*UMS_ItemManager::GetInstance())
 };

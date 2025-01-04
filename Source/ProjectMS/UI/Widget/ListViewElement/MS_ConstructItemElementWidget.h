@@ -25,4 +25,6 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_ConstructItemImage = nullptr;
+
+	int32 ItemId = 0;
 };

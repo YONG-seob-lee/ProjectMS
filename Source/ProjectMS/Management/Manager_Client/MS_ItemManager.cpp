@@ -1,56 +1,56 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_InventoryManager.h"
+#include "MS_ItemManager.h"
 
 #include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 
-UMS_InventoryManager::UMS_InventoryManager()
+UMS_ItemManager::UMS_ItemManager()
 {
 	InventoryManager = this;
 }
 
-UMS_InventoryManager::~UMS_InventoryManager()
+UMS_ItemManager::~UMS_ItemManager()
 {
 }
 
-void UMS_InventoryManager::BuiltInInitialize()
+void UMS_ItemManager::BuiltInInitialize()
 {
 	Super::BuiltInInitialize();
 }
 
-void UMS_InventoryManager::Initialize()
+void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
 }
 
-void UMS_InventoryManager::PostInitialize()
+void UMS_ItemManager::PostInitialize()
 {
 	Super::PostInitialize();
 }
 
-void UMS_InventoryManager::PreFinalize()
+void UMS_ItemManager::PreFinalize()
 {
 	Super::PreFinalize();
 }
 
-void UMS_InventoryManager::Finalize()
+void UMS_ItemManager::Finalize()
 {
 	Super::Finalize();
 }
 
-void UMS_InventoryManager::BuiltInFinalize()
+void UMS_ItemManager::BuiltInFinalize()
 {
 	Super::BuiltInFinalize();
 }
 
-void UMS_InventoryManager::Tick(float aDeltaTime)
+void UMS_ItemManager::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
 }
 
-void UMS_InventoryManager::CreateItem(int32 aItemId)
+void UMS_ItemManager::CreateItem(int32 aItemId)
 {
 	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Item));
 	if(!ItemTable)
@@ -61,7 +61,7 @@ void UMS_InventoryManager::CreateItem(int32 aItemId)
 	ItemTable->GetItem(aItemId);
 }
 
-void UMS_InventoryManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
+void UMS_ItemManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
 {
 	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Item));
 	if(!ItemTable)
@@ -74,12 +74,12 @@ void UMS_InventoryManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aIte
 		if(const FMS_Item* ItemData = ItemTable->GetItem(Item.Key))
 		{
 			// ItemData->Index 를 유닛 타입의 key 로 변경해야함.
-			gUnitMng.CreateUnit(ItemData->Index, EMS_UnitType::Item, Item.Value->Vector, Item.Value->Rotator);
+			gUnitMng.CreateUnit(ItemData->Id, EMS_UnitType::Item, Item.Value->Vector, Item.Value->Rotator);
 		}
 	}
 }
 
-UMS_InventoryManager* UMS_InventoryManager::GetInstance()
+UMS_ItemManager* UMS_ItemManager::GetInstance()
 {
 	return InventoryManager;
 }

@@ -3,7 +3,7 @@
 
 #include "MS_InMarketLevelScriptActor.h"
 
-#include "Manager_Client/MS_InventoryManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 
 
 AMS_InMarketLevelScriptActor::AMS_InMarketLevelScriptActor()
@@ -18,7 +18,7 @@ void AMS_InMarketLevelScriptActor::BeginPlay()
 	// 패킷으로 데이터를 받음
 	
 	TMap<int32, FPacketItemDatas*> Items;
-	gInvenMng.CreateItem(Items);
+	gItemMng.CreateItem(Items);
 }
 
 void AMS_InMarketLevelScriptActor::Tick(float DeltaTime)

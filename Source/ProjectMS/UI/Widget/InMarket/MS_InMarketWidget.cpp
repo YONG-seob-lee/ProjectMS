@@ -4,6 +4,7 @@
 #include "MS_InMarketModeWidget.h"
 #include "MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Table/Caches/MS_StorageCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
@@ -23,7 +24,11 @@ void UMS_InMarketWidget::NativeConstruct()
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
 
 	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::Visible);
-
+	
+	TArray<TObjectPtr<UMS_ConstructItemElement>> ConstructItemElements;
+	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	StorageTable->GetStorageData(ConstructItemElements);
+	
 	if(CPP_ExpanderWidget)
 	{
 		for(int32 i = 0 ; i < 10 ; i++)
@@ -31,10 +36,6 @@ void UMS_InMarketWidget::NativeConstruct()
 			UMS_ConstructCategoryElementData* Data = MS_NewObject<UMS_ConstructCategoryElementData>(this);
 			Data->SetElementName(FText::Format(FText::FromString(TEXT("건설목록\'{0}\'")), i).ToString());
 			ConstructCategoryElements.Emplace(Data);
-
-			UMS_ConstructItemElement* ItemData = MS_NewObject<UMS_ConstructItemElement>(this);
-			ItemData->SetElementName(FText::Format(FText::FromString(TEXT("매대\'{0}\'")), i).ToString());
-			ConstructItemElements.Emplace(ItemData);
 		}
 		
 		CPP_ExpanderWidget->SetListItems(ConstructCategoryElements, ConstructItemElements);

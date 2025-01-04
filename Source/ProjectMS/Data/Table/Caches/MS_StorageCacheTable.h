@@ -17,6 +17,9 @@ class PROJECTMS_API UMS_StorageCacheTable : public UMS_CacheTable
 public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
+
+	void GetStorageData(TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
+
 private:
-	TMap<int32, FMS_StorageData*> SaleStandDatas; 
+	TMap<int32, FMS_StorageData*> StorageDatas; 
 };

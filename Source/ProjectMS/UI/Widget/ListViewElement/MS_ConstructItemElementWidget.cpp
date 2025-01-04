@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ConstructItemElement.h"
+#include "Manager_Client/MS_ItemManager.h"
 
 void UMS_ConstructItemElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {
@@ -15,9 +16,12 @@ void UMS_ConstructItemElementWidget::NativeOnListItemObjectSet(UObject* aListIte
 	
 	CPP_ConstructItemText->SetText(FText::FromString(ItemData->GetElementName()));
 	CPP_ConstructItemImage->SetBrushFromTexture(ItemData->GetImage());
+	ItemId = ItemData->GetItemId();
 }
 
 void UMS_ConstructItemElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
 	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+
+	gItemMng.OnClickedItemDelegate.Broadcast(ItemId, static_cast<int32>(EMS_ItemType::Storage));
 }

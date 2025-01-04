@@ -16,11 +16,14 @@ class PROJECTMS_API UMS_ConstructItemElement : public UObject
 public:
 	FORCEINLINE void SetImage(UTexture2D* aImage) { Image = aImage; }
 	FORCEINLINE void SetElementName(const FString& aElementName) { ElementName = aElementName; }
+	FORCEINLINE void SetItemId(int32 aId) { ItemId = aId; }
 	FORCEINLINE UTexture2D* GetImage() const { return Image; }
 	FORCEINLINE FString GetElementName() { return ElementName; }
+	FORCEINLINE int32 GetItemId() const { return ItemId; }
 	
 private:
 	UPROPERTY()
 	UTexture2D* Image = nullptr;
 	FString ElementName = FString();
+	int32 ItemId = 0;
 };
