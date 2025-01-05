@@ -13,9 +13,20 @@ UENUM(BlueprintType) enum class EMS_StaffObservePattern : uint8
 UENUM(BlueprintType) enum class EMS_StaffOperatePattern : uint8
 {
 	Undefined			UMETA(DisplayName = "Undefined"),
+	Move				UMETA(DisplayName = "Move"),
 	Fetch				UMETA(DisplayName = "Fetch"),
 	Pick				UMETA(DisplayName = "Pick"),
 	Drop				UMETA(DisplayName = "Drop"),
+};
+
+UENUM(BlueprintType) enum class EMS_StaffInteractPattern : uint8
+{
+	Undefined			UMETA(DisplayName = "Undefined")
+};
+
+UENUM(BlueprintType) enum class EMS_StaffIdlePattern : uint8
+{
+	Undefined			UMETA(DisplayName = "Undefined")
 };
 
 UCLASS() class PROJECTMS_API AMS_StaffAICharacter : public AMS_AICharacter

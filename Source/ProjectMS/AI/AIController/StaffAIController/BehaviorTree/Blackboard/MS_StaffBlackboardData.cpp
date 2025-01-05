@@ -5,14 +5,17 @@
 
 UMS_StaffBlackboardData::UMS_StaffBlackboardData()
 {
-    AddEntryAsEnum(FName(TEXT("StaffIdlePattern")), TEXT("EMS_StaffIdlePattern"));
     AddEntryAsEnum(FName(TEXT("StaffObservePattern")), TEXT("EMS_StaffObservePattern"));
     AddEntryAsEnum(FName(TEXT("StaffOperatePattern")), TEXT("EMS_StaffOperatePattern"));
-    AddEntryAsEnum(FName(TEXT("StaffNavigatePattern")), TEXT("EMS_StaffNavigatePattern"));
+    AddEntryAsEnum(FName(TEXT("StaffInteractPattern")), TEXT("EMS_StaffInteractPattern"));
+    AddEntryAsEnum(FName(TEXT("StaffIdlePattern")), TEXT("EMS_StaffIdlePattern"));
 
     AddEntryAsVector(FName(TEXT("TargetLocation")));
     AddEntryAsObject(FName(TEXT("TargetStorage")), AMS_Storage::StaticClass());
 
     AddEntryAsVector(FName(TEXT("StorageBayAdjacentLocation")));
     AddEntryAsInt(FName(TEXT("StorageBayOrder")));
+	AddEntryAsString(FName(TEXT("StorageSlotStuffName")));
+    AddEntryAsInt(FName(TEXT("StorageSlotStockCapacity")));
+    AddEntryAsInt(FName(TEXT("StorageSlotStockQuantity")));
 }
