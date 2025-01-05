@@ -34,6 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable) bool LoadStuff(FName aStuffRowName, int aStockQuantity);
 	UFUNCTION(BlueprintCallable) void UnloadStuff();
 
+	UFUNCTION(BlueprintCallable) void AdjustSlotStock(const FName& aStuffRowName, const int& aStockQuantity, const int& aStockCapacity);
+
 	// Property
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int SlotOrder = INT_MIN;

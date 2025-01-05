@@ -1,4 +1,4 @@
-#include "AI/AIController/StaffAIController/BehaviorTree/BehaviorTreeTask/MS_SeekUntilAvailableBayTask.h"
+#include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_SeekUntilAvailableBayTask.h"
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Actor/Storage/MS_Storage.h"

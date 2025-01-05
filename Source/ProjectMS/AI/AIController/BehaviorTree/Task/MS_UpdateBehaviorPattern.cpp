@@ -23,7 +23,6 @@ EBTNodeResult::Type UMS_UpdateBehaviorPattern::ExecuteTask(UBehaviorTreeComponen
 	EBTNodeResult::Type Result = Super::ExecuteTask(aOwnerComp, aNodeMemory);
 
 	aOwnerComp.GetBlackboardComponent()->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), static_cast<uint8>(ConditionAIBehaviorPattern));
-	UE_LOG(LogTemp, Warning, TEXT("Execute Task"));
 
 	Result = EBTNodeResult::Succeeded;
 	return Result;

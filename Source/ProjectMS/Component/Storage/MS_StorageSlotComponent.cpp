@@ -5,6 +5,9 @@
 #include "Components/LineBatchComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
+#include "Management/Manager_Both/MS_TableManager.h"
+#include "Data/Table/RowBase/MS_Item.h"
+
 
 UMS_StorageSlotComponent::UMS_StorageSlotComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -117,9 +120,30 @@ void UMS_StorageSlotComponent::UnreserveWorker()
 
 bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity)
 {
+	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
+	MS_CHECK(ItemData);
+
+	FMS_Item* ItemDataTableRow = ItemData->FindRow<FMS_Item>(aStuffRowName, TEXT(""));
+	MS_CHECK(ItemDataTableRow);
+
+	StuffRowName = aStuffRowName;
+	StockQuantity = (aStockQuantity < StockCapacity) ? aStockQuantity : StockCapacity;
+
+	SetStaticMesh(ItemDataTableRow->Model);
 	return true;
 }
 
 void UMS_StorageSlotComponent::UnloadStuff()
 {
+	StuffRowName = NAME_None;
+	StockQuantity = 0;
+
+	SetStaticMesh(nullptr);
+}
+
+void UMS_StorageSlotComponent::AdjustSlotStock(const FName& aStuffRowName, const int& aStockQuantity, const int& aStockCapacity)
+{
+	StuffRowName = aStuffRowName;
+	StockQuantity = aStockQuantity;
+	StockCapacity = aStockCapacity;
 }
