@@ -15,6 +15,12 @@
 #include "Camera/CameraEffect/MS_CameraEffect.h"
 #include "Camera/CameraEffect/CameraShake/MS_CameraShake.h"
 
+namespace ViewCamera
+{
+	const FName Quarter = TEXT("QuarterViewCamera");
+	const FName Side = TEXT("SideViewCamera");
+}
+
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
 {
 	CameraManager = this;
@@ -135,11 +141,11 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 {
 	FActorSpawnParameters ActorSpawnParameters = {};
 	
-	ActorSpawnParameters.Name = TEXT("QuarterViewCamera");
+	ActorSpawnParameters.Name = ViewCamera::Quarter;
 	ViewCameraMap.Add(EMS_ViewCameraType::QuarterView, GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
 
-	ActorSpawnParameters.Name = TEXT("SideViewCamera");
-	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector(-300.f, 0.f, 100.f), FVector::OneVector), ActorSpawnParameters));
+	ActorSpawnParameters.Name = ViewCamera::Side;
+	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
 
 	for (const TPair<EMS_ViewCameraType, TObjectPtr<AMS_ViewCamera>>& PairMap : ViewCameraMap)
 	{
@@ -212,8 +218,17 @@ void AMS_PlayerCameraManager::AdjustPostProcessEffect(UMS_CameraPostProcessEffec
 	ViewCamera->AdjustPostProcessEffect(aCameraPostProcessEffect);
 }
 
+void AMS_PlayerCameraManager::LocateAndRotateCamera(const FVector& aLocation, const FRotator& aRotation, EMS_ViewCameraType aViewCameraType)
+{
+	if(const TObjectPtr<class AMS_ViewCamera>* TargetViewCamera = ViewCameraMap.Find(aViewCameraType))
+	{
+		(*TargetViewCamera)->SetActorLocationAndRotation(aLocation, aRotation);
+	}
+}
+
 void AMS_PlayerCameraManager::LocateCamera(FVector aLocation)
 {
+	
 	ViewCamera->SetActorLocation(aLocation);
 }
 

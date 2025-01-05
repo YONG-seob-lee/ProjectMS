@@ -222,12 +222,12 @@ void UMS_RootWidget::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = 
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 {
-	if(aLevelType < EMS_LevelType::LobbyLevel)
+	if(aLevelType < EMS_LevelType::Stage01)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
-	else if(aLevelType == EMS_LevelType::LobbyLevel)
+	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);

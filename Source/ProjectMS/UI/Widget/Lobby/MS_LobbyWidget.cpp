@@ -32,7 +32,7 @@ void UMS_LobbyWidget::OnClickedStartButton()
 	Command->OnFadeEventDelegate = FMS_FadeEventDelegate::CreateWeakLambda(this, [this]
 	{
 		FViewTargetTransitionParams Param;
-		Param.BlendTime = 2.f;
+		Param.BlendTime = 1.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
 	});
 

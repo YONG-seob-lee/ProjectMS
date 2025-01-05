@@ -1,9 +1,11 @@
 Id,LevelName,LevelKey,PrimitiveWidgetName
 int32,FName,int32,FName
 1,PersistentLevel,1,Persistent
-2,PracticeLevel_01,1000,Practice_01
-3,PracticeLevel_02,1001,Practice_02
-4,AccountLevel,2,Logo
-5,LobbyLevel,3,Lobby
-6,TownLevel,4,Town
-7,MarketLevel,5,Market
+2,AccountLevel,2,Logo
+3,stage01,3,Lobby
+4,stage02,4,Lobby
+5,stage03,5,Lobby
+6,TownLevel,6,Town
+7,MarketLevel,7,Market
+8,PracticeLevel_01,1000,Practice_01
+9,PracticeLevel_02,1001,Practice_02

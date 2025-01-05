@@ -82,16 +82,6 @@ void AMS_Building::OnPressUpEvent()
 void AMS_Building::LaunchEvent()
 {
 	Super::LaunchEvent();
-
-	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::MarketLevel);
-	Command->SetPreviousLevelType(EMS_LevelType::LobbyLevel);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
-	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
-	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-
-	gSceneMng.RequestChangeScene(Command);
 }
 
 void AMS_Building::UpdateFloorSize()

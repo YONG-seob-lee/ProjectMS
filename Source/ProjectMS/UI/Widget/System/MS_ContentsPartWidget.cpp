@@ -72,17 +72,6 @@ void UMS_ContentsPartWidget::NativeConstruct()
 
 void UMS_ContentsPartWidget::OnClickMarketButton()
 {
-	
-	
-	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::MarketLevel);
-	Command->SetPreviousLevelType(EMS_LevelType::LobbyLevel);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
-	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
-	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-
-	gSceneMng.RequestChangeScene(Command);
 }
 
 void UMS_ContentsPartWidget::OnClickHamburgerButton(TObjectPtr<UMS_ContentButtonWidget> aCommandModeButton)
