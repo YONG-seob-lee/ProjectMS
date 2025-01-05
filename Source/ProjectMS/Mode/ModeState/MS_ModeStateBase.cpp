@@ -28,13 +28,11 @@ void UMS_ModeStateBase::Exit()
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult,
-	const FHitResult& aSpaceHitResult)
+void UMS_ModeStateBase::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult,
-	const FHitResult& aSpaceHitResult)
+void UMS_ModeStateBase::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
 {
 }
 
@@ -53,13 +51,11 @@ void UMS_ModeStateBase::OnMouseRightButtonGlide(const FVector2D& aPosition, cons
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
-	const FHitResult& aSpaceHitResult)
+void UMS_ModeStateBase::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult,
-	const FHitResult& aSpaceHitResult)
+void UMS_ModeStateBase::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 }
 

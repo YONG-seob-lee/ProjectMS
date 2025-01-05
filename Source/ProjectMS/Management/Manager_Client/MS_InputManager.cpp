@@ -134,17 +134,14 @@ void UMS_InputManager::HandlePointerDown(const FInputActionValue& aValue)
 
 	FHitResult InteractableHitResult = {};
 	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	
-	FHitResult SpaceHitResult = {};
-	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
 
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
 	if (IsValid(CurrentModeState))
 	{
-		CurrentModeState->OnInputPointerDownEvent(PointerDownPosition, InteractableHitResult, SpaceHitResult);
+		CurrentModeState->OnInputPointerDownEvent(PointerDownPosition, InteractableHitResult);
 	}
 	
-	OnPointerDownDelegate.Broadcast(PointerDownPosition, InteractableHitResult, SpaceHitResult);
+	OnPointerDownDelegate.Broadcast(PointerDownPosition, InteractableHitResult);
 
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
 	MS_CHECK(CommonTable);
@@ -167,16 +164,13 @@ void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
 	FHitResult InteractableHitResult = {};
 	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
-	FHitResult SpaceHitResult = {};
-	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
-
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
 	if (IsValid(CurrentModeState))
 	{
-		CurrentModeState->OnInputPointerUpEvent(PointerUpPosition, InteractableHitResult, SpaceHitResult);
+		CurrentModeState->OnInputPointerUpEvent(PointerUpPosition, InteractableHitResult);
 	}
 	
-	OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult, SpaceHitResult);
+	OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult);
 
 	ElapsedHoldTime = 0.f;
 	GetWorld()->GetTimerManager().ClearTimer(HandlePointerHoldTimerHandle);
@@ -194,16 +188,13 @@ void UMS_InputManager::HandlePointerHold()
 	FHitResult InteractableHitResult = {};
 	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 	
-	FHitResult SpaceHitResult = {};
-	GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
-
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
 	if (IsValid(CurrentModeState))
 	{
-		CurrentModeState->OnInputPointerHold(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult, SpaceHitResult);
+		CurrentModeState->OnInputPointerHold(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
 	}
 	
-	OnPointerHoldDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult, SpaceHitResult);
+	OnPointerHoldDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
 }
 
 void UMS_InputManager::HandlePointerClick()
@@ -219,17 +210,14 @@ void UMS_InputManager::HandlePointerClick()
 
 		FHitResult InteractableHitResult = {};
 		GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	
-		FHitResult SpaceHitResult = {};
-		GetHitResultUnderPointerPostion(ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult);
-
+		
 		UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
 		if (IsValid(CurrentModeState))
 		{
-			CurrentModeState->OnInputPointerClick(PointerClickPosition, InteractableHitResult, SpaceHitResult);
+			CurrentModeState->OnInputPointerClick(PointerClickPosition, InteractableHitResult);
 		}
 		
-		OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult, SpaceHitResult);
+		OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult);
 	}
 }
 

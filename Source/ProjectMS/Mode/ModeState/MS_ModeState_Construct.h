@@ -27,9 +27,9 @@ protected:
 	virtual void Exit() override;
 
 public:
-	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult) override;
 	
-	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
 	
 	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 	
@@ -37,9 +37,31 @@ public:
 	
 	virtual void OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 
-	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 
-	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 	
 	virtual void OnPinchAction(float aPinchValue) override;
+
+
+	void SelectProp(AActor* aSelectedActor);
+	void UnselectProp();
+
+	UFUNCTION()
+	void OnSelectProp(AActor* aSelectedActor);
+
+	UFUNCTION()
+	void OnUnselectProp(AActor* aUnselectedActor);
+	
+	void CreatePreviewProp(class AMS_Prop* aSelectedProp);
+	void MovePreviewProp(const FVector& NewLocation);
+	void ApplyPreviewProp();
+	void CancelPreviewProp(class AMS_Prop* aSelectedProp);
+
+	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
+	
+private:
+	TObjectPtr<class AMS_Prop> SelectedPreviewProp;
+
+	FVector2D PointerPostionToObjectScreenPositionOffset;
 };

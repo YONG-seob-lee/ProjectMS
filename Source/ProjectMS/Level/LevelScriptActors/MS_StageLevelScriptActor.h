@@ -19,8 +19,8 @@ public:
 	virtual void Destroyed() override;
 private:
 	UFUNCTION()
-	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);
 	
 	UFUNCTION()
-	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult);
+	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
 };

@@ -68,3 +68,8 @@ void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& a
 	PropCenterLocationInZone = aPropCenterLocationInZone;
 }
 
+void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
+{
+	LinkedProp = aLinkedProp;
+}
+

@@ -25,6 +25,9 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_InputManager> InputManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_InteractionManager> InteractionManager = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_WidgetManager> WidgetManager = nullptr;

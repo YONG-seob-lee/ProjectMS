@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
+#include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
@@ -22,6 +23,10 @@ void UMS_ManagementClient::Initialize()
 	ModeManager = MS_NewObject<UMS_ModeManager>(this);
 	MS_CHECK(ModeManager);
 	ModeManager->Initialize();
+
+	InteractionManager = MS_NewObject<UMS_InteractionManager>(this);
+	MS_CHECK(InteractionManager);
+	InteractionManager->Initialize();
 	
 	InputManager = MS_NewObject<UMS_InputManager>(this);
 	MS_CHECK(InputManager);
@@ -39,10 +44,27 @@ void UMS_ManagementClient::Initialize()
 
 void UMS_ManagementClient::Finalize()
 {
-	if(SceneManager)
+	if(CameraManager)
 	{
-		SceneManager->Finalize();
-		SceneManager = nullptr;
+		CameraManager->Destroyed();
+	}
+	
+	if(WidgetManager)
+	{
+		WidgetManager->Finalize();
+		WidgetManager = nullptr;
+	}
+
+	if(InputManager)
+	{
+		InputManager->Finalize();
+		InputManager = nullptr;
+	}
+	
+	if(InteractionManager)
+	{
+		InteractionManager->Finalize();
+		InteractionManager = nullptr;
 	}
 	
 	if(ModeManager)
@@ -51,21 +73,10 @@ void UMS_ManagementClient::Finalize()
 		ModeManager = nullptr;
 	}
 	
-	if(InputManager)
+	if(SceneManager)
 	{
-		InputManager->Finalize();
-		InputManager = nullptr;
-	}
-	
-	if(WidgetManager)
-	{
-		WidgetManager->Finalize();
-		WidgetManager = nullptr;
-	}
-	
-	if(CameraManager)
-	{
-		CameraManager->Destroyed();
+		SceneManager->Finalize();
+		SceneManager = nullptr;
 	}
 	
 	Super::Finalize();

@@ -27,9 +27,9 @@ protected:
 	virtual void Exit() override;
 
 public:
-	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult) override;
 	
-	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
 	
 	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 	
@@ -37,9 +37,9 @@ public:
 	
 	virtual void OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 
-	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 
-	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult) override;
+	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 	
 	virtual void OnPinchAction(float aPinchValue) override;
 

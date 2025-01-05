@@ -41,7 +41,7 @@ void AMS_StageLevelScriptActor::Destroyed()
 	Super::Destroyed();
 }
 
-void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult)
+void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
 {
 	AActor* PointerDownActor = aInteractableHitResult.GetActor();
 	if(IsValid(PointerDownActor))
@@ -56,7 +56,7 @@ void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition,
 	}
 }
 
-void AMS_StageLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult, const FHitResult& aSpaceHitResult)
+void AMS_StageLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
 {
 	AActor* PointerUpActor = aInteractableHitResult.GetActor();
 	if(IsValid(PointerUpActor))

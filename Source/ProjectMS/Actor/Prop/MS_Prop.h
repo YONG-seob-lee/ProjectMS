@@ -37,6 +37,12 @@ public:
 	// Zone Data :: Setter
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone);
 
+
+	// For Preview
+	void InitializeWhenPreviewProp(AMS_Prop* aLinkedProp);
+	
+	TWeakObjectPtr<AMS_Prop> GetLinkedProp() const { return LinkedProp; }
+
 	
 protected:
 	// Property
@@ -57,4 +63,7 @@ protected:
 
 	UPROPERTY()
 	FVector PropCenterLocationInZone;
+
+	// LinkedProp (For Preview)
+	TWeakObjectPtr<AMS_Prop> LinkedProp;
 };

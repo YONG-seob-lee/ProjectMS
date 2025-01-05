@@ -7,13 +7,13 @@
 #include "MS_ManagerBase.h"
 #include "MS_InputManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerDownDelegate, FVector2D, aPointerDownPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerUpDelegate, FVector2D, aPointerUpPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerDownDelegate, FVector2D, aPointerDownPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerUpDelegate, FVector2D, aPointerUpPosition, const FHitResult&, aInteractableHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerMoveDelegate, FVector2D, aPointerMovePosition, FVector2D, aPointerMovePositionDelta, FVector2D, aPointerMovePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnMouseRightButtonGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FXOnPointerHoldDelegate, float, aElapsedTime, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerClickDelegate, FVector2D, aPointerClickPosition, const FHitResult&, aInteractableHitResult, const FHitResult&, aSpaceHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerHoldDelegate, float, aElapsedTime, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerClickDelegate, FVector2D, aPointerClickPosition, const FHitResult&, aInteractableHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FXOnPinchActionDelegate, float, aPinchValue);
 /**
  * 
