@@ -24,22 +24,6 @@ void UMS_InMarketWidget::NativeConstruct()
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
 
 	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::Visible);
-	
-	TArray<TObjectPtr<UMS_ConstructItemElement>> ConstructItemElements;
-	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
-	StorageTable->GetStorageData(ConstructItemElements);
-	
-	if(CPP_ExpanderWidget)
-	{
-		for(int32 i = 0 ; i < 10 ; i++)
-		{
-			UMS_ConstructCategoryElementData* Data = MS_NewObject<UMS_ConstructCategoryElementData>(this);
-			Data->SetElementName(FText::Format(FText::FromString(TEXT("건설목록\'{0}\'")), i).ToString());
-			ConstructCategoryElements.Emplace(Data);
-		}
-		
-		CPP_ExpanderWidget->SetListItems(ConstructCategoryElements, ConstructItemElements);
-	}
 }
 
 void UMS_InMarketWidget::NativeDestruct()

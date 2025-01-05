@@ -18,8 +18,6 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	void SetListItems(const TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aConstructCategoryElements, const TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructItemElements) const;
-	
 private:
 	void OnClickedArrowButton();
 	

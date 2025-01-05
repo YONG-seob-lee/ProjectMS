@@ -9,6 +9,7 @@
 #include "MS_ItemManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnClickedItem, int32, int32); /* ItemId, ItemType */
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnClickedTileViewItem, int32)
 
 // 임시
 struct FPacketItemDatas
@@ -38,7 +39,16 @@ UENUM()
 enum class EMS_StorageType : uint8
 {
 	Undefined = 0,
-	Fresh,
+	Pallet,
+	Shelf,
+	Display
+};
+
+UENUM()
+enum class EMS_TemperatureType : uint8
+{
+	Undefined = 0,
+	Constant,
 	Refrigeration,
 	Freezing
 };
@@ -67,6 +77,8 @@ public:
 	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
 
 	FMS_OnClickedItem OnClickedItemDelegate;
+	
+	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 private:
 	TMap<int32, FMS_Item*> Items = {};
 	TMap<int32, FMS_StorageData*> Stand = {};

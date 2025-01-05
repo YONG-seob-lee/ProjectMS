@@ -42,14 +42,6 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_MarketExpanderWidget::SetListItems(const TArray<TObjectPtr<UMS_ConstructCategoryElementData>>& aConstructCategoryElements, const TArray<TObjectPtr<UMS_ConstructItemElement>>& aConstructItemElements) const
-{
-	if(CPP_ModeSelectWidget)
-	{
-		CPP_ModeSelectWidget->SetConstructListItems(aConstructCategoryElements, aConstructItemElements);
-	}
-}
-
 void UMS_MarketExpanderWidget::OnClickedArrowButton()
 {
 	if(ModeState != EMS_ModeState::Normal)

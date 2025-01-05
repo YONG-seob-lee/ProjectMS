@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager_Client/MS_ItemManager.h"
 
 #include "MS_ConstructCategoryElementData.generated.h"
 
@@ -14,13 +15,9 @@ class PROJECTMS_API UMS_ConstructCategoryElementData : public UObject
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetImage(UTexture2D* aImage) { Image = aImage; }
-	FORCEINLINE void SetElementName(const FString& aElementName) { ElementName = aElementName; }
-	FORCEINLINE UTexture2D* GetImage() const { return Image; }
-	FORCEINLINE FString GetElementName() { return ElementName; }
-	
+	FORCEINLINE void SetStorageType(int32 aStorageType) { StorageType = aStorageType; }
+	FORCEINLINE int32 GetStorageType() const { return StorageType; }
+
 private:
-	UPROPERTY()
-	UTexture2D* Image = nullptr;
-	FString ElementName = FString();
+	int32 StorageType = 0;
 };

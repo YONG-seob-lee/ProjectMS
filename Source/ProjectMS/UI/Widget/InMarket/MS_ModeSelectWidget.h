@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_ModeSelectWidget.generated.h"
@@ -18,10 +19,14 @@ public:
 	virtual void NativeConstruct() override;
 	FORCEINLINE void GetOnClickedModeButtonFunc(const TFunction<void(EMS_ModeState)>& aFunc) { OnClickedModeButtonCallback = aFunc; }
 
-	void SetConstructListItems(const TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aConstructCategoryElements, const TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructItemElements) const;
 	void SwitchWidget(EMS_ModeState aModeState) const;
 private:
+	void InitCategory() const;
+	void RefreshConstructListItems(EMS_StorageType aStorageType);
+	
 	void OnClickModeButton(EMS_ModeState aModeState);
+	void OnClickedCategory(int32 aCategoryType);
+
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ModeButton01 = nullptr;

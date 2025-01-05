@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Table/MS_CacheTable.h"
 #include "Table/RowBase/MS_StorageData.h"
 #include "MS_StorageCacheTable.generated.h"
@@ -18,7 +19,9 @@ public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
 
-	void GetStorageData(TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
+	FORCEINLINE TMap<int32, FMS_StorageData*> GetStorageDatas() { return StorageDatas; }
+	void GetStorageData(EMS_StorageType aStorageType, TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
+	void GetStorageCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
 
 private:
 	TMap<int32, FMS_StorageData*> StorageDatas; 
