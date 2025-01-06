@@ -11,7 +11,7 @@ AMS_Building::AMS_Building()
 	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
 	if (InteractionComponent)
 	{
-		SetRootComponent(InteractionComponent);
+		InteractionComponent->SetupAttachment(GetRootComponent());
 	}
 	
 	BuildingFront = CreateDefaultSubobject<UStaticMeshComponent>("BuildingFront");

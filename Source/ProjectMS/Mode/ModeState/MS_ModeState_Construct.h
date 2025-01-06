@@ -52,13 +52,20 @@ public:
 
 	UFUNCTION()
 	void OnUnselectProp(AActor* aUnselectedActor);
+
+	void OnClickApplyPreviewProp(class UMS_PreviewWidget* PreviewWidget);
+	void OnClickCancelPreviewProp(class UMS_PreviewWidget* PreviewWidget);
 	
 	void CreatePreviewProp(class AMS_Prop* aSelectedProp);
 	void MovePreviewProp(const FVector& NewLocation);
 	void ApplyPreviewProp();
 	void CancelPreviewProp(class AMS_Prop* aSelectedProp);
 
+	void ShowPreviewWidget(bool bShow);
+
 	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
+
+	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
 	
 private:
 	TObjectPtr<class AMS_Prop> SelectedPreviewProp;

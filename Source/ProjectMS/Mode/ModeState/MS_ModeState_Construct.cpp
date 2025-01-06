@@ -1,10 +1,12 @@
 ﻿#include "MS_ModeState_Construct.h"
 
 #include "MS_Define.h"
+#include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Prop/MS_Prop.h"
+#include "Widget/InMarket/MS_PreviewWidget.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
@@ -50,17 +52,28 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
 
-	AActor* InteractableActor = aInteractableHitResult.GetActor();
-	
-	if (IsValid(InteractableActor))
+	if (!GetWorld())
 	{
-		SelectProp(InteractableActor);
+		return;
 	}
+	
+	GetWorld()->GetTimerManager().SetTimerForNextTick(
+		FTimerDelegate::CreateWeakLambda(this, [this, aInteractableHitResult]
+		{
+			AActor* InteractableActor = aInteractableHitResult.GetActor();
+	
+			if (IsValid(InteractableActor))
+			{
+				SelectProp(InteractableActor);
+			}
+		}));
 }
 
 void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+
+	ShowPreviewWidget(true);
 }
 
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -186,6 +199,25 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	}
 }
 
+void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* PreviewWidget)
+{
+	if (!IsValid(PreviewWidget))
+	{
+		return;
+	}
+	
+	if (PreviewWidget != SelectedPreviewProp->GetPreviewWidget())
+	{
+		return;
+	}
+
+	ApplyPreviewProp();
+}
+
+void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* PreviewWidget)
+{
+}
+
 void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
@@ -207,21 +239,75 @@ void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
 	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp);
 
 	SelectedPreviewProp->SetActorEnableCollision(false);
+
+	if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
+	{
+		PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
+		PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
+	}
 }
 
 void UMS_ModeState_Construct::MovePreviewProp(const FVector& NewLocation)
 {
-	SelectedPreviewProp->SetActorLocation(NewLocation + FVector(0.f, 0.f, 10.f));
+	FVector NewLocationOnGrid = GetLocationOnGrid(NewLocation,
+		SelectedPreviewProp->GetGridNum().X % 2 != 0,
+		SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+	
+	SelectedPreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
 }
 
 void UMS_ModeState_Construct::ApplyPreviewProp()
 {
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+
+	if (!IsValid(SelectedPreviewProp))
+    {
+    	return;
+    }
+
+	if (SelectedPreviewProp->GetLinkedProp() != nullptr)
+	{
+		AMS_Prop* LinkedProp = SelectedPreviewProp->GetLinkedProp().Get();
+		if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
+		{
+			return;
+		}
+
+		FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
+		SelectedPreviewProp->GetGridNum().X % 2 != 0,
+		SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+		
+		LinkedProp->SetActorLocation(NewLocationOnGrid);
+	}
 }
 
 void UMS_ModeState_Construct::CancelPreviewProp(AMS_Prop* aSelectedProp)
 {
 	aSelectedProp->SetActorHiddenInGame(false);
 	SelectedPreviewProp->Destroy();
+}
+
+void UMS_ModeState_Construct::ShowPreviewWidget(bool bShow)
+{
+	if (!IsValid(SelectedPreviewProp))
+	{
+		return;
+	}
+	
+	if (UWidgetComponent* PreviewWidgetComponent = SelectedPreviewProp->GetPreviewWidgetComponent())
+	{
+		PreviewWidgetComponent->SetVisibility(bShow);
+	}
 }
 
 bool UMS_ModeState_Construct::GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion,
@@ -247,4 +333,22 @@ bool UMS_ModeState_Construct::GetHitResultUnderObjectScreenPosition(const FVecto
 	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::ScreenPosition : %f, %f"), ScreenPosition.X, ScreenPosition.Y);
 		
 	return PlayerController->GetHitResultAtScreenPosition(ScreenPosition, TraceChannel, bTraceComplex, HitResult);
+}
+
+FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter) const
+{
+	FVector OffsetByGridCenter = FVector(
+		aIsXGridCenter ? 25.f : 0.f,
+		aIsYGridCenter ? 25.f : 0.f,
+		aIsZGridCenter ? 25.f : 0.f
+	);
+	
+	FIntVector GridPosition = FIntVector(
+		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
+		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y),
+		FMath::RoundToInt32((aInLocation.Z - OffsetByGridCenter.Z) / MS_GridSize.Z));
+
+	return FVector(GridPosition.X * MS_GridSize.X,
+		GridPosition.Y * MS_GridSize.Y,
+		GridPosition.Z * MS_GridSize.Z) + OffsetByGridCenter;
 }

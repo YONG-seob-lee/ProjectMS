@@ -27,7 +27,9 @@ public:
 	
 	int32 GetTableIndex() const { return TableIndex; }
 
+	const FIntVector& GetGridNum() const { return GridNum; }
 
+	
 	// Component :: Getter
 	TArray<class UMS_PropSpaceComponent*> GetPropSpaceComponents() const { return PropSpaceComponents; }
 	
@@ -43,8 +45,14 @@ public:
 	
 	TWeakObjectPtr<AMS_Prop> GetLinkedProp() const { return LinkedProp; }
 
+	class UWidgetComponent* GetPreviewWidgetComponent() const { return PreviewWidgetComponent; }
+	class UMS_PreviewWidget* GetPreviewWidget() const;
+
 	
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class USceneComponent> SceneRootComponent;
+	
 	// Property
 	UPROPERTY(EditDefaultsOnly)
 	EMS_PropType PropType;
@@ -52,6 +60,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 TableIndex;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FIntVector GridNum;
 	
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -64,6 +74,9 @@ protected:
 	UPROPERTY()
 	FVector PropCenterLocationInZone;
 
-	// LinkedProp (For Preview)
+	// For Preview
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UWidgetComponent> PreviewWidgetComponent;
+	
 	TWeakObjectPtr<AMS_Prop> LinkedProp;
 };

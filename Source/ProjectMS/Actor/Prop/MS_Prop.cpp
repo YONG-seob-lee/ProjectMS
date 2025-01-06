@@ -4,7 +4,10 @@
 #include "MS_Prop.h"
 
 #include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
+#include "Widget/MS_Widget.h"
+#include "Widget/InMarket/MS_PreviewWidget.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -12,6 +15,18 @@ AMS_Prop::AMS_Prop()
 	: PropType(EMS_PropType::None), TableIndex(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	SceneRootComponent = CreateEditorOnlyDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
+	if (SceneRootComponent)
+	{
+		SetRootComponent(SceneRootComponent);
+	}
+	
+	PreviewWidgetComponent = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("PreviewWidgetComponent"));
+	if (PreviewWidgetComponent)
+	{
+		PreviewWidgetComponent->SetupAttachment(GetRootComponent());
+	}
 }
 
 void AMS_Prop::PostInitializeComponents()
@@ -20,6 +35,11 @@ void AMS_Prop::PostInitializeComponents()
 
 	// Component
 	GetComponents(UMS_PropSpaceComponent::StaticClass(), PropSpaceComponents);
+
+	if (PreviewWidgetComponent)
+	{
+		PreviewWidgetComponent->SetVisibility(false);
+	}
 }
 
 void AMS_Prop::BeginPlay()
@@ -73,3 +93,15 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 	LinkedProp = aLinkedProp;
 }
 
+UMS_PreviewWidget* AMS_Prop::GetPreviewWidget() const
+{
+	if (IsValid(PreviewWidgetComponent))
+	{
+		if (UUserWidget* Widget = PreviewWidgetComponent->GetWidget())
+		{
+			return Cast<UMS_PreviewWidget>(Widget);
+		}
+	}
+
+	return nullptr;
+}
