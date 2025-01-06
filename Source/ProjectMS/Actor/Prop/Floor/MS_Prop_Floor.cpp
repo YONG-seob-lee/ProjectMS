@@ -18,7 +18,11 @@ AMS_Prop_Floor::AMS_Prop_Floor()
 
 	// Component
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	
+	if (MeshComponent)
+	{
+		MeshComponent->SetupAttachment(GetRootComponent());
+	}
+
 	/*
 #if WITH_EDITORONLY_DATA
 	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
