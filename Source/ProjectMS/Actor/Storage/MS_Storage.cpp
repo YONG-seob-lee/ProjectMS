@@ -10,10 +10,11 @@ AMS_Storage::AMS_Storage()
 
 	StorageStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
 	StorageStaticMeshComponent->SetupAttachment(GetRootComponent());
+	StorageStaticMeshComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 
 	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
 	StorageAssemblyAreaComponent->SetupAttachment(GetRootComponent());
-	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-75.0f, 0.0f, 0.0f));
+	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 
 	BayComponentIndexSize = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("No1StorageBayComponent")));
 	BayComponentArray[BayComponentIndexSize]->SetupAttachment(GetRootComponent());
@@ -23,7 +24,6 @@ AMS_Storage::AMS_Storage()
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No1StorageSlotComponent")));
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
-
 }
 
 void AMS_Storage::PostInitializeComponents()

@@ -40,7 +40,10 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
+	UFUNCTION(BlueprintCallable) virtual UClass* GetLoadingStorageType();
+	UFUNCTION(BlueprintCallable) virtual UClass* GetUnloadingStorageType();
+
 	// Property
 public:
-	int TargetStorageBayOrder = INT_MIN;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)int TargetStorageBayOrder = INT_MIN;
 };

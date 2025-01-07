@@ -31,3 +31,13 @@ void AMS_StaffAICharacter::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
 }
+
+UClass* AMS_StaffAICharacter::GetLoadingStorageType()
+{
+	return nullptr;
+}
+
+UClass* AMS_StaffAICharacter::GetUnloadingStorageType()
+{
+	return nullptr;
+}

@@ -10,4 +10,7 @@ UCLASS() class PROJECTMS_API AMS_ShelfStaffAICharacter : public AMS_StaffAIChara
 	
 public:
 	AMS_ShelfStaffAICharacter();
+
+	virtual UClass* GetLoadingStorageType() override;
+	virtual UClass* GetUnloadingStorageType() override;
 };

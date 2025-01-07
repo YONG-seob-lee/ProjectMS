@@ -35,13 +35,13 @@ enum class EMS_ItemType : uint8
 	Storage
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EMS_StorageType : uint8
 {
 	Undefined = 0,
-	Pallet,
-	Shelf,
-	Display
+	Display			UMETA(DisplayName = "Display"),
+	Shelf			UMETA(DisplayName = "Shelf"),
+	Pallet			UMETA(DisplayName = "Pallet")
 };
 
 UENUM()

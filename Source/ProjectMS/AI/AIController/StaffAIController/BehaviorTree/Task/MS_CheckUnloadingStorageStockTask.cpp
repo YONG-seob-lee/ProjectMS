@@ -1,4 +1,4 @@
-#include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_CheckAllStorageStockTask.h"
+#include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_CheckUnloadingStorageStockTask.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -7,12 +7,12 @@
 #include "Actor/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
-UMS_CheckAllStorageStockTask::UMS_CheckAllStorageStockTask()
+UMS_CheckUnloadingStorageStockTask::UMS_CheckUnloadingStorageStockTask()
 {
-	NodeName = FString(TEXT("Check All Storage Stock"));
+	NodeName = FString(TEXT("Check Unloading Storage Stock"));
 }
 
-EBTNodeResult::Type UMS_CheckAllStorageStockTask::ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
+EBTNodeResult::Type UMS_CheckUnloadingStorageStockTask::ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(aOwnerComp, aNodeMemory);
 
@@ -30,7 +30,8 @@ EBTNodeResult::Type UMS_CheckAllStorageStockTask::ExecuteTask(UBehaviorTreeCompo
 	}
 
 	TArray<AActor*> AllStorageArray = {};
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Storage::StaticClass(), AllStorageArray);
+	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), OwnerCharacter->GetUnloadingStorageType(), AllStorageArray);
 	for (int i = 0; i < AllStorageArray.Num(); i++)
 	{
 		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->CheckStorageEachSlotStatus();
@@ -43,22 +44,18 @@ EBTNodeResult::Type UMS_CheckAllStorageStockTask::ExecuteTask(UBehaviorTreeCompo
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
-			if (ItemRowNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true && StorageEachSlotStatus[j].ReservationFlag == false)
+			if (ItemRowNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true &&
+				aOwnerComp.GetBlackboardComponent()->GetValueAsName(FName(TEXT("StorageStuffName"))) == StorageEachSlotStatus[j].StuffRowName &&
+				StorageEachSlotStatus[j].ReservationFlag == false && 
+				aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("StorageSlotStockQuantity"))) <= StorageEachSlotStatus[j].StockQuantity)
 			{
 				UnoccupiedSlotExistenceFlag = true;
 				UnoccupiedSlotOrder = StorageEachSlotStatus[j].SlotOrder;
 				StorageStuffName = StorageEachSlotStatus[j].StuffRowName;
 				StorageStockCapacity = StorageEachSlotStatus[j].StockCapacity;
 				StorageStockQuantity = StorageEachSlotStatus[j].StockQuantity;
-
-				UE_LOG(LogTemp, Warning, TEXT("StorageStockCapacity: %d"), StorageStockCapacity);
-				UE_LOG(LogTemp, Warning, TEXT("StorageStockQuantity: %d"), StorageStockQuantity);
-				UE_LOG(LogTemp, Warning, TEXT("UnoccupiedSlotOrder: %d"), UnoccupiedSlotOrder);
-				UE_LOG(LogTemp, Warning, TEXT("UnoccupiedSlotExistenceFlag: %d"), UnoccupiedSlotExistenceFlag);
-
 				break;
 			}
-			UE_LOG(LogTemp, Warning, TEXT("StorageEachSlotStatus[j].StuffRowName: %s"), *StorageEachSlotStatus[j].StuffRowName.ToString());
 		}
 
 		if (UnoccupiedSlotExistenceFlag == false)
@@ -67,13 +64,8 @@ EBTNodeResult::Type UMS_CheckAllStorageStockTask::ExecuteTask(UBehaviorTreeCompo
 		}
 		else
 		{
-			AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
-			Cast<AMS_Storage>(AllStorageArray[i])->BayComponentArray[0]->ReserveWorker(OwnerCharacter);
-
-			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("TargetStorage")), AllStorageArray[i]);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("UnloadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotOrder")), UnoccupiedSlotOrder);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("TargetLocation")), Cast<AMS_Storage>(AllStorageArray[i])->StorageAssemblyAreaComponent->GetComponentLocation());
-			aOwnerComp.GetBlackboardComponent()->SetValueAsString(FName(TEXT("StorageSlotStuffName")), StorageStuffName.ToString());
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockCapacity")), StorageStockCapacity);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockQuantity")), StorageStockQuantity);
 
