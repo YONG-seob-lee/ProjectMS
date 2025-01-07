@@ -1,7 +1,7 @@
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 
 #include "AI/AIController/StaffAIController/BehaviorTree/Blackboard/MS_StaffBlackboardData.h"
-#include "Actor/Character/AICharacter/MS_AICharacter.h"
+#include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 AMS_StaffAIController::AMS_StaffAIController()
 {
@@ -24,7 +24,8 @@ void AMS_StaffAIController::BeginPlay()
 	StaffAICharacter = Cast<AMS_StaffAICharacter>(GetPawn());
 	ExecuteBehaviorTree();
 
-	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehvaiorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
+	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
+	UE_LOG(LogTemp, Warning, TEXT("%d"), static_cast<uint8>(BlackboardComponent->GetValueAsEnum(FName(TEXT("AIBehaviorPattern")))));
 }
 
 void AMS_StaffAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)
