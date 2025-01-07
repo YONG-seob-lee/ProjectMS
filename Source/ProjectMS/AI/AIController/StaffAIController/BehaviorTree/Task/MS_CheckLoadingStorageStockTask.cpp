@@ -39,8 +39,7 @@ EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeC
 		int UnoccupiedSlotOrder = INT_MIN;
 
 		FName StorageStuffName = NAME_None;
-		int StorageStockCapacity = INT_MIN;
-		int StorageStockQuantity = INT_MIN;
+		int EmptyStuffQuantity = INT_MIN;
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
@@ -49,8 +48,7 @@ EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeC
 				UnoccupiedSlotExistenceFlag = true;
 				UnoccupiedSlotOrder = StorageEachSlotStatus[j].SlotOrder;
 				StorageStuffName = StorageEachSlotStatus[j].StuffRowName;
-				StorageStockCapacity = StorageEachSlotStatus[j].StockCapacity;
-				StorageStockQuantity = StorageEachSlotStatus[j].StockQuantity;
+				EmptyStuffQuantity = StorageEachSlotStatus[j].StockCapacity - StorageEachSlotStatus[j].StockQuantity;
 				break;
 			}
 		}
@@ -62,11 +60,10 @@ EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeC
 		else
 		{
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("LoadingStorage")), AllStorageArray[i]);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsString(FName(TEXT("StorageSlotStuffName")), StorageStuffName.ToString());
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotOrder")), UnoccupiedSlotOrder);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockCapacity")), StorageStockCapacity);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockQuantity")), StorageStockQuantity);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("LoadingStorageSlotOrder")), UnoccupiedSlotOrder);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("EmptyStuffQuantity")), EmptyStuffQuantity);
 
+			aOwnerComp.GetBlackboardComponent()->SetValueAsString(FName(TEXT("StorageSlotStuffName")), StorageStuffName.ToString());
 			return EBTNodeResult::Succeeded;
 		}
 	}

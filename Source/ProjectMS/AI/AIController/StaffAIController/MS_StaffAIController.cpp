@@ -23,6 +23,8 @@ void AMS_StaffAIController::BeginPlay()
 
 	StaffAICharacter = Cast<AMS_StaffAICharacter>(GetPawn());
 	ExecuteBehaviorTree();
+
+	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehvaiorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
 }
 
 void AMS_StaffAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)

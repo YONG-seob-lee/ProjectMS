@@ -31,6 +31,7 @@ void UMS_SeekUntilAvailableBayTask::TickTask(UBehaviorTreeComponent& aOwnerComp,
 
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	AMS_Storage* TargetStorage = Cast<AMS_Storage>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(StorageKey.SelectedKeyName));
+	UE_LOG(LogTemp, Warning, TEXT("TargetStorage %s"), *TargetStorage->GetName());
 
 	for (int i = 0; i < TargetStorage->BayComponentArray.Num(); i++)
 	{

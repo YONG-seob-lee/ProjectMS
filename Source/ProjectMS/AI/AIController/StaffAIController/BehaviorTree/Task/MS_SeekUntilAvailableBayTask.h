@@ -10,7 +10,6 @@ UCLASS() class PROJECTMS_API UMS_SeekUntilAvailableBayTask : public UMS_Behavior
 	
 public:
 	UMS_SeekUntilAvailableBayTask();
-
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
 	virtual EBTNodeResult::Type AbortTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
 	virtual void TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds) override;

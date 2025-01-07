@@ -11,7 +11,6 @@ UCLASS() class PROJECTMS_API UMS_UpdateStaffBehaviorPattern : public UMS_Behavio
 	
 public:
 	UMS_UpdateStaffBehaviorPattern();
-
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& aPropertyChangedEvent) override;
 #endif

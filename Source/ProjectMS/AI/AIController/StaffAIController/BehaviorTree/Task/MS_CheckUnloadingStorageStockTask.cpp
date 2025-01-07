@@ -32,6 +32,7 @@ EBTNodeResult::Type UMS_CheckUnloadingStorageStockTask::ExecuteTask(UBehaviorTre
 	TArray<AActor*> AllStorageArray = {};
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), OwnerCharacter->GetUnloadingStorageType(), AllStorageArray);
+
 	for (int i = 0; i < AllStorageArray.Num(); i++)
 	{
 		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->CheckStorageEachSlotStatus();
@@ -45,9 +46,9 @@ EBTNodeResult::Type UMS_CheckUnloadingStorageStockTask::ExecuteTask(UBehaviorTre
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
 			if (ItemRowNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true &&
-				aOwnerComp.GetBlackboardComponent()->GetValueAsName(FName(TEXT("StorageStuffName"))) == StorageEachSlotStatus[j].StuffRowName &&
-				StorageEachSlotStatus[j].ReservationFlag == false && 
-				aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("StorageSlotStockQuantity"))) <= StorageEachSlotStatus[j].StockQuantity)
+				aOwnerComp.GetBlackboardComponent()->GetValueAsString(FName(TEXT("StorageSlotStuffName"))) == StorageEachSlotStatus[j].StuffRowName &&
+				StorageEachSlotStatus[j].ReservationFlag == false &&
+				aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("EmptyStuffQuantity"))) <= StorageEachSlotStatus[j].StockQuantity)
 			{
 				UnoccupiedSlotExistenceFlag = true;
 				UnoccupiedSlotOrder = StorageEachSlotStatus[j].SlotOrder;
@@ -65,9 +66,7 @@ EBTNodeResult::Type UMS_CheckUnloadingStorageStockTask::ExecuteTask(UBehaviorTre
 		else
 		{
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("UnloadingStorage")), AllStorageArray[i]);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotOrder")), UnoccupiedSlotOrder);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockCapacity")), StorageStockCapacity);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageSlotStockQuantity")), StorageStockQuantity);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("LoadingStorageSlotOrder")), UnoccupiedSlotOrder);
 
 			return EBTNodeResult::Succeeded;
 		}

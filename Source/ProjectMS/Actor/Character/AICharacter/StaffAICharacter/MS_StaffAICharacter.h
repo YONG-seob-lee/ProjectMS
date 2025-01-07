@@ -7,16 +7,13 @@
 UENUM(BlueprintType) enum class EMS_StaffObservePattern : uint8
 {
 	Undefined			UMETA(DisplayName = "Undefined"),
-	Inspection			UMETA(DisplayName = "Inspection")
+	Transportation		UMETA(DisplayName = "Transportation")
 };
 
 UENUM(BlueprintType) enum class EMS_StaffOperatePattern : uint8
 {
 	Undefined			UMETA(DisplayName = "Undefined"),
-	Move				UMETA(DisplayName = "Move"),
-	Fetch				UMETA(DisplayName = "Fetch"),
-	Pick				UMETA(DisplayName = "Pick"),
-	Drop				UMETA(DisplayName = "Drop"),
+	Transportation		UMETA(DisplayName = "Transportation")
 };
 
 UENUM(BlueprintType) enum class EMS_StaffInteractPattern : uint8
