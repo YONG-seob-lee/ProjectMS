@@ -12,4 +12,5 @@ UCLASS() class PROJECTMS_API UMS_CheckLoadingStorageStockTask : public UMS_Behav
 public:
 	UMS_CheckLoadingStorageStockTask();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory) override;
+	virtual void TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds) override;
 };

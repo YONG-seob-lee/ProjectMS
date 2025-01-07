@@ -4,6 +4,14 @@
 #include "Components/StaticMeshComponent.h"
 #include "MS_StorageSlotComponent.generated.h"
 
+UENUM(BlueprintType) enum class EMS_SlotStaticMeshType : uint8
+{
+	Undefined					UMETA(DisplayName = "Undefined"),
+	StuffStaticMesh				UMETA(DisplayName = "StuffStaticMesh"),
+	StuffBundleStaticMesh		UMETA(DisplayName = "StuffBundleStaticMesh"),
+	StuffBoxStaticMesh			UMETA(DisplayName = "StuffBoxStaticMesh"),
+};
+
 UCLASS() class PROJECTMS_API UMS_StorageSlotComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
@@ -31,7 +39,7 @@ private:
 public:
 	UFUNCTION(BlueprintCallable) void ReserveWorker(class AMS_StaffAICharacter* aTarget);
 	UFUNCTION(BlueprintCallable) void UnreserveWorker();
-	UFUNCTION(BlueprintCallable) bool LoadStuff(FName aStuffRowName, int aStockQuantity);
+	UFUNCTION(BlueprintCallable) bool LoadStuff(FName aStuffRowName, int aStockQuantity, EMS_SlotStaticMeshType aSlotStaticMeshType);
 	UFUNCTION(BlueprintCallable) void UnloadStuff();
 
 	UFUNCTION(BlueprintCallable) void AdjustSlotStock(const FName& aStuffRowName, const int& aStockQuantity, const int& aStockCapacity);

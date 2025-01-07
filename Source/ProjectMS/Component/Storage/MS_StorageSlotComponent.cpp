@@ -118,7 +118,7 @@ void UMS_StorageSlotComponent::UnreserveWorker()
 	ReservationWorker = nullptr;
 }
 
-bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity)
+bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity, EMS_SlotStaticMeshType aSlotStaticMeshType)
 {
 	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
 	MS_CHECK(ItemData);
@@ -129,7 +129,30 @@ bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity
 	StuffRowName = aStuffRowName;
 	StockQuantity = (aStockQuantity < StockCapacity) ? aStockQuantity : StockCapacity;
 
-	SetStaticMesh(ItemDataTableRow->Model);
+	if (StockQuantity == 0)
+	{
+		SetStaticMesh(nullptr);
+	}
+	else
+	{
+		switch (aSlotStaticMeshType)
+		{
+		case EMS_SlotStaticMeshType::Undefined:
+			break;
+		case EMS_SlotStaticMeshType::StuffStaticMesh:
+			SetStaticMesh(ItemDataTableRow->StuffStaticMesh);
+			break;
+		case EMS_SlotStaticMeshType::StuffBundleStaticMesh:
+			SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
+			break;
+		case EMS_SlotStaticMeshType::StuffBoxStaticMesh:
+			SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
+			break;
+		default:
+			break;
+		}
+	}
+
 	return true;
 }
 

@@ -15,6 +15,15 @@ UMS_CheckLoadingStorageStockTask::UMS_CheckLoadingStorageStockTask()
 EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(aOwnerComp, aNodeMemory);
+	return EBTNodeResult::InProgress;
+}
+
+
+void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds)
+{
+	Super::TickTask(aOwnerComp, aNodeMemory, aDeltaSeconds);
+	SetNextTickTime(aNodeMemory, 0.2f);
+
 
 	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
 	TArray<FName> ItemRowNameArray = {};
@@ -64,8 +73,8 @@ EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeC
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("EmptyStuffQuantity")), EmptyStuffQuantity);
 
 			aOwnerComp.GetBlackboardComponent()->SetValueAsString(FName(TEXT("StorageSlotStuffName")), StorageStuffName.ToString());
-			return EBTNodeResult::Succeeded;
+			FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
 		}
 	}
-	return EBTNodeResult::Failed;
+	FinishLatentTask(aOwnerComp, EBTNodeResult::InProgress);
 }
