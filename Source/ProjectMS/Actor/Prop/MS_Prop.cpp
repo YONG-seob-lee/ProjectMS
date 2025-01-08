@@ -90,6 +90,8 @@ void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& a
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 {
+	bIsPreviewProp = true;
+	
 	LinkedProp = aLinkedProp;
 }
 

@@ -16,6 +16,11 @@ UMS_InteractionManager* UMS_InteractionManager::GetInstance()
 
 void UMS_InteractionManager::SelectActor(TWeakObjectPtr<AActor> aSelectedActor)
 {
+	if (SelectedActor == aSelectedActor)
+	{
+		return;
+	}
+	
 	UnselectActor();
 
 	if (aSelectedActor != nullptr)

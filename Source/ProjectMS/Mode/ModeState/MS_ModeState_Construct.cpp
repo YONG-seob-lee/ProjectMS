@@ -39,7 +39,7 @@ void UMS_ModeState_Construct::Begin()
 	
 	if (SelectedProp != nullptr)
 	{
-		OnSelectProp(SelectedProp.Get());
+		SelectProp(SelectedProp.Get());
 	}
 }
 
@@ -52,21 +52,14 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
 
-	if (!GetWorld())
+	AActor* InteractableActor = aInteractableHitResult.GetActor();
+	
+	if (IsValid(InteractableActor))
 	{
-		return;
+		SelectProp(InteractableActor);
 	}
 	
-	GetWorld()->GetTimerManager().SetTimerForNextTick(
-		FTimerDelegate::CreateWeakLambda(this, [this, aInteractableHitResult]
-		{
-			AActor* InteractableActor = aInteractableHitResult.GetActor();
-	
-			if (IsValid(InteractableActor))
-			{
-				SelectProp(InteractableActor);
-			}
-		}));
+	ShowPreviewWidget(false);
 }
 
 void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
@@ -131,17 +124,7 @@ void UMS_ModeState_Construct::OnPinchAction(float aPinchValue)
 	Super::OnPinchAction(aPinchValue);
 }
 
-void UMS_ModeState_Construct::SelectProp(AActor* ASelectedActor)
-{
-	gInteractionMng.SelectActor(ASelectedActor);
-}
-
-void UMS_ModeState_Construct::UnselectProp()
-{
-	gInteractionMng.UnselectActor();
-}
-
-void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)
+void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	if (!IsValid(World))
@@ -155,11 +138,11 @@ void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)
 		return;
 	}
 	
-	if (aSelectedActor == nullptr)
+	if (!IsValid(aSelectedActor))
 	{
 		return;
 	}
-
+	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
 		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
@@ -177,7 +160,37 @@ void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)
 		
 		PointerPostionToObjectScreenPositionOffset = ActorCenterScreenPosition - PointerScreenPosition;
 		MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::ClickPositionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
+		
+		if (SelectedProp->IsPreviewProp())
+		{
+			gInteractionMng.SelectActor(SelectedProp->GetLinkedProp());
+		}
+		else
+		{
+			gInteractionMng.SelectActor(aSelectedActor);
+		}
+	}
+}
 
+void UMS_ModeState_Construct::UnselectProp()
+{
+	gInteractionMng.UnselectActor();
+}
+
+void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)	// 기존의 것과 다른 Prop이 선택되야 호출됨
+{
+	if (!IsValid(aSelectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	{
+		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
+		{
+			return;
+		}
+		
 		// PreviewProp
 		CreatePreviewProp(SelectedProp);
 	}
@@ -237,8 +250,6 @@ void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
 	FRotator Rotator = aSelectedProp->GetActorRotation();
 	SelectedPreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
 	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp);
-
-	SelectedPreviewProp->SetActorEnableCollision(false);
 
 	if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
 	{

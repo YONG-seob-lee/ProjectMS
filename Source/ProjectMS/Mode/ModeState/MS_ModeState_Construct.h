@@ -48,7 +48,7 @@ public:
 	void UnselectProp();
 
 	UFUNCTION()
-	void OnSelectProp(AActor* aSelectedActor);
+	void OnSelectProp(AActor* aSelectedActor);	// 기존의 것과 다른 Prop이 선택되야 호출됨
 
 	UFUNCTION()
 	void OnUnselectProp(AActor* aUnselectedActor);

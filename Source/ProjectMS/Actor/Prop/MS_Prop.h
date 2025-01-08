@@ -45,6 +45,8 @@ public:
 	
 	TWeakObjectPtr<AMS_Prop> GetLinkedProp() const { return LinkedProp; }
 
+	bool IsPreviewProp() const { return bIsPreviewProp; }
+	
 	class UWidgetComponent* GetPreviewWidgetComponent() const { return PreviewWidgetComponent; }
 	class UMS_PreviewWidget* GetPreviewWidget() const;
 
@@ -77,6 +79,9 @@ protected:
 	// For Preview
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> PreviewWidgetComponent;
+
+	UPROPERTY()
+	bool bIsPreviewProp;
 	
 	TWeakObjectPtr<AMS_Prop> LinkedProp;
 };
