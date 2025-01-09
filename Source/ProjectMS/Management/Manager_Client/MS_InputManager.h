@@ -5,15 +5,17 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "MS_ManagerBase.h"
+#include "InputProcessor/IMS_TouchInputProcessor.h"
 #include "MS_InputManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerDownDelegate, FVector2D, aPointerDownPosition, const FHitResult&, aInteractableHitResult);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerUpDelegate, FVector2D, aPointerUpPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMS_OnPointerDownDelegate, FVector2D, aPointerDownPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMS_OnPointerUpDelegate, FVector2D, aPointerUpPosition, const FHitResult&, aInteractableHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerMoveDelegate, FVector2D, aPointerMovePosition, FVector2D, aPointerMovePositionDelta, FVector2D, aPointerMovePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnMouseRightButtonGlideDelegate, FVector2D, aPointerGlidePosition, FVector2D, aPointerGlidePositionDelta, FVector2D, aPointerGlidePositionDeltaTrend);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FXOnPointerHoldDelegate, float, aElapsedTime, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FXOnPointerClickDelegate, FVector2D, aPointerClickPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMS_OnPointerHoldDelegate, float, aElapsedTime, FVector2D, aPointerHoldPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMS_OnPointerLongTouchDelegate, float, aElapsedTime, FVector2D, aPointerLongTouchPosition, const FHitResult&, aInteractableHitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMS_OnPointerClickDelegate, FVector2D, aPointerClickPosition, const FHitResult&, aInteractableHitResult);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FXOnPinchActionDelegate, float, aPinchValue);
 /**
  * 
@@ -33,7 +35,7 @@ public:
 	
 /* Input */
 public:
-	FORCEINLINE FVector2D AcquirePointerPositionOnViewport() const;
+	FVector2D AcquirePointerPositionOnViewport() const;
 
 	UFUNCTION() void HandlePointerDown(const FInputActionValue& aValue);
 	UFUNCTION() void HandlePointerUp(const FInputActionValue& aValue);
@@ -48,11 +50,12 @@ public:
 	UFUNCTION() void HandleMouseRightButtonDown(const FInputActionValue& aValue);
 	UFUNCTION() void HandleMouseRightButtonUp(const FInputActionValue& aValue);
 
-	// Property
+	bool GetHitResultUnderPointerPosition(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
+	
 private:
+	TSharedPtr<class IMS_TouchInputProcessor> TouchInputProcessor = nullptr;
 	
-	bool GetHitResultUnderPointerPostion(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
-	
+	// Property
 	UPROPERTY() bool PointerPressFlag = false;
 
 	UPROPERTY() int64 PointerDownTimestamp = 0;
@@ -87,16 +90,16 @@ private:
 	// DEBUG
 	UPROPERTY() bool MouseRightButtonPressFlag = false;
 
-	// Instance
 private:
 
 	// Delegate
 public:
-	FXOnPointerDownDelegate OnPointerDownDelegate = {};
-	FXOnPointerUpDelegate OnPointerUpDelegate = {};
+	FMS_OnPointerDownDelegate OnPointerDownDelegate = {};
+	FMS_OnPointerUpDelegate OnPointerUpDelegate = {};
 	FXOnPointerMoveDelegate OnPointerMoveDelegate = {};
-	FXOnPointerHoldDelegate OnPointerHoldDelegate = {};
-	FXOnPointerClickDelegate OnPointerClickDelegate = {};
+	FMS_OnPointerHoldDelegate OnPointerHoldDelegate = {};
+	FMS_OnPointerLongTouchDelegate OnPointerLongTouchDelegate = {};
+	FMS_OnPointerClickDelegate OnPointerClickDelegate = {};
 	FXOnPointerGlideDelegate OnPointerGlideDelegate = {};
 
 	FXOnPinchActionDelegate OnPinchActionDelegate = {};

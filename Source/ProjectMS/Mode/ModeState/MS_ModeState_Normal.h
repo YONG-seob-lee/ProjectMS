@@ -39,10 +39,9 @@ public:
 
 	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 
-	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
+	virtual void OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 	
-	virtual void OnPinchAction(float aPinchValue) override;
+	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 
-private:
-	const float MoveToDetailModeTime = 3.f; // To Do : Move To Table
+	virtual void OnPinchAction(float aPinchValue) override;
 };

@@ -55,6 +55,10 @@ void UMS_ModeStateBase::OnInputPointerHold(float aElapsedTime, const FVector2D& 
 {
 }
 
+void UMS_ModeStateBase::OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
+{
+}
+
 void UMS_ModeStateBase::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 }

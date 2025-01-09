@@ -141,6 +141,11 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
+void UMS_WidgetManager::ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop, float aElapsedTime, FColor aDisplayColor)
+{
+	GEngine->AddOnScreenDebugMessage(-1, aElapsedTime, aDisplayColor, aMessage);
+}
+
 void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
 {
 	if(RootWidget)

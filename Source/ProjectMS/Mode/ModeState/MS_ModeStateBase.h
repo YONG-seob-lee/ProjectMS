@@ -46,6 +46,9 @@ public:
 	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult);
 
 	UFUNCTION()
+	virtual void OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult);
+	
+	UFUNCTION()
 	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult);
 
 	UFUNCTION()

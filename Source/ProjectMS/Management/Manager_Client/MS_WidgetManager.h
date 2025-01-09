@@ -36,7 +36,8 @@ public:
 	void PreDestroyWidget(TObjectPtr<class UMS_Widget> aWidget);
 	bool DestroyWidget(const FName& aTypeName);
 	void PostDestroyWidget(const FName& aTypeName);
-	
+
+	void ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop = true, float aElapsedTime = 3.f, FColor aDisplayColor = FColor::Green);
 	void ShowToastMessage(const FString& aMessage) const;
 	
 	void ShowRotateWidget() const;

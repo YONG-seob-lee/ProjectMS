@@ -58,8 +58,7 @@ void UMS_ModeState_Normal::OnInputPointerGlide(const FVector2D& aPosition, const
 	Super::OnInputPointerGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
 }
 
-void UMS_ModeState_Normal::OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta,
-	const FVector2D& aPositionDeltaTrend)
+void UMS_ModeState_Normal::OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend)
 {
 	Super::OnMouseRightButtonGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
 }
@@ -67,18 +66,20 @@ void UMS_ModeState_Normal::OnMouseRightButtonGlide(const FVector2D& aPosition, c
 void UMS_ModeState_Normal::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
-	
-	if (aElapsedTime >= MoveToDetailModeTime)
+}
+
+void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerLongTouch(aElapsedTime, aPosition, aInteractableHitResult);
+
+	if (AActor* InteractActor = aInteractableHitResult.GetActor())
 	{
-		if (AActor* InteractActor = aInteractableHitResult.GetActor())
+		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{
-			if (InteractActor->IsA(AMS_Prop::StaticClass()))
-			{
 				
-				gInteractionMng.SelectActor(InteractActor);
+			gInteractionMng.SelectActor(InteractActor);
 				
-				gModeMng.ChangeState(EMS_ModeState::Construct);
-			}
+			gModeMng.ChangeState(EMS_ModeState::Construct);
 		}
 	}
 }
