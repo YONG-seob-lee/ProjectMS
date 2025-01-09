@@ -74,7 +74,7 @@ void UMS_RootWidget::RefreshContentCanvas() const
 
 void UMS_RootWidget::ActivatePreventionCover(bool bShow) const
 {
-	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
 }
 
 void UMS_RootWidget::SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle) const
@@ -204,14 +204,14 @@ void UMS_RootWidget::ShowToastMessage(const FString& Message) const
 
 void UMS_RootWidget::ShowRotateWidget() const
 {
-	CPP_RotateWidget->SetVisibility(CPP_RotateWidget->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);	
+	CPP_RotateWidget->SetVisibility(CPP_RotateWidget->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);	
 }
 
 void UMS_RootWidget::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
 {
 	if(bShow)
 	{
-		CPP_ModalWidget->SetVisibility(ESlateVisibility::Visible);
+		CPP_ModalWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_ModalWidget->SetModal(aModalData);	
 	}
 	else

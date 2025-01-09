@@ -27,7 +27,7 @@ void UMS_ContentButtonWidget::SetVerticalBoxVisibility(bool bShow) const
 {
 	if(CPP_ExtensionPanel)
 	{
-		CPP_ExtensionPanel->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		CPP_ExtensionPanel->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	}
 }
 

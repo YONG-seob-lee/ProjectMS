@@ -224,7 +224,10 @@ void UMS_SceneManager::HandleLoadingLevel()
 	}
 	
 	gWidgetMng.RefreshContentWidget();
-	gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	if (!LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()).IsNone())
+	{
+		gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	}
 	
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;

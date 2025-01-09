@@ -41,6 +41,6 @@ void UMS_MenuButtonWidget::OnClickSettingButton()
 	}
 	else
 	{
-		CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Visible);
+		CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }

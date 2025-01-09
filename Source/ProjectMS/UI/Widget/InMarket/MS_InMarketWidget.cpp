@@ -23,7 +23,7 @@ void UMS_InMarketWidget::NativeConstruct()
 	
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
 
-	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::Visible);
+	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UMS_InMarketWidget::NativeDestruct()
