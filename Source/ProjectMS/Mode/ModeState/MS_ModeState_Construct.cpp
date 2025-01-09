@@ -1,10 +1,12 @@
 ﻿#include "MS_ModeState_Construct.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
 #include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Prop/MS_Prop.h"
 #include "Widget/InMarket/MS_PreviewWidget.h"
 
@@ -212,14 +214,14 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	}
 }
 
-void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* PreviewWidget)
+void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPreviewWidget)
 {
-	if (!IsValid(PreviewWidget))
+	if (!IsValid(aPreviewWidget))
 	{
 		return;
 	}
 	
-	if (PreviewWidget != SelectedPreviewProp->GetPreviewWidget())
+	if (aPreviewWidget != SelectedPreviewProp->GetPreviewWidget())
 	{
 		return;
 	}
@@ -227,7 +229,7 @@ void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* Preview
 	ApplyPreviewProp();
 }
 
-void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* PreviewWidget)
+void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
 {
 }
 
@@ -258,13 +260,30 @@ void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
 	}
 }
 
-void UMS_ModeState_Construct::MovePreviewProp(const FVector& NewLocation)
+void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 {
-	FVector NewLocationOnGrid = GetLocationOnGrid(NewLocation,
-		SelectedPreviewProp->GetGridNum().X % 2 != 0,
-		SelectedPreviewProp->GetGridNum().Y % 2 != 0);
-	
-	SelectedPreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		FIntVector OldCenterGridPosition =  GetGridPosition(SelectedPreviewProp->GetActorLocation(),
+	SelectedPreviewProp->GetGridNum().X % 2 != 0,
+	SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+		
+		FIntVector NewCenterGridPosition = GetGridPosition(aNewLocation,
+	SelectedPreviewProp->GetGridNum().X % 2 != 0,
+	SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+
+		TArray<const FMS_GridData*> NewLocationGridDatas;
+		
+		if (LevelScriptActor->GetGridDatasForPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas,
+			NewCenterGridPosition - OldCenterGridPosition))
+		{
+			FVector NewLocationOnGrid = GetLocationOnGrid(aNewLocation,
+SelectedPreviewProp->GetGridNum().X % 2 != 0,
+SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+			
+			SelectedPreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
+		}
+	}
 }
 
 void UMS_ModeState_Construct::ApplyPreviewProp()
@@ -346,13 +365,26 @@ bool UMS_ModeState_Construct::GetHitResultUnderObjectScreenPosition(const FVecto
 	return PlayerController->GetHitResultAtScreenPosition(ScreenPosition, TraceChannel, bTraceComplex, HitResult);
 }
 
+FIntVector UMS_ModeState_Construct::GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter,
+	bool aIsYGridCenter, bool aIsZGridCenter) const
+{
+	FVector OffsetByGridCenter = FVector(
+	aIsXGridCenter ? 25.f : 0.f,
+	aIsYGridCenter ? 25.f : 0.f,
+	aIsZGridCenter ? 25.f : 0.f);
+	
+	return  FIntVector(
+		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
+		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y),
+		FMath::RoundToInt32((aInLocation.Z - OffsetByGridCenter.Z) / MS_GridSize.Z));
+}
+
 FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter) const
 {
 	FVector OffsetByGridCenter = FVector(
 		aIsXGridCenter ? 25.f : 0.f,
 		aIsYGridCenter ? 25.f : 0.f,
-		aIsZGridCenter ? 25.f : 0.f
-	);
+		aIsZGridCenter ? 25.f : 0.f);
 	
 	FIntVector GridPosition = FIntVector(
 		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),

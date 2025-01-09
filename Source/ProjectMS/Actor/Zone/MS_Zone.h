@@ -49,6 +49,8 @@ public:
 	
 	const FIntVector& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
+	const FMS_GridData& GetGrid(const FIntVector2& aZoneGridPosition) const;
+
 	void ShowDebugZoneData();
 
 	

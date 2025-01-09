@@ -165,6 +165,18 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 	}
 }
 
+const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aZoneGridPosition) const
+{
+	static FMS_GridData Dummy;
+	if (!Grids.Contains(aZoneGridPosition))
+	{
+		MS_Ensure(false);
+		return Dummy;
+	}
+	
+	return *Grids.Find(aZoneGridPosition);
+}
+
 void AMS_Zone::ShowDebugZoneData()
 {
 #if WITH_EDITOR
@@ -176,7 +188,7 @@ void AMS_Zone::ShowDebugZoneData()
 			{
 				if (pGrid->Object != nullptr && pGrid->PropSpaceComponent != nullptr)
 				{
-					MS_LOG_Verbosity(Warning, TEXT("ZoneGrid %d-%d,%d : %s, SpaceType : %d, PurposeType : %d"),
+					MS_LOG_Verbosity(VeryVerbose, TEXT("ZoneGrid %d-%d,%d : %s, SpaceType : %d, PurposeType : %d"),
 						ZoneIndex, j, i, *pGrid->Object->GetName(),
 						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropSpaceType()),
 						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropPurposeSpaceType()));

@@ -44,6 +44,8 @@ public:
 	
 	struct FMS_Level* GetCurrentLevelData();
 	
+	class ALevelScriptActor* GetCurrentLevelScriptActor() const;
+	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 
 private:

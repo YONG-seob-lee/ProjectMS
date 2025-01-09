@@ -54,6 +54,16 @@ FMS_Level* UMS_SceneManager::GetCurrentLevelData()
 	return nullptr;
 }
 
+ALevelScriptActor* UMS_SceneManager::GetCurrentLevelScriptActor() const
+{
+	if (IsValid(LevelStreamingInst))
+	{
+		return LevelStreamingInst->GetLevelScriptActor();
+	}
+
+	return nullptr;
+}
+
 void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aCommand)
 {
 	MS_CHECK(aCommand);

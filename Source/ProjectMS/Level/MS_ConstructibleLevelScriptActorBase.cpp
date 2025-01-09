@@ -126,19 +126,22 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	}
 }
 
-bool AMS_ConstructibleLevelScriptActorBase::AreAllPropSpacesInValidGrids(AMS_Prop* aProp)
+bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(class AMS_Prop* aInProp,
+	TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition) // Ret : AllGridInZones
 {
-	if (!IsValid(aProp))
+	if (!IsValid(aInProp))
 	{
 		return false;
 	}
 	
-	if (aProp->GetPropType() != EMS_PropType::Furniture && aProp->GetPropType() != EMS_PropType::Structure)
+	if (aInProp->GetPropType() != EMS_PropType::Furniture && aInProp->GetPropType() != EMS_PropType::Structure)
 	{
 		return true;
 	}
+
+	aOutGridDatas.Empty();
 	
-	const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = aProp->GetPropSpaceComponents();
+	const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = aInProp->GetPropSpaceComponents();
 		
 	for (const UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
 	{
@@ -146,17 +149,11 @@ bool AMS_ConstructibleLevelScriptActorBase::AreAllPropSpacesInValidGrids(AMS_Pro
 		FIntVector GridNum = FIntVector::ZeroValue;
 			
 		PropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
-
-		bool IsInValidGrid = false;
+		WorldStartGridPosition += aInAddtiveGridPosition;
 		
 		// Set With Grid
 		for (int i = 0; i < GridNum.Y; ++i)
 		{
-			if (IsInValidGrid)
-			{
-				break;
-			}
-			
 			for (int j = 0; j < GridNum.X; ++j)
 			{
 				FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
@@ -166,15 +163,15 @@ bool AMS_ConstructibleLevelScriptActorBase::AreAllPropSpacesInValidGrids(AMS_Pro
 							
 				if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
 				{
-					IsInValidGrid = true;
-					break;
+					const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(ZoneGridPosition);
+					aOutGridDatas.Emplace(&GridData);
+				}
+				else
+				{
+					aOutGridDatas.Empty();
+					return false;
 				}
 			}
-		}
-
-		if (!IsInValidGrid)
-		{
-			return false;
 		}
 	}
 

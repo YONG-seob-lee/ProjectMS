@@ -45,7 +45,7 @@ void UMS_PropSpaceComponent::GetGridPositions(FIntVector& aOutWorldStartGridPosi
 	}
 			
 	FVector WorldStartLocation = GetComponentLocation() + SpaceStartOffset;
-	FIntVector WorldStartGridPosition = FIntVector(FMath::RoundToInt32(WorldStartLocation.X / MS_GridSize.X), FMath::RoundToInt32(WorldStartLocation.Y / MS_GridSize.Y), 0);
+	aOutWorldStartGridPosition = FIntVector(FMath::RoundToInt32(WorldStartLocation.X / MS_GridSize.X), FMath::RoundToInt32(WorldStartLocation.Y / MS_GridSize.Y), 0);
 
 	// Num
 	FVector SpaceSize;
@@ -58,5 +58,5 @@ void UMS_PropSpaceComponent::GetGridPositions(FIntVector& aOutWorldStartGridPosi
 		SpaceSize = FVector(GetUnscaledBoxExtent().Y * 2.f, GetUnscaledBoxExtent().X * 2.f, 0.f);
 	}
 
-	FIntVector aGridNum = FIntVector(FMath::RoundToInt32(SpaceSize.X / MS_GridSize.X), FMath::RoundToInt32(SpaceSize.Y / MS_GridSize.Y), 0);
+	aOutGridNum = FIntVector(FMath::RoundToInt32(SpaceSize.X / MS_GridSize.X), FMath::RoundToInt32(SpaceSize.Y / MS_GridSize.Y), 0);
 }

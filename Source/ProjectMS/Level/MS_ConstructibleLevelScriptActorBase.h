@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_LevelScriptActorBase.h"
+#include "Environment/MS_LevelPropDatas.h"
 #include "MS_ConstructibleLevelScriptActorBase.generated.h"
 
 UCLASS()
@@ -25,8 +26,8 @@ protected:
 	virtual void ParsingDefaultPropDatas();
 
 public:
-	bool AreAllPropSpacesInValidGrids(class AMS_Prop* aProp);
-
+	bool GetGridDatasForPropSpaceLocations(class AMS_Prop* aInProp, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition);	// Ret : AllGridInZones
+	
 	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
 	
 protected:

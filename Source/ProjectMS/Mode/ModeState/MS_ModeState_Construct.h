@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ModeStateBase.h"
+#include "Environment/MS_LevelPropDatas.h"
 #include "MS_ModeState_Construct.generated.h"
 
 /**
@@ -53,11 +54,11 @@ public:
 	UFUNCTION()
 	void OnUnselectProp(AActor* aUnselectedActor);
 
-	void OnClickApplyPreviewProp(class UMS_PreviewWidget* PreviewWidget);
-	void OnClickCancelPreviewProp(class UMS_PreviewWidget* PreviewWidget);
+	void OnClickApplyPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
+	void OnClickCancelPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
 	
 	void CreatePreviewProp(class AMS_Prop* aSelectedProp);
-	void MovePreviewProp(const FVector& NewLocation);
+	void MovePreviewProp(const FVector& aNewLocation);
 	void ApplyPreviewProp();
 	void CancelPreviewProp(class AMS_Prop* aSelectedProp);
 
@@ -65,8 +66,10 @@ public:
 
 	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 
-	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
+	FIntVector GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
 	
+	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
+
 private:
 	TObjectPtr<class AMS_Prop> SelectedPreviewProp;
 
