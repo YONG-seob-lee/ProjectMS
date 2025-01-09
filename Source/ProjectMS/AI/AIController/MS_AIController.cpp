@@ -48,8 +48,8 @@ void AMS_AIController::ExecuteBehaviorTree()
 	MS_CHECK(BehaviorTree);
 
 	RunBehaviorTree(BehaviorTree);
-    BlackboardComponent = GetBlackboardComponent();
-    BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(GetBrainComponent());
+	BlackboardComponent = GetBlackboardComponent();
+	BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(GetBrainComponent());
 
 	SynchronizeBlackboard();
 }

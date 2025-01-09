@@ -22,8 +22,9 @@ EBTNodeResult::Type UMS_UnloadStockFromStorageTask::ExecuteTask(UBehaviorTreeCom
 	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
 	FMS_Item* ItemRowData = ItemData->FindRow<FMS_Item>(StuffName, TEXT(""));
 
-	// TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->SetStaticMesh(ItemRowData->StuffStaticMesh);
-	// TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->AdjustSlotStock(StuffName, TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->StockQuantity + EmptyStuffQuantity, TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->StockCapacity);
 	TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->LoadStuff(StuffName, EmptyStuffQuantity, SlotStaticMeshType);
+	TargetStorage->SlotComponentArray[LoadingStorageSlotOrder]->UnreserveWorker();
+	OwnerCharacter->DeattachStockStaticMesh();
+
 	return Result;
 }

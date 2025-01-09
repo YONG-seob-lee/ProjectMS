@@ -69,10 +69,14 @@ void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwner
 		}
 		else
 		{
+			Cast<AMS_Storage>(AllStorageArray[i])->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
+			UE_LOG(LogTemp, Warning, TEXT("Success"));
+
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("UnloadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("UnloadingStorageSlotOrder")), UnoccupiedSlotOrder);
 
 			FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
+			break;
 		}
 	}
 	FinishLatentTask(aOwnerComp, EBTNodeResult::InProgress);

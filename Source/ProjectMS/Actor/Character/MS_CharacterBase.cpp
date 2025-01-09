@@ -9,30 +9,30 @@ AMS_CharacterBase::AMS_CharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-	if(RootSkeletalMeshComponent)
-	{
-		RootSkeletalMeshComponent->Activate();
+	//RootSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
+	//if(RootSkeletalMeshComponent)
+	//{
+	//	RootSkeletalMeshComponent->Activate();
 
-		// if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
-		// {
-		// 	AnimInstance->Initialize();
-		// }
+	//	// if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
+	//	// {
+	//	// 	AnimInstance->Initialize();
+	//	// }
 
-		RootSkeletalMeshComponent->bUseAsOccluder = false;
-	}
+	//	RootSkeletalMeshComponent->bUseAsOccluder = false;
+	//}
 
-	TestSphere = CreateDefaultSubobject<USphereComponent>("VisibleTestComponent");
-	if(TestSphere)
-	{
-		TestSphere->SetSphereRadius(300.f);
-		TestSphere->SetGenerateOverlapEvents(false);
-		TestSphere->SetEnableGravity(false);
-		TestSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		TestSphere->SetCollisionProfileName(TEXT("NoCollision"));
-		TestSphere->SetupAttachment(RootComponent);
-		RootSkeletalMeshComponent->SetupAttachment(TestSphere);
-	}
+	//TestSphere = CreateDefaultSubobject<USphereComponent>("VisibleTestComponent");
+	//if(TestSphere)
+	//{
+	//	TestSphere->SetSphereRadius(300.f);
+	//	TestSphere->SetGenerateOverlapEvents(false);
+	//	TestSphere->SetEnableGravity(false);
+	//	TestSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//	TestSphere->SetCollisionProfileName(TEXT("NoCollision"));
+	//	TestSphere->SetupAttachment(RootComponent);
+	//	RootSkeletalMeshComponent->SetupAttachment(TestSphere);
+	//}
 }
 
 void AMS_CharacterBase::BeginPlay()
@@ -75,20 +75,21 @@ void AMS_CharacterBase::Initialize()
 
 void AMS_CharacterBase::Finalize()
 {
-	if(TestSphere)
-	{
-		TestSphere->Deactivate();
-	}
-
-	if(RootSkeletalMeshComponent)
-	{
-		RootSkeletalMeshComponent->Deactivate();
-
-		// if(const TObjectPtr<UMS_AnimInstance> _AnimInstance = GetAnimInstance())
-		// {
-		// 	_AnimInstance->Finalize();
-		// }
-	}
+	//	if(TestSphere)
+	//	{
+	//		TestSphere->Deactivate();
+	//	}
+	//
+	//	if(RootSkeletalMeshComponent)
+	//	{
+	//		RootSkeletalMeshComponent->Deactivate();
+	//
+	//		// if(const TObjectPtr<UMS_AnimInstance> _AnimInstance = GetAnimInstance())
+	//		// {
+	//		// 	_AnimInstance->Finalize();
+	//		// }
+	//	}
+	//}
 }
 
 void AMS_CharacterBase::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine)

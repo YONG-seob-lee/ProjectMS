@@ -32,7 +32,7 @@ USTRUCT(BlueprintType) struct FMS_PositiveEmotionGroup
 	GENERATED_BODY()
 
 public:
-	int Happiness = INT_MIN;
+	int Happiness = INT_MIN;	
 	int Passion = INT_MIN;
 	int Confidence = INT_MIN;
 	int Inspiration = INT_MIN;

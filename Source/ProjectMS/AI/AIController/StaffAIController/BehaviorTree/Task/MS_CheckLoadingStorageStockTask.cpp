@@ -5,6 +5,8 @@
 #include "Management/Manager_Both/MS_TableManager.h"
 #include "Data/Table/RowBase/MS_Item.h"
 #include "Actor/Storage/MS_Storage.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
+#include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 UMS_CheckLoadingStorageStockTask::UMS_CheckLoadingStorageStockTask()
@@ -68,12 +70,15 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 		}
 		else
 		{
+			Cast<AMS_Storage>(AllStorageArray[i])->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
+			UE_LOG(LogTemp, Warning, TEXT("Success"));
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("LoadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("LoadingStorageSlotOrder")), UnoccupiedSlotOrder);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("EmptyStuffQuantity")), EmptyStuffQuantity);
 
 			aOwnerComp.GetBlackboardComponent()->SetValueAsString(FName(TEXT("StorageSlotStuffName")), StorageStuffName.ToString());
 			FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
+			break;
 		}
 	}
 	FinishLatentTask(aOwnerComp, EBTNodeResult::InProgress);

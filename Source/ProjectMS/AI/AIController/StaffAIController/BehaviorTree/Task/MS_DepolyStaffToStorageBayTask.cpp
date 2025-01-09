@@ -2,6 +2,7 @@
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Actor/Storage/MS_Storage.h"
+#include "Component/Storage/MS_StorageBayComponent.h"
 
 UMS_DepolyStaffToStorageBayTask::UMS_DepolyStaffToStorageBayTask()
 {
@@ -17,7 +18,6 @@ EBTNodeResult::Type UMS_DepolyStaffToStorageBayTask::ExecuteTask(UBehaviorTreeCo
 
 	int StorageBayOrder = INT_MIN;
 	StorageBayOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("StorageBayOrder")));
-
 	TargetStorage->BayComponentArray[StorageBayOrder]->UnreserveWorker();
 	TargetStorage->BayComponentArray[StorageBayOrder]->DeployWorker(OwnerCharacter);
 

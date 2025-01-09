@@ -1,6 +1,7 @@
 #include "Actor/Storage/MS_Storage.h"
 
 #include "Components/SceneComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 AMS_Storage::AMS_Storage()
@@ -11,6 +12,13 @@ AMS_Storage::AMS_Storage()
 	StorageStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
 	StorageStaticMeshComponent->SetupAttachment(GetRootComponent());
 	StorageStaticMeshComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+	StorageStaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
+	CollisionBoxComponent->SetupAttachment(GetRootComponent());
+	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	CollisionBoxComponent->SetCollisionProfileName(TEXT("StorageCollisionPreset"));
+	CollisionBoxComponent->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
 
 	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
 	StorageAssemblyAreaComponent->SetupAttachment(GetRootComponent());

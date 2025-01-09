@@ -40,7 +40,13 @@ public:
 	UFUNCTION(BlueprintCallable) virtual UClass* GetLoadingStorageType();
 	UFUNCTION(BlueprintCallable) virtual UClass* GetUnloadingStorageType();
 
-	// Property
+	UFUNCTION(BlueprintCallable) virtual void AttachStockStaticMesh(class UStaticMesh* aStockStaticMesh);
+	UFUNCTION(BlueprintCallable) virtual void DeattachStockStaticMesh();
+
+	// Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UStaticMeshComponent* StockStaticMeshComponent = nullptr;
+
+	// Properties
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)int TargetStorageBayOrder = INT_MIN;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int TargetStorageBayOrder = INT_MIN;
 };

@@ -22,6 +22,8 @@ AMS_AICharacter::AMS_AICharacter()
 
 	SkeletalMeshComponent = GetMesh();
 	SkeletalMeshComponent->SetupAttachment(CollisionCapsuleComponent);
+	SkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	SkeletalMeshComponent->SetRenderCustomDepth(true);
 
 #if WITH_EDITOR
 	GetArrowComponent()->SetupAttachment(CollisionCapsuleComponent);
@@ -29,7 +31,7 @@ AMS_AICharacter::AMS_AICharacter()
 
 	CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	CharacterMovementComponent->MaxAcceleration = 512.0f;
-	CharacterMovementComponent->MaxWalkSpeed = 75.0f;
+	CharacterMovementComponent->MaxWalkSpeed = /*75.0f*/300.0f;
 	CharacterMovementComponent->MaxWalkSpeedCrouched = 150.0f;
 	CharacterMovementComponent->RotationRate = FRotator(0.0f, 630.0f, 0.0f);
 }

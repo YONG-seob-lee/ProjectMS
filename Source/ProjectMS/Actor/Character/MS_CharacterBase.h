@@ -63,11 +63,11 @@ private:
 	UPROPERTY(Category = AITT_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FMS_CharacterLodValues LodValues = FMS_CharacterLodValues();
 
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMeshComponent> RootSkeletalMeshComponent = nullptr;
-	
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USphereComponent> TestSphere = nullptr;
+	//UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//TObjectPtr<USkeletalMeshComponent> RootSkeletalMeshComponent = nullptr;
+	//
+	//UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//TObjectPtr<class USphereComponent> TestSphere = nullptr;
 	
 	TWeakObjectPtr<UObject> UnitOwner = nullptr;
 };
