@@ -305,19 +305,30 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
     	return;
     }
 
-	if (SelectedPreviewProp->GetLinkedProp() != nullptr)
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		AMS_Prop* LinkedProp = SelectedPreviewProp->GetLinkedProp().Get();
-		if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
-		{
-			return;
-		}
-
-		FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
-		SelectedPreviewProp->GetGridNum().X % 2 != 0,
-		SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+		TArray<const FMS_GridData*> LocationGridDatas;
 		
-		LinkedProp->SetActorLocation(NewLocationOnGrid);
+		if (LevelScriptActor->GetGridDatasForPropSpaceLocations(SelectedPreviewProp, LocationGridDatas))
+		{
+			if (SelectedPreviewProp->GetLinkedProp() != nullptr)
+			{
+				AMS_Prop* LinkedProp = SelectedPreviewProp->GetLinkedProp().Get();
+				if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
+				{
+					return;
+				}
+
+				if (CheckGridDatas(LocationGridDatas, LinkedProp))
+				{
+					FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
+					SelectedPreviewProp->GetGridNum().X % 2 != 0,
+					SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+		
+					LinkedProp->SetActorLocation(NewLocationOnGrid);
+				}
+			}
+		}
 	}
 }
 
@@ -394,4 +405,22 @@ FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, b
 	return FVector(GridPosition.X * MS_GridSize.X,
 		GridPosition.Y * MS_GridSize.Y,
 		GridPosition.Z * MS_GridSize.Z) + OffsetByGridCenter;
+}
+
+bool UMS_ModeState_Construct::CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const
+{
+	for (const FMS_GridData* GridData : aGridDatas)
+	{
+		if (IsValid(aTargetProp) && GridData->Object == aTargetProp)
+		{
+			continue;
+		}
+		
+		if (GridData->Object != nullptr)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

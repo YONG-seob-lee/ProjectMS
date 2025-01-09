@@ -26,7 +26,7 @@ protected:
 	virtual void ParsingDefaultPropDatas();
 
 public:
-	bool GetGridDatasForPropSpaceLocations(class AMS_Prop* aInProp, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition);	// Ret : AllGridInZones
+	bool GetGridDatasForPropSpaceLocations(class AMS_Prop* aInProp, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition = FIntVector::ZeroValue);	// Ret : AllGridInZones
 	
 	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
 	
