@@ -272,9 +272,9 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 	SelectedPreviewProp->GetGridNum().X % 2 != 0,
 	SelectedPreviewProp->GetGridNum().Y % 2 != 0);
 
-		TArray<const FMS_GridData*> NewLocationGridDatas;
+		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
 		
-		if (LevelScriptActor->GetGridDatasForPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas,
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas,
 			NewCenterGridPosition - OldCenterGridPosition))
 		{
 			FVector NewLocationOnGrid = GetLocationOnGrid(aNewLocation,
@@ -307,9 +307,9 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		TArray<const FMS_GridData*> LocationGridDatas;
+		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
 		
-		if (LevelScriptActor->GetGridDatasForPropSpaceLocations(SelectedPreviewProp, LocationGridDatas))
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas))
 		{
 			if (SelectedPreviewProp->GetLinkedProp() != nullptr)
 			{
@@ -318,9 +318,20 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 				{
 					return;
 				}
-
-				if (CheckGridDatas(LocationGridDatas, LinkedProp))
+				
+				if (CheckGridDatas(NewLocationGridDatas, LinkedProp))
 				{
+					// Unregister Old Datas
+					TArray<FMS_GridDataForPropSpace> OldLocationGridDatas;
+					LevelScriptActor->GetGridDatasForAllPropSpaceLocations(LinkedProp, OldLocationGridDatas);
+
+					LevelScriptActor->UnregisterGridObjectData(OldLocationGridDatas);
+
+					// Register New Datas
+					LevelScriptActor->RegisterGridObjectData(NewLocationGridDatas);
+					
+					// Move Location
+					// ToDo : Level Script로 이동
 					FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
 					SelectedPreviewProp->GetGridNum().X % 2 != 0,
 					SelectedPreviewProp->GetGridNum().Y % 2 != 0);
@@ -419,6 +430,30 @@ bool UMS_ModeState_Construct::CheckGridDatas(const TArray<const FMS_GridData*>& 
 		if (GridData->Object != nullptr)
 		{
 			return false;
+		}
+	}
+
+	return true;
+}
+
+bool UMS_ModeState_Construct::CheckGridDatas(const TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces,
+	AMS_Prop* aTargetProp) const
+{
+	for (const FMS_GridDataForPropSpace& GridDataForPropSpace : aGridDatasForPropSpaces)
+	{
+		TArray<const FMS_GridData*> GridDatas = GridDataForPropSpace.GridDatas;
+		
+		for (const FMS_GridData* GridData : GridDatas)
+		{
+			if (IsValid(aTargetProp) && GridData->Object == aTargetProp)
+			{
+				continue;
+			}
+		
+			if (GridData->Object != nullptr)
+			{
+				return false;
+			}
 		}
 	}
 

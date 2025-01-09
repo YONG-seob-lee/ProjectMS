@@ -4,6 +4,7 @@
 #include "MS_PropSpaceComponent.h"
 
 #include "MS_Define.h"
+#include "Prop/MS_Prop.h"
 
 
 UMS_PropSpaceComponent::UMS_PropSpaceComponent()
@@ -59,4 +60,9 @@ void UMS_PropSpaceComponent::GetGridPositions(FIntVector& aOutWorldStartGridPosi
 	}
 
 	aOutGridNum = FIntVector(FMath::RoundToInt32(SpaceSize.X / MS_GridSize.X), FMath::RoundToInt32(SpaceSize.Y / MS_GridSize.Y), 0);
+}
+
+AMS_Prop* UMS_PropSpaceComponent::GetOwnerProp() const
+{
+	return Cast<AMS_Prop>(GetOwner());
 }

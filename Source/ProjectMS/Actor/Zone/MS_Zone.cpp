@@ -165,6 +165,24 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 	}
 }
 
+void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aZoneGridPosition)
+{
+	if (Grids.Contains(aZoneGridPosition))
+	{
+		FMS_GridData& GridData = *Grids.Find(aZoneGridPosition);
+
+		GridData.Object = nullptr;
+		GridData.PropSpaceComponent = nullptr;
+	}
+	else
+	{
+		MS_LOG_Verbosity(Error, TEXT("Object's ZoneGridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+			ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+
+		MS_Ensure(false);
+	}
+}
+
 const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aZoneGridPosition) const
 {
 	static FMS_GridData Dummy;

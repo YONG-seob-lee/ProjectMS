@@ -94,6 +94,21 @@ public:
 	TWeakObjectPtr<class UMS_PropSpaceComponent> PropSpaceComponent;
 };
 
+USTRUCT()
+struct FMS_GridDataForPropSpace
+{
+	GENERATED_BODY()
+
+public:
+	FMS_GridDataForPropSpace()
+		: PropSpaceComponent(nullptr)
+	{
+		GridDatas.Empty();
+	}
+	
+	class UMS_PropSpaceComponent* PropSpaceComponent;
+	TArray<const FMS_GridData*> GridDatas;
+};
 
 // LevelPropDatas
 USTRUCT(BlueprintType)

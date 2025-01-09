@@ -72,6 +72,7 @@ private:
 	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
 
 	bool CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const;
+	bool CheckGridDatas(const TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces, class AMS_Prop* aTargetProp) const;
 	
 private:
 	TObjectPtr<class AMS_Prop> SelectedPreviewProp;

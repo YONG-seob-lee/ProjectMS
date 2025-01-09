@@ -27,9 +27,11 @@ public:
 	// Property :: Getter
 	EMS_PropSpaceType GetPropSpaceType() const { return PropSpaceType; }
 	EMS_PurposeType GetPropPurposeSpaceType() const { return PropPurposeSpaceType; }
-
-
+	
 	void GetGridPositions(FIntVector& aOutWorldStartGridPosition, FIntVector& aOutGridNum) const;
+
+	inline class AMS_Prop* GetOwnerProp() const;
+
 	
 private:
 	// Property

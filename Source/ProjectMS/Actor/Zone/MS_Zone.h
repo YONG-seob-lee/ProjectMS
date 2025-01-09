@@ -35,6 +35,7 @@ public:
 
 	void RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aFloor);
 	void RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
+	void UnregisterObjectToGrid(const FIntVector2& aZoneGridPosition);
 
 
 	// Setter

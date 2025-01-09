@@ -126,8 +126,64 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	}
 }
 
-bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(class AMS_Prop* aInProp,
-	TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition) // Ret : AllGridInZones
+void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(TArray<const FMS_GridData*>& aGridDatas,
+	TWeakObjectPtr<UMS_PropSpaceComponent> aPropSpaceComponent)
+{
+	for (const FMS_GridData* GridData : aGridDatas)
+	{
+		AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
+		Zone->RegisterObjectToGrid(GridData->GetZoneGridPosition(), aPropSpaceComponent);
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(
+	TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces)
+{
+	for (const FMS_GridDataForPropSpace& GridDataForPropSpace : aGridDatasForPropSpaces)
+	{
+		UMS_PropSpaceComponent* PropSpaceComponent = GridDataForPropSpace.PropSpaceComponent;
+		if (!IsValid(PropSpaceComponent))
+		{
+			MS_Ensure(false);
+			return;
+		}
+		
+		TArray<const FMS_GridData*> GridDatas = GridDataForPropSpace.GridDatas;
+		
+		for (const FMS_GridData* GridData : GridDatas)
+		{
+			AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
+			Zone->RegisterObjectToGrid(GridData->GetZoneGridPosition(), PropSpaceComponent);
+		}
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::UnregisterGridObjectData(TArray<const FMS_GridData*>& aGridDatas)
+{
+	for (const FMS_GridData* GridData : aGridDatas)
+	{
+		AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
+		Zone->UnregisterObjectToGrid(GridData->GetZoneGridPosition());
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::UnregisterGridObjectData(
+	TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces)
+{
+	for (const FMS_GridDataForPropSpace& GridDataForPropSpace : aGridDatasForPropSpaces)
+	{
+		TArray<const FMS_GridData*> GridDatas = GridDataForPropSpace.GridDatas;
+		
+		for (const FMS_GridData* GridData : GridDatas)
+		{
+			AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
+			Zone->UnregisterObjectToGrid(GridData->GetZoneGridPosition());
+		}
+	}
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations(class AMS_Prop* aInProp,
+                                                                                 TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector& aInAddtiveGridPosition) // Ret : AllGridInZones
 {
 	if (!IsValid(aInProp))
 	{
@@ -139,12 +195,15 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(cl
 		return true;
 	}
 
-	aOutGridDatas.Empty();
+	aOutGridDatasForPropSpaces.Empty();
 	
 	const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = aInProp->GetPropSpaceComponents();
 		
-	for (const UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+	for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
 	{
+		FMS_GridDataForPropSpace GridDataForPropSpace;
+		GridDataForPropSpace.PropSpaceComponent = PropSpaceComponent;
+		
 		FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
 		FIntVector GridNum = FIntVector::ZeroValue;
 			
@@ -164,13 +223,69 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(cl
 				if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
 				{
 					const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(ZoneGridPosition);
-					aOutGridDatas.Emplace(&GridData);
+					GridDataForPropSpace.GridDatas.Emplace(&GridData);
 				}
 				else
 				{
-					aOutGridDatas.Empty();
+					aOutGridDatasForPropSpaces.Empty();
 					return false;
 				}
+			}
+		}
+
+		aOutGridDatasForPropSpaces.Emplace(GridDataForPropSpace);
+	}
+
+	return true;
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
+	UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas,
+	const FIntVector& aInAddtiveGridPosition)
+{
+	if (!IsValid(aPropSpaceComponent))
+	{
+		return false;
+	}
+
+	AMS_Prop* OwnerProp = aPropSpaceComponent->GetOwnerProp();
+	if (!IsValid(OwnerProp))
+	{
+		return false;
+	}
+	
+	if (OwnerProp->GetPropType() != EMS_PropType::Furniture && OwnerProp->GetPropType() != EMS_PropType::Structure)
+	{
+		return true;
+	}
+
+	aOutGridDatas.Empty();
+	
+	FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
+	FIntVector GridNum = FIntVector::ZeroValue;
+		
+	aPropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
+	WorldStartGridPosition += aInAddtiveGridPosition;
+	
+	// Set With Grid
+	for (int i = 0; i < GridNum.Y; ++i)
+	{
+		for (int j = 0; j < GridNum.X; ++j)
+		{
+			FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
+
+			int32 ZoneIndex;
+			FIntVector2 ZoneGridPosition;
+						
+			if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
+			{
+				const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(ZoneGridPosition);
+				aOutGridDatas.Emplace(&GridData);
+			}
+			else
+			{
+				aOutGridDatas.Empty();
+				return false;
 			}
 		}
 	}
