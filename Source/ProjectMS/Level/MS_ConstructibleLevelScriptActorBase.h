@@ -24,6 +24,10 @@ public:
 protected:
 	virtual void ParsingDefaultPropDatas();
 
+public:
+	bool AreAllPropSpacesInValidGrids(class AMS_Prop* aProp);
+
+	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
 	
 protected:
 	UPROPERTY()

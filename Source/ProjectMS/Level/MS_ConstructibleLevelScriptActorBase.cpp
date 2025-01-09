@@ -74,57 +74,28 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		
 		for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
 		{
-			float PropYaw = Prop->GetActorRotation().Yaw;
-			MS_LOG_Verbosity(Warning, TEXT("PropYaw : %f [PropName : %s]"), PropYaw, *Prop->GetName());
-
+			FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
+			FIntVector GridNum = FIntVector::ZeroValue;
 			
-			// Start Position
-			FVector SpaceStartOffset;
-			if (FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
-			{
-				SpaceStartOffset = FVector(-PropSpaceComponent->GetUnscaledBoxExtent().X, -PropSpaceComponent->GetUnscaledBoxExtent().Y, 0.f);
-			}
-			else
-			{
-				SpaceStartOffset = FVector(-PropSpaceComponent->GetUnscaledBoxExtent().Y, -PropSpaceComponent->GetUnscaledBoxExtent().X, 0.f);
-			}
+			PropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
 			
-			FVector WorldStartLocation = PropSpaceComponent->GetComponentLocation() + SpaceStartOffset;
-			FIntVector WorldStartPosition = FIntVector(FMath::RoundToInt32(WorldStartLocation.X / MS_GridSize.X), FMath::RoundToInt32(WorldStartLocation.Y / MS_GridSize.Y), 0);
-
-			// Num
-			FVector SpaceSize;
-			if (FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
-			{
-				SpaceSize = FVector(PropSpaceComponent->GetUnscaledBoxExtent().X * 2.f, PropSpaceComponent->GetUnscaledBoxExtent().Y * 2.f, 0.f);
-			}
-			else
-			{
-				SpaceSize = FVector(PropSpaceComponent->GetUnscaledBoxExtent().Y * 2.f, PropSpaceComponent->GetUnscaledBoxExtent().X * 2.f, 0.f);
-			}
-
-			FIntVector GridNum = FIntVector(FMath::RoundToInt32(SpaceSize.X / MS_GridSize.X), FMath::RoundToInt32(SpaceSize.Y / MS_GridSize.Y), 0);
-
 			// Set With Grid
 			for (int i = 0; i < GridNum.Y; ++i)
 			{
 				for (int j = 0; j < GridNum.X; ++j)
 				{
-					FIntVector2 WorldGridPosition = FIntVector2(WorldStartPosition.X + j, WorldStartPosition.Y + i);
+					FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
 
 					switch (Prop->GetPropType())
 					{
 					case EMS_PropType::Floor:
 						{
-							for (auto& Zone : Zones)
+							int32 ZoneIndex;
+							FIntVector2 ZoneGridPosition;
+							
+							if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
 							{
-								FIntVector2 ZoneGridPosition;
-								if (Zone.Value->IsWorldGridContained(WorldGridPosition, ZoneGridPosition))
-								{
-									Zone.Value->RegisterFloorToGrid(ZoneGridPosition, Prop);
-									
-									break;
-								}
+								(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(ZoneGridPosition, Prop);
 							}
 					
 							break;
@@ -135,7 +106,7 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 						{
 							for (auto& Zone : Zones)
 							{
-								FIntVector2 ZoneGridPosition;
+								FIntVector2 ZoneGridPosition = FIntVector2::ZeroValue;
 								if (Zone.Value->IsWorldGridContained(WorldGridPosition, ZoneGridPosition))
 								{
 									Zone.Value->RegisterObjectToGrid(ZoneGridPosition, PropSpaceComponent);
@@ -153,14 +124,76 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 			}
 		}
 	}
+}
 
-	// Debug
-	/*
-#if WITH_EDITOR
+bool AMS_ConstructibleLevelScriptActorBase::AreAllPropSpacesInValidGrids(AMS_Prop* aProp)
+{
+	if (!IsValid(aProp))
+	{
+		return false;
+	}
+	
+	if (aProp->GetPropType() != EMS_PropType::Furniture && aProp->GetPropType() != EMS_PropType::Structure)
+	{
+		return true;
+	}
+	
+	const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = aProp->GetPropSpaceComponents();
+		
+	for (const UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+	{
+		FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
+		FIntVector GridNum = FIntVector::ZeroValue;
+			
+		PropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
+
+		bool IsInValidGrid = false;
+		
+		// Set With Grid
+		for (int i = 0; i < GridNum.Y; ++i)
+		{
+			if (IsInValidGrid)
+			{
+				break;
+			}
+			
+			for (int j = 0; j < GridNum.X; ++j)
+			{
+				FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
+
+				int32 ZoneIndex;
+				FIntVector2 ZoneGridPosition;
+							
+				if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
+				{
+					IsInValidGrid = true;
+					break;
+				}
+			}
+		}
+
+		if (!IsInValidGrid)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::ConvertWorldGridPositionToZoneGridPosition(
+	const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition)
+{
 	for (auto& Zone : Zones)
 	{
-		Zone.Value->ShowDebugZoneData();
+		FIntVector2 ZoneGridPosition;
+		if (Zone.Value->IsWorldGridContained(aInWorldGridPosition, ZoneGridPosition))
+		{
+			aOutZoneIndex = Zone.Key;
+			aOutZoneGridPosition = ZoneGridPosition;
+			return true;
+		}
 	}
-#endif
-*/
+
+	return false;
 }

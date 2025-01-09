@@ -16,13 +16,13 @@ AMS_Prop::AMS_Prop()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SceneRootComponent = CreateEditorOnlyDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
+	SceneRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
 	if (SceneRootComponent)
 	{
 		SetRootComponent(SceneRootComponent);
 	}
-	
-	PreviewWidgetComponent = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("PreviewWidgetComponent"));
+
+	PreviewWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PreviewWidgetComponent"));
 	if (PreviewWidgetComponent)
 	{
 		PreviewWidgetComponent->SetupAttachment(GetRootComponent());
@@ -45,7 +45,6 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AMS_Prop::Tick(float DeltaTime)
