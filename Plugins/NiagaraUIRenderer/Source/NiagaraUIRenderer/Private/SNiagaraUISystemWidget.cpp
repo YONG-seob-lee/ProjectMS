@@ -1,4 +1,4 @@
-﻿// Copyright 2024 - Michal Smoleň
+// Copyright 2023 - Michal Smoleň
 
 #include "SNiagaraUISystemWidget.h"
 #include "Materials/MaterialInterface.h"
@@ -8,16 +8,8 @@
 
 TMap<TObjectPtr<UMaterialInterface>, TSharedPtr<FSlateMaterialBrush>> SNiagaraUISystemWidget::MaterialBrushMap;
 
-void SNiagaraUISystemWidget::PrivateRegisterAttributes(FSlateAttributeInitializer& AttributeInitializer)
-{
-    SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, "DesiredSize", DesiredSizeAttribute, EInvalidateWidgetReason::Layout);
-    SLATE_ADD_MEMBER_ATTRIBUTE_DEFINITION_WITH_NAME(AttributeInitializer, "ColorAndOpacity", ColorAndOpacityAttribute, EInvalidateWidgetReason::Paint);
-}
-
 void SNiagaraUISystemWidget::Construct(const FArguments& Args)
 {
-    DesiredSizeAttribute.Assign(*this, Args._DesiredSize);
-    ColorAndOpacityAttribute.Assign(*this, Args._ColorAndOpacity);
 }
 
 SNiagaraUISystemWidget::~SNiagaraUISystemWidget()
@@ -43,25 +35,19 @@ int32 SNiagaraUISystemWidget::OnPaint(const FPaintArgs& Args, const FGeometry& A
     
     const FVector2D Location2D = (AllottedGeometry.GetAbsolutePositionAtCoordinates(FVector2D(0.5f, 0.5f)) - FVector2D(ParentTopLeft)) / LayoutScale;
     const FScale2D Scale2D = SlateRenderTransform.GetMatrix().GetScale();
-
-    float A, B, C, D;
-    SlateRenderTransform.GetMatrix().GetMatrix(A, B, C, D);
-    const float AdditionalAngle = D < 0.f ? 180.f : 0.f;
-    const float Angle = FMath::RadiansToDegrees(FMath::Atan(C / D)) + AdditionalAngle;
-
-    FNiagaraUIRenderProperties RenderProperties = FNiagaraUIRenderProperties(LayoutScale, ParentTopLeft, InWidgetStyle.GetColorAndOpacityTint() * ColorAndOpacityAttribute.Get().GetColor(InWidgetStyle));
+    const float Angle = SlateRenderTransform.GetMatrix().GetRotationAngle();
 
     UNiagaraUIComponent* NiagaraUIComponent = NiagaraComponent.Get();
 
     NiagaraUIComponent->SetTransformationForUIRendering(Location2D, Scale2D.GetVector() / LayoutScale, Angle);
-    NiagaraUIComponent->RenderUI(const_cast<SNiagaraUISystemWidget*>(this), RenderProperties, &WidgetProperties);
+    NiagaraUIComponent->RenderUI(const_cast<SNiagaraUISystemWidget*>(this), LayoutScale, ParentTopLeft, &WidgetProperties);
 
     return SMeshWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 }
 
 FVector2D SNiagaraUISystemWidget::ComputeDesiredSize(float LayoutScaleMultiplier) const
 {
-    return DesiredSizeAttribute.Get();
+    return DesiredSize;
 }
 
 void SNiagaraUISystemWidget::AddRenderData(FSlateVertex** OutVertexData, SlateIndex** OutIndexData, UMaterialInterface* Material, int32 NumVertexData, int32 NumIndexData)
@@ -127,27 +113,19 @@ void SNiagaraUISystemWidget::CheckForInvalidBrushes()
     }
 }
 
-void SNiagaraUISystemWidget::SetNiagaraComponentReference(TWeakObjectPtr<UNiagaraUIComponent> NiagaraComponentIn)
+void SNiagaraUISystemWidget::SetNiagaraComponentReference(TWeakObjectPtr<UNiagaraUIComponent> NiagaraComponentIn, FNiagaraWidgetProperties Properties)
 {
     if (!ensure(NiagaraComponentIn != nullptr))
         return;
 
-    NiagaraComponent = NiagaraComponentIn;
-}
-
-void SNiagaraUISystemWidget::SetNiagaraWidgetProperties(FNiagaraWidgetProperties Properties)
-{
     WidgetProperties = Properties;
+
+    NiagaraComponent = NiagaraComponentIn;
 }
 
 void SNiagaraUISystemWidget::SetDesiredSize(FVector2D NewDesiredSize)
 {
-    DesiredSizeAttribute.Set(*this, NewDesiredSize);
-}
-
-void SNiagaraUISystemWidget::SetColorAndOpacity(FLinearColor NewColorAndOpacity)
-{
-    ColorAndOpacityAttribute.Set(*this, NewColorAndOpacity);
+    DesiredSize = NewDesiredSize;
 }
 
 void SNiagaraUISystemWidget::AddReferencedObjects(FReferenceCollector& Collector)

@@ -1,4 +1,4 @@
-﻿// Copyright 2024 - Michal Smoleň
+// Copyright 2023 Michal Smoleň 
 
 
 #include "NiagaraUIContentBrowserExtension.h"
@@ -104,11 +104,7 @@ struct FCreateNiagaraUIMaterialsExtension : public FContentBrowserSelectedAssetE
 					for (UMaterialExpression* TestExp : NewMaterial->GetExpressions())
 #endif
 					{
-#if ENGINE_MINOR_VERSION > 2
 						TArrayView<FExpressionInput*> Inputs = TestExp->GetInputsView();
-#else
-						TArray<FExpressionInput*> Inputs = TestExp->GetInputs();
-#endif
 
 						for (FExpressionInput* Input : Inputs)
 						{

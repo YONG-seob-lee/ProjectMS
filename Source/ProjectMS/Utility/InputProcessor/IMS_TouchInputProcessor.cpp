@@ -6,20 +6,46 @@
 #include "MS_Define.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Widget/System/Touch/MS_TouchWidget.h"
 
 FMS_PointerData::FMS_PointerData()
+{
+}
+
+FMS_PointerData::~FMS_PointerData()
+{
+	MS_DeleteObject(TouchWidget);
+}
+
+void FMS_PointerData::Initialize()
 {
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
 	MS_CHECK(CommonTable);
 	PointerHoldDelay = CommonTable->GetParameter02(CommonContents::POINTER_HOLD_DELAY);
 	PointerLongTouch = CommonTable->GetParameter02(CommonContents::POINTER_LONG_TOUCH);
 	PointerClickDelay = CommonTable->GetParameter02(CommonContents::POINTER_CLICK_DELAY);
+	
+	TouchWidget = Cast<UMS_TouchWidget>(gWidgetMng.Create_Widget_NotManaging(UMS_TouchWidget::GetWidgetPath()));
+	if(TouchWidget)
+	{
+		TouchWidget->RebuildTouchWidget();
+	}
+
+	TouchWidget->SetOnFinishedParticleRendererFunc([this]()
+	{
+		if(OnFinishParticleCallback)
+		{
+			OnFinishParticleCallback();
+		}
+	});
 }
 
-FMS_PointerData::~FMS_PointerData()
+void FMS_PointerData::Finalize()
 {
+	
 }
 
 void FMS_PointerData::Tick(const float aDeltaTime)
@@ -76,7 +102,7 @@ void FMS_PointerData::HandlePointerClick()
 		PointerClickIntervalTime = (FDateTime::UtcNow().GetTicks() - PointerClickTimestamp) / IntervalTimeValue::Separation;
 		PointerClickTimestamp = FDateTime::UtcNow().GetTicks();
 		PointerClickPosition = gInputMng.AcquirePointerPositionOnViewport();
-
+		
 		FHitResult InteractableHitResult = {};
 		gInputMng.GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 		
@@ -191,6 +217,18 @@ void FMS_PointerData::UpdatePointerMovePosition()
 	HandlePointerGlide();
 }
 
+void FMS_PointerData::PlayParticle() const
+{
+	if(!TouchWidget)
+	{
+		return;
+	}
+	
+	TouchWidget->AddToViewport(99999);
+	TouchWidget->SetPositionInViewport(PointerClickPosition);
+	TouchWidget->PlayActive();
+}
+
 void IMS_TouchInputProcessor::Initialize()
 {
 }
@@ -224,8 +262,9 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 {
 	MS_LOG(TEXT("IMS_TouchInputProcessor::HandleMouseButtonDownEvent    PointerIndex : %d"), aMouseEvent.GetPointerIndex());
 
-	const FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
-
+	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
+	NewPointerData->Initialize();
+	
 	ShootLineTrace(NewPointerData->GetPointerDownPosition());
 	
 	FingerCount++;
@@ -279,8 +318,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	TargetPointerData->CalculateIntervalTime();
 
 	TargetPointerData->HandlePointerClick();
-
-	PointerDatas.Remove(aMouseEvent.GetPointerIndex());
+	TargetPointerData->PlayParticle();
 	
 	FingerCount--;
 
@@ -295,7 +333,14 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDoubleClickEvent(FSlateApplicatio
 FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMouseEvent)
 {
 	FMS_PointerData* PointerData = new FMS_PointerData();
+	
 	PointerDatas.Emplace(aMouseEvent.GetPointerIndex(), PointerData);
+	PointerData->SetOnFinishParticleFunc([this, PointerData]()
+	{
+		PointerDatas.Remove(PointerData->GetPointerIndex());
+		PointerData->Finalize();
+		delete PointerData;
+	});
 	
 	PointerData->SetPointerIndex(aMouseEvent.GetPointerIndex());
 	PointerData->SetPointerPressFlag(true);

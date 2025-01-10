@@ -25,7 +25,12 @@ public:
 	FMS_PointerData();
 	~FMS_PointerData();
 
+	void Initialize();
+	void Finalize();
+
 	void Tick(const float aDeltaTime);
+
+	FORCEINLINE void SetOnFinishParticleFunc(const TFunction<void()>& aFunc) { OnFinishParticleCallback = aFunc; }
 
 	FORCEINLINE void SetPointerIndex(uint32 aPointerIndex) { PointerIndex = aPointerIndex; }
 	FORCEINLINE uint32 GetPointerIndex() const { return PointerIndex; }
@@ -54,6 +59,8 @@ public:
 	
 	FORCEINLINE FVector2D GetPointerMovePosition() const { return PointerMovePosition; }
 	void UpdatePointerMovePosition();
+
+	void PlayParticle() const;
 
 private:
 	uint32 PointerIndex = -1;
@@ -90,6 +97,10 @@ private:
 	float PointerHoldDelay = 0.f;
 	float PointerLongTouch = 0.f;
 	float PointerClickDelay = 0.f;
+
+	TObjectPtr<class UMS_TouchWidget> TouchWidget = nullptr;
+
+	TFunction<void()> OnFinishParticleCallback = nullptr;
 };
 
 /**

@@ -1,4 +1,4 @@
-﻿// Copyright 2024 - Michal Smoleň
+// Copyright 2023 - Michal Smoleň
 
 #include "NiagaraUIComponent.h"
 #include "Stats/Stats.h"
@@ -43,9 +43,7 @@ void UNiagaraUIComponent::SetTransformationForUIRendering(FVector2D Location, FV
 {
 	const FVector NewLocation(Location.X, 0.f, -Location.Y);
 	const FVector NewScale(Scale.X, 1.f, Scale.Y);
-	const FRotator NewRotation(Angle, 0.f, 0.f);;
-	
-	WidgetRotationAngle = Angle;
+	const FRotator NewRotation(FMath::RadiansToDegrees(Angle), 0.f, 0.f);;
 	
 	SetRelativeTransform(FTransform(NewRotation, NewLocation, NewScale));
 
@@ -80,7 +78,7 @@ struct FNiagaraRendererEntry
 };
 #endif
 
-void UNiagaraUIComponent::RenderUI(SNiagaraUISystemWidget* NiagaraWidget, const FNiagaraUIRenderProperties& RenderProperties, const FNiagaraWidgetProperties* WidgetProperties)
+void UNiagaraUIComponent::RenderUI(SNiagaraUISystemWidget* NiagaraWidget, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties)
 {
 	TRACE_CPUPROFILER_EVENT_SCOPE(UNiagaraUIComponent::RenderUI);
 
@@ -148,11 +146,11 @@ void UNiagaraUIComponent::RenderUI(SNiagaraUISystemWidget* NiagaraWidget, const 
 				
 				if (UNiagaraSpriteRendererProperties* SpriteRenderer = Cast<UNiagaraSpriteRendererProperties>(Renderer.RendererProperties))
 				{
-					AddSpriteRendererData(NiagaraWidget, Renderer.EmitterInstance, SpriteRenderer, RenderProperties, WidgetProperties);
+					AddSpriteRendererData(NiagaraWidget, Renderer.EmitterInstance, SpriteRenderer, ScaleFactor, ParentTopLeft, WidgetProperties);
 				}
 				else if (UNiagaraRibbonRendererProperties* RibbonRenderer = Cast<UNiagaraRibbonRendererProperties>(Renderer.RendererProperties))
 				{
-					AddRibbonRendererData(NiagaraWidget, Renderer.EmitterInstance, RibbonRenderer, RenderProperties, WidgetProperties);                		
+					AddRibbonRendererData(NiagaraWidget, Renderer.EmitterInstance, RibbonRenderer, ScaleFactor, ParentTopLeft, WidgetProperties);                		
 				}
 			}
 		}
@@ -166,13 +164,14 @@ FORCEINLINE FVector2D FastRotate(const FVector2D Vector, float Sin, float Cos)
 }
 
 
-void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance> EmitterInst, UNiagaraSpriteRendererProperties* SpriteRenderer, const FNiagaraUIRenderProperties& RenderProperties, const FNiagaraWidgetProperties* WidgetProperties)
+void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance> EmitterInst, UNiagaraSpriteRendererProperties* SpriteRenderer, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties)
 {
 	TRACE_CPUPROFILER_EVENT_SCOPE(UNiagaraUIComponent::AddSpriteRendererData);
 	SCOPE_CYCLE_COUNTER(STAT_GenerateSpriteData);
 	FVector ComponentLocation = GetRelativeLocation();
 	FVector ComponentScale = GetRelativeScale3D();
-	float WidgetRotationAngleRadians = FMath::DegreesToRadians(WidgetRotationAngle);
+	FRotator ComponentRotation = GetRelativeRotation();
+	float ComponentPitchRadians = FMath::DegreesToRadians(ComponentRotation.Pitch);
 
 #if ENGINE_MINOR_VERSION < 4
 	FNiagaraDataSet& DataSet = EmitterInst->GetData();
@@ -189,10 +188,6 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 
 	if (ParticleCount < 1)
 		return;
-
-	const float& ScaleFactor = RenderProperties.ScaleFactor;
-	const FVector2f& ParentTopLeft = RenderProperties.ParentTopLeft;
-	const FLinearColor& Tint = RenderProperties.Tint;
 
 	
 #if ENGINE_MINOR_VERSION < 1		
@@ -228,9 +223,9 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 		return PositionData.GetSafe(Index, FVector::ZeroVector).Y;
 	};	
 
-	auto GetParticleColor = [&ColorData, &Tint](int32 Index)
+	auto GetParticleColor = [&ColorData](int32 Index)
 	{
-		return ColorData.GetSafe(Index, FLinearColor::White) * Tint;
+		return ColorData.GetSafe(Index, FLinearColor::White);
 	};
 	
 	auto GetParticleVelocity2D = [&VelocityData](int32 Index)
@@ -276,7 +271,7 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 		if (LocalSpace)
 		{
 			ParticlePosition *= FVector2f(ComponentScale.X, ComponentScale.Z);
-			ParticlePosition  = ParticlePosition.GetRotated(-WidgetRotationAngle);
+			ParticlePosition  = ParticlePosition.GetRotated(-ComponentRotation.Pitch);
 			ParticlePosition += ParentTopLeft;	
 			ParticlePosition += FVector2f(ComponentLocation.X, -ComponentLocation.Z) * ScaleFactor;
 			
@@ -312,7 +307,7 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 			
 			if ( LocalSpace)
 			{
-				const float ParticleRotation = FMath::Acos(ParticleRotationCos * SinSign) - WidgetRotationAngleRadians;
+				const float ParticleRotation = FMath::Acos(ParticleRotationCos * SinSign) - ComponentPitchRadians;
 				FMath::SinCos(&ParticleRotationSin, &ParticleRotationCos, ParticleRotation);				
 			}
 			else
@@ -325,7 +320,7 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 			float ParticleRotation = GetParticleRotation(ParticleIndex);
 			
 			if (LocalSpace)
-				ParticleRotation -= WidgetRotationAngle;
+				ParticleRotation -= ComponentRotation.Pitch;
 			
 			FMath::SinCos(&ParticleRotationSin, &ParticleRotationCos, FMath::DegreesToRadians(ParticleRotation));
 		}
@@ -391,13 +386,14 @@ void UNiagaraUIComponent::AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraW
 	}
 }
 
-void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance> EmitterInst, UNiagaraRibbonRendererProperties* RibbonRenderer, const FNiagaraUIRenderProperties& RenderProperties, const FNiagaraWidgetProperties* WidgetProperties)
+void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance> EmitterInst, UNiagaraRibbonRendererProperties* RibbonRenderer, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties)
 {
 	TRACE_CPUPROFILER_EVENT_SCOPE(UNiagaraUIComponent::AddRibbonRendererData);
 	SCOPE_CYCLE_COUNTER(STAT_GenerateRibbonData);
 	
 	FVector ComponentLocation = GetRelativeLocation();
 	FVector ComponentScale = GetRelativeScale3D();
+	FRotator ComponentRotation = GetRelativeRotation();
 
 #if ENGINE_MINOR_VERSION < 4
 	FNiagaraDataSet& DataSet = EmitterInst->GetData();
@@ -414,10 +410,6 @@ void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraW
 
 	if (ParticleCount < 2)
 		return;
-			
-	const float& ScaleFactor = RenderProperties.ScaleFactor;
-	const FVector2f& ParentTopLeft = RenderProperties.ParentTopLeft;
-	const FLinearColor& Tint = RenderProperties.Tint;
 	
 #if ENGINE_MINOR_VERSION < 3
 	const auto SortKeyReader = RibbonRenderer->SortKeyDataSetAccessor.GetReader(DataSet);
@@ -466,9 +458,9 @@ void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraW
 		return FVector2f(Position3D.X, -Position3D.Z);
 	};	
 
-	auto GetParticleColor = [&ColorData, &Tint](int32 Index)
+	auto GetParticleColor = [&ColorData](int32 Index)
 	{
-		return ColorData.GetSafe(Index, FLinearColor::White) * Tint;
+		return ColorData.GetSafe(Index, FLinearColor::White);
 	};
 	
 	auto GetParticleWidth = [&RibbonWidthData](int32 Index)
@@ -527,7 +519,7 @@ void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraW
 		if (LocalSpace)
 		{
 			LastParticleUIPosition *= FVector2f(ComponentScale.X, ComponentScale.Z);
-			LastParticleUIPosition = LastParticleUIPosition.GetRotated(-WidgetRotationAngle);
+			LastParticleUIPosition = LastParticleUIPosition.GetRotated(-ComponentRotation.Pitch);
 			LastParticleUIPosition += ParentTopLeft;
 			
 			LastParticleUIPosition += FVector2f(ComponentLocation.X, -ComponentLocation.Z) * ScaleFactor;
@@ -595,7 +587,7 @@ void UNiagaraUIComponent::AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraW
 			if (LocalSpace)
 			{
 				CurrentParticleUIPosition *= FVector2f(ComponentScale.X, ComponentScale.Z);
-				CurrentParticleUIPosition = CurrentParticleUIPosition.GetRotated(-WidgetRotationAngle);
+				CurrentParticleUIPosition = CurrentParticleUIPosition.GetRotated(-ComponentRotation.Pitch);
 				CurrentParticleUIPosition += ParentTopLeft;
 				CurrentParticleUIPosition += FVector2f(ComponentLocation.X, -ComponentLocation.Z) * ScaleFactor;
 			}

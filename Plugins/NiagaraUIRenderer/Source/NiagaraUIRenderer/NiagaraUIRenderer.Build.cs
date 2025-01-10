@@ -1,4 +1,4 @@
-﻿// Copyright 2024 - Michal Smoleň
+﻿// Copyright 2023 - Michal Smoleň
 
 using UnrealBuildTool;
 
@@ -26,7 +26,7 @@ public class NiagaraUIRenderer : ModuleRules
 			new string[]
 			{
 				"Core",
-				"UMG",
+				"UMG", "Niagara",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
