@@ -8,6 +8,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
+#include "Slate/SceneViewport.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/System/Touch/MS_TouchWidget.h"
 
@@ -225,7 +226,7 @@ void FMS_PointerData::PlayParticle() const
 	}
 	
 	TouchWidget->AddToViewport(99999);
-	TouchWidget->SetPositionInViewport(PointerClickPosition);
+	TouchWidget->SetPositionInViewport(PointerDownPosition);
 	TouchWidget->PlayActive();
 }
 
