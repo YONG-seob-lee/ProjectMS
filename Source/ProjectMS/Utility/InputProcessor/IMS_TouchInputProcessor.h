@@ -25,7 +25,8 @@ public:
 	virtual bool HandleMouseButtonUpEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent) override;
 	virtual bool HandleMouseButtonDoubleClickEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent) override;
 
-	// Hold, LongTouch, Cilck, Glide, Pinch 등의 액션은 Data 구조체 내에서 관리.
+	// Hold, LongTouch, Click, Glide, Pinch 등의 액션은 Data 구조체 내에서 관리.
+	void HandleRotate();
 private:
 	FMS_PointerData* CreatePointer(const FPointerEvent& aMouseEvent);
 	FMS_PointerData* GetPointerData(uint32 aPointerIndex);

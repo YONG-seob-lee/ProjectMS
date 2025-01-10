@@ -61,7 +61,7 @@ bool IMS_TouchInputProcessor::HandleMouseMoveEvent(FSlateApplication& aSlateApp,
 {
 	if(FingerCount == 2)
 	{
-		
+		HandleRotate();
 	}
 
 	FMS_PointerData* TargetPointerData = GetPointerData(aMouseEvent.GetPointerIndex());
@@ -111,8 +111,33 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 }
 
 bool IMS_TouchInputProcessor::HandleMouseButtonDoubleClickEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent)
-{	
+{
+	FingerCount++; // 손가락 카운트 오류 방지용.
+	
 	return IInputProcessor::HandleMouseButtonDoubleClickEvent(aSlateApp, aMouseEvent);
+}
+
+void IMS_TouchInputProcessor::HandleRotate()
+{
+	const FMS_PointerData* FirstFinger = nullptr;
+	const FMS_PointerData* SecondFinger = nullptr;
+	
+	for(const auto& PointerData : PointerDatas)
+	{
+		if(PointerData.Value->IsPointerPressed())
+		{
+			if(FirstFinger == nullptr)
+			{
+				FirstFinger = PointerData.Value;
+			}
+			else
+			{
+				SecondFinger = PointerData.Value;
+			}
+		}
+	}
+
+	//FVector2D Pivot = FirstFinger->GetPointerDownPosition() - SecondFinger->GetPointerDownPosition();
 }
 
 FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMouseEvent)

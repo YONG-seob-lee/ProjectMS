@@ -31,6 +31,7 @@ void FMS_PointerData::Initialize()
 	{
 		TouchWidget->RebuildTouchWidget();
 	}
+	TouchWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	TouchWidget->SetOnFinishedParticleRendererFunc([this]()
 	{
