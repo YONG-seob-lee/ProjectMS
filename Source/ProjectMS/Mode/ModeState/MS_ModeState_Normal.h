@@ -43,5 +43,7 @@ public:
 	
 	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 
+	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
+
 	virtual void OnPinchAction(float aPinchValue) override;
 };

@@ -170,7 +170,7 @@ void UMS_WidgetManager::ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool
 {
 	if(aWidgetPath == nullptr)
 	{
-		RootWidget->ShowModalWidget(nullptr, bShow, AnimationName);
+		RootWidget->ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(FSoftObjectPath(TEXT("/Game/UI/Widget/SystemWidgets/Modal/InModalWidget.InModalWidget"))), bShow, AnimationName);
 	}
 	else
 	{

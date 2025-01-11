@@ -21,7 +21,7 @@ public:
 	virtual void Finalize() override;
 
 	virtual void Tick(float aDeltaTime) override;
-	
+
 protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
@@ -51,6 +51,9 @@ public:
 	UFUNCTION()
 	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult);
 
+	UFUNCTION()
+	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult);
+	
 	UFUNCTION()
 	virtual void OnPinchAction(float aPinchValue);
 };

@@ -63,6 +63,10 @@ void UMS_ModeStateBase::OnInputPointerClick(const FVector2D& aPosition, const FH
 {
 }
 
+void UMS_ModeStateBase::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+{
+}
+
 void UMS_ModeStateBase::OnPinchAction(float aPinchValue)
 {
 }

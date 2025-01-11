@@ -6,8 +6,15 @@
 #include "MS_PointerData.h"
 
 #include "Framework/Application/IInputProcessor.h"
-#include "Manager_Client/MS_InputManager.h"
 
+UENUM()
+enum class EMS_TouchActionType : uint8
+{
+	None = 0,
+	Down,
+	Up,
+	Double,
+};
 /**
  * 
  */
@@ -32,7 +39,7 @@ private:
 	void DestroyPointer(FMS_PointerData* aPointerData);
 	FMS_PointerData* GetPointerData(uint32 aPointerIndex);
 	
-	void ShootLineTrace(const FVector2D& aPointerDownPosition);
+	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType);
 
 	int32 FingerCount = 0;
 

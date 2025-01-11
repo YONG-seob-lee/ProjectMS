@@ -5,6 +5,7 @@
 
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
@@ -87,6 +88,19 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerClick(aPosition, aInteractableHitResult);
+}
+
+void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
+
+	if (AActor* InteractActor = aInteractableHitResult.GetActor())
+	{
+		if (InteractActor->IsA(AMS_Prop::StaticClass()))
+		{
+			gWidgetMng.ShowModalWidget(nullptr, true, TEXT("PlayModal"));
+		}
+	}
 }
 
 void UMS_ModeState_Normal::OnPinchAction(float aPinchValue)
