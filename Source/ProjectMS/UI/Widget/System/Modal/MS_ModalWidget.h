@@ -6,10 +6,6 @@
 #include "Widget/MS_Widget.h"
 #include "MS_ModalWidget.generated.h"
 
-struct FMS_ModalData
-{
-	FMS_ModalData();
-};
 
 /**
  * 
@@ -21,12 +17,12 @@ class PROJECTMS_API UMS_ModalWidget : public UMS_Widget
 public:
 	virtual void NativeConstruct() override;
 	
-	void SetModal(FMS_ModalData* aModalData);
+	void SetModal(const TObjectPtr<UMS_Widget>& aNewWidget);
 	
 private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_BlurButton = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_InModalWidget> CPP_InModalWidget = nullptr;
+	TObjectPtr<class UCanvasPanel> CPP_InModalPanel = nullptr;
 };

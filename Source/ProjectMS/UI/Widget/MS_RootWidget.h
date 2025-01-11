@@ -37,7 +37,7 @@ public:
 	void ShowToastMessage(const FString& Message) const;
 
 	void ShowRotateWidget() const;
-	void ShowModalWidget(struct FMS_ModalData* aModalData, bool bShow = true) const;
+	void ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow = true, const FName AnimationName = FName()) const;
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 	

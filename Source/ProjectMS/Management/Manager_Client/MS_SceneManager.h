@@ -48,6 +48,8 @@ public:
 	
 	void RequestChangeScene(const TObjectPtr<class UMS_SceneCommand>& aCommand);
 
+	FMS_FadeEventDelegate OnFadeFinishedEventDelegate;
+	
 private:
 	void StartFade();
 	void ProcessFade();

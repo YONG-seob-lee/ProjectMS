@@ -3,14 +3,15 @@
 
 #include "MS_ModalWidget.h"
 
-#include "MS_InModalWidget.h"
 #include "Button/MS_Button.h"
+#include "Components/CanvasPanel.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ModalWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	FillDefaultAnimations();
 	if(CPP_BlurButton)
 	{
 		CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
@@ -20,7 +21,9 @@ void UMS_ModalWidget::NativeConstruct()
 	}
 }
 
-void UMS_ModalWidget::SetModal(FMS_ModalData* aModalData)
+void UMS_ModalWidget::SetModal(const TObjectPtr<UMS_Widget>& aNewWidget)
 {
-	CPP_InModalWidget->SetModal(aModalData);
+	CPP_InModalPanel->ClearChildren();
+	
+	CPP_InModalPanel->AddChild(aNewWidget);
 }

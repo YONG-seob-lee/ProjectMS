@@ -130,8 +130,8 @@ void UMS_SceneManager::EndFade()
 		RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 		if(NewCommand->OnFadeEventDelegate.IsBound())
 		{
-			NewCommand->OnFadeEventDelegate.Execute();
-			NewCommand->OnFadeEventDelegate.Unbind();
+			NewCommand->OnFadeEventDelegate.Broadcast();
+			NewCommand->OnFadeEventDelegate.RemoveAll(this);
 		}
 	}
 	else
@@ -143,8 +143,8 @@ void UMS_SceneManager::EndFade()
 
 			if(NewCommand->OnFadeEventDelegate.IsBound())
 			{
-				NewCommand->OnFadeEventDelegate.Execute();
-				NewCommand->OnFadeEventDelegate.Unbind();
+				NewCommand->OnFadeEventDelegate.Broadcast();
+				NewCommand->OnFadeEventDelegate.RemoveAll(this);
 			}
 		}
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
@@ -152,7 +152,16 @@ void UMS_SceneManager::EndFade()
 			RootWidget->ActivatePreventionCover(false);
 			RootWidget->ResetCanvasZOrder();
 			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
+
+			if(OnFadeFinishedEventDelegate.IsBound())
+			{
+				OnFadeFinishedEventDelegate.Broadcast();
+				OnFadeFinishedEventDelegate.RemoveAll(this);
+			}
+			
 			LevelChangeStep = EMS_FadeStep::Finished;
+			MS_DeleteObject(NewCommand);
+			NewCommand = nullptr;
 		}
 	}
 }

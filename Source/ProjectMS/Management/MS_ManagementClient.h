@@ -37,4 +37,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UMS_ModeManager> ModeManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_ScheduleManager> ScheduleManager = nullptr;
 };

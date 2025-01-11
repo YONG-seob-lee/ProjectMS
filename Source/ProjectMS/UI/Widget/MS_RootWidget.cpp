@@ -207,16 +207,21 @@ void UMS_RootWidget::ShowRotateWidget() const
 	CPP_RotateWidget->SetVisibility(CPP_RotateWidget->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);	
 }
 
-void UMS_RootWidget::ShowModalWidget(FMS_ModalData* aModalData, bool bShow /* = true */) const
+void UMS_RootWidget::ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow /* = true */, const FName AnimationName /* = FName() */) const
 {
 	if(bShow)
 	{
 		CPP_ModalWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		CPP_ModalWidget->SetModal(aModalData);	
+		CPP_ModalWidget->SetModal(aNewWidget);	
 	}
 	else
 	{
 		CPP_ModalWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if(AnimationName != FName())
+	{
+		CPP_ModalWidget->PlayAnimationByName(AnimationName);
 	}
 }
 

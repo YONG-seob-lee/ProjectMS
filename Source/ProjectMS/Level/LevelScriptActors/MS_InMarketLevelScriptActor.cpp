@@ -4,6 +4,9 @@
 #include "MS_InMarketLevelScriptActor.h"
 
 #include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
+#include "Widget/InMarket/MS_MarketStartModal.h"
 
 
 AMS_InMarketLevelScriptActor::AMS_InMarketLevelScriptActor()
@@ -19,6 +22,11 @@ void AMS_InMarketLevelScriptActor::BeginPlay()
 	
 	TMap<int32, FPacketItemDatas*> Items;
 	gItemMng.CreateItem(Items);
+
+	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
+	{
+		gWidgetMng.ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath()), true, TEXT("PlayModal"));
+	});
 }
 
 void AMS_InMarketLevelScriptActor::Tick(float DeltaTime)

@@ -43,7 +43,7 @@ public:
 	void ShowRotateWidget() const;
 	void HideRotateWidget() const;
 	
-	void ShowModalWidget(FMS_ModalData* aModalData, bool bShow = true) const;
+	void ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow = true, const FName AnimationName = FName()) const;
 	void ShowGeneralWidget(bool bShow) const;
 
 	FMS_CreateWidget OnCreateWidget;

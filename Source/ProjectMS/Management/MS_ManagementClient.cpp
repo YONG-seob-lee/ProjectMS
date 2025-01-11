@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ManagementClient::Initialize()
@@ -40,6 +41,10 @@ void UMS_ManagementClient::Initialize()
 	WidgetManager->Initialize();
 	
 	CameraManager = Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager);
+
+	ScheduleManager = MS_NewObject<UMS_ScheduleManager>(this);
+	MS_CHECK(ScheduleManager);
+	ScheduleManager->Initialize();
 }
 
 void UMS_ManagementClient::Finalize()

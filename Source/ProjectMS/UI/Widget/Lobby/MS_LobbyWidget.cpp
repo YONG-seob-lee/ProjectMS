@@ -29,7 +29,7 @@ void UMS_LobbyWidget::OnClickedStartButton()
 	CREATE_SCENE_COMMAND(Command)
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
-	Command->OnFadeEventDelegate = FMS_FadeEventDelegate::CreateWeakLambda(this, [this]
+	Command->OnFadeEventDelegate.AddWeakLambda(this, [this]
 	{
 		FViewTargetTransitionParams Param;
 		Param.BlendTime = 1.f;
