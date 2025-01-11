@@ -92,6 +92,15 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 	bIsPreviewProp = true;
 	
 	LinkedProp = aLinkedProp;
+
+	// For PostProcess
+	TArray<UMeshComponent*> MeshComponents;
+	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
+
+	for (UMeshComponent* MeshComponent : MeshComponents)
+	{
+		MeshComponent->SetRenderCustomDepth(true);
+	}
 }
 
 UMS_PreviewWidget* AMS_Prop::GetPreviewWidget() const
