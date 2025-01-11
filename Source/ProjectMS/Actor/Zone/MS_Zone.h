@@ -50,6 +50,8 @@ public:
 	
 	const FIntVector& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
+	const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
+	
 	const FMS_GridData& GetGrid(const FIntVector2& aZoneGridPosition) const;
 
 	void ShowDebugZoneData();

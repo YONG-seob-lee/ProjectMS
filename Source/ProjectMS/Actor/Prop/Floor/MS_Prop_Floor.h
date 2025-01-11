@@ -20,11 +20,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone) override;
+	
+	virtual void SetMaterial(const FName& MaterialKey);
 
 protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UMeshComponent* MeshComponent;
+
+	// Material
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, TObjectPtr<class UMaterialInterface>> Materials;
+
 	
 	/*
 #if WITH_EDITORONLY_DATA

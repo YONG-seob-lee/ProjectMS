@@ -8,6 +8,7 @@
 
 #include "Prop/MS_Prop.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Prop/Floor/MS_Prop_Floor.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -308,4 +309,33 @@ bool AMS_ConstructibleLevelScriptActorBase::ConvertWorldGridPositionToZoneGridPo
 	}
 
 	return false;
+}
+
+void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
+{
+	if (bShowUnconstructableGrid != bShow)
+	{
+		bShowUnconstructableGrid = bShow;
+		
+		for (auto& Zone : Zones)
+		{
+			const TMap<FIntVector2, FMS_GridData>& Grids = Zone.Value->GetGrids();
+			{
+				for (auto& Grid : Grids)
+				{
+					if (AMS_Prop_Floor* Floor = Cast<AMS_Prop_Floor>(Grid.Value.Floor.Get()))
+					{
+						if (!bShowUnconstructableGrid || Grid.Value.Object == nullptr)
+						{
+							Floor->SetMaterial(FName("Normal"));
+						}
+						else
+						{
+							Floor->SetMaterial(FName("Unconstructable"));
+						}
+					}
+				}
+			}
+		}
+	}
 }

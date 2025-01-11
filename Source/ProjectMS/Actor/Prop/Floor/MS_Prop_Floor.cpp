@@ -66,3 +66,20 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, cons
 */
 }
 
+void AMS_Prop_Floor::SetMaterial(const FName& MaterialKey)
+{
+	if (Materials.Contains(MaterialKey))
+	{
+		MeshComponent->SetMaterial(0, *Materials.Find(MaterialKey));
+	}
+	else
+	{
+		MS_LOG_Verbosity(Error, TEXT("Material Key isn't valid"));
+		
+		if (Materials.Contains(FName("Normal")))
+		{
+			MeshComponent->SetMaterial(0, *Materials.Find(FName("Normal")));
+		}
+	}
+}
+

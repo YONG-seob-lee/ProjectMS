@@ -36,6 +36,8 @@ public:
 	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition = FIntVector::ZeroValue);	// Ret : AllGridInZones
 	
 	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
+
+	void ShowUnconstructableGrid(bool bShow);
 	
 protected:
 	UPROPERTY()
@@ -43,4 +45,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	TMap<int32, TObjectPtr<class AMS_Zone>> Zones;
+
+	bool bShowUnconstructableGrid;
 };

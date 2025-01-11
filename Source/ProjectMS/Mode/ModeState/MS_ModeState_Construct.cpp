@@ -37,6 +37,13 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 
 void UMS_ModeState_Construct::Begin()
 {
+	// ShowUnconstructableGrid
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		LevelScriptActor->ShowUnconstructableGrid(true);
+	}
+
+	// SelectProp
 	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
 	
 	if (SelectedProp != nullptr)
@@ -47,7 +54,14 @@ void UMS_ModeState_Construct::Begin()
 
 void UMS_ModeState_Construct::Exit()
 {
+	// SelectProp
 	UnselectProp();
+
+	// ShowUnconstructableGrid
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		LevelScriptActor->ShowUnconstructableGrid(false);
+	}
 }
 
 void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
