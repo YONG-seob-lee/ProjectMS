@@ -4,9 +4,16 @@
 #include "MS_ScheduleManager.h"
 
 #include "MS_Define.h"
+#include "MS_WidgetManager.h"
+#include "Table/Caches/MS_CommonCacheTable.h"
+#include "Widget/InMarket/MS_MarketEndModal.h"
 
 void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 {
+	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+	MS_CHECK(CommonTable);
+
+	int32 SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
 	switch(aType)
 	{
 	case EMS_ScheduleType::Prepare:
@@ -18,7 +25,7 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 			}
 			
 			PassTheDay();
-			Minute = 420;
+			Minute = 7 * SecondPerOneMinute;
 			break;
 		}
 	case EMS_ScheduleType::UpAndDown:
@@ -28,7 +35,7 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 				MS_LOG(TEXT("Miss Schedule! "));
 				return;
 			}
-			Minute = 420;
+			Minute = 7 * SecondPerOneMinute;
 			break;
 		}
 	case EMS_ScheduleType::OpenMarket:
@@ -38,7 +45,7 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 				MS_LOG(TEXT("Miss Schedule! "));
 				return;
 			}
-			Minute = 540;
+			Minute = 9 * SecondPerOneMinute;
 			break;
 		}
 	case EMS_ScheduleType::Deadline:
@@ -48,7 +55,7 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 				MS_LOG(TEXT("Miss Schedule! "));
 				return;
 			}
-			Minute = 1200;
+			Minute = 20 * SecondPerOneMinute;
 			break;
 		}
 	default:
@@ -77,12 +84,15 @@ EMS_ScheduleType FMS_TimeSchedule::GetNextScheduleType()
 
 void FMS_TimeSchedule::PassTheDay()
 {
+	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+	MS_CHECK(CommonTable);
+	
 	Day += 1;
-	if(Day > 28)
+	if(Day > CommonTable->GetParameter01(CommonContents::DAYS_PER_ONEMONTH))
 	{
 		Month +=1;
 		Day = 1;
-		if(Month > 12)
+		if(Month > CommonTable->GetParameter01(CommonContents::MONTH_PER_ONEYEAR))
 		{
 			Year +=1;
 			Month = 1;
@@ -117,6 +127,13 @@ void UMS_ScheduleManager::Initialize()
 
 	// "TEST" Step.1 : 최초로 서버에서 스케쥴 데이터를 받음.
 	TakeTimeSchedule(nullptr);
+
+	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+	MS_CHECK(CommonTable);
+
+	IntervalSecondReal = CommonTable->GetParameter01(CommonContents::INTERVAL_SECOND);
+	
+	TestServer.SetManager(this);
 }
 
 void UMS_ScheduleManager::PostInitialize()
@@ -153,31 +170,51 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 	// 테스트용 데이터 생성.
 	if(TimeSchedule == nullptr)
 	{
-		TimeSchedule = new FMS_TimeSchedule(2025, 1, 1 , 390, EMS_ScheduleType::Prepare);
+		const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+		MS_CHECK(CommonTable);
+		
+		TimeSchedule = new FMS_TimeSchedule(CommonTable->GetParameter01(CommonContents::DEFAULT_YEAR), CommonTable->GetParameter01(CommonContents::DEFAULT_MONTH), CommonTable->GetParameter01(CommonContents::DEFAULT_DAY) , CommonTable->GetParameter01(CommonContents::DEFAULT_MINUTE), EMS_ScheduleType::Prepare);
 	}
-
+	else
+	{
+		TimeSchedule = aTimeSchedule;
+	}
+	
 	switch(TimeSchedule->GetCurrentScheduleType())
 	{
 	case EMS_ScheduleType::UpAndDown:
 		{
 			// 타이머를 매니저에서 돌려 (게임시간 1분당 현실시간 0.5초)
 			PlayTimer(120);
+			gWidgetMng.ShowToastMessage(TEXT("상하차가 시작되었습니다!"));
+			break;
 		}
 	case EMS_ScheduleType::OpenMarket:
 		{
 			PlayTimer(660);
+			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
+			break;
 		}
 	case EMS_ScheduleType::Prepare:
+		{
+			OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
+			gWidgetMng.ShowToastMessage(TEXT("준비 단계!"));
+			break;
+		}
 	case EMS_ScheduleType::Deadline:
 		{
 			// 타이머 없어도 돼
+			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
+			gWidgetMng.ShowModalWidget(UMS_MarketEndModal::GetWidgetPath(), true, TEXT("PlayModal"));
+			break;
 		}
 	default:
 		{
 			break;
 		}
 	}
-	
+
+	OnUpdateScheduleDelegate.Broadcast(static_cast<int32>(TimeSchedule->GetCurrentScheduleType()));
 }
 
 void UMS_ScheduleManager::TransferServer()
@@ -185,12 +222,42 @@ void UMS_ScheduleManager::TransferServer()
 	TestServer.RenewSchedule(TimeSchedule->GetNextScheduleType());
 }
 
+void UMS_ScheduleManager::SetTest()
+{
+	IntervalSecondReal = 30;
+}
+
 void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)
 {
-	const float RealTimeSecond = static_cast<float>(aGamePlayMinute) / 2;
-	MS_LOG(TEXT("====== UMS_ScheduleManager::PlayTimer \' In Rate Time : %f \'"), RealTimeSecond);
+	if(IntervalSecondReal != 1)
+	{
+		CostTimeSecondReal = aGamePlayMinute;
+	}
+	else
+	{
+		CostTimeSecondReal = aGamePlayMinute / 2;
+	}
 	
-	GetWorld()->GetTimerManager().SetTimer(MarketPlayTimerHandle, this, &UMS_ScheduleManager::EndTimer, RealTimeSecond, false);
+	MS_LOG(TEXT("====== UMS_ScheduleManager::PlayTimer Start \' In Rate Time : %d \'"), CostTimeSecondReal);
+
+	// Test용으로 나중에 InRate 인수에 IntervalSecond 로 대체
+	GetWorld()->GetTimerManager().SetTimer(MarketPlayTimerHandle, this, &UMS_ScheduleManager::DuringTimer, 1, true);
+}
+
+void UMS_ScheduleManager::DuringTimer()
+{
+	CostTimeSecondReal -= IntervalSecondReal;
+	
+	TimeSchedule->UpdateMinute(IntervalSecondReal);
+	OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
+	
+	if(CostTimeSecondReal <= 0)
+	{
+		CostTimeSecondReal = 0;
+			
+		GetWorld()->GetTimerManager().ClearTimer(MarketPlayTimerHandle);
+		EndTimer();
+	}
 }
 
 void UMS_ScheduleManager::EndTimer()

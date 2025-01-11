@@ -16,6 +16,7 @@ class PROJECTMS_API UMS_ModalWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void OnAnimFinished(const FName& aAnimName) override;
 	
 	void SetModal(const TObjectPtr<UMS_Widget>& aNewWidget);
 	

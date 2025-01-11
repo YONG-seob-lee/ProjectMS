@@ -3,8 +3,10 @@
 
 #include "MS_GeneralWidget.h"
 
+#include "MS_TimeLineWidget.h"
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
@@ -18,6 +20,9 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_LeftButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedLeftButton);
 	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
+
+	gScheduleMng.OnUpdateScheduleDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
+	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateMinute);
 }
 
 void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
@@ -128,4 +133,35 @@ void UMS_GeneralWidget::OnClickedRightButton()
 void UMS_GeneralWidget::OnClickedExpanderButton()
 {
 	gWidgetMng.ShowModalWidget(nullptr, true);
+}
+
+void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
+{
+	switch(static_cast<EMS_ScheduleType>(ScheduleType))
+	{
+	case EMS_ScheduleType::Prepare:
+	case EMS_ScheduleType::Deadline:
+		{
+			CPP_TimeLineWidget->IsStartTimer(false);
+			break;
+		}
+	case EMS_ScheduleType::UpAndDown:
+	case EMS_ScheduleType::OpenMarket:
+		{
+			CPP_TimeLineWidget->IsStartTimer(true);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+}
+
+void UMS_GeneralWidget::OnUpdateMinute(int32 aMinute)
+{
+	if(CPP_TimeLineWidget)
+	{
+		CPP_TimeLineWidget->UpdateTimer(aMinute);
+	}
 }

@@ -243,7 +243,7 @@ void UMS_SceneManager::HandleLoadingLevel()
 	}
 	
 	gWidgetMng.RefreshContentWidget();
-	if (!LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()).IsNone())
+	if (!LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()).IsNone() && NewCommand->GetNextWidgetName() == TEXT("None"))
 	{
 		gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
 	}

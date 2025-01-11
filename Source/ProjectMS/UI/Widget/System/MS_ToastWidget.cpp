@@ -1,5 +1,6 @@
 ﻿#include "MS_ToastWidget.h"
 
+#include "Components/TextBlock.h"
 #include "Widget/MS_RootWidget.h"
 
 void UMS_ToastWidget::NativeConstruct()
@@ -28,4 +29,9 @@ void UMS_ToastWidget::OnAnimFinished(const FName& aAnimName)
 			RootWidget->ResetToastPanel();
 		}
 	}
+}
+
+void UMS_ToastWidget::SetToastMsg(const FString& aMessage) const
+{
+	CPP_ToastText->SetText(aMessage == TEXT("") ? FText::FromString(TEXT("추후 업데이트 예정입니다.")) : FText::FromString(aMessage));
 }

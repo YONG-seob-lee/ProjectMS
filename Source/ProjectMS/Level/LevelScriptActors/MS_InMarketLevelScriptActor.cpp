@@ -25,7 +25,7 @@ void AMS_InMarketLevelScriptActor::BeginPlay()
 
 	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
 	{
-		gWidgetMng.ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath()), true, TEXT("PlayModal"));
+		gWidgetMng.ShowModalWidget(UMS_MarketStartModal::GetWidgetPath(), true, TEXT("PlayModal"));
 	});
 }
 

@@ -194,6 +194,8 @@ void UMS_RootWidget::ShowToastMessage(const FString& Message) const
 	{
 		return;
 	}
+
+	CPP_ToastWidget->SetToastMsg(Message);
 	
 	CPP_MessagePanel->SetVisibility(ESlateVisibility::HitTestInvisible);
 	CPP_MessageWidgetSwitcher->SetActiveWidgetIndex(MessageType::Toast);

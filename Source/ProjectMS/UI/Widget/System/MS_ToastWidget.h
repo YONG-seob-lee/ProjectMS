@@ -17,4 +17,9 @@ public:
 	virtual void NativeConstruct() override;
 	
 	virtual void OnAnimFinished(const FName& aAnimName) override;
+
+	void SetToastMsg(const FString& aMessage) const;
+private:
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_ToastText = nullptr;
 };

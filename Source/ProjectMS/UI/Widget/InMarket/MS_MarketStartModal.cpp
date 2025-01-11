@@ -3,7 +3,31 @@
 
 #include "MS_MarketStartModal.h"
 
+#include "Button/MS_Button.h"
+#include "Manager_Client/MS_ScheduleManager.h"
+
 void UMS_MarketStartModal::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	CPP_OpeningPlayButton->GetOnClickedDelegate().AddUObject(this, &UMS_MarketStartModal::OnClickedOpeningPlayButton);
+
+	CPP_FastButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+	{
+		if(Test)
+		{
+			gScheduleMng.SetTest();
+			Test();
+		}
+	});
+}
+
+void UMS_MarketStartModal::OnClickedOpeningPlayButton()
+{
+	if(OnClickedOpeningPlayButtonCallback)
+	{
+		OnClickedOpeningPlayButtonCallback();
+	}
+	
+	CPP_OpeningPlayButton->GetOnClickedDelegate().RemoveAll(this);
 }

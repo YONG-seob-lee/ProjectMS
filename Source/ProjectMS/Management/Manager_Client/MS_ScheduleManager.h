@@ -6,6 +6,9 @@
 #include "MS_ManagerBase.h"
 #include "MS_ScheduleManager.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleDelegate, int32);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMinuteDelegate, int32);
+
 UENUM()
 enum class EMS_ScheduleType
 {
@@ -24,6 +27,9 @@ public:
 
 	void SetScheduleType(EMS_ScheduleType aType);
 	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() const { return ScheduleType; }
+	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
+	FORCEINLINE int32 GetMinute() const { return Minute; }
+	
 	EMS_ScheduleType GetNextScheduleType();
 
 private:
@@ -43,8 +49,8 @@ struct FMS_TestServerScheduler
 {
 public:
 	FMS_TestServerScheduler() {}
-	FMS_TestServerScheduler(class UMS_ScheduleManager* aManager): Manager(aManager) {}
 
+	void SetManager(class UMS_ScheduleManager* aManager) { Manager = aManager; } 
 	void RenewSchedule(EMS_ScheduleType aType);
 
 	FORCEINLINE FMS_TimeSchedule TransferSchedule() const { return CurrentTime; }
@@ -77,16 +83,27 @@ public:
 	void TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule);
 
 	void TransferServer();
+
+	//test
+	void SetTest();
+
+	FMS_OnUpdateScheduleDelegate OnUpdateScheduleDelegate;
+	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
+	
 private:
 	void PlayTimer(int32 aGamePlayMinute);
+	void DuringTimer();
 	void EndTimer();
 	
 	FTimerHandle MarketPlayTimerHandle;
 	FMS_TimeSchedule* TimeSchedule = nullptr;
 
+	int32 CostTimeSecondReal = 0;
+	int32 IntervalSecondReal = 0; 
 	// Test
 	FMS_TestServerScheduler TestServer;
 
+public:
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;
 	static UMS_ScheduleManager* GetInstance();
 	

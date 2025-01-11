@@ -166,9 +166,16 @@ void UMS_WidgetManager::HideRotateWidget() const
 {
 }
 
-void UMS_WidgetManager::ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow /* = true */, const FName AnimationName /* = FName() */) const
+void UMS_WidgetManager::ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool bShow /* = true */, const FName AnimationName /* = FName() */) const
 {
-	RootWidget->ShowModalWidget(aNewWidget, bShow, AnimationName);
+	if(aWidgetPath == nullptr)
+	{
+		RootWidget->ShowModalWidget(nullptr, bShow, AnimationName);
+	}
+	else
+	{
+		RootWidget->ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(aWidgetPath), bShow, AnimationName);
+	}
 }
 
 void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const

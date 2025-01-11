@@ -5,7 +5,10 @@
 
 #include "Button/MS_Button.h"
 #include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Widget/InMarket/MS_MarketStartModal.h"
 
 void UMS_ModalWidget::NativeConstruct()
 {
@@ -21,9 +24,42 @@ void UMS_ModalWidget::NativeConstruct()
 	}
 }
 
+void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
+{
+	Super::OnAnimFinished(aAnimName);
+
+	
+	if(aAnimName == TEXT("CloseModal"))
+	{
+		gScheduleMng.TransferServer();
+	}
+}
+
 void UMS_ModalWidget::SetModal(const TObjectPtr<UMS_Widget>& aNewWidget)
 {
+	if(!aNewWidget)
+	{
+		return;
+	}
 	CPP_InModalPanel->ClearChildren();
-	
 	CPP_InModalPanel->AddChild(aNewWidget);
+
+	if(const TObjectPtr<UMS_MarketStartModal> MarketStartModal = Cast<UMS_MarketStartModal>(aNewWidget))
+	{
+		MarketStartModal->SetOnClickedOpeningPlayButtonFunc([this]()
+		{
+			PlayAnimationByName(TEXT("CloseModal"));
+		});
+
+		MarketStartModal->SetTest([this]()
+		{
+			PlayAnimationByName(TEXT("CloseModal"));
+		});
+	}
+	
+	if(UCanvasPanelSlot* aSlot = Cast<UCanvasPanelSlot>(aNewWidget->Slot))
+	{
+		aSlot->SetSize(FVector2D(1440.f, 810.f));
+		//aSlot->SetAnchors(FAnchors::Maximum);
+	}
 }
