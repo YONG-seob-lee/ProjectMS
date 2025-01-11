@@ -45,12 +45,12 @@ void IMS_TouchInputProcessor::Tick(const float aDeltaTime, FSlateApplication& aS
 
 bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent)
 {
-	MS_LOG(TEXT("IMS_TouchInputProcessor::HandleMouseButtonDownEvent    PointerIndex : %d"), aMouseEvent.GetPointerIndex());
-
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
 	
 	ShootLineTrace(NewPointerData->GetPointerDownPosition());
+
+	NewPointerData->PlayParticle();
 	
 	FingerCount++;
 
@@ -77,7 +77,6 @@ bool IMS_TouchInputProcessor::HandleMouseMoveEvent(FSlateApplication& aSlateApp,
 
 bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent)
 {
-	MS_LOG(TEXT("IMS_TouchInputProcessor::HandleMouseButtonUpEvent    PointerIndex : %d"), aMouseEvent.GetPointerIndex());
 	FMS_PointerData* TargetPointerData = GetPointerData(aMouseEvent.GetPointerIndex());
 	if(!TargetPointerData)
 	{
@@ -101,10 +100,9 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 
 	TargetPointerData->ResetElapsedHoldTime();
 	TargetPointerData->CalculateIntervalTime();
-
 	TargetPointerData->HandlePointerClick();
-	TargetPointerData->PlayParticle();
 	
+	DestroyPointer(TargetPointerData);
 	FingerCount--;
 
 	return IInputProcessor::HandleMouseButtonUpEvent(aSlateApp, aMouseEvent);
@@ -145,12 +143,6 @@ FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMo
 	FMS_PointerData* PointerData = new FMS_PointerData();
 	
 	PointerDatas.Emplace(aMouseEvent.GetPointerIndex(), PointerData);
-	PointerData->SetOnFinishParticleFunc([this, PointerData]()
-	{
-		PointerDatas.Remove(PointerData->GetPointerIndex());
-		PointerData->Finalize();
-		delete PointerData;
-	});
 	
 	PointerData->SetPointerIndex(aMouseEvent.GetPointerIndex());
 	PointerData->SetPointerPressFlag(true);
@@ -158,6 +150,23 @@ FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMo
 	PointerData->SetPointerDownPosition(gInputMng.AcquirePointerPositionOnViewport());
 
 	return PointerData;
+}
+
+void IMS_TouchInputProcessor::DestroyPointer(FMS_PointerData* aPointerData)
+{
+	FMS_PointerData** TargetPointerData = PointerDatas.Find(aPointerData->GetPointerIndex());
+	if(!TargetPointerData)
+	{
+		return;
+	}
+
+	if((*TargetPointerData)->IsPointerPressed())
+	{
+		return;
+	}
+	PointerDatas.Remove(aPointerData->GetPointerIndex());
+	aPointerData->Finalize();
+	delete aPointerData;
 }
 
 FMS_PointerData* IMS_TouchInputProcessor::GetPointerData(uint32 aPointerIndex)

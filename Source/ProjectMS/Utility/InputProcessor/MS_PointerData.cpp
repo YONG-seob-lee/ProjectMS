@@ -15,7 +15,6 @@ FMS_PointerData::FMS_PointerData()
 
 FMS_PointerData::~FMS_PointerData()
 {
-	MS_DeleteObject(TouchWidget);
 }
 
 void FMS_PointerData::Initialize()
@@ -25,21 +24,6 @@ void FMS_PointerData::Initialize()
 	PointerHoldDelay = CommonTable->GetParameter02(CommonContents::POINTER_HOLD_DELAY);
 	PointerLongTouch = CommonTable->GetParameter02(CommonContents::POINTER_LONG_TOUCH);
 	PointerClickDelay = CommonTable->GetParameter02(CommonContents::POINTER_CLICK_DELAY);
-	
-	TouchWidget = Cast<UMS_TouchWidget>(gWidgetMng.Create_Widget_NotManaging(UMS_TouchWidget::GetWidgetPath()));
-	if(TouchWidget)
-	{
-		TouchWidget->RebuildTouchWidget();
-	}
-	TouchWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	TouchWidget->SetOnFinishedParticleRendererFunc([this]()
-	{
-		if(OnFinishParticleCallback)
-		{
-			OnFinishParticleCallback();
-		}
-	});
 }
 
 void FMS_PointerData::Finalize()
@@ -49,11 +33,14 @@ void FMS_PointerData::Finalize()
 
 void FMS_PointerData::Tick(const float aDeltaTime)
 {
-	ElapsedHoldTime += aDeltaTime;
-
-	if(ElapsedHoldTime >= PointerLongTouch)
+	if(IsPointerPressed())
 	{
-		HandlePointerLongTouch();
+		ElapsedHoldTime += aDeltaTime;
+		
+		if(ElapsedHoldTime >= PointerLongTouch)
+		{
+			HandlePointerLongTouch();
+		}	
 	}
 }
 
@@ -80,7 +67,7 @@ void FMS_PointerData::HandlePointerHold()
 	gInputMng.OnPointerHoldDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
 }
 
-void FMS_PointerData::HandlePointerLongTouch()
+void FMS_PointerData::HandlePointerLongTouch() const
 {
 	FHitResult InteractableHitResult = {};
 	gInputMng.GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
@@ -113,13 +100,15 @@ void FMS_PointerData::HandlePointerClick()
 		
 		gInputMng.OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult);
 	}
+
+	PlayParticle();
 }
 
 void FMS_PointerData::HandlePointerGlide()
 {
 	if (IsPointerPressFlag == true || IsMouseRightButtonPressFlag == true)
 	{
-		FVector2D PrevPointerGlidePosition = PointerGlidePosition;
+		const FVector2D PrevPointerGlidePosition = PointerGlidePosition;
 		PointerGlidePosition = PointerMovePosition;
 		if(PrevPointerGlidePosition.Equals(PointerParameter::DefaultVector))
 		{
@@ -218,11 +207,12 @@ void FMS_PointerData::UpdatePointerMovePosition()
 
 void FMS_PointerData::PlayParticle() const
 {
-	if(!TouchWidget)
+	const TObjectPtr<UMS_TouchWidget> TouchWidget = Cast<UMS_TouchWidget>(gWidgetMng.Create_Widget_NotManaging(UMS_TouchWidget::GetWidgetPath()));
+	if(TouchWidget)
 	{
-		return;
+		TouchWidget->RebuildTouchWidget();
 	}
-	
+	TouchWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	TouchWidget->AddToViewport(99999);
 	TouchWidget->SetPositionInViewport(PointerDownPosition);
 	TouchWidget->PlayActive();

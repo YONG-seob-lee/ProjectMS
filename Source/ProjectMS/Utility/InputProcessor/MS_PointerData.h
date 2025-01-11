@@ -23,8 +23,6 @@ public:
 
 	void Tick(const float aDeltaTime);
 
-	FORCEINLINE void SetOnFinishParticleFunc(const TFunction<void()>& aFunc) { OnFinishParticleCallback = aFunc; }
-
 	FORCEINLINE void SetPointerIndex(uint32 aPointerIndex) { PointerIndex = aPointerIndex; }
 	FORCEINLINE uint32 GetPointerIndex() const { return PointerIndex; }
 	
@@ -45,7 +43,7 @@ public:
 	void CalculateIntervalTime();
 
 	void HandlePointerHold();
-	void HandlePointerLongTouch();
+	void HandlePointerLongTouch() const;
 	void HandlePointerClick();
 	void HandlePointerGlide();
 	void HandlePinchAction();
@@ -90,8 +88,4 @@ private:
 	float PointerHoldDelay = 0.f;
 	float PointerLongTouch = 0.f;
 	float PointerClickDelay = 0.f;
-
-	TObjectPtr<class UMS_TouchWidget> TouchWidget = nullptr;
-
-	TFunction<void()> OnFinishParticleCallback = nullptr;
 };

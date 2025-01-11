@@ -29,6 +29,7 @@ public:
 	void HandleRotate();
 private:
 	FMS_PointerData* CreatePointer(const FPointerEvent& aMouseEvent);
+	void DestroyPointer(FMS_PointerData* aPointerData);
 	FMS_PointerData* GetPointerData(uint32 aPointerIndex);
 	
 	void ShootLineTrace(const FVector2D& aPointerDownPosition);

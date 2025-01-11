@@ -1,7 +1,7 @@
 ﻿#include "MS_TouchWidget.h"
 
+#include "MS_Define.h"
 #include "NiagaraSystemWidget.h"
-#include "NiagaraUIComponent.h"
 
 void UMS_TouchWidget::NativeConstruct()
 {
@@ -16,18 +16,12 @@ void UMS_TouchWidget::NativeDestruct()
 void UMS_TouchWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	if(bIsActive == false)
-	{
-		return;
-	}
+
+	ElapsedTime += InDeltaTime;
 	
-	if(CPP_TouchEffectWidget->GetNiagaraComponent()->IsActive() == false)
+	if(ElapsedTime >= 5.f)
 	{
-		if(OnFinishedParticleRendererCallback)
-		{
-			OnFinishedParticleRendererCallback();
-			bIsActive = false;
-		}
+		MS_DeleteObject(this);
 	}
 }
 
@@ -47,9 +41,7 @@ void UMS_TouchWidget::ReleasedNiagaraActor() const
 	}
 }
 
-void UMS_TouchWidget::PlayActive()
-{
-	GetWorld()->GetTimerManager().SetTimer(ActiveHandle, [this](){bIsActive = true; }, 0.2f, false);
-	
+void UMS_TouchWidget::PlayActive() const
+{	
 	CPP_TouchEffectWidget->ActivateSystem(true);
 }
