@@ -8,6 +8,10 @@
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/System/Touch/MS_TouchWidget.h"
 
+namespace dummy
+{
+	float POINTER_HOLD_TERM = 0.1f;
+}
 
 FMS_PointerData::FMS_PointerData()
 {
@@ -36,6 +40,13 @@ void FMS_PointerData::Tick(const float aDeltaTime)
 	if(IsPointerPressed())
 	{
 		ElapsedHoldTime += aDeltaTime;
+		ElapsedHoldTimeInternal += aDeltaTime;
+		
+		if(ElapsedHoldTimeInternal >= dummy::POINTER_HOLD_TERM)
+		{
+			HandlePointerHold();
+			ElapsedHoldTimeInternal = 0.f;
+		}
 		
 		if(ElapsedHoldTime >= PointerLongTouch)
 		{

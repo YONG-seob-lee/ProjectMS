@@ -83,7 +83,7 @@ private:
 	FVector2D PointerGlidePositionDeltaTrend = PointerParameter::DefaultVector;
 	
 	float ElapsedHoldTime = 0.f;
-
+	float ElapsedHoldTimeInternal = 0.f;
 	// Fixed Value
 	float PointerHoldDelay = 0.f;
 	float PointerLongTouch = 0.f;
