@@ -74,7 +74,7 @@ void UMS_RootWidget::RefreshContentCanvas() const
 
 void UMS_RootWidget::ActivatePreventionCover(bool bShow) const
 {
-	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
 }
 
 void UMS_RootWidget::SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle) const
