@@ -4,11 +4,21 @@
 #include "Components/CapsuleComponent.h"
 
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
+#include "AI/AIController/StaffAIController/AnimInstance/MS_StaffAIAnimInstance.h"
 
 AMS_StaffAICharacter::AMS_StaffAICharacter()
 {
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMeshFinder(TEXT("/Game/3D/Character/Ch_Duck"));
+	static ConstructorHelpers::FClassFinder<UMS_StaffAIAnimInstance> AnimInstanceFinder(TEXT("/Game/AI/AIController/StaffAIController/AnimInstance/BP_StaffAIAnimInstance"));
+
+	MS_CHECK(SkeletalMeshFinder.Object);
+	MS_CHECK(AnimInstanceFinder.Class);
+
 	AIControllerClass = AMS_StaffAIController::StaticClass();
 	SkeletalMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -50.0f));
+	SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	SkeletalMeshComponent->SetSkeletalMesh(SkeletalMeshFinder.Object);
+	SkeletalMeshComponent->SetAnimInstanceClass(AnimInstanceFinder.Class);
 
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationRoll = true;
@@ -58,4 +68,9 @@ void AMS_StaffAICharacter::AttachStockStaticMesh(UStaticMesh* aStockStaticMesh)
 void AMS_StaffAICharacter::DeattachStockStaticMesh()
 {
 	StockStaticMeshComponent->SetStaticMesh(nullptr);
+}
+
+void AMS_StaffAICharacter::SetWorkAnimationFlag(const bool& aWorkFlag)
+{
+	Cast<UMS_StaffAIAnimInstance>(SkeletalMeshComponent->GetAnimInstance())->SetOwnerWorkFlag(aWorkFlag);
 }

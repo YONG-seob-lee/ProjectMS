@@ -18,6 +18,7 @@ EBTNodeResult::Type UMS_UndeployStaffFromStorageBayTask::ExecuteTask(UBehaviorTr
 	int TargetStorageBayOrder = INT_MIN;
 	TargetStorageBayOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("TargetStorageBayOrder")));
 	TargetStorage->BayComponentArray[TargetStorageBayOrder]->UndeployWorker();
+	OwnerCharacter->SetWorkAnimationFlag(false);
 
 	return EBTNodeResult::Succeeded;
 }

@@ -7,6 +7,8 @@
 AMS_ShelfStaffAICharacter::AMS_ShelfStaffAICharacter()
 {
 	AIControllerClass = AMS_ShelfStaffAIController::StaticClass();
+	// /Script/Engine.SkeletalMesh'/Game/3D/Character/Ch_Duck.Ch_Duck'
+
 }
 
 UClass* AMS_ShelfStaffAICharacter::GetLoadingStorageType()

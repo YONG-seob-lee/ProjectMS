@@ -35,18 +35,18 @@ void UMS_SeekUntilAvailableBayTask::TickTask(UBehaviorTreeComponent& aOwnerComp,
 
 	for (int i = 0; i < TargetStorage->BayComponentArray.Num(); i++)
 	{
-		if (TargetStorage->BayComponentArray[i]->ReservationFlag == false && TargetStorage->BayComponentArray[i]->OccupancyFlag == false)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Character: %s , ReservationStorage: %s"), *OwnerCharacter->GetName(), *TargetStorage->GetName());
+		//if (TargetStorage->BayComponentArray[i]->ReservationFlag == false && TargetStorage->BayComponentArray[i]->OccupancyFlag == false)
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Character: %s , ReservationStorage: %s"), *OwnerCharacter->GetName(), *TargetStorage->GetName());
 
-			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageBayOrder")), TargetStorage->BayComponentArray[i]->BayOrder);
-			aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("StorageBayAdjacentLocation")), TargetStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(TargetStorage->BayComponentArray[i]->BayOrder, OwnerCharacter));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Character: %s, Not Found"), *OwnerCharacter->GetName());
-			FinishLatentTask(aOwnerComp, EBTNodeResult::Failed);
-		}
+		aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageBayOrder")), TargetStorage->BayComponentArray[i]->BayOrder);
+		aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("StorageBayAdjacentLocation")), TargetStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(TargetStorage->BayComponentArray[i]->BayOrder, OwnerCharacter));
+		//}
+		//else
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Character: %s, Not Found"), *OwnerCharacter->GetName());
+		//	FinishLatentTask(aOwnerComp, EBTNodeResult::Failed);
+		//}
 	}
 	FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
 }

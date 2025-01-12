@@ -47,8 +47,11 @@ public:
 	UFUNCTION(BlueprintCallable) virtual void AttachStockStaticMesh(class UStaticMesh* aStockStaticMesh);
 	UFUNCTION(BlueprintCallable) virtual void DeattachStockStaticMesh();
 
+	UFUNCTION() void SetWorkAnimationFlag(const bool& aWorkFlag);
+
 	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class UStaticMeshComponent* StockStaticMeshComponent = nullptr;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UStaticMeshComponent> StockStaticMeshComponent = nullptr;
 
 	// Properties
 public:
