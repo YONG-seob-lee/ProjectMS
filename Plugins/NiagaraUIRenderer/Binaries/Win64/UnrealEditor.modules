@@ -2,7 +2,7 @@
 	"BuildId": "33043543",
 	"Modules": 
 	{
-		"NiagaraUIRenderer": "UnrealEditor-NiagaraUIRenderer-0010.dll",
-		"NiagaraUIRendererEditor": "UnrealEditor-NiagaraUIRendererEditor-0010.dll"
+		"NiagaraUIRenderer": "UnrealEditor-NiagaraUIRenderer.dll",
+		"NiagaraUIRendererEditor": "UnrealEditor-NiagaraUIRendererEditor.dll"
 	}
 }
