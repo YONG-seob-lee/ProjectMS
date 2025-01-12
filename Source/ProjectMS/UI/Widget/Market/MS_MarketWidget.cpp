@@ -1,7 +1,7 @@
-﻿#include "MS_InMarketWidget.h"
+﻿#include "MS_MarketWidget.h"
 
 #include "MS_Define.h"
-#include "MS_InMarketModeWidget.h"
+#include "MS_MarketModeWidget.h"
 #include "MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Table/Caches/MS_StorageCacheTable.h"
@@ -10,14 +10,14 @@
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 
-void UMS_InMarketWidget::NativeOnInitialized()
+void UMS_MarketWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	
-	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_InMarketWidget::OnChangeMode);
+	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_MarketWidget::OnChangeMode);
 }
 
-void UMS_InMarketWidget::NativeConstruct()
+void UMS_MarketWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
@@ -26,17 +26,17 @@ void UMS_InMarketWidget::NativeConstruct()
 	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
-void UMS_InMarketWidget::NativeDestruct()
+void UMS_MarketWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
 }
 
-void UMS_InMarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
+void UMS_MarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
 	SetActiveModeSwitcherIndex(aModeState);
 }
 
-void UMS_InMarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
+void UMS_MarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
 {
 	// if (CPP_ModeWidgetSwitcher)
 	// {
