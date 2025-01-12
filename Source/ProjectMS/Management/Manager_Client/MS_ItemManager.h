@@ -75,6 +75,8 @@ public:
 
 	void CreateItem(int32 aItemId);
 	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
+	
+	void GetItem(TArray<FMS_Item*>& aItems, EMS_ItemType aItemType);
 
 	FMS_OnClickedItem OnClickedItemDelegate;
 	

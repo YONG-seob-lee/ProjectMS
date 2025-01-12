@@ -1,12 +1,8 @@
 ﻿#include "MS_MarketWidget.h"
 
 #include "MS_Define.h"
-#include "MS_MarketModeWidget.h"
-#include "MS_MarketExpanderWidget.h"
+#include "Expander/MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
-#include "Table/Caches/MS_StorageCacheTable.h"
-#include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
-#include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 

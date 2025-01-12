@@ -7,6 +7,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
+#include "Widget/Market/Modal/MS_StorageStatusModalWidget.h"
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
 {
@@ -98,7 +99,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 	{
 		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{
-			gWidgetMng.ShowModalWidget(nullptr, true, TEXT("PlayModal"));
+			gWidgetMng.ShowModalWidget(UMS_StorageStatusModalWidget::GetWidgetPath(), true, TEXT("PlayModal"));
 		}
 	}
 }

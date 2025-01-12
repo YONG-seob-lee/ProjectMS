@@ -14,7 +14,7 @@ class PROJECTMS_API UMS_MarketStartModal : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/MarketStartModalWidget.MarketStartModalWidget"));}
+	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/MarketStartModalWidget.MarketStartModalWidget"));}
 
 	FORCEINLINE void SetOnClickedOpeningPlayButtonFunc(const TFunction<void()>& aFunc) { OnClickedOpeningPlayButtonCallback = aFunc; }
 	FORCEINLINE void SetTest(const TFunction<void()>& aFunc) { Test = aFunc; }	

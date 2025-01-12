@@ -79,6 +79,11 @@ void UMS_ItemManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
 	}
 }
 
+void UMS_ItemManager::GetItem(TArray<FMS_Item*>& aItems, EMS_ItemType aItemType)
+{
+	
+}
+
 UMS_ItemManager* UMS_ItemManager::GetInstance()
 {
 	return InventoryManager;
