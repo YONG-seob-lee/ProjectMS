@@ -94,7 +94,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 {
 	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
 
-	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
+	if (AActor* InteractActor = aInteractableHitResult.GetActor())
 	{
 		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{

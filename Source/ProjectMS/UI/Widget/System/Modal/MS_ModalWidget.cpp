@@ -8,7 +8,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Widget/Market/MS_MarketStartModal.h"
+#include "Widget/InMarket/MS_MarketStartModal.h"
 
 void UMS_ModalWidget::NativeConstruct()
 {
