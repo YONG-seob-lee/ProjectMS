@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_InMarketModeWidget.h"
+#include "MS_MarketModeWidget.h"
 
-void UMS_InMarketModeWidget::OnShow()
+void UMS_MarketModeWidget::OnShow()
 {
 }

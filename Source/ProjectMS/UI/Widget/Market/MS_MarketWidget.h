@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_InMarketWidget.generated.h"
+#include "MS_MarketWidget.generated.h"
 
 /**
  * 
@@ -13,7 +13,7 @@ enum class EMS_ModeState : uint8;
 enum class EMS_ControllerModeType : uint8;
 
 UCLASS()
-class PROJECTMS_API UMS_InMarketWidget : public UMS_Widget
+class PROJECTMS_API UMS_MarketWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 

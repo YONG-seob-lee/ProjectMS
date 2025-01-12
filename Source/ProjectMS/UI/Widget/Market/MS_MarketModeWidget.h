@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_InMarketModeWidget.generated.h"
+#include "MS_MarketModeWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_InMarketModeWidget : public UMS_Widget
+class PROJECTMS_API UMS_MarketModeWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 

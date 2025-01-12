@@ -6,7 +6,7 @@
 #include "MS_Define.h"
 #include "MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
-#include "Widget/InMarket/MS_MarketEndModal.h"
+#include "Widget/Market/MS_MarketEndModal.h"
 
 void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 {
