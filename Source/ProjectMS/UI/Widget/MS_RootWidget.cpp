@@ -74,7 +74,7 @@ void UMS_RootWidget::RefreshContentCanvas() const
 
 void UMS_RootWidget::ActivatePreventionCover(bool bShow) const
 {
-	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
+	CPP_PreventionCoverImage->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 void UMS_RootWidget::SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle) const
@@ -259,5 +259,4 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 void UMS_RootWidget::ShowGeneralWidget(bool bShow) const
 {
 	CPP_GeneralWidget->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
-	CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
 }

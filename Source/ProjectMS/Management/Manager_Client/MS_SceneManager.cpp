@@ -68,6 +68,10 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 {
 	MS_CHECK(aCommand);
 	NewCommand = aCommand;
+
+	// 예외체크용 함수
+	RootWidget->ShowGeneralWidget(false);
+	RootWidget->ActivatePreventionCover(true);
 	
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
@@ -121,6 +125,7 @@ void UMS_SceneManager::EndFade()
 	{
 		// 위젯 변경만	
 		gWidgetMng.RefreshContentWidget();
+		RootWidget->ActivatePreventionCover(false);
 
 		if(NewCommand->GetNextWidgetName() != FName(TEXT("None")))
 		{
@@ -149,7 +154,10 @@ void UMS_SceneManager::EndFade()
 		}
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
 		{
-			RootWidget->ActivatePreventionCover(false);
+			if(NewCommand->GetLevelType() != EMS_LevelType::Stage01)
+			{
+				RootWidget->ActivatePreventionCover(false);
+			}
 			RootWidget->ResetCanvasZOrder();
 			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 

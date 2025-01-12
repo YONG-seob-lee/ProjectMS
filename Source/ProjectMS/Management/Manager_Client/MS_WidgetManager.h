@@ -37,6 +37,7 @@ public:
 	bool DestroyWidget(const FName& aTypeName);
 	void PostDestroyWidget(const FName& aTypeName);
 
+	void ActivatePreventionCover(bool bActivate) const;
 	void ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop = true, float aElapsedTime = 3.f, FColor aDisplayColor = FColor::Green);
 	void ShowToastMessage(const FString& aMessage) const;
 	
@@ -44,6 +45,7 @@ public:
 	void HideRotateWidget() const;
 	
 	void ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool bShow = true, const FName AnimationName = FName()) const;
+	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 
 	FMS_CreateWidget OnCreateWidget;

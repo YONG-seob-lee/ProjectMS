@@ -16,6 +16,7 @@ void UMS_LobbyWidget::NativeConstruct()
 
 	CPP_StartButton->GetOnClickedDelegate().AddUObject(this, &UMS_LobbyWidget::OnClickedStartButton);
 	gCameraMng.SwitchViewCamera(EMS_ViewCameraType::SideView);
+	gWidgetMng.ActivatePreventionCover(true);
 }
 
 void UMS_LobbyWidget::OnClickedStartButton()
@@ -23,7 +24,7 @@ void UMS_LobbyWidget::OnClickedStartButton()
 	gCameraMng.GetOnFinishedCameraTransitionDelegate().BindWeakLambda(this, []()
 	{
 		gWidgetMng.Create_Widget(UMS_TownWidget::GetWidgetName());
-		gWidgetMng.ShowGeneralWidget(true);
+		gWidgetMng.SetGeneralWidget(EMS_LevelType::TownLevel);
 	});
 	
 	CREATE_SCENE_COMMAND(Command)

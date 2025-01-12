@@ -141,6 +141,11 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
+void UMS_WidgetManager::ActivatePreventionCover(bool bActivate) const
+{
+	RootWidget->ActivatePreventionCover(bActivate);
+}
+
 void UMS_WidgetManager::ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop, float aElapsedTime, FColor aDisplayColor)
 {
 	GEngine->AddOnScreenDebugMessage(-1, aElapsedTime, aDisplayColor, aMessage);
@@ -176,6 +181,11 @@ void UMS_WidgetManager::ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool
 	{
 		RootWidget->ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(aWidgetPath), bShow, AnimationName);
 	}
+}
+
+void UMS_WidgetManager::SetGeneralWidget(EMS_LevelType aLevelType) const
+{
+	RootWidget->SetGeneralWidget(aLevelType);
 }
 
 void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
