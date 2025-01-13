@@ -41,7 +41,7 @@ public:
 
 
 	// For Preview
-	void InitializeWhenPreviewProp(AMS_Prop* aLinkedProp);
+	void InitializeWhenPreviewProp(AMS_Prop* aLinkedProp, int32 aTableIndex);
 	
 	TWeakObjectPtr<AMS_Prop> GetLinkedProp() const { return LinkedProp; }
 

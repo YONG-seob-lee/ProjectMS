@@ -44,7 +44,9 @@ public:
 	
 	virtual void OnPinchAction(float aPinchValue) override;
 
-
+	UFUNCTION()
+	void OnClickedStorageButton(int32 aStorageId, int32 aItemType);
+	
 	void SelectProp(AActor* aSelectedActor);
 	void UnselectProp();
 
@@ -56,14 +58,17 @@ public:
 
 	void OnClickApplyPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
 	void OnClickCancelPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
+
+	void CreateNoLinkedPreviewProp(struct FMS_StorageData* aStorageData);
+	void CreateLinkedPreviewProp(class AMS_Prop* aSelectedProp);
 	
-	void CreatePreviewProp(class AMS_Prop* aSelectedProp);
 	void MovePreviewProp(const FVector& aNewLocation);
 	void ApplyPreviewProp();
 	void CancelPreviewProp(class AMS_Prop* aSelectedProp);
 
 	void ShowPreviewWidget(bool bShow);
 
+	FVector2d GetScreenCenterPosition() const;
 	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 
 private:
@@ -78,4 +83,6 @@ private:
 	TObjectPtr<class AMS_Prop> SelectedPreviewProp;
 
 	FVector2D PointerPostionToObjectScreenPositionOffset;
+
+	FDelegateHandle OnClickedItemButtonHandle;
 };

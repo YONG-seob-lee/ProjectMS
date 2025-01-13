@@ -4,8 +4,10 @@
 #include "MS_Define.h"
 #include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/MS_Prop.h"
 #include "Widget/Market/MS_PreviewWidget.h"
@@ -50,10 +52,16 @@ void UMS_ModeState_Construct::Begin()
 	{
 		SelectProp(SelectedProp.Get());
 	}
+
+	// Delegate
+	OnClickedItemButtonHandle = gItemMng.OnClickedItemDelegate.AddUObject(this, &UMS_ModeState_Construct::OnClickedStorageButton);
 }
 
 void UMS_ModeState_Construct::Exit()
 {
+	// Delegate
+	gItemMng.OnClickedItemDelegate.Remove(OnClickedItemButtonHandle);
+	
 	// SelectProp
 	UnselectProp();
 
@@ -140,6 +148,21 @@ void UMS_ModeState_Construct::OnPinchAction(float aPinchValue)
 	Super::OnPinchAction(aPinchValue);
 }
 
+void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aItemType)
+{
+	if (aItemType == static_cast<int32>(EMS_ItemType::Storage))
+	{
+		FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aStorageId);
+		if(StorageData == nullptr)
+		{
+			MS_LOG_Verbosity(Error, TEXT("Storage Data is invalid"));
+			return;
+		}
+		
+		CreateNoLinkedPreviewProp(StorageData);
+	}
+}
+
 void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
@@ -208,7 +231,7 @@ void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)	// 기존의 
 		}
 		
 		// PreviewProp
-		CreatePreviewProp(SelectedProp);
+		CreateLinkedPreviewProp(SelectedProp);
 	}
 }
 
@@ -245,9 +268,57 @@ void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPrevie
 
 void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
 {
+	if (IsValid(SelectedPreviewProp))
+	{
+		CancelPreviewProp(SelectedPreviewProp->GetLinkedProp().Get());
+	}
 }
 
-void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
+void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorageData)
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	if (IsValid(SelectedPreviewProp))
+	{
+		CancelPreviewProp(SelectedPreviewProp->GetLinkedProp().Get());
+	}
+
+	FHitResult SpaceHitResult = {};
+	FVector2D CenterPosition = GetScreenCenterPosition();
+	if (GetHitResultUnderObjectScreenPosition(CenterPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
+	{
+		DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Green, false, 1.f);
+		FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 10.f);
+		MS_LOG_Verbosity(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
+		FRotator Rotator = FRotator(0.f, 90.f, 0.f);
+		
+		const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aStorageData->PathFile, true);
+
+		UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
+		if(IsValid(BlueprintClass) == false)
+		{
+			MS_CHECK(false);
+			MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
+			return;
+		}
+		
+		SelectedPreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
+		
+		SelectedPreviewProp->InitializeWhenPreviewProp(nullptr, aStorageData->Index);
+
+		if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
+		{
+			PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
+			PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
+		}
+	}
+}
+
+void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	if (!IsValid(World))
@@ -265,7 +336,7 @@ void UMS_ModeState_Construct::CreatePreviewProp(AMS_Prop* aSelectedProp)
 	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 10.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
 	SelectedPreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
-	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp);
+	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp, aSelectedProp->GetTableIndex());
 
 	if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
 	{
@@ -325,7 +396,38 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 		
 		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas))
 		{
-			if (SelectedPreviewProp->GetLinkedProp() != nullptr)
+			if (SelectedPreviewProp->GetLinkedProp() == nullptr)
+			{
+				FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, SelectedPreviewProp->GetTableIndex());
+				if(StorageData == nullptr)
+				{
+					MS_LOG_Verbosity(Error, TEXT("Storage Data is invalid"));
+					return;
+				}
+
+				const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, StorageData->PathFile, true);
+
+				UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
+				if(IsValid(BlueprintClass) == false)
+				{
+					MS_CHECK(false);
+					MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
+					return;
+				}
+				
+				// Register New Datas
+				LevelScriptActor->RegisterGridObjectData(NewLocationGridDatas);
+				
+				// Move Location
+				// ToDo : Level Script로 이동
+				FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
+				SelectedPreviewProp->GetGridNum().X % 2 != 0,
+				SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+
+				gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, SelectedPreviewProp->GetActorRotation());
+			}
+			
+			else
 			{
 				AMS_Prop* LinkedProp = SelectedPreviewProp->GetLinkedProp().Get();
 				if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
@@ -359,7 +461,10 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 
 void UMS_ModeState_Construct::CancelPreviewProp(AMS_Prop* aSelectedProp)
 {
-	aSelectedProp->SetActorHiddenInGame(false);
+	if (IsValid(aSelectedProp))
+	{
+		aSelectedProp->SetActorHiddenInGame(false);
+	}
 	SelectedPreviewProp->Destroy();
 }
 
@@ -376,8 +481,29 @@ void UMS_ModeState_Construct::ShowPreviewWidget(bool bShow)
 	}
 }
 
+FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return FVector2d::ZeroVector;
+	}
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return FVector2d::ZeroVector;
+	}
+
+	int32 SizeX;
+	int32 SizeY;
+	PlayerController->GetViewportSize(SizeX, SizeY);
+
+	return FVector2d(SizeX / 2, SizeY / 2);
+}
+
 bool UMS_ModeState_Construct::GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion,
-	ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
+                                                                    ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	if (!IsValid(World))
