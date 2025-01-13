@@ -15,10 +15,14 @@ class PROJECTMS_API UMS_MarketExpanderWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeOnInitialized() override;
+	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 private:
+	void OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
+	
 	void OnClickedArrowButton();
 	
 	UPROPERTY(Meta = (BindWidget))
@@ -28,5 +32,4 @@ private:
 	TObjectPtr<class UMS_Button> CPP_ArrowButton = nullptr;
 
 	bool bOpen = false;
-	EMS_ModeState ModeState = EMS_ModeState::Normal;
 };
