@@ -7,6 +7,7 @@
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
@@ -28,6 +29,10 @@ void UMS_ManagementClient::Initialize()
 	InteractionManager = MS_NewObject<UMS_InteractionManager>(this);
 	MS_CHECK(InteractionManager);
 	InteractionManager->Initialize();
+
+	ItemManager = MS_NewObject<UMS_ItemManager>(this);
+	MS_CHECK(ItemManager);
+	ItemManager->Initialize();
 	
 	InputManager = MS_NewObject<UMS_InputManager>(this);
 	MS_CHECK(InputManager);

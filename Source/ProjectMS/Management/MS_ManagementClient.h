@@ -28,6 +28,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UMS_InteractionManager> InteractionManager = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_ItemManager> ItemManager = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_WidgetManager> WidgetManager = nullptr;
