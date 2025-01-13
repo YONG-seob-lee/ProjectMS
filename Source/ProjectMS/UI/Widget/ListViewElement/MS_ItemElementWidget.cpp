@@ -4,18 +4,22 @@
 #include "MS_ItemElementWidget.h"
 
 #include "MS_Define.h"
+#include "Blueprint/DragDropOperation.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ItemElementData.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_ItemElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {
 	IUserObjectListEntry::NativeOnListItemObjectSet(aListItemObject);
 	
 	UMS_ItemElementData* ItemData = Cast<UMS_ItemElementData>(aListItemObject);
-	
-	CPP_ItemName->SetText(FText::FromString(ItemData->GetElementName()));
-	CPP_ItemImage->SetBrushFromTexture(ItemData->GetImage());
+
+	ItemName = ItemData->GetElementName();
+	ItemImage = ItemData->GetImage();
+
+	InitializeItem(ItemName, ItemImage);
 }
 
 void UMS_ItemElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
@@ -28,6 +32,14 @@ void UMS_ItemElementWidget::NativeOnDragDetected(const FGeometry& InGeometry, co
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
 	MS_LOG(TEXT("============ UMS_ItemElementWidget::NativeOnDragDetected"));
+
+	const TObjectPtr<UDragDropOperation> DragWidget = MS_NewObject<UDragDropOperation>();
+	MS_CHECK(DragWidget);
+	DragWidget->Pivot = EDragPivot::MouseDown;
+	DragWidget->DefaultDragVisual = gWidgetMng.Create_Widget_NotManaging(GetWidgetPath());
+	const TObjectPtr<UMS_ItemElementWidget> ItemElementWidget = Cast<UMS_ItemElementWidget>(DragWidget->DefaultDragVisual);
+	ItemElementWidget->InitializeItem(ItemName, ItemImage);
+	OutOperation = DragWidget;
 }
 
 void UMS_ItemElementWidget::NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -42,4 +54,12 @@ void UMS_ItemElementWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDr
 	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
 
 	MS_LOG(TEXT("============ UMS_ItemElementWidget::NativeOnDragCancelled"));
+}
+
+void UMS_ItemElementWidget::InitializeItem(const FString& aItemName, UTexture2D* aItemImage)
+{
+	ItemName = aItemName;
+	ItemImage = aItemImage;
+	CPP_ItemName->SetText(FText::FromString(aItemName));
+	CPP_ItemImage->SetBrushFromTexture(aItemImage);
 }

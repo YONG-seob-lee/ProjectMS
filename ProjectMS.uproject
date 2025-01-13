@@ -30,7 +30,7 @@
 		},
 		{
 			"Name": "EditorExtension",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "NiagaraUIRenderer",

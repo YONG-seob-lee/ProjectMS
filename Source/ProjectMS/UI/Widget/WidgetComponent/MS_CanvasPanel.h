@@ -13,5 +13,6 @@ UCLASS()
 class PROJECTMS_API UMS_CanvasPanel : public UCanvasPanel
 {
 	GENERATED_BODY()
+public:
 	
 };

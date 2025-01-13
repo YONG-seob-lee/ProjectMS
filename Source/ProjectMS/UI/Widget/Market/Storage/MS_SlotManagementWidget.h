@@ -22,7 +22,7 @@ public:
 	
 private:
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UImage> CPP_StorageSlotImage = nullptr;
+	TObjectPtr<class UMS_StorageSlotManagementWidget> CPP_StorageSlotWidget = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_TileView> CPP_SelectItemTileView = nullptr;
