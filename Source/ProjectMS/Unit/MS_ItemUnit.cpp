@@ -29,7 +29,7 @@ bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, const FVector& aPosition, cons
 {
 	Super::CreateUnit(aUnitTableId, aPosition, aRotator);
 	
-	ItemData = gTableMng.GetTableRowData<FMS_Item>(EMS_TableDataType::Item, aUnitTableId);
+	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
 	if(ItemData == nullptr)
 	{
 		return false;

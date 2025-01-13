@@ -7,5 +7,7 @@ void UMS_TileView::SetElements(const TArray<TObjectPtr<UObject>>& aListItems)
 {
 	SetListItems(aListItems);
 	if(aListItems.IsValidIndex(0))
-	SetSelectedItem(aListItems[0]);
+	{
+		SetSelectedItem(aListItems[0]);
+	}
 }

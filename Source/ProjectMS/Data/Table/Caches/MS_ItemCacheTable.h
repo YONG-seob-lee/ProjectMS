@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Table/MS_CacheTable.h"
-#include "Table/RowBase/MS_Item.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "MS_ItemCacheTable.generated.h"
 
 /**
@@ -18,8 +18,11 @@ public:
 	virtual void Initialize(TObjectPtr<UMS_TableManager> aMng) override;
 	virtual void Finalize() override;
 
-	FMS_Item* GetItem(int32 aItemId);
-	
+	FMS_ItemData* GetItem(int32 aItemId);
+	void GetItems(TMap<int32, FMS_ItemData*>& aItemDatas) const;
+	void GetItemElementDatas(TArray<TObjectPtr<class UMS_ItemElementData>>& aItemElementDatas);
+
 private:
-	TMap<int32, FMS_Item*> ItemDatas; 
+	TMap<int32, FMS_ItemData*> ItemDatas;
+	TMap<int32, FMS_ItemData*> MoneyDatas;
 };

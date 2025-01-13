@@ -258,7 +258,7 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceUnit, TEXT("/Game/TableData/ResourceUnit.ResourceUnit"), UMS_ResourceUnitCacheTable::StaticClass());
 
-	CreateTableData(EMS_TableDataType::Item, TEXT("/Game/TableData/Item.Item"), UMS_ItemCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::ItemData, TEXT("/Game/TableData/ItemData.ItemData"), UMS_ItemCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::Storage, TEXT("/Game/TableData/Storage.Storage"), UMS_StorageCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::MenuElement, TEXT("/Game/TableData/MenuElement.MenuElement"), UMS_MenuElementCacheTable::StaticClass());
 }

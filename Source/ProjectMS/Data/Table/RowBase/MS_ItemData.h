@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "MS_Item.generated.h"
+#include "MS_ItemData.generated.h"
 
-USTRUCT(BlueprintType) struct FMS_Item : public FTableRowBase
+USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -22,4 +22,5 @@ USTRUCT(BlueprintType) struct FMS_Item : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UStaticMesh* StuffBundleStaticMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UStaticMesh* StuffBoxStaticMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 PathFile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 ImagePath;
 };

@@ -6,7 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 #include "Management/Manager_Both/MS_TableManager.h"
-#include "Data/Table/RowBase/MS_Item.h"
+#include "Data/Table/RowBase/MS_ItemData.h"
 
 
 UMS_StorageSlotComponent::UMS_StorageSlotComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -120,10 +120,10 @@ void UMS_StorageSlotComponent::UnreserveWorker()
 
 bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity, EMS_SlotStaticMeshType aSlotStaticMeshType)
 {
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
+	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
 	MS_CHECK(ItemData);
 
-	FMS_Item* ItemDataTableRow = ItemData->FindRow<FMS_Item>(aStuffRowName, TEXT(""));
+	FMS_ItemData* ItemDataTableRow = ItemData->FindRow<FMS_ItemData>(aStuffRowName, TEXT(""));
 	MS_CHECK(ItemDataTableRow);
 
 	StuffRowName = aStuffRowName;

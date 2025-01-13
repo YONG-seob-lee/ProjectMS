@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "Table/RowBase/MS_Item.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_StorageData.h"
 #include "MS_ItemManager.generated.h"
 
@@ -73,16 +73,16 @@ public:
 
 	virtual void Tick(float aDeltaTime) override;
 
-	void CreateItem(int32 aItemId);
+	TObjectPtr<class UMS_Item> CreateItem(int32 aItemId);
 	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
 	
-	void GetItem(TArray<FMS_Item*>& aItems, EMS_ItemType aItemType);
+	void GetItem(TArray<UMS_Item*>& aItems, EMS_ItemType aItemType);
 
 	FMS_OnClickedItem OnClickedItemDelegate;
 	
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 private:
-	TMap<int32, FMS_Item*> Items = {};
+	TMap<int32, FMS_ItemData*> Items = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
 	
 public:

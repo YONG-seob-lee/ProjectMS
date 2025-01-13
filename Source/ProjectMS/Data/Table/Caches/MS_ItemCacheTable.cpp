@@ -3,10 +3,24 @@
 
 #include "MS_ItemCacheTable.h"
 
+#include "Widget/ListViewElement/ElementData/MS_ItemElementData.h"
+
 void UMS_ItemCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
 	Super::Initialize(aMng);
-	BuildTable(aMng, EMS_TableDataType::Item, ItemDatas);
+	BuildTable(aMng, EMS_TableDataType::ItemData, ItemDatas);
+
+	for(const auto& ItemData : ItemDatas)
+	{
+		if(ItemData.Value->TemperatureType == 0)
+		{
+			MoneyDatas.Emplace(ItemData.Key, ItemData.Value);
+		}
+	}
+	for(const auto& MoneyData : MoneyDatas)
+	{
+		ItemDatas.Remove(MoneyData.Key);
+	}
 }
 
 void UMS_ItemCacheTable::Finalize()
@@ -14,13 +28,38 @@ void UMS_ItemCacheTable::Finalize()
 	Super::Finalize();
 }
 
-FMS_Item* UMS_ItemCacheTable::GetItem(int32 aItemId)
+FMS_ItemData* UMS_ItemCacheTable::GetItem(int32 aItemId)
 {
-	FMS_Item** ItemData = ItemDatas.Find(aItemId);
+	FMS_ItemData** ItemData = ItemDatas.Find(aItemId);
 	if(!ItemData)
 	{
 		return nullptr;
 	}
 	
 	return *ItemData;
+}
+
+void UMS_ItemCacheTable::GetItems(TMap<int32, FMS_ItemData*>& aItemDatas) const
+{
+	aItemDatas.Empty();
+	aItemDatas = ItemDatas;
+}
+
+void UMS_ItemCacheTable::GetItemElementDatas(TArray<TObjectPtr<UMS_ItemElementData>>& aItemElementDatas)
+{
+	aItemElementDatas.Empty();
+	
+	for(const auto& ItemData : ItemDatas)
+	{
+		TObjectPtr<UMS_ItemElementData> ItemElementData = MS_NewObject<UMS_ItemElementData>();
+		MS_CHECK(ItemElementData);
+
+		ItemElementData->SetElementName(ItemData.Value->ItemName.ToString());
+		const FString ItemImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, ItemData.Value->ImagePath);
+		if(UTexture2D* ItemTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ItemImagePath)))
+		{
+			ItemElementData->SetImage(ItemTexture);	
+		}
+		aItemElementDatas.Emplace(ItemElementData);
+	}
 }

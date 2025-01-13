@@ -14,7 +14,7 @@
 #include "Camera/ViewCamera/MS_ViewCamera.h"
 #include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Management/Manager_Both/MS_TableManager.h"
-#include "Data/Table/RowBase/MS_Item.h"
+#include "Data/Table/RowBase/MS_ItemData.h"
 
 
 
@@ -128,7 +128,7 @@ void UMS_DebugControlStorageItemUI::OnAssignStoragePropertiesButtonClicked()
         return;
     }
 
-    TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
+    TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
     MS_CHECK(ItemData);
 
     for (int i = 0; i < Storage->SlotComponentArray.Num(); i++)
@@ -143,7 +143,7 @@ void UMS_DebugControlStorageItemUI::OnAssignStoragePropertiesButtonClicked()
         }
         else
         {
-            FMS_Item* ItemDataTableRow = ItemData->FindRow<FMS_Item>(Storage->SlotComponentArray[i]->StuffRowName, TEXT(""));
+            FMS_ItemData* ItemDataTableRow = ItemData->FindRow<FMS_ItemData>(Storage->SlotComponentArray[i]->StuffRowName, TEXT(""));
             MS_CHECK(ItemDataTableRow);
 
             if (SlotStaticMeshSwitch == false)

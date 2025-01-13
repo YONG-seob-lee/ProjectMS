@@ -3,6 +3,7 @@
 
 #include "MS_ItemManager.h"
 
+#include "Item/MS_Item.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 
@@ -50,20 +51,17 @@ void UMS_ItemManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-void UMS_ItemManager::CreateItem(int32 aItemId)
+TObjectPtr<UMS_Item> UMS_ItemManager::CreateItem(int32 aItemId)
 {
-	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Item));
-	if(!ItemTable)
-	{
-		return;
-	}
-
-	ItemTable->GetItem(aItemId);
+	const TObjectPtr<UMS_Item> NewItem = MS_NewObject<UMS_Item>();
+	NewItem->Initialize(aItemId);
+	
+	return NewItem;
 }
 
 void UMS_ItemManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
 {
-	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Item));
+	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
 	if(!ItemTable)
 	{
 		return;
@@ -71,7 +69,7 @@ void UMS_ItemManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
 
 	for(auto& Item : aItems)
 	{
-		if(const FMS_Item* ItemData = ItemTable->GetItem(Item.Key))
+		if(const FMS_ItemData* ItemData = ItemTable->GetItem(Item.Key))
 		{
 			// ItemData->Index 를 유닛 타입의 key 로 변경해야함.
 			gUnitMng.CreateUnit(ItemData->Id, EMS_UnitType::Item, Item.Value->Vector, Item.Value->Rotator);
@@ -79,9 +77,22 @@ void UMS_ItemManager::CreateItem(const TMap<int32, FPacketItemDatas*>& aItems)
 	}
 }
 
-void UMS_ItemManager::GetItem(TArray<FMS_Item*>& aItems, EMS_ItemType aItemType)
+void UMS_ItemManager::GetItem(TArray<UMS_Item*>& aItems, EMS_ItemType aItemType)
 {
+	TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_CHECK(ItemTable);
+
+	TMap<int32, FMS_ItemData*> ItemDatas;
+	ItemTable->GetItems(ItemDatas);
+
+	aItems.Empty();
 	
+	TArray<int32> ItemKeys;
+	ItemDatas.GenerateKeyArray(ItemKeys);
+	for(const auto& Key : ItemKeys)
+	{
+		aItems.Emplace(CreateItem(Key));
+	}
 }
 
 UMS_ItemManager* UMS_ItemManager::GetInstance()

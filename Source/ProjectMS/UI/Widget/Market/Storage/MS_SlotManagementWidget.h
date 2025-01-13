@@ -3,19 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Widget/MS_Widget.h"
-#include "SlotManagementWidget.generated.h"
+#include "MS_SlotManagementWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API USlotManagementWidget : public UMS_Widget
+class PROJECTMS_API UMS_SlotManagementWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	void SettingItems(TArray<TObjectPtr<class UMS_ItemElementData>>& aItemElementDatas) const;
 	
 private:
 	UPROPERTY(Meta = (BindWidget))

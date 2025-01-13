@@ -15,7 +15,11 @@ class PROJECTMS_API UMS_StorageStatusModalWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/StorageStatusModalWidget.StorageStatusModalWidget"));}
+
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	
 private:
-	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_SlotManagementWidget> CPP_SlotManagementWidget = nullptr;
 };

@@ -3,7 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Management/Manager_Both/MS_TableManager.h"
-#include "Data/Table/RowBase/MS_Item.h"
+#include "Data/Table/RowBase/MS_ItemData.h"
 #include "Actor/Storage/MS_Storage.h"
 #include "Component/Storage/MS_StorageBayComponent.h"
 #include "Component/Storage/MS_StorageSlotComponent.h"
@@ -27,13 +27,13 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 	SetNextTickTime(aNodeMemory, 0.2f);
 
 
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
+	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
 	TArray<FName> ItemRowNameArray = {};
 
 	TArray<FName> DataRowNameArray = ItemData->GetRowNames();
 	for (const FName& RowName : DataRowNameArray)
 	{
-		FMS_Item* ItemRowData = ItemData->FindRow<FMS_Item>(RowName, TEXT(""));
+		FMS_ItemData* ItemRowData = ItemData->FindRow<FMS_ItemData>(RowName, TEXT(""));
 		if (ItemRowData != nullptr)
 		{
 			ItemRowNameArray.Add(ItemRowData->ItemName);

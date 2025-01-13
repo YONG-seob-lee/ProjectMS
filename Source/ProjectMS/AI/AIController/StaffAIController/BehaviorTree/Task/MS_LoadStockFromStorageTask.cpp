@@ -19,8 +19,8 @@ EBTNodeResult::Type UMS_LoadStockFromStorageTask::ExecuteTask(UBehaviorTreeCompo
 	int EmptyStuffQuantity = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("EmptyStuffQuantity")));
 	int UnloadingStorageSlotOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("UnloadingStorageSlotOrder")));
 
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::Item);
-	FMS_Item* ItemRowData = ItemData->FindRow<FMS_Item>(StuffName, TEXT(""));
+	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
+	FMS_ItemData* ItemRowData = ItemData->FindRow<FMS_ItemData>(StuffName, TEXT(""));
 
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->UnreserveWorker();
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->LoadStuff(StuffName, TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->StockQuantity - EmptyStuffQuantity, SlotStaticMeshType);

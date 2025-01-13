@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_UnitBase.h"
-#include "Table/RowBase/MS_Item.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "MS_ItemUnit.generated.h"
 
 class AMS_Actor;
@@ -32,5 +32,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<AMS_Actor> Actor = nullptr;
 
-	FMS_Item* ItemData = nullptr;
+	FMS_ItemData* ItemData = nullptr;
 };
