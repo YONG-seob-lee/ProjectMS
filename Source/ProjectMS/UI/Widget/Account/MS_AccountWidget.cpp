@@ -53,6 +53,7 @@ void UMS_AccountWidget::OnClickStartButton()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
+	Command->SetAllowInteractActor(false);
 
 	gSceneMng.RequestChangeScene(Command);
 }

@@ -3,6 +3,7 @@
 
 #include "MS_SceneManager.h"
 
+#include "MS_InputManager.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_LevelCacheTable.h"
@@ -72,6 +73,7 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	// 예외체크용 함수
 	RootWidget->ShowGeneralWidget(false);
 	RootWidget->ActivatePreventionCover(true);
+	gInputMng.SetAllowInteractActor(false);
 	
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
@@ -138,6 +140,8 @@ void UMS_SceneManager::EndFade()
 			NewCommand->OnFadeEventDelegate.Broadcast();
 			NewCommand->OnFadeEventDelegate.RemoveAll(this);
 		}
+
+		gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
 	}
 	else
 	{
@@ -167,9 +171,12 @@ void UMS_SceneManager::EndFade()
 				OnFadeFinishedEventDelegate.RemoveAll(this);
 			}
 			
+			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
+			
 			LevelChangeStep = EMS_FadeStep::Finished;
 			MS_DeleteObject(NewCommand);
 			NewCommand = nullptr;
+
 		}
 	}
 }

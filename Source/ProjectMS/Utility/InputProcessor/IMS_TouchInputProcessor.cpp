@@ -185,6 +185,11 @@ FMS_PointerData* IMS_TouchInputProcessor::GetPointerData(uint32 aPointerIndex)
 
 void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType)
 {
+	if(gInputMng.IsAllowInteractActor() == false)
+	{
+		return;
+	}
+	
 	FHitResult InteractableHitResult;
 	
 	gInputMng.GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);

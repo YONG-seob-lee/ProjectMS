@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "Button/MS_Button.h"
+#include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
@@ -16,7 +17,6 @@ void UMS_LobbyWidget::NativeConstruct()
 
 	CPP_StartButton->GetOnClickedDelegate().AddUObject(this, &UMS_LobbyWidget::OnClickedStartButton);
 	gCameraMng.SwitchViewCamera(EMS_ViewCameraType::SideView);
-	gWidgetMng.ActivatePreventionCover(true);
 }
 
 void UMS_LobbyWidget::OnClickedStartButton()
@@ -30,11 +30,16 @@ void UMS_LobbyWidget::OnClickedStartButton()
 	CREATE_SCENE_COMMAND(Command)
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
+	Command->SetAllowInteractActor(false);
 	Command->OnFadeEventDelegate.AddWeakLambda(this, [this]
 	{
 		FViewTargetTransitionParams Param;
 		Param.BlendTime = 1.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
+		gCameraMng.GetOnFinishedCameraTransitionDelegate().BindWeakLambda(this, []()
+		{
+			gInputMng.SetAllowInteractActor(true);
+		});
 	});
 
 	gSceneMng.RequestChangeScene(Command);

@@ -66,7 +66,8 @@ public:
 	FORCEINLINE void SetLoadingWidgetType(EMS_LoadingWidgetType aType) { LoadingWidgetType = aType; }
 	// If do not Reload Level. Use this Function.
 	FORCEINLINE void SetNextWidget(const FName& aWidgetName) { WidgetName = aWidgetName; }
-	FORCEINLINE void SetFadeAnimationType(EMS_FadeAnimationCurveType aFadeAnimationCurveType) { FadeAnimationCurveType = aFadeAnimationCurveType; } 
+	FORCEINLINE void SetFadeAnimationType(EMS_FadeAnimationCurveType aFadeAnimationCurveType) { FadeAnimationCurveType = aFadeAnimationCurveType; }
+	FORCEINLINE void SetAllowInteractActor(bool bAllow) { bAllowInteractActor = bAllow;}
 	
 	FORCEINLINE EMS_LevelType GetLevelType() const { return LevelType; }
 	FORCEINLINE EMS_LevelType GetPreviousLevelType() const { return PreviousLevelType; }
@@ -76,10 +77,11 @@ public:
 	FORCEINLINE TSubclassOf<class UMS_Widget> GetLoadingWidget() { return LoadingWidget; }
 	FORCEINLINE FName GetNextWidgetName() const { return WidgetName; }
 	FORCEINLINE EMS_FadeAnimationCurveType GetFadeAnimationCurveType() const { return FadeAnimationCurveType; }
+	FORCEINLINE bool IsAllowInteractActor() const { return bAllowInteractActor; }
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
-
-	FMS_FadeEventDelegate OnFadeEventDelegate;
 	
+	FMS_FadeEventDelegate OnFadeEventDelegate;
+
 private:
 	TSubclassOf<UMS_Widget> LoadingWidget = nullptr;
 	FName WidgetName = FName();
@@ -91,5 +93,7 @@ private:
 	EMS_LoadingWidgetType LoadingWidgetType = EMS_LoadingWidgetType::Default;
 	EMS_FadeAnimationCurveType FadeAnimationCurveType = EMS_FadeAnimationCurveType::Undefined; 
 
+	bool bAllowInteractActor = true;
+	
 	FString CreateFileLine = FString();
 };

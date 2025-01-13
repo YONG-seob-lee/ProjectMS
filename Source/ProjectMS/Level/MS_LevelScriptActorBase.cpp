@@ -102,7 +102,10 @@ void AMS_LevelScriptActorBase::BeginPlay()
 	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
 	MS_CHECK(PlayerController);
 
-	PlayerController->RegisterManagement();
+	if(PlayerController)
+	{
+		PlayerController->RegisterManagement();
+	}
 	
 }
 

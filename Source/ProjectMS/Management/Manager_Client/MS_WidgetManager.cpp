@@ -3,6 +3,7 @@
 
 #include "MS_WidgetManager.h"
 
+#include "MS_InputManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Data/Table/RowBase/MS_ResourceWidget.h"
@@ -173,6 +174,8 @@ void UMS_WidgetManager::HideRotateWidget() const
 
 void UMS_WidgetManager::ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool bShow /* = true */, const FName AnimationName /* = FName() */) const
 {
+	gInputMng.SetAllowGlide(!bShow);
+	
 	if(aWidgetPath == nullptr)
 	{
 		RootWidget->ShowModalWidget(gWidgetMng.Create_Widget_NotManaging(FSoftObjectPath(TEXT("/Game/UI/Widget/SystemWidgets/Modal/InModalWidget.InModalWidget"))), bShow, AnimationName);
