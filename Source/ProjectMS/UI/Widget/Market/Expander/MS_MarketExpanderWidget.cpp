@@ -14,6 +14,13 @@ namespace ArrowAnimation
 	const FName CloseMode = TEXT("CloseMode");
 }
 
+void UMS_MarketExpanderWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_MarketExpanderWidget::OnChangeModeState);
+}
+
 void UMS_MarketExpanderWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -24,9 +31,7 @@ void UMS_MarketExpanderWidget::NativeConstruct()
 	{
 		CPP_ModeSelectWidget->GetOnClickedModeButtonFunc([this](EMS_ModeState aModeState)
 		{
-			PlayAnimationByName(ArrowAnimation::OpenMode);
-			CPP_ModeSelectWidget->SwitchWidget(aModeState);
-			ModeState = aModeState;
+			gModeMng.ChangeState(aModeState);
 		});
 	}
 
@@ -42,8 +47,16 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+void UMS_MarketExpanderWidget::OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
+{
+	PlayAnimationByName(ArrowAnimation::OpenMode);
+	CPP_ModeSelectWidget->SwitchWidget(aModeState);
+}
+
 void UMS_MarketExpanderWidget::OnClickedArrowButton()
 {
+	EMS_ModeState ModeState = gModeMng.GetCurrentModeStateId();
+	
 	if(ModeState != EMS_ModeState::Normal)
 	{
 		PlayAnimationByName(ArrowAnimation::CloseMode);
