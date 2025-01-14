@@ -4,6 +4,7 @@
 #include "MS_Define.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Controller/MS_PlayerController.h"
+#include "InputProcessor/MS_GridBasedMoveHelper.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
@@ -20,7 +21,11 @@ UMS_ModeState_Construct::UMS_ModeState_Construct()
 void UMS_ModeState_Construct::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
+
+	// Helper
+	GridBasedMoveHelper = MS_NewObject<UMS_GridBasedMoveHelper>(this);
 	
+	// Delegate
 	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
 }
@@ -29,8 +34,15 @@ void UMS_ModeState_Construct::Finalize()
 {
 	Super::Finalize();
 
+	// Delegate
 	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
 	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
+
+	// Helper
+	if (IsValid(GridBasedMoveHelper))
+	{
+		MS_DeleteObject(GridBasedMoveHelper);
+	}
 }
 
 void UMS_ModeState_Construct::Tick(float aDeltaTime)
@@ -97,6 +109,11 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 	{
 		PreviewProp->ShowArrangementWidget(true);
 	}
+
+	if (IsValid(GridBasedMoveHelper))
+	{
+		GridBasedMoveHelper->ResetPositionOffset();
+	}
 }
 
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -120,27 +137,36 @@ void UMS_ModeState_Construct::OnMouseRightButtonGlide(const FVector2D& aPosition
 void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
-
-	TWeakObjectPtr<AMS_Prop> SelectedPreviewProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
 	
-	if (SelectedPreviewProp == nullptr)
+	if (PreviewProp == nullptr)
 	{
 		return;
 	}
 	
-	if (SelectedPreviewProp->GetPropType() == EMS_PropType::Floor || SelectedPreviewProp->GetPropType() == EMS_PropType::Wall)
+	if (PreviewProp->GetPropType() == EMS_PropType::Floor || PreviewProp->GetPropType() == EMS_PropType::Wall)
 	{
 		return;
 	}
-	
-	FHitResult SpaceHitResult = {};
-	if (GetHitResultUnderObjectScreenPosition(aPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
-	{
-		DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Yellow, false, 1.f);
-		FVector NewObjectLocation = SpaceHitResult.Location;
-		MS_LOG_Verbosity(VeryVerbose, TEXT("NewObjectLocation : %f, %f, %f"), NewObjectLocation.X, NewObjectLocation.Y, NewObjectLocation.Z);
 
-		MovePreviewProp(NewObjectLocation);
+	if (IsValid(GridBasedMoveHelper))
+	{
+		// Position Offset
+		if (GridBasedMoveHelper->GetTargetActor() == nullptr)
+		{
+			GridBasedMoveHelper->SetPositionOffset(PreviewProp);
+		}
+		else
+		{
+			FHitResult SpaceHitResult = {};
+			if (GridBasedMoveHelper->GetCheckedHitResultUnderObjectScreenPosition(PreviewProp, aPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
+			{
+				DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Yellow, false, 1.f);
+				FVector NewObjectLocation = SpaceHitResult.Location;
+				MS_LOG_Verbosity(VeryVerbose, TEXT("NewObjectLocation : %f, %f, %f"), NewObjectLocation.X, NewObjectLocation.Y, NewObjectLocation.Z);
+
+				MovePreviewProp(NewObjectLocation);
+			}
+		}
 	}
 }
 
@@ -219,17 +245,6 @@ void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 			return;
 		}
 		
-		// PointerPostionToObjectScreenPositionOffset
-		FVector2D PointerScreenPosition = gInputMng.AcquirePointerPositionOnViewport();
-		MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::PointerScreenPosition : %f, %f"), PointerScreenPosition.X, PointerScreenPosition.Y);
-
-		FVector2D ActorCenterScreenPosition;
-		GetWorld()->GetFirstPlayerController()->ProjectWorldLocationToScreen(SelectedProp->GetActorLocation(), ActorCenterScreenPosition);
-		MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::ActorCenterScreenPosition : %f, %f"), ActorCenterScreenPosition.X, ActorCenterScreenPosition.Y);
-		
-		PointerPostionToObjectScreenPositionOffset = ActorCenterScreenPosition - PointerScreenPosition;
-		MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::ClickPositionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
-		
 		if (SelectedProp->IsPreviewProp())
 		{
 			if (SelectedProp->GetLinkedProp() == nullptr)
@@ -306,33 +321,37 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		CancelPreviewProp();
 	}
 
-	FHitResult SpaceHitResult = {};
-	FVector2D CenterPosition = GetScreenCenterPosition();
-	if (GetHitResultUnderObjectScreenPosition(CenterPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
+	if (IsValid(GridBasedMoveHelper))
 	{
-		DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Green, false, 1.f);
-		FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 10.f);
-		MS_LOG_Verbosity(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
-		FRotator Rotator = FRotator(0.f, 90.f, 0.f);
+		FHitResult SpaceHitResult = {};
+		FVector2D CenterPosition = GetScreenCenterPosition();
 		
-		const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aStorageData->PathFile, true);
-
-		UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
-		if(IsValid(BlueprintClass) == false)
+		if (GridBasedMoveHelper->GetCheckedHitResultUnderObjectScreenPosition(nullptr, CenterPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
 		{
-			MS_CHECK(false);
-			MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
-			return;
-		}
+			DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Green, false, 1.f);
+			FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 10.f);
+			MS_LOG_Verbosity(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
+			FRotator Rotator = FRotator(0.f, 90.f, 0.f);
 		
-		PreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
-		
-		PreviewProp->InitializeWhenPreviewProp(nullptr);
+			const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aStorageData->PathFile, true);
 
-		if (UMS_ArrangementWidget* ArrangementWidget = PreviewProp->GetArrangementWidget())
-		{
-			ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
-			ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
+			UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
+			if(IsValid(BlueprintClass) == false)
+			{
+				MS_CHECK(false);
+				MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
+				return;
+			}
+		
+			PreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
+		
+			PreviewProp->InitializeWhenPreviewProp(nullptr);
+
+			if (UMS_ArrangementWidget* ArrangementWidget = PreviewProp->GetArrangementWidget())
+			{
+				ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
+				ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
+			}
 		}
 	}
 }
@@ -523,31 +542,6 @@ FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
 	PlayerController->GetViewportSize(SizeX, SizeY);
 
 	return FVector2d(SizeX / 2, SizeY / 2);
-}
-
-bool UMS_ModeState_Construct::GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion,
-                                                                    ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
-{
-	const TObjectPtr<UWorld> World = GetWorld();
-	if (!IsValid(World))
-	{
-		return false;
-	}
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return false;
-	}
-
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::aPointerPostion : %f, %f"), aPointerPostion.X, aPointerPostion.Y);
-
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::PointerPostionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
-
-	FVector2D ScreenPosition = aPointerPostion + PointerPostionToObjectScreenPositionOffset;
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::ScreenPosition : %f, %f"), ScreenPosition.X, ScreenPosition.Y);
-		
-	return PlayerController->GetHitResultAtScreenPosition(ScreenPosition, TraceChannel, bTraceComplex, HitResult);
 }
 
 FIntVector UMS_ModeState_Construct::GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter,

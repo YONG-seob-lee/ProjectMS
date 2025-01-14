@@ -77,7 +77,6 @@ private:
 	void CancelPreviewProp();
 
 	FVector2d GetScreenCenterPosition() const;
-	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 	
 	FIntVector GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
 	
@@ -90,9 +89,14 @@ private:
 
 	
 private:
+	// Member
+	UPROPERTY()
 	TObjectPtr<class AMS_Prop> PreviewProp;
 
-	FVector2D PointerPostionToObjectScreenPositionOffset;
+	// Helper
+	UPROPERTY()
+	TObjectPtr<class UMS_GridBasedMoveHelper> GridBasedMoveHelper;
 
+	// Delegate
 	FDelegateHandle OnClickedItemButtonHandle;
 };
