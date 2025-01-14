@@ -100,13 +100,11 @@ void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& a
 	PropCenterLocationInZone = aPropCenterLocationInZone;
 }
 
-void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp, int32 aTableIndex)
+void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 {
 	bIsPreviewProp = true;
 	
 	LinkedProp = aLinkedProp;
-
-	TableIndex = aTableIndex;
 	
 	// For PostProcess
 	TArray<UMeshComponent*> MeshComponents;

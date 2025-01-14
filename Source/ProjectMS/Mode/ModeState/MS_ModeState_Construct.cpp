@@ -322,7 +322,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		
 		SelectedPreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
 		
-		SelectedPreviewProp->InitializeWhenPreviewProp(nullptr, aStorageData->Index);
+		SelectedPreviewProp->InitializeWhenPreviewProp(nullptr);
 
 		if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
 		{
@@ -350,7 +350,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 10.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
 	SelectedPreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
-	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp, aSelectedProp->GetTableIndex());
+	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp);
 
 	if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
 	{
