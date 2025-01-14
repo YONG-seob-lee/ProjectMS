@@ -202,7 +202,18 @@ void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 		
 		if (SelectedProp->IsPreviewProp())
 		{
-			gInteractionMng.SelectActor(SelectedProp->GetLinkedProp());
+			if (SelectedProp->GetLinkedProp() == nullptr)
+			{
+			}
+			else
+			{
+				if (gInteractionMng.GetSelectedActor() == SelectedProp->GetLinkedProp())
+				{
+					return;
+				}
+				
+				gInteractionMng.SelectActor(SelectedProp->GetLinkedProp());
+			}
 		}
 		else
 		{
