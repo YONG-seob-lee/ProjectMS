@@ -4,7 +4,7 @@ UMS_UpdateStaffBehaviorPattern::UMS_UpdateStaffBehaviorPattern()
 {
 	NodeName = FString(TEXT("Update Staff Behavior Pattern"));
 }
-
+#if WITH_EDITOR
 void UMS_UpdateStaffBehaviorPattern::PostEditChangeProperty(FPropertyChangedEvent& aPropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(aPropertyChangedEvent);
@@ -28,6 +28,7 @@ void UMS_UpdateStaffBehaviorPattern::PostEditChangeProperty(FPropertyChangedEven
 		NodeName = FString::Printf(TEXT("Update Staff Idle Pattern: %s"), *StaticEnum<EMS_StaffIdlePattern>()->GetNameStringByValue(static_cast<int64>(ConditionStaffIdlePattern)));
 	}
 }
+#endif
 
 EBTNodeResult::Type UMS_UpdateStaffBehaviorPattern::ExecuteTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory)
 {

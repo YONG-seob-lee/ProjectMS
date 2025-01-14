@@ -7,6 +7,7 @@
 
 #include "Camera/ViewCamera/QuarterViewCamera/MS_QuarterViewCamera.h"
 #include "Camera/ViewCamera/SideViewCamera/MS_SideViewCamera.h"
+#include "Camera/ViewCamera/TopViewCamera/MS_TopViewCamera.h"
 
 #include "Camera/CameraMode/FollowingInputCameraMode/MS_FollowingInputCameraMode.h"
 #include "Camera/CameraMode/FollowingPlayerCameraMode/MS_FollowingPlayerCameraMode.h"
@@ -19,6 +20,7 @@ namespace ViewCamera
 {
 	const FName Quarter = TEXT("QuarterViewCamera");
 	const FName Side = TEXT("SideViewCamera");
+	const FName Top = TEXT("TopViewCamera");
 }
 
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
@@ -103,6 +105,11 @@ FRotator AMS_PlayerCameraManager::GenerateInertiaForceForRotation(FRotator aCurr
 	return aCurrentRotation + FRotator(0.0f, aVelocity, 0.0f);
 }
 
+void AMS_PlayerCameraManager::RestrictCameraMovement(const bool& aFlag)
+{
+	RestrictCameraFlag = aFlag;
+}
+
 void AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
 {
 	TargetCameraRotation = ViewCamera.Get()->GetActorRotation();
@@ -128,6 +135,7 @@ void AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosi
 			}, 0.005f, true);
 	}
 }
+
 void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
 {
 	FAddCameraShakeParams AddCameraShakeParams = {};
@@ -147,8 +155,12 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 	ActorSpawnParameters.Name = ViewCamera::Side;
 	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
 
+	ActorSpawnParameters.Name = ViewCamera::Top;
+	ViewCameraMap.Add(EMS_ViewCameraType::TopView, GetWorld()->SpawnActor<AMS_TopViewCamera>(AMS_TopViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
+
 	for (const TPair<EMS_ViewCameraType, TObjectPtr<AMS_ViewCamera>>& PairMap : ViewCameraMap)
 	{
+		PairMap.Value->Bind(this);
 		PairMap.Value->Deactivate();
 	}
 }
@@ -271,6 +283,11 @@ void AMS_PlayerCameraManager::TruckRight(const FInputActionValue& aValue)
 
 void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
 {
+	if (RestrictCameraFlag == true)
+	{
+		return;
+	}
+
 	ViewCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
 	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * 0.85f);
 }

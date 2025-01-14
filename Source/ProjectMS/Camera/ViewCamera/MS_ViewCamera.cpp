@@ -23,6 +23,12 @@ void AMS_ViewCamera::BeginPlay()
 void AMS_ViewCamera::AdjustCameraDistance(float aDistance)
 {
 	CameraDistance = aDistance;
+	CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(-45.0f, 0.0f, 0.0f));
+}
+
+void AMS_ViewCamera::Bind(AMS_PlayerCameraManager* aManager)
+{
+	PlayerCameraManager = aManager;
 }
 
 void AMS_ViewCamera::Activate()

@@ -14,7 +14,8 @@ UENUM() enum class EMS_ViewCameraType
 {
 	Undefined,
 	QuarterView,
-	SideView
+	SideView,
+	TopView
 };
 
 UENUM() enum class EMS_CameraModeType
@@ -38,6 +39,8 @@ public:
 	// DEBUG
 	UFUNCTION(BlueprintCallable) void DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
 	UFUNCTION() FRotator GenerateInertiaForceForRotation(FRotator aCurrentRotation, FRotator aTargetRotation, float& aVelocity, float aDampingFactor);
+
+	UFUNCTION(BlueprintCallable) void RestrictCameraMovement(const bool& aFlag);
 
 	UFUNCTION(BlueprintCallable) void FadeInCamera(float aDuration, EMS_InterpolationType aInterpolationType);
 	UFUNCTION(BlueprintCallable) void FadeOutCamera(float aDuration, EMS_InterpolationType aInterpolationType);
@@ -77,6 +80,7 @@ public:
 	// Property
 private:
 	EMS_ViewCameraType ViewCameraType = EMS_ViewCameraType::Undefined;
+	bool RestrictCameraFlag = false;
 
 	float ZoomMagnification = 1.0f;
 	FTimerHandle ZoomTimerHandle = {};
