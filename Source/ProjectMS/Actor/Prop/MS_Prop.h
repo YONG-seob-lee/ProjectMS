@@ -48,9 +48,13 @@ public:
 	TWeakObjectPtr<AMS_Prop> GetLinkedProp() const { return LinkedProp; }
 
 	bool IsPreviewProp() const { return bIsPreviewProp; }
+
+	// Arrangement Widget
+	class UWidgetComponent* GetArrangementWidgetComponent() const;
 	
-	class UWidgetComponent* GetPreviewWidgetComponent() const { return PreviewWidgetComponent; }
-	class UMS_PreviewWidget* GetPreviewWidget() const;
+	class UMS_ArrangementWidget* GetArrangementWidget() const;
+
+	void ShowArrangementWidget(bool bShow) const;
 
 	
 protected:
@@ -77,11 +81,12 @@ protected:
 
 	UPROPERTY()
 	FVector PropCenterLocationInZone;
+	
+	// Arrangement Widget
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UWidgetComponent> ArrangementWidgetComponent;
 
 	// For Preview
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UWidgetComponent> PreviewWidgetComponent;
-
 	UPROPERTY()
 	bool bIsPreviewProp;
 	

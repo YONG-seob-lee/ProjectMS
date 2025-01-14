@@ -4,25 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_PreviewWidget.generated.h"
+#include "MS_ArrangementWidget.generated.h"
 
 /**
  * 
  */
-DECLARE_DELEGATE_OneParam(FOnClickApplyButtonDelegate, UMS_PreviewWidget*);
-DECLARE_DELEGATE_OneParam(FOnClickCancelButtonDelegate, UMS_PreviewWidget*);
+DECLARE_DELEGATE_OneParam(FOnClickApplyButtonDelegate, UMS_ArrangementWidget*);
+DECLARE_DELEGATE_OneParam(FOnClickCancelButtonDelegate, UMS_ArrangementWidget*);
 
 UCLASS()
-class PROJECTMS_API UMS_PreviewWidget : public UMS_Widget
+class PROJECTMS_API UMS_ArrangementWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 
 
 public:
-	void NativeOnInitialized() override;
+	virtual void NativeOnInitialized() override;
 	
 	void OnClickApplyButton();
 	void OnClickCancelButton();
+
 	
 protected:
 	UPROPERTY(Meta = (BindWidget))
@@ -31,6 +32,7 @@ protected:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_CancelButton = nullptr;
 
+	
 public:
 	FOnClickApplyButtonDelegate OnClickApplyButtonDelegate;
 	FOnClickCancelButtonDelegate OnClickCancelButtonDelegate;

@@ -52,10 +52,10 @@ public:
 	void OnClickedStorageButton(int32 aStorageId, int32 aItemType);
 
 	UFUNCTION()
-	void OnClickApplyPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
+	void OnClickApplyArrangementWidget(class UMS_ArrangementWidget* aArrangementWidget);
 	
 	UFUNCTION()
-	void OnClickCancelPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
+	void OnClickCancelArrangementWidget(class UMS_ArrangementWidget* aArrangementWidget);
 
 
 	// Select
@@ -74,9 +74,7 @@ private:
 	
 	void MovePreviewProp(const FVector& aNewLocation);
 	void ApplyPreviewProp();
-	void CancelPreviewProp(class AMS_Prop* aSelectedProp);
-
-	void ShowPreviewWidget(bool bShow);
+	void CancelPreviewProp();
 
 	FVector2d GetScreenCenterPosition() const;
 	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;

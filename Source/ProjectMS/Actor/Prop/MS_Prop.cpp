@@ -7,7 +7,7 @@
 #include "Components/WidgetComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "Widget/MS_Widget.h"
-#include "Widget/Market/MS_PreviewWidget.h"
+#include "Widget/Market/MS_ArrangementWidget.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -22,10 +22,10 @@ AMS_Prop::AMS_Prop()
 		SetRootComponent(SceneRootComponent);
 	}
 
-	PreviewWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PreviewWidgetComponent"));
-	if (PreviewWidgetComponent)
+	ArrangementWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ArrangementWidgetComponent"));
+	if (ArrangementWidgetComponent)
 	{
-		PreviewWidgetComponent->SetupAttachment(GetRootComponent());
+		ArrangementWidgetComponent->SetupAttachment(GetRootComponent());
 	}
 }
 
@@ -36,10 +36,8 @@ void AMS_Prop::PostInitializeComponents()
 	// Component
 	GetComponents(UMS_PropSpaceComponent::StaticClass(), PropSpaceComponents);
 
-	if (PreviewWidgetComponent)
-	{
-		PreviewWidgetComponent->SetVisibility(false);
-	}
+
+	ShowArrangementWidget(false);
 }
 
 void AMS_Prop::BeginPlay()
@@ -116,15 +114,46 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 	}
 }
 
-UMS_PreviewWidget* AMS_Prop::GetPreviewWidget() const
+UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 {
-	if (IsValid(PreviewWidgetComponent))
+	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
 	{
-		if (UUserWidget* Widget = PreviewWidgetComponent->GetWidget())
+		MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+	}
+	
+	return ArrangementWidgetComponent;
+}
+
+UMS_ArrangementWidget* AMS_Prop::GetArrangementWidget() const
+{
+	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+	}
+	
+	if (IsValid(ArrangementWidgetComponent))
+	{
+		if (UUserWidget* Widget = ArrangementWidgetComponent->GetWidget())
 		{
-			return Cast<UMS_PreviewWidget>(Widget);
+			return Cast<UMS_ArrangementWidget>(Widget);
 		}
 	}
 
 	return nullptr;
+}
+
+void AMS_Prop::ShowArrangementWidget(bool bShow) const
+{
+	if (bShow)
+	{
+		if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
+		{
+			MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+		}
+	}
+
+	if (IsValid(ArrangementWidgetComponent))
+	{
+		ArrangementWidgetComponent->SetVisibility(bShow);
+	}
 }

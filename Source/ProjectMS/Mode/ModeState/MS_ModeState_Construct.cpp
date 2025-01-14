@@ -3,7 +3,6 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
-#include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
@@ -11,7 +10,7 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/MS_Prop.h"
-#include "Widget/Market/MS_PreviewWidget.h"
+#include "Widget/Market/MS_ArrangementWidget.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
@@ -83,15 +82,21 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	{
 		SelectProp(InteractableActor);
 	}
-	
-	ShowPreviewWidget(false);
+
+	if (IsValid(PreviewProp))
+	{
+		PreviewProp->ShowArrangementWidget(false);
+	}
 }
 
 void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
 
-	ShowPreviewWidget(true);
+	if (IsValid(PreviewProp))
+	{
+		PreviewProp->ShowArrangementWidget(true);
+	}
 }
 
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -164,14 +169,14 @@ void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aIt
 	}
 }
 
-void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPreviewWidget)
+void UMS_ModeState_Construct::OnClickApplyArrangementWidget(UMS_ArrangementWidget* aArrangementWidget)
 {
-	if (!IsValid(aPreviewWidget))
+	if (!IsValid(aArrangementWidget))
 	{
 		return;
 	}
 	
-	if (aPreviewWidget != PreviewProp->GetPreviewWidget())
+	if (aArrangementWidget != PreviewProp->GetArrangementWidget())
 	{
 		return;
 	}
@@ -180,11 +185,11 @@ void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPrevie
 	UnselectProp();
 }
 
-void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
+void UMS_ModeState_Construct::OnClickCancelArrangementWidget(UMS_ArrangementWidget* aArrangementWidget)
 {
-	if (IsValid(PreviewProp))
+	if (IsValid(aArrangementWidget))
 	{
-		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
+		CancelPreviewProp();
 	}
 }
 
@@ -283,7 +288,7 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 				return;
 			}
 
-			CancelPreviewProp(UnselectedProp);
+			CancelPreviewProp();
 		}
 	}
 }
@@ -298,7 +303,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 
 	if (IsValid(PreviewProp))
 	{
-		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
+		CancelPreviewProp();
 	}
 
 	FHitResult SpaceHitResult = {};
@@ -324,10 +329,10 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		
 		PreviewProp->InitializeWhenPreviewProp(nullptr);
 
-		if (UMS_PreviewWidget* PreviewWidget = PreviewProp->GetPreviewWidget())
+		if (UMS_ArrangementWidget* ArrangementWidget = PreviewProp->GetArrangementWidget())
 		{
-			PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
-			PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
+			ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
+			ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
 		}
 	}
 }
@@ -342,7 +347,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 
 	if (IsValid(PreviewProp))
 	{
-		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
+		CancelPreviewProp();
 	}
 	
 	aSelectedProp->SetActorHiddenInGame(true);
@@ -352,10 +357,10 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 	PreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
 	PreviewProp->InitializeWhenPreviewProp(aSelectedProp);
 
-	if (UMS_PreviewWidget* PreviewWidget = PreviewProp->GetPreviewWidget())
+	if (UMS_ArrangementWidget* ArrangementWidget = PreviewProp->GetArrangementWidget())
 	{
-		PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
-		PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
+		ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
+		ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
 	}
 }
 
@@ -377,8 +382,8 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 			NewCenterGridPosition - OldCenterGridPosition))
 		{
 			FVector NewLocationOnGrid = GetLocationOnGrid(aNewLocation,
-PreviewProp->GetGridNum().X % 2 != 0,
-PreviewProp->GetGridNum().Y % 2 != 0);
+					PreviewProp->GetGridNum().X % 2 != 0,
+					PreviewProp->GetGridNum().Y % 2 != 0);
 			
 			PreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
 		}
@@ -482,28 +487,21 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 	}
 }
 
-void UMS_ModeState_Construct::CancelPreviewProp(AMS_Prop* aSelectedProp)
-{
-	ShowPreviewWidget(false);
-	
-	if (IsValid(aSelectedProp))
-	{
-		aSelectedProp->SetActorHiddenInGame(false);
-	}
-	PreviewProp->Destroy();
-}
-
-void UMS_ModeState_Construct::ShowPreviewWidget(bool bShow)
+void UMS_ModeState_Construct::CancelPreviewProp()
 {
 	if (!IsValid(PreviewProp))
 	{
 		return;
 	}
+
+	PreviewProp->ShowArrangementWidget(false);
 	
-	if (UWidgetComponent* PreviewWidgetComponent = PreviewProp->GetPreviewWidgetComponent())
+	if (PreviewProp->GetLinkedProp() != nullptr)
 	{
-		PreviewWidgetComponent->SetVisibility(bShow);
+		PreviewProp->GetLinkedProp()->SetActorHiddenInGame(false);
 	}
+	
+	PreviewProp->Destroy();
 }
 
 FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
