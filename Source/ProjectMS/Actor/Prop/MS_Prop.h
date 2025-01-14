@@ -35,6 +35,8 @@ public:
 	
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
 
+	class UMS_PropSpaceComponent* GetPropSpaceComponentByRelativeLocation(const FVector& aRelativeLocation) const;
+
 	
 	// Zone Data :: Setter
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone);

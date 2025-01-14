@@ -2,6 +2,7 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
+#include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -204,6 +205,7 @@ void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 		{
 			if (SelectedProp->GetLinkedProp() == nullptr)
 			{
+				return;
 			}
 			else
 			{
@@ -275,6 +277,7 @@ void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPrevie
 	}
 
 	ApplyPreviewProp();
+	UnselectProp();
 }
 
 void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
@@ -403,9 +406,9 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
+		TArray<FMS_GridDataForPropSpace> PreviewPropGridDatas;
 		
-		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas))
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, PreviewPropGridDatas))
 		{
 			if (SelectedPreviewProp->GetLinkedProp() == nullptr)
 			{
@@ -426,16 +429,23 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 					return;
 				}
 				
-				// Register New Datas
-				LevelScriptActor->RegisterGridObjectData(NewLocationGridDatas);
-				
 				// Move Location
 				// ToDo : Level Script로 이동
 				FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
 				SelectedPreviewProp->GetGridNum().X % 2 != 0,
 				SelectedPreviewProp->GetGridNum().Y % 2 != 0);
 
-				gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, SelectedPreviewProp->GetActorRotation());
+				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, SelectedPreviewProp->GetActorRotation())))
+				{
+					// Register New Datas
+					TArray<FMS_GridDataForPropSpace> PropGridDatas;
+					ConvertObjectDataProp(PreviewPropGridDatas, NewProp, PropGridDatas);
+					LevelScriptActor->RegisterGridObjectData(PropGridDatas);
+				}
+				else
+				{
+					MS_Ensure(false);
+				}
 			}
 			
 			else
@@ -446,16 +456,13 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 					return;
 				}
 				
-				if (CheckGridDatas(NewLocationGridDatas, LinkedProp))
+				if (CheckGridDatas(PreviewPropGridDatas, LinkedProp))
 				{
 					// Unregister Old Datas
 					TArray<FMS_GridDataForPropSpace> OldLocationGridDatas;
 					LevelScriptActor->GetGridDatasForAllPropSpaceLocations(LinkedProp, OldLocationGridDatas);
 
 					LevelScriptActor->UnregisterGridObjectData(OldLocationGridDatas);
-
-					// Register New Datas
-					LevelScriptActor->RegisterGridObjectData(NewLocationGridDatas);
 					
 					// Move Location
 					// ToDo : Level Script로 이동
@@ -464,6 +471,11 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 					SelectedPreviewProp->GetGridNum().Y % 2 != 0);
 		
 					LinkedProp->SetActorLocation(NewLocationOnGrid);
+
+					// Register New Datas
+					TArray<FMS_GridDataForPropSpace> PropGridDatas;
+					ConvertObjectDataProp(PreviewPropGridDatas, LinkedProp, PropGridDatas);
+					LevelScriptActor->RegisterGridObjectData(PropGridDatas);
 				}
 			}
 		}
@@ -472,6 +484,8 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 
 void UMS_ModeState_Construct::CancelPreviewProp(AMS_Prop* aSelectedProp)
 {
+	ShowPreviewWidget(false);
+	
 	if (IsValid(aSelectedProp))
 	{
 		aSelectedProp->SetActorHiddenInGame(false);
@@ -609,4 +623,32 @@ bool UMS_ModeState_Construct::CheckGridDatas(const TArray<FMS_GridDataForPropSpa
 	}
 
 	return true;
+}
+
+void UMS_ModeState_Construct::ConvertObjectDataProp(const TArray<FMS_GridDataForPropSpace>& aInGridDatas,
+	AMS_Prop* aInNewProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatas)
+{
+	if (aInGridDatas.Num() == 0)
+	{
+		return;
+	}
+	
+	if (!IsValid(aInGridDatas[0].PropSpaceComponent) || !IsValid(aInGridDatas[0].PropSpaceComponent->GetOwner()))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* OldProp = Cast<AMS_Prop>(aInGridDatas[0].PropSpaceComponent->GetOwner()))
+	{
+		for (const FMS_GridDataForPropSpace& OldGridData : aInGridDatas)
+		{
+			FMS_GridDataForPropSpace NewGridData;
+			NewGridData.GridDatas = OldGridData.GridDatas;
+			
+			MS_Ensure(IsValid(OldGridData.PropSpaceComponent));
+			NewGridData.PropSpaceComponent = aInNewProp->GetPropSpaceComponentByRelativeLocation(OldGridData.PropSpaceComponent->GetRelativeLocation());
+
+			aOutGridDatas.Emplace(NewGridData);
+		}
+	}
 }

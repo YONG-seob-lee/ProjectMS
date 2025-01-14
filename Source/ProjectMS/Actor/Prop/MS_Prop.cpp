@@ -80,6 +80,19 @@ TArray<UMS_PropSpaceComponent*> AMS_Prop::GetPropPurposeSpaceComponents(EMS_Purp
 	return Ret;
 }
 
+UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const FVector& aRelativeLocation) const
+{
+	for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+	{
+		if (PropSpaceComponent->GetRelativeLocation() == aRelativeLocation)
+		{
+			return PropSpaceComponent;
+		}
+	}
+
+	return nullptr;
+}
+
 void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
 {
 	OwnerZone = aOwnerZone;
