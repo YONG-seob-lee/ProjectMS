@@ -23,6 +23,9 @@ DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 #define MS_CHECK(expr) check(expr)
 #define MS_Ensure(expr) ensure(expr)
 
+#define MS_FUNC_TEXT __FUNCTION__
+#define MS_FUNC_STRING FString(__FUNCTION__)
+
 // Object
 #define MS_NewObject NewObject
 

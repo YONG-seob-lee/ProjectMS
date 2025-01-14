@@ -43,11 +43,11 @@ void AMS_Zone::InitializeZoneData()
 	
 	ZoneSize = ZoneBoxComponent->GetUnscaledBoxExtent() * 2.f;
 	
-	ZoneGridNum = FIntVector(FMath::RoundToInt32(ZoneSize.X / MS_GridSize.X),
-		FMath::RoundToInt32(ZoneSize.Y / MS_GridSize.Y), FMath::RoundToInt32(ZoneSize.Z / MS_GridSize.Z));
+	ZoneGridNum = FIntVector2(FMath::RoundToInt32(ZoneSize.X / MS_GridSize.X),
+		FMath::RoundToInt32(ZoneSize.Y / MS_GridSize.Y));
 	
-	ZoneWorldGridPosition = FIntVector(FMath::RoundToInt32(ZoneLocation.X / MS_GridSize.X),
-		FMath::RoundToInt32(ZoneLocation.Y / MS_GridSize.Y), FMath::RoundToInt32(ZoneLocation.Z / MS_GridSize.Z));
+	ZoneWorldGridPosition = FIntVector2(FMath::RoundToInt32(ZoneLocation.X / MS_GridSize.X),
+		FMath::RoundToInt32(ZoneLocation.Y / MS_GridSize.Y));
 
 	CreateGrids();
 }

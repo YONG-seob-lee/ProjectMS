@@ -46,9 +46,9 @@ public:
 	
 	const FVector& GetZoneLocation() const { return ZoneLocation; }
 	
-	const FIntVector& GetZoneGridNum() const { return ZoneGridNum; }
+	const FIntVector2& GetZoneGridNum() const { return ZoneGridNum; }
 	
-	const FIntVector& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
+	const FIntVector2& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
 	const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
 	
@@ -75,10 +75,10 @@ private:
 	FVector ZoneSize;
 	
 	UPROPERTY()
-	FIntVector ZoneGridNum;
+	FIntVector2 ZoneGridNum;
 
 	UPROPERTY()
-	FIntVector ZoneWorldGridPosition;
+	FIntVector2 ZoneWorldGridPosition;
 	
 	UPROPERTY()
 	TMap<FIntVector2, FMS_GridData> Grids;

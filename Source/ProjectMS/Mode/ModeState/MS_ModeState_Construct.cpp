@@ -116,14 +116,14 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 {
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
 
-	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
+	TWeakObjectPtr<AMS_Prop> SelectedPreviewProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
 	
-	if (SelectedProp == nullptr)
+	if (SelectedPreviewProp == nullptr)
 	{
 		return;
 	}
 	
-	if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
+	if (SelectedPreviewProp->GetPropType() == EMS_PropType::Floor || SelectedPreviewProp->GetPropType() == EMS_PropType::Wall)
 	{
 		return;
 	}
@@ -161,6 +161,30 @@ void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aIt
 		}
 		
 		CreateNoLinkedPreviewProp(StorageData);
+	}
+}
+
+void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPreviewWidget)
+{
+	if (!IsValid(aPreviewWidget))
+	{
+		return;
+	}
+	
+	if (aPreviewWidget != PreviewProp->GetPreviewWidget())
+	{
+		return;
+	}
+
+	ApplyPreviewProp();
+	UnselectProp();
+}
+
+void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
+{
+	if (IsValid(PreviewProp))
+	{
+		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
 	}
 }
 
@@ -264,30 +288,6 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	}
 }
 
-void UMS_ModeState_Construct::OnClickApplyPreviewProp(UMS_PreviewWidget* aPreviewWidget)
-{
-	if (!IsValid(aPreviewWidget))
-	{
-		return;
-	}
-	
-	if (aPreviewWidget != SelectedPreviewProp->GetPreviewWidget())
-	{
-		return;
-	}
-
-	ApplyPreviewProp();
-	UnselectProp();
-}
-
-void UMS_ModeState_Construct::OnClickCancelPreviewProp(UMS_PreviewWidget* aPreviewWidget)
-{
-	if (IsValid(SelectedPreviewProp))
-	{
-		CancelPreviewProp(SelectedPreviewProp->GetLinkedProp().Get());
-	}
-}
-
 void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorageData)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
@@ -296,9 +296,9 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		return;
 	}
 
-	if (IsValid(SelectedPreviewProp))
+	if (IsValid(PreviewProp))
 	{
-		CancelPreviewProp(SelectedPreviewProp->GetLinkedProp().Get());
+		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
 	}
 
 	FHitResult SpaceHitResult = {};
@@ -320,11 +320,11 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 			return;
 		}
 		
-		SelectedPreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
+		PreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
 		
-		SelectedPreviewProp->InitializeWhenPreviewProp(nullptr);
+		PreviewProp->InitializeWhenPreviewProp(nullptr);
 
-		if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
+		if (UMS_PreviewWidget* PreviewWidget = PreviewProp->GetPreviewWidget())
 		{
 			PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
 			PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
@@ -340,19 +340,19 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 		return;
 	}
 
-	if (IsValid(SelectedPreviewProp))
+	if (IsValid(PreviewProp))
 	{
-		CancelPreviewProp(SelectedPreviewProp->GetLinkedProp().Get());
+		CancelPreviewProp(PreviewProp->GetLinkedProp().Get());
 	}
 	
 	aSelectedProp->SetActorHiddenInGame(true);
 		
 	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 10.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
-	SelectedPreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
-	SelectedPreviewProp->InitializeWhenPreviewProp(aSelectedProp);
+	PreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
+	PreviewProp->InitializeWhenPreviewProp(aSelectedProp);
 
-	if (UMS_PreviewWidget* PreviewWidget = SelectedPreviewProp->GetPreviewWidget())
+	if (UMS_PreviewWidget* PreviewWidget = PreviewProp->GetPreviewWidget())
 	{
 		PreviewWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyPreviewProp);
 		PreviewWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelPreviewProp);
@@ -363,24 +363,24 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 {
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		FIntVector OldCenterGridPosition =  GetGridPosition(SelectedPreviewProp->GetActorLocation(),
-	SelectedPreviewProp->GetGridNum().X % 2 != 0,
-	SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+		FIntVector OldCenterGridPosition =  GetGridPosition(PreviewProp->GetActorLocation(),
+	PreviewProp->GetGridNum().X % 2 != 0,
+	PreviewProp->GetGridNum().Y % 2 != 0);
 		
 		FIntVector NewCenterGridPosition = GetGridPosition(aNewLocation,
-	SelectedPreviewProp->GetGridNum().X % 2 != 0,
-	SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+	PreviewProp->GetGridNum().X % 2 != 0,
+	PreviewProp->GetGridNum().Y % 2 != 0);
 
 		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
 		
-		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, NewLocationGridDatas,
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(PreviewProp, NewLocationGridDatas,
 			NewCenterGridPosition - OldCenterGridPosition))
 		{
 			FVector NewLocationOnGrid = GetLocationOnGrid(aNewLocation,
-SelectedPreviewProp->GetGridNum().X % 2 != 0,
-SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+PreviewProp->GetGridNum().X % 2 != 0,
+PreviewProp->GetGridNum().Y % 2 != 0);
 			
-			SelectedPreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
+			PreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
 		}
 	}
 }
@@ -399,7 +399,7 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 		return;
 	}
 
-	if (!IsValid(SelectedPreviewProp))
+	if (!IsValid(PreviewProp))
     {
     	return;
     }
@@ -408,11 +408,11 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 	{
 		TArray<FMS_GridDataForPropSpace> PreviewPropGridDatas;
 		
-		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(SelectedPreviewProp, PreviewPropGridDatas))
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(PreviewProp, PreviewPropGridDatas))
 		{
-			if (SelectedPreviewProp->GetLinkedProp() == nullptr)
+			if (PreviewProp->GetLinkedProp() == nullptr)
 			{
-				FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, SelectedPreviewProp->GetTableIndex());
+				FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, PreviewProp->GetTableIndex());
 				if(StorageData == nullptr)
 				{
 					MS_LOG_Verbosity(Error, TEXT("Storage Data is invalid"));
@@ -431,11 +431,11 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 				
 				// Move Location
 				// ToDo : Level Script로 이동
-				FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
-				SelectedPreviewProp->GetGridNum().X % 2 != 0,
-				SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+				FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
+				PreviewProp->GetGridNum().X % 2 != 0,
+				PreviewProp->GetGridNum().Y % 2 != 0);
 
-				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, SelectedPreviewProp->GetActorRotation())))
+				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, PreviewProp->GetActorRotation())))
 				{
 					// Register New Datas
 					TArray<FMS_GridDataForPropSpace> PropGridDatas;
@@ -450,7 +450,7 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 			
 			else
 			{
-				AMS_Prop* LinkedProp = SelectedPreviewProp->GetLinkedProp().Get();
+				AMS_Prop* LinkedProp = PreviewProp->GetLinkedProp().Get();
 				if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
 				{
 					return;
@@ -466,9 +466,9 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 					
 					// Move Location
 					// ToDo : Level Script로 이동
-					FVector NewLocationOnGrid = GetLocationOnGrid(SelectedPreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
-					SelectedPreviewProp->GetGridNum().X % 2 != 0,
-					SelectedPreviewProp->GetGridNum().Y % 2 != 0);
+					FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
+					PreviewProp->GetGridNum().X % 2 != 0,
+					PreviewProp->GetGridNum().Y % 2 != 0);
 		
 					LinkedProp->SetActorLocation(NewLocationOnGrid);
 
@@ -490,17 +490,17 @@ void UMS_ModeState_Construct::CancelPreviewProp(AMS_Prop* aSelectedProp)
 	{
 		aSelectedProp->SetActorHiddenInGame(false);
 	}
-	SelectedPreviewProp->Destroy();
+	PreviewProp->Destroy();
 }
 
 void UMS_ModeState_Construct::ShowPreviewWidget(bool bShow)
 {
-	if (!IsValid(SelectedPreviewProp))
+	if (!IsValid(PreviewProp))
 	{
 		return;
 	}
 	
-	if (UWidgetComponent* PreviewWidgetComponent = SelectedPreviewProp->GetPreviewWidgetComponent())
+	if (UWidgetComponent* PreviewWidgetComponent = PreviewProp->GetPreviewWidgetComponent())
 	{
 		PreviewWidgetComponent->SetVisibility(bShow);
 	}

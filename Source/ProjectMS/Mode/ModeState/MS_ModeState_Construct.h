@@ -27,7 +27,9 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 
+	
 public:
+	// Game Input
 	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult) override;
 	
 	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
@@ -44,9 +46,19 @@ public:
 	
 	virtual void OnPinchAction(float aPinchValue) override;
 
+	
+	// UI Input
 	UFUNCTION()
 	void OnClickedStorageButton(int32 aStorageId, int32 aItemType);
+
+	UFUNCTION()
+	void OnClickApplyPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
 	
+	UFUNCTION()
+	void OnClickCancelPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
+
+
+	// Select
 	void SelectProp(AActor* aSelectedActor);
 	void UnselectProp();
 
@@ -56,9 +68,7 @@ public:
 	UFUNCTION()
 	void OnUnselectProp(AActor* aUnselectedActor);
 
-	void OnClickApplyPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
-	void OnClickCancelPreviewProp(class UMS_PreviewWidget* aPreviewWidget);
-
+private:
 	void CreateNoLinkedPreviewProp(struct FMS_StorageData* aStorageData);
 	void CreateLinkedPreviewProp(class AMS_Prop* aSelectedProp);
 	
@@ -70,8 +80,7 @@ public:
 
 	FVector2d GetScreenCenterPosition() const;
 	bool GetHitResultUnderObjectScreenPosition(const FVector2D& aPointerPostion, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
-
-private:
+	
 	FIntVector GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
 	
 	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter = false) const;
@@ -83,7 +92,7 @@ private:
 
 	
 private:
-	TObjectPtr<class AMS_Prop> SelectedPreviewProp;
+	TObjectPtr<class AMS_Prop> PreviewProp;
 
 	FVector2D PointerPostionToObjectScreenPositionOffset;
 
