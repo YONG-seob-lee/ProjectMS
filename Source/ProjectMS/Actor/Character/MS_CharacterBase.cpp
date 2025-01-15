@@ -59,7 +59,7 @@ void AMS_CharacterBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 
 void AMS_CharacterBase::Create(const FString& aLabelName)
 {
-	SetActorLabel(aLabelName);
+	//SetActorLabel(aLabelName);
 
 	Initialize();
 }

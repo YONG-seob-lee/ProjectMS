@@ -128,7 +128,7 @@ TObjectPtr<AActor> UMS_UnitManager::SpawnBlueprintActor(const FString& Blueprint
 
 	if(ResultActor)
 	{
-		ResultActor->SetActorLabel(GetBPNameFromFullPath(BlueprintPath));
+		//ResultActor->SetActorLabel(GetBPNameFromFullPath(BlueprintPath));
 
 		if(bNeedRootComponent && ResultActor->GetRootComponent() == nullptr)
 		{

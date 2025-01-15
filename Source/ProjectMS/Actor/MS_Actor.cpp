@@ -45,7 +45,7 @@ void AMS_Actor::Tick(float DeltaTime)
 
 void AMS_Actor::Create(const FString& aLabelName)
 {
-	SetActorLabel(aLabelName);
+	//SetActorLabel(aLabelName);
 
 	Initialize();
 }

@@ -30,7 +30,7 @@ public:
 	
 	void GetGridPositions(FIntVector& aOutWorldStartGridPosition, FIntVector& aOutGridNum) const;
 
-	inline class AMS_Prop* GetOwnerProp() const;
+	class AMS_Prop* GetOwnerProp() const;
 
 	
 private:

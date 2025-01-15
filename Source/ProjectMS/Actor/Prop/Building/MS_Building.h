@@ -15,9 +15,11 @@ class PROJECTMS_API AMS_Building : public AMS_Prop
 	GENERATED_BODY()
 public:
 	AMS_Building();
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual void PostInitProperties() override;
 	
+	virtual void PostInitProperties() override;
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 	virtual bool HasInteractionComponent() override;
 	virtual void OnPressDownEvent() override;
 	virtual void OnPressUpEvent() override;

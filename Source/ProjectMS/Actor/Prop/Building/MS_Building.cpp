@@ -48,6 +48,7 @@ AMS_Building::AMS_Building()
 	SetFloor(Floor);
 }
 
+#if WITH_EDITOR
 void AMS_Building::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -55,7 +56,7 @@ void AMS_Building::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	UpdateFloorSize();
 	SetFloor(Floor);
 }
-
+#endif
 void AMS_Building::PostInitProperties()
 {
 	Super::PostInitProperties();

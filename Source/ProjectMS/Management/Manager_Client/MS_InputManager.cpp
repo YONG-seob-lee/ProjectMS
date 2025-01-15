@@ -112,6 +112,10 @@ FVector2D UMS_InputManager::AcquirePointerPositionOnViewport() const
 	
 #elif PLATFORM_ANDROID || PLATFORM_IOS
 	bool CurrentlyTouchPressFlag = {};
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
 	PlayerController->GetInputTouchState(ETouchIndex::Touch1, PointerPosition.X, PointerPosition.Y, CurrentlyTouchPressFlag);
 #endif
 	return PointerPosition;

@@ -158,7 +158,7 @@ void AMS_LevelScriptActorBase::OnBaseLayerLevelCollectionSwitchClick()
 				CDOBaseLayerLevelArray->Add(TSoftObjectPtr<UWorld>(AssetDataArray[i].ToSoftObjectPath()));
 
 				ALevelInstance* SpawnedBaseLayerLevelInstance = Cast<UWorld>(GetLevel()->GetOuter())->SpawnActor<ALevelInstance>();
-				SpawnedBaseLayerLevelInstance->SetActorLabel(AssetDataArray[i].AssetName.ToString(), false);
+				//SpawnedBaseLayerLevelInstance->SetActorLabel(AssetDataArray[i].AssetName.ToString(), false);
 				SpawnedBaseLayerLevelInstance->Tags.Add(FName(TEXT("BaseLayerLevel")));
 				SpawnedBaseLayerLevelInstance->SetWorldAsset(TSoftObjectPtr<UWorld>(AssetDataArray[i].ToSoftObjectPath()));
 				SpawnedBaseLayerLevelInstance->UpdateLevelInstanceFromWorldAsset();
