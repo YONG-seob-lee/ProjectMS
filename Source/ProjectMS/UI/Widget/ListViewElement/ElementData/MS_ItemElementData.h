@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widget/MS_Widget.h"
 #include "MS_ItemElementData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_ItemElementData : public UMS_Widget
+class PROJECTMS_API UMS_ItemElementData : public UObject
 {
 	GENERATED_BODY()
 public:

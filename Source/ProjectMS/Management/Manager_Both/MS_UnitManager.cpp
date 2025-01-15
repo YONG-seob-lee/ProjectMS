@@ -6,6 +6,7 @@
 #include "MS_BasePlayerUnit.h"
 #include "MS_FurnitureUnit.h"
 #include "MS_ItemUnit.h"
+#include "Character/MS_CharacterBase.h"
 #include "Unit/MS_UnitBase.h"
 
 UMS_UnitManager::UMS_UnitManager()

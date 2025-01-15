@@ -41,6 +41,8 @@ void UMS_ModeSelectWidget::InitCategory() const
 void UMS_ModeSelectWidget::RefreshConstructListItems(EMS_StorageType aStorageType)
 {
 	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	MS_CHECK(StorageTable);
+	
 	TArray<TObjectPtr<UMS_ConstructItemElement>> Items;
 	StorageTable->GetStorageData(aStorageType, Items);
 	

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_UnitBase.h"
+#include "Table/RowBase/MS_ResourceUnit.h"
 #include "MS_BasePlayerUnit.generated.h"
 
 /**
@@ -23,7 +24,7 @@ public:
 	virtual bool CreateUnit(int32 aUnitTableId, const FVector& aPosition, const FRotator& aRotator) override;
 	virtual void DestroyUnit() override;
 	
-	FORCEINLINE TObjectPtr<AMS_CharacterBase> GetCharacterBase() const { return Character; }
+	FORCEINLINE TObjectPtr<class AMS_CharacterBase> GetCharacterBase() const { return Character; }
 
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
 protected:

@@ -6,6 +6,7 @@
 #include "EngineUtils.h"
 #include "Actor/SpawnPoint/MS_SpawnPoint.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "Character/MS_CharacterBase.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Manager_Both/MS_UnitManager.h"

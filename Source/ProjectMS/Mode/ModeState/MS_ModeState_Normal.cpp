@@ -7,6 +7,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
+#include "Table/Caches/MS_StorageCacheTable.h"
 #include "Widget/Market/Modal/MS_StorageStatusModalWidget.h"
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
@@ -95,11 +96,35 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 {
 	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
 
-	if (AActor* InteractActor = aInteractableHitResult.GetActor())
+	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
 		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{
-			gWidgetMng.ShowModalWidget(UMS_StorageStatusModalWidget::GetWidgetPath(), true, TEXT("PlayModal"));
+			if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
+			{
+				// const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+				// MS_CHECK(StorageTable);
+				//
+				// const FMS_StorageData* StorageData = StorageTable->GetStorageData(PropActor->GetTableIndex());
+				// if(StorageData == nullptr)
+				// {
+				// 	return;
+				// }
+				// if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Display))
+				// {
+				// 	gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath()), TEXT("PlayModal"));
+				// }
+				// else if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Shelf))
+				// {
+				// 	
+				// }
+				// else if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Pallet))
+				// {
+				// 	
+				// }
+
+				gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath()), TEXT("PlayModal"));
+			}
 		}
 	}
 }

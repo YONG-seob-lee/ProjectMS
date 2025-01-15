@@ -41,7 +41,8 @@ enum class EMS_StorageType : uint8
 	Undefined = 0,
 	Display			UMETA(DisplayName = "Display"),
 	Shelf			UMETA(DisplayName = "Shelf"),
-	Pallet			UMETA(DisplayName = "Pallet")
+	Pallet			UMETA(DisplayName = "Pallet"),
+	Counter			UMETA(DisplayName = "Counter"),
 };
 
 UENUM()

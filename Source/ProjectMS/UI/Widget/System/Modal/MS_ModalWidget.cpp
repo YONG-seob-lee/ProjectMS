@@ -20,7 +20,7 @@ void UMS_ModalWidget::NativeConstruct()
 	{
 		CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 		{
-			gWidgetMng.ShowModalWidget(nullptr, false);
+			gWidgetMng.ShowModalWidget(false);
 		});
 	}
 }
@@ -33,6 +33,7 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 	if(aAnimName == TEXT("CloseModal"))
 	{
 		gScheduleMng.TransferServer();
+		gInputMng.SetAllowGlide(true);
 	}
 }
 

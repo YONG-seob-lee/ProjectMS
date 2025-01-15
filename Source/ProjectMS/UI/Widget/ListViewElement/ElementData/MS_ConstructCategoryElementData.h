@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager_Client/MS_ItemManager.h"
-
 #include "MS_ConstructCategoryElementData.generated.h"
 
 /**

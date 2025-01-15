@@ -42,6 +42,16 @@ void UMS_StorageCacheTable::GetStorageData(EMS_StorageType aStorageType, TArray<
 	}
 }
 
+FMS_StorageData* UMS_StorageCacheTable::GetStorageData(int32 aStorageId)
+{
+	if(FMS_StorageData** StorageData = StorageDatas.Find(aStorageId))
+	{
+		return *StorageData;
+	}
+
+	return nullptr;
+}
+
 void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_ConstructCategoryElementData>>& aCategoryArray)
 {
 	aCategoryArray.Empty();

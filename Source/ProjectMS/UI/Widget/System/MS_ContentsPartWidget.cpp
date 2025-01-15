@@ -84,5 +84,5 @@ void UMS_ContentsPartWidget::OnClickHamburgerButton(TObjectPtr<UMS_ContentButton
 
 void UMS_ContentsPartWidget::OnClickModalButton()
 {
-	gWidgetMng.ShowModalWidget(nullptr);
+	gWidgetMng.ShowModalWidget(true);
 }

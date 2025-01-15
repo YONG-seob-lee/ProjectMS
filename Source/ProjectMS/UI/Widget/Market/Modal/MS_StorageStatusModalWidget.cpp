@@ -6,7 +6,7 @@
 #include "Manager_Both/MS_TableManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
-#include "Widget/Market/Storage/MS_SlotManagementWidget.h"
+#include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_StorageStatusModalWidget::NativeConstruct()
 {
@@ -17,8 +17,8 @@ void UMS_StorageStatusModalWidget::NativeConstruct()
 	
 	TArray<TObjectPtr<UMS_ItemElementData>> ItemElementDatas;
 	ItemTable->GetItemElementDatas(ItemElementDatas);
-	
-	CPP_SlotManagementWidget->SettingItems(ItemElementDatas);
+
+	CPP_SelectItemTileView->SetElements(TArray<UObject*>(ItemElementDatas));
 }
 
 void UMS_StorageStatusModalWidget::NativeDestruct()

@@ -205,7 +205,7 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 		{
 			// 타이머 없어도 돼
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
-			gWidgetMng.ShowModalWidget(UMS_MarketEndModal::GetWidgetPath(), true, TEXT("PlayModal"));
+			gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath()), TEXT("PlayModal"));
 			break;
 		}
 	default:

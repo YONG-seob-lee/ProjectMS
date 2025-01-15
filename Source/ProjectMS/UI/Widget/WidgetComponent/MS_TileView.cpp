@@ -3,7 +3,7 @@
 
 #include "MS_TileView.h"
 
-void UMS_TileView::SetElements(const TArray<TObjectPtr<UObject>>& aListItems)
+void UMS_TileView::SetElements(const TArray<UObject*>& aListItems)
 {
 	SetListItems(aListItems);
 	if(aListItems.IsValidIndex(0))

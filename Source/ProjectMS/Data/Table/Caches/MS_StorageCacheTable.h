@@ -21,6 +21,7 @@ public:
 
 	FORCEINLINE TMap<int32, FMS_StorageData*> GetStorageDatas() { return StorageDatas; }
 	void GetStorageData(EMS_StorageType aStorageType, TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
+	FMS_StorageData* GetStorageData(int32 aStorageId);
 	void GetStorageCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
 
 private:

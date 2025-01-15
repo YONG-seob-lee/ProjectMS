@@ -3,8 +3,10 @@
 
 #include "MS_BasePlayerUnit.h"
 
+#include "Character/MS_CharacterBase.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Table/RowBase/MS_ResourceUnit.h"
 
 void UMS_BasePlayerUnit::Initialize()
 {

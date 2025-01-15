@@ -19,7 +19,7 @@ void UMS_MarketEndModal::NativeConstruct()
 
 void UMS_MarketEndModal::OnClickedClosingPlayButton()
 {
-	gWidgetMng.ShowModalWidget(nullptr, false);
+	gWidgetMng.ShowModalWidget(false);
 
 	gScheduleMng.TransferServer();
 	

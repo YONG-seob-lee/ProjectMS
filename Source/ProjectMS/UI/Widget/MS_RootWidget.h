@@ -8,6 +8,10 @@
 #include "System/General/MS_GeneralWidget.h"
 #include "MS_RootWidget.generated.h"
 
+namespace DefaultModal
+{
+	const FSoftObjectPath InModalWidgetPath = FSoftObjectPath(TEXT("/Game/UI/Widget/SystemWidgets/Modal/InModalWidget.InModalWidget"));
+}
 /**
  * 
  */

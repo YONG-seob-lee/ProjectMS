@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProjectMS/Actor/Character/MS_CharacterBase.h"
-#include "ProjectMS/Data/Table/RowBase/MS_ResourceUnit.h"
 #include "ProjectMS/Utility/MS_Define.h"
 #include "UObject/Object.h"
 #include "MS_UnitBase.generated.h"

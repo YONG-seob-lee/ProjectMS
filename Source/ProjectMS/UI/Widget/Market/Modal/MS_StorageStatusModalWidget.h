@@ -20,6 +20,10 @@ public:
 	virtual void NativeDestruct() override;
 	
 private:
+	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_SlotManagementWidget> CPP_SlotManagementWidget = nullptr;
+	TObjectPtr<class UMS_StorageSlotManagementWidget> CPP_StorageSlotWidget = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_TileView> CPP_SelectItemTileView = nullptr;
 };

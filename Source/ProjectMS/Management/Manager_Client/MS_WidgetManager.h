@@ -44,7 +44,7 @@ public:
 	void ShowRotateWidget() const;
 	void HideRotateWidget() const;
 	
-	void ShowModalWidget(const FSoftObjectPath& aWidgetPath, bool bShow = true, const FName AnimationName = FName()) const;
+	void ShowModalWidget(bool bShow, TObjectPtr<UMS_Widget> aWidget = nullptr, const FName AnimationName = FName());
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 
