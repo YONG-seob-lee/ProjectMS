@@ -28,3 +28,4 @@ EBTNodeResult::Type UMS_LoadStockFromStorageTask::ExecuteTask(UBehaviorTreeCompo
 
 	return Result;
 }
+
