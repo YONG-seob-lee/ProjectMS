@@ -4,6 +4,7 @@
 #include "MS_ScheduleManager.h"
 
 #include "MS_Define.h"
+#include "MS_ItemManager.h"
 #include "MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
@@ -111,6 +112,27 @@ void FMS_TestServerScheduler::RenewSchedule(EMS_ScheduleType aType)
 	}
 }
 
+void FMS_TestServerScheduler::RenewItems(TMap<int32, int32> aTransferItems)
+{
+	for(const auto& TransferItem : aTransferItems)
+	{
+		if(int32* TargetItem = Items.Find(TransferItem.Key))
+		{
+			*TargetItem += TransferItem.Value; 
+		}
+		else
+		{
+			Items.Emplace(TransferItem.Key, TransferItem.Value);
+		}
+	}
+	
+	if(Manager)
+	{
+		// "TEST" Step.4 : 서버에서 클라로 전송.
+		Manager->TakeItems(&Items);
+	}
+}
+
 UMS_ScheduleManager::UMS_ScheduleManager()
 {
 	ScheduleManager = this;
@@ -205,7 +227,9 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 		{
 			// 타이머 없어도 돼
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
-			gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath()), TEXT("PlayModal"));
+			FMS_ModalParameter ModalParameter;
+			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());
+			gWidgetMng.ShowModalWidget(ModalParameter);
 			break;
 		}
 	default:
@@ -217,9 +241,19 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 	OnUpdateScheduleDelegate.Broadcast(static_cast<int32>(TimeSchedule->GetCurrentScheduleType()));
 }
 
+void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
+{
+	gItemMng.SetItems(aTakeItems);
+}
+
 void UMS_ScheduleManager::TransferServer()
 {
 	TestServer.RenewSchedule(TimeSchedule->GetNextScheduleType());
+}
+
+void UMS_ScheduleManager::TransferItemsToServer(const TMap<int32, int32>& aTransferItems)
+{
+	TestServer.RenewItems(aTransferItems);
 }
 
 void UMS_ScheduleManager::SetTest()

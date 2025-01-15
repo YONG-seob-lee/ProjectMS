@@ -5,6 +5,7 @@
 
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Market/Modal/MS_MarketStartModal.h"
 
@@ -21,11 +22,16 @@ void AMS_InMarketLevelScriptActor::BeginPlay()
 	// 패킷으로 데이터를 받음
 	
 	TMap<int32, FPacketItemDatas*> Items;
-	gItemMng.CreateItem(Items);
 
 	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
 	{
-		gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath()), TEXT("PlayModal"));
+		FMS_ModalParameter ModalParameter;
+		ModalParameter.OnCloseWidgetCallback = []()
+		{
+			gScheduleMng.TransferServer();
+		};
+		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
+		gWidgetMng.ShowModalWidget(ModalParameter);
 	});
 }
 

@@ -50,12 +50,16 @@ struct FMS_TestServerScheduler
 public:
 	FMS_TestServerScheduler() {}
 
-	void SetManager(class UMS_ScheduleManager* aManager) { Manager = aManager; } 
+	void SetManager(class UMS_ScheduleManager* aManager) { Manager = aManager; }
+	
 	void RenewSchedule(EMS_ScheduleType aType);
+	void RenewItems(TMap<int32, int32> aTransferItems);
 
 	FORCEINLINE FMS_TimeSchedule TransferSchedule() const { return CurrentTime; }
+
 private:
 	FMS_TimeSchedule CurrentTime;
+	TMap<int32, int32> Items;
 
 	class UMS_ScheduleManager* Manager = nullptr; 
 };
@@ -81,8 +85,10 @@ public:
 	virtual void Tick(float aDeltaTime);
 
 	void TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule);
+	void TakeItems(const TMap<int32, int32>* aTakeItems);
 
 	void TransferServer();
+	void TransferItemsToServer(const TMap<int32, int32>& aTransferItems);
 
 	//test
 	void SetTest();

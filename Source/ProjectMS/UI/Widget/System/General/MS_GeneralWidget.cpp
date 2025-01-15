@@ -95,11 +95,11 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 {
 	if(LeftButtonType == EMS_GeneralButtonType::Schedule)
 	{
-		gWidgetMng.ShowModalWidget(true);
+		gWidgetMng.ShowModalWidget();
 	}
 	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
 	{
-		gWidgetMng.ShowModalWidget(true);
+		gWidgetMng.ShowModalWidget();
 	}
 	else
 	{
@@ -111,7 +111,7 @@ void UMS_GeneralWidget::OnClickedRightButton()
 {
 	if(RightButtonType == EMS_GeneralButtonType::Setting)
 	{
-		gWidgetMng.ShowModalWidget(true);
+		gWidgetMng.ShowModalWidget();
 	}
 	else if(RightButtonType == EMS_GeneralButtonType::Menu)
 	{
@@ -132,7 +132,7 @@ void UMS_GeneralWidget::OnClickedRightButton()
 
 void UMS_GeneralWidget::OnClickedExpanderButton()
 {
-	gWidgetMng.ShowModalWidget(true);
+	gWidgetMng.ShowModalWidget();
 }
 
 void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)

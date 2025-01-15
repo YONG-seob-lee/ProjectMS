@@ -112,7 +112,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 				// }
 				// if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Display))
 				// {
-				// 	gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath()), TEXT("PlayModal"));
+				// 	
 				// }
 				// else if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Shelf))
 				// {
@@ -123,7 +123,9 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 				// 	
 				// }
 
-				gWidgetMng.ShowModalWidget(true, gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath()), TEXT("PlayModal"));
+				FMS_ModalParameter ModalParameter;
+				ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath());
+				gWidgetMng.ShowModalWidget(ModalParameter);
 			}
 		}
 	}

@@ -5,6 +5,7 @@
 
 #include "Button/MS_Button.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -24,10 +25,7 @@ void UMS_MarketStartModal::NativeConstruct()
 
 void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 {
-	if(OnClickedOpeningPlayButtonCallback)
-	{
-		OnClickedOpeningPlayButtonCallback();
-	}
-	
 	CPP_OpeningPlayButton->GetOnClickedDelegate().RemoveAll(this);
+
+	gWidgetMng.CloseModalWidget();
 }

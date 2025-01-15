@@ -4,6 +4,7 @@
 #include "MS_ItemCacheTable.h"
 
 #include "Widget/ListViewElement/ElementData/MS_ItemElementData.h"
+#include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 
 void UMS_ItemCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
@@ -61,5 +62,27 @@ void UMS_ItemCacheTable::GetItemElementDatas(TArray<TObjectPtr<UMS_ItemElementDa
 			ItemElementData->SetImage(ItemTexture);	
 		}
 		aItemElementDatas.Emplace(ItemElementData);
+	}
+}
+
+void UMS_ItemCacheTable::GetOrderItemElementDatas(TArray<TObjectPtr<UMS_OrderItemElementData>>& aOrderItemElementDatas)
+{
+	aOrderItemElementDatas.Empty();
+	
+	for(const auto& ItemData : ItemDatas)
+	{
+		TObjectPtr<UMS_OrderItemElementData> OrderItemElementData = MS_NewObject<UMS_OrderItemElementData>();
+		MS_CHECK(OrderItemElementData);
+
+		OrderItemElementData->SetItemId(ItemData.Key);
+		OrderItemElementData->SetItemName(ItemData.Value->ItemName.ToString());
+		const FString ItemImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, ItemData.Value->ImagePath);
+		if(UTexture2D* ItemTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ItemImagePath)))
+		{
+			OrderItemElementData->SetImage(ItemTexture);	
+		}
+		OrderItemElementData->SetItemPrice(ItemData.Value->PriceMin);
+		OrderItemElementData->SetItemCount(0);
+		aOrderItemElementDatas.Emplace(OrderItemElementData);
 	}
 }

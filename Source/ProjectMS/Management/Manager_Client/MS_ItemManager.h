@@ -73,17 +73,15 @@ public:
 	virtual void BuiltInFinalize() override;
 
 	virtual void Tick(float aDeltaTime) override;
-
-	TObjectPtr<class UMS_Item> CreateItem(int32 aItemId);
-	void CreateItem(const TMap<int32, FPacketItemDatas*>& aItems);
 	
-	void GetItem(TArray<UMS_Item*>& aItems, EMS_ItemType aItemType);
+	FORCEINLINE TMap<int32, int32> GetCurrentItems() { return Items; }
+	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 
 	FMS_OnClickedItem OnClickedItemDelegate;
 	
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 private:
-	TMap<int32, FMS_ItemData*> Items = {};
+	TMap<int32, int32> Items = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
 	
 public:

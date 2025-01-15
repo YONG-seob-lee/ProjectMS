@@ -20,7 +20,7 @@ void UMS_ModalWidget::NativeConstruct()
 	{
 		CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 		{
-			gWidgetMng.ShowModalWidget(false);
+			gWidgetMng.CloseModalWidget();
 		});
 	}
 }
@@ -32,12 +32,43 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 	
 	if(aAnimName == TEXT("CloseModal"))
 	{
-		gScheduleMng.TransferServer();
+		if(OnCloseModalWidgetCallback)
+		{
+			OnCloseModalWidgetCallback();
+		}
+		
 		gInputMng.SetAllowGlide(true);
+		SetModalInternal(gWidgetMng.Create_Widget_NotManaging(DefaultModal::InModalWidgetPath));
 	}
 }
 
-void UMS_ModalWidget::SetModal(const TObjectPtr<UMS_Widget>& aNewWidget)
+void UMS_ModalWidget::SetModal(const FMS_ModalParameter& aModalParameter)
+{
+	SetModalInternal(aModalParameter.InModalWidget);
+	bPlayCloseAnimation = aModalParameter.bPlayCloseAnimation;
+
+	OnCloseModalWidgetCallback = aModalParameter.OnCloseWidgetCallback;
+	if(aModalParameter.bPlayOpenAnimation)
+	{
+		PlayAnimationByName(ModalWidgetAnimation::Open);
+	}
+}
+
+void UMS_ModalWidget::CloseModal()
+{
+	if(bPlayCloseAnimation)
+	{
+		PlayAnimationByName(ModalWidgetAnimation::Close);
+	}
+	else
+	{
+		SetVisibility(ESlateVisibility::Collapsed);
+		SetModalInternal(gWidgetMng.Create_Widget_NotManaging(DefaultModal::InModalWidgetPath));
+	}
+
+}
+
+void UMS_ModalWidget::SetModalInternal(const TObjectPtr<UMS_Widget>& aNewWidget)
 {
 	if(!aNewWidget)
 	{
@@ -48,15 +79,6 @@ void UMS_ModalWidget::SetModal(const TObjectPtr<UMS_Widget>& aNewWidget)
 
 	if(const TObjectPtr<UMS_MarketStartModal> MarketStartModal = Cast<UMS_MarketStartModal>(aNewWidget))
 	{
-		MarketStartModal->SetOnClickedOpeningPlayButtonFunc([this]()
-		{
-			PlayAnimationByName(TEXT("CloseModal"));
-		});
-
-		MarketStartModal->SetTest([this]()
-		{
-			PlayAnimationByName(TEXT("CloseModal"));
-		});
 	}
 	
 	if(UCanvasPanelSlot* aSlot = Cast<UCanvasPanelSlot>(aNewWidget->Slot))

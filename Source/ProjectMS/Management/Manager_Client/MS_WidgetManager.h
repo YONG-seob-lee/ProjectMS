@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
 #include "Widget/MS_RootWidget.h"
+#include "Widget/System/Modal/MS_ModalWidget.h"
 #include "MS_WidgetManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_CreateWidget, const FName&);
@@ -43,8 +44,10 @@ public:
 	
 	void ShowRotateWidget() const;
 	void HideRotateWidget() const;
+
+	void ShowModalWidget(const FMS_ModalParameter& aModalParameter = FMS_ModalParameter()) const;
+	void CloseModalWidget() const;
 	
-	void ShowModalWidget(bool bShow, TObjectPtr<UMS_Widget> aWidget = nullptr, const FName AnimationName = FName());
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 

@@ -158,10 +158,6 @@ void UMS_SceneManager::EndFade()
 		}
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
 		{
-			if(NewCommand->GetLevelType() != EMS_LevelType::Stage01)
-			{
-				RootWidget->ActivatePreventionCover(false);
-			}
 			RootWidget->ResetCanvasZOrder();
 			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 

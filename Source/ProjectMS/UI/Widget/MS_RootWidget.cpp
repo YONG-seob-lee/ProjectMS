@@ -209,37 +209,30 @@ void UMS_RootWidget::ShowRotateWidget() const
 	CPP_RotateWidget->SetVisibility(CPP_RotateWidget->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);	
 }
 
-void UMS_RootWidget::ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow /* = true */, const FName AnimationName /* = FName() */) const
+void UMS_RootWidget::ShowModalWidget(const FMS_ModalParameter& aModalParameter) const
 {
-	if(bShow)
-	{
-		CPP_ModalWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		CPP_ModalWidget->SetModal(aNewWidget);	
-	}
-	else
-	{
-		CPP_ModalWidget->SetVisibility(ESlateVisibility::Collapsed);
-	}
+	CPP_ModalWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	CPP_ModalWidget->SetModal(aModalParameter);
+}
 
-	if(AnimationName != FName())
-	{
-		CPP_ModalWidget->PlayAnimationByName(AnimationName);
-	}
+void UMS_RootWidget::CloseModalWidget() const
+{
+	CPP_ModalWidget->CloseModal();
 }
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 {
-	if(aLevelType < EMS_LevelType::Stage01)
+	if(aLevelType < EMS_LevelType::LobbyLevel)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
-	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
+	else if(aLevelType == EMS_LevelType::LobbyLevel)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
 	}
-	else if(aLevelType == EMS_LevelType::TownLevel)
+	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);

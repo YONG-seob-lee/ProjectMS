@@ -172,15 +172,19 @@ void UMS_WidgetManager::HideRotateWidget() const
 {
 }
 
-void UMS_WidgetManager::ShowModalWidget(bool bShow, TObjectPtr<UMS_Widget> aWidget /* = nullptr */, const FName AnimationName /* = FName() */)
+void UMS_WidgetManager::ShowModalWidget(const FMS_ModalParameter& aModalParameter /* =  = FMS_ModalParameter() */) const
 {
-	gInputMng.SetAllowGlide(!bShow);
+	gInputMng.SetAllowGlide(true);
+	gInputMng.SetAllowInteractActor(false);
+	
+	RootWidget->ShowModalWidget(aModalParameter);
+}
 
-	if(bShow && aWidget == nullptr)
-	{
-		aWidget = Create_Widget_NotManaging(DefaultModal::InModalWidgetPath);
-	}
-	RootWidget->ShowModalWidget(aWidget, bShow, AnimationName);
+void UMS_WidgetManager::CloseModalWidget() const
+{
+	gInputMng.SetAllowInteractActor(true);
+	
+	RootWidget->CloseModalWidget();
 }
 
 void UMS_WidgetManager::SetGeneralWidget(EMS_LevelType aLevelType) const

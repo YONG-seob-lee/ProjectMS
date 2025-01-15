@@ -16,7 +16,6 @@ class PROJECTMS_API UMS_MarketStartModal : public UMS_Widget
 public:
 	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/MarketStartModalWidget.MarketStartModalWidget"));}
 
-	FORCEINLINE void SetOnClickedOpeningPlayButtonFunc(const TFunction<void()>& aFunc) { OnClickedOpeningPlayButtonCallback = aFunc; }
 	FORCEINLINE void SetTest(const TFunction<void()>& aFunc) { Test = aFunc; }	
 	virtual void NativeConstruct() override;
 
@@ -29,6 +28,5 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_FastButton = nullptr;
 	
-	TFunction<void()> OnClickedOpeningPlayButtonCallback = nullptr;
 	TFunction<void()> Test = nullptr;
 };

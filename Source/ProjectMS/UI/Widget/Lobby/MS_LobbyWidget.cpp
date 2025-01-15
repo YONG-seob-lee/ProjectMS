@@ -20,13 +20,7 @@ void UMS_LobbyWidget::NativeConstruct()
 }
 
 void UMS_LobbyWidget::OnClickedStartButton()
-{
-	gCameraMng.GetOnFinishedCameraTransitionDelegate().BindWeakLambda(this, []()
-	{
-		gWidgetMng.Create_Widget(UMS_TownWidget::GetWidgetName());
-		gWidgetMng.SetGeneralWidget(EMS_LevelType::TownLevel);
-	});
-	
+{	
 	CREATE_SCENE_COMMAND(Command)
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::Undefined);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::Undefined);
@@ -39,6 +33,8 @@ void UMS_LobbyWidget::OnClickedStartButton()
 		gCameraMng.GetOnFinishedCameraTransitionDelegate().BindWeakLambda(this, []()
 		{
 			gInputMng.SetAllowInteractActor(true);
+		gWidgetMng.Create_Widget(UMS_TownWidget::GetWidgetName());
+		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
 		});
 	});
 

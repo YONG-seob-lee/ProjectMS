@@ -21,6 +21,7 @@ public:
 	FMS_ItemData* GetItem(int32 aItemId);
 	void GetItems(TMap<int32, FMS_ItemData*>& aItemDatas) const;
 	void GetItemElementDatas(TArray<TObjectPtr<class UMS_ItemElementData>>& aItemElementDatas);
+	void GetOrderItemElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderItemElementDatas);
 
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;

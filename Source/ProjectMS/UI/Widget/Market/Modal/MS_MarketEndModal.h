@@ -15,8 +15,6 @@ class PROJECTMS_API UMS_MarketEndModal : public UMS_Widget
 	GENERATED_BODY()
 public:
 	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/MarketEndModalWidget.MarketEndModalWidget"));}
-
-	FORCEINLINE void SetOnClickedOpeningPlayButtonFunc(const TFunction<void()>& aFunc) { OnClickedOpeningPlayButtonCallback = aFunc; }
 	
 	virtual void NativeConstruct() override;
 

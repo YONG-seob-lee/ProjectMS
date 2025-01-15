@@ -5,26 +5,29 @@
 #include "CoreMinimal.h"
 #include "Blueprint/IUserObjectListEntry.h"
 #include "Widget/MS_Widget.h"
-#include "MS_MenuListElementWidget.generated.h"
+#include "MS_StockElementWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_MenuListElementWidget : public UMS_Widget, public IUserObjectListEntry
+class PROJECTMS_API UMS_StockElementWidget : public UMS_Widget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeConstruct() override;
 
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
 	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
-	
-private:
-	FString MenuName = FString();
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UImage> CPP_MenuImage = nullptr;
 
+private:
+	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_MenuName = nullptr;
+	TObjectPtr<class UImage> CPP_ItemImage = nullptr;
+
+	UPROPERTY(Meta= (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_ItemName = nullptr;
+
+	UPROPERTY(Meta= (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_ItemCount = nullptr;
 };

@@ -6,13 +6,17 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ElementData/MS_MenuElementData.h"
+#include "Manager_Client/MS_WidgetManager.h"
+#include "Widget/Market/Modal/MS_MarketOrderModalWidget.h"
+#include "Widget/Market/Modal/MS_MarketStockModalWidget.h"
+#include "Widget/System/Modal/MS_ModalWidget.h"
 
 void UMS_MenuListElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {
 	IUserObjectListEntry::NativeOnListItemObjectSet(aListItemObject);
 
 	UMS_MenuElementData* ItemData = Cast<UMS_MenuElementData>(aListItemObject);
-	
+	MenuName = ItemData->GetElementName();
 	CPP_MenuImage->SetBrushFromTexture(ItemData->GetImage());
 	CPP_MenuName->SetText(FText::FromString(ItemData->GetElementName()));
 }
@@ -20,4 +24,19 @@ void UMS_MenuListElementWidget::NativeOnListItemObjectSet(UObject* aListItemObje
 void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
 	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+
+	if(MenuName == TEXT("dollar"))
+	{
+		FMS_ModalParameter ModalParameter;
+		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketOrderModalWidget::GetWidgetPath());
+		ModalParameter.bPlayOpenAnimation = true;
+		ModalParameter.bPlayCloseAnimation = true;
+		gWidgetMng.ShowModalWidget(ModalParameter);
+	}
+	else if(MenuName == TEXT("User"))
+	{
+		FMS_ModalParameter ModalParameter;
+		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStockModalWidget::GetWidgetPath());
+		gWidgetMng.ShowModalWidget(ModalParameter);
+	}
 }

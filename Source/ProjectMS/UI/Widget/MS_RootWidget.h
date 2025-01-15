@@ -6,12 +6,9 @@
 #include "MS_Widget.h"
 #include "Command/SceneCommand/MS_SceneCommand.h"
 #include "System/General/MS_GeneralWidget.h"
+#include "System/Modal/MS_ModalWidget.h"
 #include "MS_RootWidget.generated.h"
 
-namespace DefaultModal
-{
-	const FSoftObjectPath InModalWidgetPath = FSoftObjectPath(TEXT("/Game/UI/Widget/SystemWidgets/Modal/InModalWidget.InModalWidget"));
-}
 /**
  * 
  */
@@ -41,10 +38,11 @@ public:
 	void ShowToastMessage(const FString& Message) const;
 
 	void ShowRotateWidget() const;
-	void ShowModalWidget(const TObjectPtr<UMS_Widget>& aNewWidget, bool bShow = true, const FName AnimationName = FName()) const;
+	void ShowModalWidget(const FMS_ModalParameter& aModalParameter) const;
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
-	
+	void CloseModalWidget() const;
+
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
