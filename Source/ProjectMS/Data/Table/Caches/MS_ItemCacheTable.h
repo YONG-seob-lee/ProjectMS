@@ -23,6 +23,7 @@ public:
 	void GetItemElementDatas(TArray<TObjectPtr<class UMS_ItemElementData>>& aItemElementDatas);
 	void GetOrderItemElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderItemElementDatas);
 
+	UTexture2D* GetItemImage(int32 aItemId);
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;
 	TMap<int32, FMS_ItemData*> MoneyDatas;

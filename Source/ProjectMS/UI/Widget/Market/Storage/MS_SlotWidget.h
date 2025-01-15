@@ -16,7 +16,8 @@ class PROJECTMS_API UMS_SlotWidget : public UMS_Widget
 public:
 	virtual void NativeConstruct() override;
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
-	
+
+	void SetSlot(int32 aItemId) const;
 private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_Slot = nullptr;

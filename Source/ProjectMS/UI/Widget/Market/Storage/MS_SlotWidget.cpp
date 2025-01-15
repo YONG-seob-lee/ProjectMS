@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "Blueprint/DragDropOperation.h"
 #include "Components/Image.h"
+#include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/MS_ItemElementWidget.h"
 
 void UMS_SlotWidget::NativeConstruct()
@@ -30,4 +31,24 @@ bool UMS_SlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEv
 	}
 	
 	return false;
+}
+
+void UMS_SlotWidget::SetSlot(int32 aItemId) const
+{
+	if(aItemId == INDEX_NONE)
+	{
+		const FString SlotImagePath = TEXT("Game/UI/Image/Item/BlankSlot.BlankSlot");
+		if(UTexture2D* SlotTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SlotImagePath)))
+		{
+			CPP_Slot->SetBrushFromTexture(SlotTexture);
+		}
+	}
+	else
+	{
+		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+		MS_CHECK(ItemTable);
+
+		UTexture2D* ItemImage = ItemTable->GetItemImage(aItemId);
+		CPP_Slot->SetBrushFromTexture(ItemImage);
+	}
 }

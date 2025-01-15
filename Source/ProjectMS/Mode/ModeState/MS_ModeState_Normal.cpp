@@ -7,8 +7,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
-#include "Table/Caches/MS_StorageCacheTable.h"
-#include "Widget/Market/Modal/MS_StorageStatusModalWidget.h"
+#include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
 {
@@ -79,7 +78,6 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 	{
 		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{
-				
 			gInteractionMng.SelectActor(InteractActor);
 				
 			gModeMng.ChangeState(EMS_ModeState::Construct);
@@ -123,9 +121,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 				// 	
 				// }
 
-				FMS_ModalParameter ModalParameter;
-				ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_StorageStatusModalWidget::GetWidgetPath());
-				gWidgetMng.ShowModalWidget(ModalParameter);
+				gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName());
 			}
 		}
 	}

@@ -10,6 +10,7 @@ Id,Directory_Table_Id,BP_File_Name
 9,408,TownWidget
 10,409,MarketWidget
 11,410,InMarketWidget
+12,411,StorageStatusWidget
 4001,4001,BP_Counter_6x2_A
 4002,4001,BP_Counter_6x2_B
 4003,4001,BP_Discount_2x2_A

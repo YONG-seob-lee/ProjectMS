@@ -86,3 +86,17 @@ void UMS_ItemCacheTable::GetOrderItemElementDatas(TArray<TObjectPtr<UMS_OrderIte
 		aOrderItemElementDatas.Emplace(OrderItemElementData);
 	}
 }
+
+UTexture2D* UMS_ItemCacheTable::GetItemImage(int32 aItemId)
+{
+	if(const FMS_ItemData* ItemData = GetItem(aItemId))
+	{
+		const FString ItemImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, ItemData->ImagePath);
+		if(UTexture2D* ItemTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ItemImagePath)))
+		{
+			return ItemTexture;
+		}
+	}
+	
+	return nullptr;
+}
