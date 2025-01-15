@@ -6,6 +6,7 @@
 #include "UObject/Object.h"
 #include "MS_MenuElementData.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FMS_OnClickMenuElement);
 /**
  * 
  */
@@ -19,8 +20,10 @@ public:
 	FORCEINLINE UTexture2D* GetImage() const { return Image; }
 	FORCEINLINE FString GetElementName() { return ElementName; }
 	
+	FMS_OnClickMenuElement OnClickMenuElementDelegate;
 private:
 	UPROPERTY()
 	UTexture2D* Image = nullptr;
 	FString ElementName = FString();
+
 };

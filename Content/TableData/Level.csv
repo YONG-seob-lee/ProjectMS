@@ -1,5 +1,4 @@
 Id,LevelName,LevelKey,PrimitiveWidgetName
-int32,FName,int32,FName
 1,PersistentLevel,1,Persistent
 2,AccountLevel,2,Logo
 3,stage01,3,Lobby

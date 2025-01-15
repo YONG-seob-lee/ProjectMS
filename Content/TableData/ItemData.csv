@@ -1,5 +1,4 @@
 Id,ItemType,ItemName,StorageType,TemperatureType,TakeMinCount,TakeMaxCount,Volume,PriceMin,PriceMax,StuffStaticMesh,StuffBundleStaticMesh,StuffBoxStaticMesh,PathFile,ImagePath
-Int,Int,Name,Int,Int,Int,Int,Int,Int,Int,StaticMesh,StaticMesh,StaticMesh,Int,int32
 1,1,Won,0,0,100,10000,0,0,0,/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',0,
 2,2,Gold,0,0,100,10000,0,0,0,/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',0,
 3,2,Gold_Income,0,0,100,10000,0,0,0,/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',/Script/Engine.StaticMesh'/Game/3D/StaticMesh/SM_WH_BOX.SM_WH_BOX',0,

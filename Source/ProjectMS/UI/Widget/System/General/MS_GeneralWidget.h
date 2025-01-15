@@ -24,13 +24,13 @@ class PROJECTMS_API UMS_GeneralWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	
+
 	void SetType(EMS_GeneralWidgetType aType);
 	
 private:
 	void OnClickedLeftButton();
 	void OnClickedRightButton();
-	void OnClickedExpanderButton();
+	void OnClickedMenuElementButton();
 
 	void OnUpdateTimer(int32 ScheduleType);
 	void OnUpdateMinute(int32 aMinute);

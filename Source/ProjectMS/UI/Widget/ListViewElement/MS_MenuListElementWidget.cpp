@@ -39,4 +39,9 @@ void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStockModalWidget::GetWidgetPath());
 		gWidgetMng.ShowModalWidget(ModalParameter);
 	}
+
+	if(const UMS_MenuElementData* MenuElementData = GetListItem<UMS_MenuElementData>())
+	{
+		MenuElementData->OnClickMenuElementDelegate.Broadcast();
+	}
 }

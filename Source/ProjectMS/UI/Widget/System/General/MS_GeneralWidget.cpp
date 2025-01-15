@@ -53,9 +53,14 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 				const TObjectPtr<UMS_MenuElementCacheTable> MenuElement = Cast<UMS_MenuElementCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::MenuElement));
 				MS_CHECK(MenuElement);
 
-				TArray<TObjectPtr<UMS_MenuElementData>> Elements;
-				MenuElement->GetMenuData(Elements);
-				CPP_MenuTileView->SetListItems(TArray<UObject*>(Elements));
+				TArray<TObjectPtr<UMS_MenuElementData>> MenuElementDatas;
+				MenuElement->GetMenuData(MenuElementDatas);
+				CPP_MenuTileView->SetListItems(TArray<UObject*>(MenuElementDatas));
+				for(const auto& MenuElementData : MenuElementDatas)
+				{
+					MenuElementData->OnClickMenuElementDelegate.AddUObject(this, &UMS_GeneralWidget::OnClickedMenuElementButton);
+				}
+				
 			}
 			break;
 		}
@@ -130,9 +135,9 @@ void UMS_GeneralWidget::OnClickedRightButton()
 	}
 }
 
-void UMS_GeneralWidget::OnClickedExpanderButton()
+void UMS_GeneralWidget::OnClickedMenuElementButton()
 {
-	gWidgetMng.ShowModalWidget();
+	CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
