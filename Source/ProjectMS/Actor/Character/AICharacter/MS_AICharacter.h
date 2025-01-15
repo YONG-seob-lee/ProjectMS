@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Actor/Character/MS_CharacterBase.h"
+#include "Management/Manager_Both/MS_TableManager.h"
 #include "MS_AICharacter.generated.h"
 
 UENUM(BlueprintType) enum class EMS_AIBehaviorPattern : uint8
@@ -62,6 +63,9 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
+	// This function is used for loading the StaticMesh of an item
+	UFUNCTION() void OnLoadResource(FString aName, class UObject* aObject);
+
 	// Component
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
@@ -69,8 +73,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USkeletalMeshComponent> SkeletalMeshComponent = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UCharacterMovementComponent> CharacterMovementComponent = nullptr;
 
-	// Properties
+	// Property
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FMS_PositiveEmotionGroup PositiveEmotionGroup = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FMS_NagativeEmotionGroup NagativeEmotionGroup = {};
+	
+	// Delegate
+public:
+	FMS_LoadResourceDelegate LoadResourceDelegate = {};
 };

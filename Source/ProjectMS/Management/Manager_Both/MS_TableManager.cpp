@@ -197,6 +197,15 @@ TObjectPtr<UObject> UMS_TableManager::LoadObjectFromFile(const FString& Resource
 	const FSoftObjectPath Reference = FSoftObjectPath(ResourcePath);
 	
 	UObject* ResultObject = AssetLoader.LoadSynchronous(Reference);
+	if (ResultObject == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Objectnullptr"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ObjectName: %s"), *ResultObject->GetName());
+	}
+
 	if(Delegate.IsBound())
 	{
 		Delegate.Execute(ResourcePath, ResultObject);

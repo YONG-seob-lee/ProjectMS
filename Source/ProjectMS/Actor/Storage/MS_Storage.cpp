@@ -22,7 +22,7 @@ AMS_Storage::AMS_Storage()
 
 	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
 	StorageAssemblyAreaComponent->SetupAttachment(GetRootComponent());
-	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
+	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-150.0f, 0.0f, 0.0f));
 
 	BayComponentIndexSize = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("No1StorageBayComponent")));
 	BayComponentArray[BayComponentIndexSize]->SetupAttachment(GetRootComponent());

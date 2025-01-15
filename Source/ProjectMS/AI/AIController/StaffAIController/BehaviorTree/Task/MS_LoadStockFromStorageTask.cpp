@@ -1,5 +1,10 @@
 #include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_LoadStockFromStorageTask.h"
 
+#include "Management/Manager_Both/MS_TableManager.h"
+#include "Data/Table/Caches/MS_ItemCacheTable.h"
+#include "Data/Table/RowBase/MS_ItemData.h"
+#include "Data/Table/RowBase/MS_BasePathDirectory.h"
+
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Actor/Storage/MS_Storage.h"
 
@@ -19,12 +24,14 @@ EBTNodeResult::Type UMS_LoadStockFromStorageTask::ExecuteTask(UBehaviorTreeCompo
 	int EmptyStuffQuantity = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("EmptyStuffQuantity")));
 	int UnloadingStorageSlotOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("UnloadingStorageSlotOrder")));
 
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
-	FMS_ItemData* ItemRowData = ItemData->FindRow<FMS_ItemData>(StuffName, TEXT(""));
+	TObjectPtr<UMS_ItemCacheTable> CachedItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	const FMS_ItemData* ItemData = CachedItemTable->GetItemByName(StuffName);
+	FString ItemDataPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, ItemData->PathFile);
+	UObject* ItemObject = gTableMng.LoadObjectFromFile(ItemDataPath, OwnerCharacter->LoadResourceDelegate);
 
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->UnreserveWorker();
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->LoadStuff(StuffName, TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->StockQuantity - EmptyStuffQuantity, SlotStaticMeshType);
-	OwnerCharacter->AttachStockStaticMesh(ItemRowData->StuffBoxStaticMesh);
+	OwnerCharacter->AttachStockStaticMesh(Cast<UStaticMesh>(ItemObject));
 
 	return Result;
 }

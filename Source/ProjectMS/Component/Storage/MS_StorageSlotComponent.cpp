@@ -6,6 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 
 #include "Management/Manager_Both/MS_TableManager.h"
+#include "Data/Table/Caches/MS_ItemCacheTable.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
 
 
@@ -120,11 +121,8 @@ void UMS_StorageSlotComponent::UnreserveWorker()
 
 bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity, EMS_SlotStaticMeshType aSlotStaticMeshType)
 {
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
-	MS_CHECK(ItemData);
-
-	FMS_ItemData* ItemDataTableRow = ItemData->FindRow<FMS_ItemData>(aStuffRowName, TEXT(""));
-	MS_CHECK(ItemDataTableRow);
+	TObjectPtr<UMS_ItemCacheTable> CachedItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_CHECK(CachedItemTable);
 
 	StuffRowName = aStuffRowName;
 	StockQuantity = (aStockQuantity < StockCapacity) ? aStockQuantity : StockCapacity;
@@ -133,25 +131,25 @@ bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity
 	{
 		SetStaticMesh(nullptr);
 	}
-	else
-	{
-		switch (aSlotStaticMeshType)
-		{
-		case EMS_SlotStaticMeshType::Undefined:
-			break;
-		case EMS_SlotStaticMeshType::StuffStaticMesh:
-			SetStaticMesh(ItemDataTableRow->StuffStaticMesh);
-			break;
-		case EMS_SlotStaticMeshType::StuffBundleStaticMesh:
-			SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
-			break;
-		case EMS_SlotStaticMeshType::StuffBoxStaticMesh:
-			SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
-			break;
-		default:
-			break;
-		}
-	}
+	//else
+	//{
+	//	switch (aSlotStaticMeshType)
+	//	{
+	//	case EMS_SlotStaticMeshType::Undefined:
+	//		break;
+	//	case EMS_SlotStaticMeshType::StuffStaticMesh:
+	//		SetStaticMesh(ItemDataTableRow->StuffStaticMesh);
+	//		break;
+	//	case EMS_SlotStaticMeshType::StuffBundleStaticMesh:
+	//		SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
+	//		break;
+	//	case EMS_SlotStaticMeshType::StuffBoxStaticMesh:
+	//		SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 
 	return true;
 }

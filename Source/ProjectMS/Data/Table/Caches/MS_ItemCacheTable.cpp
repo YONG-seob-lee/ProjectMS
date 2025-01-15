@@ -100,3 +100,44 @@ UTexture2D* UMS_ItemCacheTable::GetItemImage(int32 aItemId)
 	
 	return nullptr;
 }
+
+const FMS_ItemData* UMS_ItemCacheTable::GetItemByName(const FName& aItemName)
+{
+	for (const auto& PairData : ItemDatas)
+	{
+		if (PairData.Value != nullptr && PairData.Value->ItemName == aItemName)
+		{
+			return PairData.Value;
+		}
+	}
+
+	return nullptr;
+}
+
+TArray<FName> UMS_ItemCacheTable::GetAllItemNames()
+{
+	TArray<FName> ItemNameArray = {};
+
+	for (const auto& PairData : ItemDatas)
+	{
+		if (PairData.Value != nullptr)
+		{
+			ItemNameArray.Add(PairData.Value->ItemName);
+		}
+	}
+
+	return ItemNameArray;
+}
+
+const int32 UMS_ItemCacheTable::GetItemIDByName(const FName& aItemName)
+{
+	for (const auto& PairData : ItemDatas)
+	{
+		if (PairData.Value != nullptr && PairData.Value->ItemName == aItemName)
+		{
+			return PairData.Value->Id;
+		}
+	}
+
+	return INDEX_NONE;
+}

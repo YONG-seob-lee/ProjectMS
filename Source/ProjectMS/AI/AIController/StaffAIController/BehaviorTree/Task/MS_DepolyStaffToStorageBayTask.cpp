@@ -18,8 +18,8 @@ EBTNodeResult::Type UMS_DepolyStaffToStorageBayTask::ExecuteTask(UBehaviorTreeCo
 
 	int StorageBayOrder = INT_MIN;
 	StorageBayOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("StorageBayOrder")));
-	TargetStorage->BayComponentArray[StorageBayOrder]->UnreserveWorker();
 	TargetStorage->BayComponentArray[StorageBayOrder]->DeployWorker(OwnerCharacter);
+	TargetStorage->BayComponentArray[StorageBayOrder]->UnreserveWorker();
 	OwnerCharacter->SetWorkAnimationFlag(true);
 
 	return EBTNodeResult::Succeeded;

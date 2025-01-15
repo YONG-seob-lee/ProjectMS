@@ -31,22 +31,20 @@ void UMS_SeekUntilAvailableBayTask::TickTask(UBehaviorTreeComponent& aOwnerComp,
 
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	AMS_Storage* TargetStorage = Cast<AMS_Storage>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(StorageKey.SelectedKeyName));
-	UE_LOG(LogTemp, Warning, TEXT("TargetStorage %s"), *TargetStorage->GetName());
 
 	for (int i = 0; i < TargetStorage->BayComponentArray.Num(); i++)
 	{
-		//if (TargetStorage->BayComponentArray[i]->ReservationFlag == false && TargetStorage->BayComponentArray[i]->OccupancyFlag == false)
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Character: %s , ReservationStorage: %s"), *OwnerCharacter->GetName(), *TargetStorage->GetName());
-
-		aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageBayOrder")), TargetStorage->BayComponentArray[i]->BayOrder);
-		aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("StorageBayAdjacentLocation")), TargetStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(TargetStorage->BayComponentArray[i]->BayOrder, OwnerCharacter));
-		//}
-		//else
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Character: %s, Not Found"), *OwnerCharacter->GetName());
-		//	FinishLatentTask(aOwnerComp, EBTNodeResult::Failed);
-		//}
+		if (TargetStorage->BayComponentArray[i]->ReservationFlag == false && TargetStorage->BayComponentArray[i]->OccupancyFlag == false)
+		{
+			TargetStorage->BayComponentArray[i]->ReserveWorker(OwnerCharacter);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("StorageBayOrder")), TargetStorage->BayComponentArray[i]->BayOrder);
+			aOwnerComp.GetBlackboardComponent()->SetValueAsVector(FName(TEXT("StorageBayAdjacentLocation")), TargetStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(TargetStorage->BayComponentArray[i]->BayOrder, OwnerCharacter));
+		}
+		else
+		{
+			FinishLatentTask(aOwnerComp, EBTNodeResult::InProgress);
+			return;
+		}
 	}
 	FinishLatentTask(aOwnerComp, EBTNodeResult::Succeeded);
 }

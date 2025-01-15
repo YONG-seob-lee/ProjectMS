@@ -108,21 +108,5 @@ void UMS_StorageAssemblyAreaComponent::EraseAssemblyAreaOutline()
 
 FVector UMS_StorageAssemblyAreaComponent::FindAdjacentLocationWithBay(int aBayOrder, AMS_StaffAICharacter* aTarget)
 {
-	TArray<UMS_StorageBayComponent*> StorageBayComponentArray = {};
-	Cast<AMS_Storage>(GetOwner())->GetComponents<UMS_StorageBayComponent>(StorageBayComponentArray);
-	if (StorageBayComponentArray.Num() == 0 || aBayOrder < 0 || aBayOrder > StorageBayComponentArray.Num() - 1)
-	{
-		return GetComponentLocation();
-	}
-	else
-	{
-		float TargetCollisionCapsuleRadius = aTarget->GetCapsuleComponent()->GetScaledCapsuleRadius();
-		float TargetCollisionCapsuleHalfHeight = aTarget->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-		if (FMath::Min(AssemblyAreaSize.X, AssemblyAreaSize.Y) < (TargetCollisionCapsuleRadius * 2.0f))
-		{
-			TargetCollisionCapsuleRadius = 0.0f;
-		}
-
-		return FVector(FMath::Clamp(StorageBayComponentArray[aBayOrder]->GetComponentLocation().X, GetComponentLocation().X - (AssemblyAreaSize.X / 2.0f) + TargetCollisionCapsuleRadius, GetComponentLocation().X + (AssemblyAreaSize.X / 2.0f) - TargetCollisionCapsuleRadius), FMath::Clamp(StorageBayComponentArray[aBayOrder]->GetComponentLocation().Y, GetComponentLocation().Y - (AssemblyAreaSize.Y / 2.0f) + TargetCollisionCapsuleRadius, GetComponentLocation().Y + (AssemblyAreaSize.Y / 2.0f) - TargetCollisionCapsuleRadius), GetComponentLocation().Z + TargetCollisionCapsuleHalfHeight);
-	}
+	return GetComponentLocation();
 }

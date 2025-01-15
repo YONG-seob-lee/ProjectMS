@@ -24,6 +24,9 @@ public:
 	void GetOrderItemElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderItemElementDatas);
 
 	UTexture2D* GetItemImage(int32 aItemId);
+	const FMS_ItemData* GetItemByName(const FName& aItemName);
+	TArray<FName> GetAllItemNames();
+	const int32 GetItemIDByName(const FName& aItemName);
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;
 	TMap<int32, FMS_ItemData*> MoneyDatas;

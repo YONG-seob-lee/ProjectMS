@@ -3,6 +3,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Management/Manager_Both/MS_TableManager.h"
+#include "Data/Table/Caches/MS_ItemCacheTable.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
 #include "Actor/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
@@ -20,18 +21,12 @@ EBTNodeResult::Type UMS_CheckUnloadingStorageStockTask::ExecuteTask(UBehaviorTre
 
 void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds)
 {
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
-	TArray<FName> ItemRowNameArray = {};
+	Super::TickTask(aOwnerComp, aNodeMemory, aDeltaSeconds);
+	SetNextTickTime(aNodeMemory, 0.2f);
 
-	TArray<FName> DataRowNameArray = ItemData->GetRowNames();
-	for (const FName& RowName : DataRowNameArray)
-	{
-		FMS_ItemData* ItemRowData = ItemData->FindRow<FMS_ItemData>(RowName, TEXT(""));
-		if (ItemRowData != nullptr)
-		{
-			ItemRowNameArray.Add(ItemRowData->ItemName);
-		}
-	}
+	TObjectPtr<UMS_ItemCacheTable> CachedItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_CHECK(CachedItemTable);
+	TArray<FName> ItemDataNameArray = CachedItemTable->GetAllItemNames();
 
 	TArray<AActor*> AllStorageArray = {};
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
@@ -49,7 +44,7 @@ void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwner
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
-			if (ItemRowNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true &&
+			if (ItemDataNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true &&
 				aOwnerComp.GetBlackboardComponent()->GetValueAsString(FName(TEXT("StorageSlotStuffName"))) == StorageEachSlotStatus[j].StuffRowName &&
 				StorageEachSlotStatus[j].ReservationFlag == false &&
 				aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("EmptyStuffQuantity"))) <= StorageEachSlotStatus[j].StockQuantity)
@@ -70,7 +65,6 @@ void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwner
 		else
 		{
 			Cast<AMS_Storage>(AllStorageArray[i])->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
-			UE_LOG(LogTemp, Warning, TEXT("Success"));
 
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("UnloadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("UnloadingStorageSlotOrder")), UnoccupiedSlotOrder);

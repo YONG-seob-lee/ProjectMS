@@ -3,11 +3,14 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "Management/Manager_Both/MS_TableManager.h"
+#include "Data/Table/Caches/MS_ItemCacheTable.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
+
 #include "Actor/Storage/MS_Storage.h"
 #include "Component/Storage/MS_StorageBayComponent.h"
 #include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+
 
 UMS_CheckLoadingStorageStockTask::UMS_CheckLoadingStorageStockTask()
 {
@@ -26,19 +29,9 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 	Super::TickTask(aOwnerComp, aNodeMemory, aDeltaSeconds);
 	SetNextTickTime(aNodeMemory, 0.2f);
 
-
-	TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
-	TArray<FName> ItemRowNameArray = {};
-
-	TArray<FName> DataRowNameArray = ItemData->GetRowNames();
-	for (const FName& RowName : DataRowNameArray)
-	{
-		FMS_ItemData* ItemRowData = ItemData->FindRow<FMS_ItemData>(RowName, TEXT(""));
-		if (ItemRowData != nullptr)
-		{
-			ItemRowNameArray.Add(ItemRowData->ItemName);
-		}
-	}
+	TObjectPtr<UMS_ItemCacheTable> CachedItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_CHECK(CachedItemTable);
+	TArray<FName> ItemDataNameArray = CachedItemTable->GetAllItemNames();
 
 	TArray<AActor*> AllStorageArray = {};
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
@@ -54,7 +47,7 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
-			if (ItemRowNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true && StorageEachSlotStatus[j].ReservationFlag == false && StorageEachSlotStatus[j].StockQuantity < StorageEachSlotStatus[j].StockCapacity)
+			if (ItemDataNameArray.Contains(StorageEachSlotStatus[j].StuffRowName) == true && StorageEachSlotStatus[j].ReservationFlag == false && StorageEachSlotStatus[j].StockQuantity < StorageEachSlotStatus[j].StockCapacity)
 			{
 				UnoccupiedSlotExistenceFlag = true;
 				UnoccupiedSlotOrder = StorageEachSlotStatus[j].SlotOrder;
@@ -71,7 +64,6 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 		else
 		{
 			Cast<AMS_Storage>(AllStorageArray[i])->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
-			UE_LOG(LogTemp, Warning, TEXT("Success"));
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("LoadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("LoadingStorageSlotOrder")), UnoccupiedSlotOrder);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("EmptyStuffQuantity")), EmptyStuffQuantity);
