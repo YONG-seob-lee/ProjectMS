@@ -63,9 +63,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
-	// This function is used for loading the StaticMesh of an item
-	UFUNCTION() void OnLoadResource(FString aName, class UObject* aObject);
-
 	// Component
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
@@ -77,8 +74,4 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FMS_PositiveEmotionGroup PositiveEmotionGroup = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FMS_NagativeEmotionGroup NagativeEmotionGroup = {};
-	
-	// Delegate
-public:
-	FMS_LoadResourceDelegate LoadResourceDelegate = {};
 };
