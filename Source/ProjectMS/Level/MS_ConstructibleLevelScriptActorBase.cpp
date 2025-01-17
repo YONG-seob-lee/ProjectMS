@@ -8,7 +8,7 @@
 
 #include "Prop/MS_Prop.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
-#include "Prop/Floor/MS_Prop_Floor.h"
+#include "Prop/Floor/MS_Floor.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -318,7 +318,7 @@ void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
 			{
 				for (auto& Grid : Grids)
 				{
-					if (AMS_Prop_Floor* Floor = Cast<AMS_Prop_Floor>(Grid.Value.Floor.Get()))
+					if (AMS_Floor* Floor = Cast<AMS_Floor>(Grid.Value.Floor.Get()))
 					{
 						if (!bShowUnconstructableGrid || Grid.Value.Object == nullptr)
 						{

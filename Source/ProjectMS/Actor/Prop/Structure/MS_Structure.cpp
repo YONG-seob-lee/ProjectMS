@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_Prop_Structure.h"
+#include "MS_Structure.h"
 
 
 AMS_Prop_Structure::AMS_Prop_Structure()

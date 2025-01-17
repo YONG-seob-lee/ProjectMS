@@ -1,7 +1,7 @@
 ﻿
 
 
-#include "MS_Prop_Floor.h"
+#include "MS_Floor.h"
 
 #include "Components/WidgetComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
@@ -9,7 +9,7 @@
 #include "Zone/MS_Zone.h"
 
 
-AMS_Prop_Floor::AMS_Prop_Floor()
+AMS_Floor::AMS_Floor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -31,17 +31,17 @@ AMS_Prop_Floor::AMS_Prop_Floor()
 */
 }
 
-void AMS_Prop_Floor::BeginPlay()
+void AMS_Floor::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void AMS_Prop_Floor::Tick(float DeltaTime)
+void AMS_Floor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
+void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
 {
 	Super::SetZoneData(aOwnerZone, aPropCenterLocationInZone);
 
@@ -66,7 +66,7 @@ void AMS_Prop_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, cons
 */
 }
 
-void AMS_Prop_Floor::SetMaterial(const FName& MaterialKey)
+void AMS_Floor::SetMaterial(const FName& MaterialKey)
 {
 	if (Materials.Contains(MaterialKey))
 	{

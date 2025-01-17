@@ -1,10 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_Prop_Furniture.h"
+#include "MS_Furniture.h"
 
 
-AMS_Prop_Furniture::AMS_Prop_Furniture()
+AMS_Furniture::AMS_Furniture()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -12,7 +12,7 @@ AMS_Prop_Furniture::AMS_Prop_Furniture()
 	PropType = EMS_PropType::Furniture;
 }
 
-void AMS_Prop_Furniture::PostInitializeComponents()
+void AMS_Furniture::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
@@ -20,12 +20,12 @@ void AMS_Prop_Furniture::PostInitializeComponents()
 	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
 }
 
-void AMS_Prop_Furniture::BeginPlay()
+void AMS_Furniture::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void AMS_Prop_Furniture::Tick(float DeltaTime)
+void AMS_Furniture::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

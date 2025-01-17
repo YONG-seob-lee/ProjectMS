@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Prop/MS_Prop.h"
-#include "MS_Prop_Furniture.generated.h"
+#include "MS_Furniture.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Prop_Furniture : public AMS_Prop
+class PROJECTMS_API AMS_Furniture : public AMS_Prop
 {
 	GENERATED_BODY()
 
 public:
-	AMS_Prop_Furniture();
+	AMS_Furniture();
 
 	virtual void PostInitializeComponents() override;
 	

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Prop/MS_Prop.h"
-#include "MS_Prop_Structure.generated.h"
+#include "MS_Structure.generated.h"
 
 UCLASS()
 class PROJECTMS_API AMS_Prop_Structure : public AMS_Prop
