@@ -30,6 +30,10 @@ public:
 	virtual void OnPressDownEvent() {}
 	virtual void OnPressUpEvent() {}
 	virtual void LaunchEvent() {}
+
+	FORCEINLINE MS_Handle GetUnitHandleId() const { return UnitHandleId; }
+protected:
+	MS_Handle UnitHandleId = InvalidUnitHandle;
 	
 private:
 	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

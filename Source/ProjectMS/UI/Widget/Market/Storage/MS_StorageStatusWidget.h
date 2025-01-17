@@ -19,6 +19,11 @@ public:
 	virtual void NativeDestruct() override;
 
 private:
+	void OnClickedConfirmButton();
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_ConfirmButton = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_TileView> CPP_TileView = nullptr;
 };

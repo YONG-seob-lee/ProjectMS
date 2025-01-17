@@ -68,6 +68,14 @@ void UMS_ModalWidget::CloseModal()
 
 }
 
+void UMS_ModalWidget::SetInModalPosition(const FVector2D& aInModalPosition) const
+{
+	if(UCanvasPanelSlot* aSlot = Cast<UCanvasPanelSlot>(CPP_InModalPanel->Slot))
+	{
+		aSlot->SetPosition(aInModalPosition);
+	}
+}
+
 void UMS_ModalWidget::SetModalInternal(const TObjectPtr<UMS_Widget>& aNewWidget)
 {
 	if(!aNewWidget)
@@ -76,10 +84,6 @@ void UMS_ModalWidget::SetModalInternal(const TObjectPtr<UMS_Widget>& aNewWidget)
 	}
 	CPP_InModalPanel->ClearChildren();
 	CPP_InModalPanel->AddChild(aNewWidget);
-
-	if(const TObjectPtr<UMS_MarketStartModal> MarketStartModal = Cast<UMS_MarketStartModal>(aNewWidget))
-	{
-	}
 	
 	if(UCanvasPanelSlot* aSlot = Cast<UCanvasPanelSlot>(aNewWidget->Slot))
 	{

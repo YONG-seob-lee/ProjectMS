@@ -23,6 +23,7 @@ public:
 	UMS_Widget* InModalWidget = nullptr;
 	bool bPlayOpenAnimation = true;
 	bool bPlayCloseAnimation = true;
+	FVector2D InModalPosition = FVector2D::ZeroVector;
 	TFunction<void()> OnCloseWidgetCallback = nullptr;
 };
 
@@ -40,6 +41,7 @@ public:
 	void SetModal(const FMS_ModalParameter& aModalParameter);
 	void CloseModal();
 
+	void SetInModalPosition(const FVector2D& aInModalPosition) const;
 private:
 	void SetModalInternal(const TObjectPtr<UMS_Widget>& aNewWidget);
 	UPROPERTY(Meta = (BindWidget))

@@ -133,6 +133,7 @@ bool UMS_WidgetManager::DestroyWidget(const FName& aTypeName)
 	Widget->FinishWidget();
 
 	ManagedWidgets.Remove(aTypeName);
+	Widget->RemoveFromParent();
 	Widget = nullptr;
 	PostDestroyWidget(aTypeName);	
 	return true;

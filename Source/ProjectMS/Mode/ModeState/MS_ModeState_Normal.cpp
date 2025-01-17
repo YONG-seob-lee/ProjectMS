@@ -3,6 +3,7 @@
 
 #include "MS_ModeState_Normal.h"
 
+#include "Components/CanvasPanelSlot.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
@@ -120,8 +121,24 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 				// {
 				// 	
 				// }
+				
+				PropActor->GetUnitHandleId();
 
-				gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName());
+				if(const TObjectPtr<UMS_StorageStatusWidget> StorageStatusWidget = Cast<UMS_StorageStatusWidget>(gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName())))
+				{
+					if(const TObjectPtr<UCanvasPanelSlot> PanelSlot = Cast<UCanvasPanelSlot>(StorageStatusWidget->Slot))
+					{
+						const FVector2D DefaultViewportSize = FVector2D(1920.f, 1080.f);
+						FVector2D CurrentViewportSize = FVector2D();
+						GetWorld()->GetGameViewport()->GetViewportSize(CurrentViewportSize);
+						
+						const FVector2D ScaleRatio = DefaultViewportSize / CurrentViewportSize;
+						const FVector2D DefaultSize = FVector2D(300.f, 400.f);
+
+						
+						PanelSlot->SetPosition(aPosition * ScaleRatio - DefaultSize);
+					}
+				}
 			}
 		}
 	}

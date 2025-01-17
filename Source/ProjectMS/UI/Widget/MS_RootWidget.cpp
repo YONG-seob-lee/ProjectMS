@@ -213,6 +213,11 @@ void UMS_RootWidget::ShowModalWidget(const FMS_ModalParameter& aModalParameter) 
 {
 	CPP_ModalWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	CPP_ModalWidget->SetModal(aModalParameter);
+
+	if(aModalParameter.InModalPosition != FVector2D::ZeroVector)
+	{
+		CPP_ModalWidget->SetInModalPosition(aModalParameter.InModalPosition);
+	}
 }
 
 void UMS_RootWidget::CloseModalWidget() const
