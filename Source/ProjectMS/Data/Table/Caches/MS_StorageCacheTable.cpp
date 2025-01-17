@@ -37,7 +37,7 @@ void UMS_StorageCacheTable::GetStorageData(EMS_StorageType aStorageType, TArray<
 		{
 			ConstructItem->SetImage(ImageImage);
 		}
-		ConstructItem->SetItemId(StorageData.Value->Index);
+		ConstructItem->SetItemId(StorageData.Key);
 		aConstructArray.Emplace(ConstructItem);
 	}
 }
