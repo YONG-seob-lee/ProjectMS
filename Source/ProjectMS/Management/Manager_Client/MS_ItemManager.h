@@ -75,6 +75,7 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	
 	FORCEINLINE TMap<int32, int32> GetCurrentItems() { return Items; }
+	FORCEINLINE TMap<int32, int32> GetShelfItems() { return ShelfItems; }
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 
 	FMS_OnClickedItem OnClickedItemDelegate;
@@ -82,6 +83,7 @@ public:
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 private:
 	TMap<int32, int32> Items = {};
+	TMap<int32, int32> ShelfItems = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
 	
 public:

@@ -87,6 +87,10 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName, 
 	{
 		AttachToRoot(Widget);
 	}
+	else
+	{
+		Widget->AddToViewport();
+	}
 	
 	if(OnCreateWidget.IsBound())
 	{

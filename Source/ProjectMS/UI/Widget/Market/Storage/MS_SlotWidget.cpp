@@ -12,11 +12,6 @@
 void UMS_SlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if(CPP_Slot)
-	{
-		CPP_Slot->SetOpacity(0.f);
-	}
 }
 
 bool UMS_SlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -37,8 +32,9 @@ void UMS_SlotWidget::SetSlot(int32 aItemId) const
 {
 	if(aItemId == INDEX_NONE)
 	{
-		const FString SlotImagePath = TEXT("Game/UI/Image/Item/BlankSlot.BlankSlot");
-		if(UTexture2D* SlotTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SlotImagePath)))
+		const FString SlotImagePath = TEXT("/Game/UI/Image/Item/BlankSlot.BlankSlot");
+		UTexture2D* SlotTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SlotImagePath));
+		if(SlotTexture)
 		{
 			CPP_Slot->SetBrushFromTexture(SlotTexture);
 		}

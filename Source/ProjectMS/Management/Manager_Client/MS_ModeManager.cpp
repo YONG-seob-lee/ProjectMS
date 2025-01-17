@@ -47,6 +47,7 @@ void UMS_ModeManager::BuiltInFinalize()
 
 void UMS_ModeManager::Tick(float aDeltaTime)
 {
+	ModeStateMachine->Tick(aDeltaTime);
 }
 
 void UMS_ModeManager::ChangeControllerMode(EMS_ControllerModeType aControllerModeType)
