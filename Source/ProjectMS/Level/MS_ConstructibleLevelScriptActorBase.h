@@ -32,8 +32,8 @@ public:
 	virtual void UnregisterGridObjectData(TArray<const FMS_GridData*>& aGridDatas);
 	virtual void UnregisterGridObjectData(TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces);
 	
-	bool GetGridDatasForAllPropSpaceLocations(class AMS_Prop* aInProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector& aInAddtiveGridPosition = FIntVector::ZeroValue);	// Ret : AllGridInZones
-	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector& aInAddtiveGridPosition = FIntVector::ZeroValue);	// Ret : AllGridInZones
+	bool GetGridDatasForAllPropSpaceLocations(class AMS_Prop* aInProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
+	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
 	
 	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
 

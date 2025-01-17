@@ -25,12 +25,16 @@ public:
 	
 	
 	// Property :: Getter
-	EMS_PropSpaceType GetPropSpaceType() const { return PropSpaceType; }
-	EMS_PurposeType GetPropPurposeSpaceType() const { return PropPurposeSpaceType; }
-	
-	void GetGridPositions(FIntVector& aOutWorldStartGridPosition, FIntVector& aOutGridNum) const;
-
 	class AMS_Prop* GetOwnerProp() const;
+	
+	EMS_PropSpaceType GetPropSpaceType() const { return PropSpaceType; }
+	
+	EMS_PurposeType GetPropPurposeSpaceType() const { return PropPurposeSpaceType; }
+
+
+	// World Grid Position
+	// 이동과 회전값이 적용된 상태에서 좌상단 기준으로 계산
+	void GetWorldGridPositions(FIntVector2& aOutWorldStartGridPosition, FIntVector2& aOutGridNum) const;
 
 	
 private:

@@ -28,41 +28,46 @@ void UMS_PropSpaceComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UMS_PropSpaceComponent::GetGridPositions(FIntVector& aOutWorldStartGridPosition,
-	FIntVector& aOutGridNum) const
-{
-	float PropYaw = GetOwner()->GetActorRotation().Yaw;
-	MS_LOG_Verbosity(Warning, TEXT("PropYaw : %f [PropName : %s]"), PropYaw, *GetOwner()->GetName());
-	
-	// Start Position
-	FVector SpaceStartOffset;
-	if (FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
-	{
-		SpaceStartOffset = FVector(-GetUnscaledBoxExtent().X, -GetUnscaledBoxExtent().Y, 0.f);
-	}
-	else
-	{
-		SpaceStartOffset = FVector(-GetUnscaledBoxExtent().Y, -GetUnscaledBoxExtent().X, 0.f);
-	}
-			
-	FVector WorldStartLocation = GetComponentLocation() + SpaceStartOffset;
-	aOutWorldStartGridPosition = FIntVector(FMath::RoundToInt32(WorldStartLocation.X / MS_GridSize.X), FMath::RoundToInt32(WorldStartLocation.Y / MS_GridSize.Y), 0);
-
-	// Num
-	FVector SpaceSize;
-	if (FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f))
-	{
-		SpaceSize = FVector(GetUnscaledBoxExtent().X * 2.f, GetUnscaledBoxExtent().Y * 2.f, 0.f);
-	}
-	else
-	{
-		SpaceSize = FVector(GetUnscaledBoxExtent().Y * 2.f, GetUnscaledBoxExtent().X * 2.f, 0.f);
-	}
-
-	aOutGridNum = FIntVector(FMath::RoundToInt32(SpaceSize.X / MS_GridSize.X), FMath::RoundToInt32(SpaceSize.Y / MS_GridSize.Y), 0);
-}
-
 AMS_Prop* UMS_PropSpaceComponent::GetOwnerProp() const
 {
 	return Cast<AMS_Prop>(GetOwner());
+}
+
+void UMS_PropSpaceComponent::GetWorldGridPositions(FIntVector2& aOutWorldStartGridPosition,
+	FIntVector2& aOutGridNum) const
+{
+	// Prop Yaw
+	float PropYaw = GetOwner()->GetActorRotation().Yaw;
+	MS_LOG_Verbosity(VeryVerbose, TEXT("[%s] PropYaw : %f [PropName : %s]"), *MS_FUNC_STRING, PropYaw, *GetOwner()->GetName());
+
+	bool bTransposeAxis = !(FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f));
+
+	
+	// Start Grid Position
+	FVector SpaceStartOffset;
+	if (bTransposeAxis)
+	{
+		SpaceStartOffset = FVector(-GetUnscaledBoxExtent().Y, -GetUnscaledBoxExtent().X, 0.f);
+	}
+	else
+	{
+		SpaceStartOffset = FVector(-GetUnscaledBoxExtent().X, -GetUnscaledBoxExtent().Y, 0.f);
+	}
+			
+	FVector WorldStartLocation = GetComponentLocation() + SpaceStartOffset;
+	aOutWorldStartGridPosition = FIntVector2(FMath::RoundToInt32(WorldStartLocation.X) / MS_GridSizeInt.X, FMath::RoundToInt32(WorldStartLocation.Y) / MS_GridSizeInt.Y);
+	
+	
+	// Grid Num
+	FVector SpaceSize;
+	if (bTransposeAxis)
+	{
+		SpaceSize = FVector(GetUnscaledBoxExtent().Y * 2.f, GetUnscaledBoxExtent().X * 2.f, 0.f);
+	}
+	else
+	{
+		SpaceSize = FVector(GetUnscaledBoxExtent().X * 2.f, GetUnscaledBoxExtent().Y * 2.f, 0.f);
+	}
+
+	aOutGridNum = FIntVector2(FMath::RoundToInt32(SpaceSize.X) / MS_GridSizeInt.X, FMath::RoundToInt32(SpaceSize.Y) / MS_GridSizeInt.Y);
 }

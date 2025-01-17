@@ -387,11 +387,11 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 {
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		FIntVector OldCenterGridPosition =  GetGridPosition(PreviewProp->GetActorLocation(),
+		FIntVector2 OldCenterGridPosition =  GetGridPosition(PreviewProp->GetActorLocation(),
 	PreviewProp->GetGridNum().X % 2 != 0,
 	PreviewProp->GetGridNum().Y % 2 != 0);
 		
-		FIntVector NewCenterGridPosition = GetGridPosition(aNewLocation,
+		FIntVector2 NewCenterGridPosition = GetGridPosition(aNewLocation,
 	PreviewProp->GetGridNum().X % 2 != 0,
 	PreviewProp->GetGridNum().Y % 2 != 0);
 
@@ -544,35 +544,31 @@ FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
 	return FVector2d(SizeX / 2, SizeY / 2);
 }
 
-FIntVector UMS_ModeState_Construct::GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter,
-	bool aIsYGridCenter, bool aIsZGridCenter) const
+FIntVector2 UMS_ModeState_Construct::GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter,
+	bool aIsYGridCenter) const
 {
-	FVector OffsetByGridCenter = FVector(
+	FVector2D OffsetByGridCenter = FVector2D(
 	aIsXGridCenter ? 25.f : 0.f,
-	aIsYGridCenter ? 25.f : 0.f,
-	aIsZGridCenter ? 25.f : 0.f);
+	aIsYGridCenter ? 25.f : 0.f);
 	
-	return  FIntVector(
+	return  FIntVector2(
 		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
-		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y),
-		FMath::RoundToInt32((aInLocation.Z - OffsetByGridCenter.Z) / MS_GridSize.Z));
+		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y));
 }
 
-FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter, bool aIsZGridCenter) const
+FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const
 {
-	FVector OffsetByGridCenter = FVector(
+	FVector2D OffsetByGridCenter = FVector2D(
 		aIsXGridCenter ? 25.f : 0.f,
-		aIsYGridCenter ? 25.f : 0.f,
-		aIsZGridCenter ? 25.f : 0.f);
+		aIsYGridCenter ? 25.f : 0.f);
 	
-	FIntVector GridPosition = FIntVector(
+	FIntVector2 GridPosition = FIntVector2(
 		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
-		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y),
-		FMath::RoundToInt32((aInLocation.Z - OffsetByGridCenter.Z) / MS_GridSize.Z));
+		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y));
 
-	return FVector(GridPosition.X * MS_GridSize.X,
-		GridPosition.Y * MS_GridSize.Y,
-		GridPosition.Z * MS_GridSize.Z) + OffsetByGridCenter;
+	return FVector(GridPosition.X * MS_GridSize.X + OffsetByGridCenter.X,
+		GridPosition.Y * MS_GridSize.Y + OffsetByGridCenter.Y,
+		aInLocation.Z);
 }
 
 bool UMS_ModeState_Construct::CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const

@@ -7,6 +7,7 @@
 
 
 #define MS_GridSize FVector(50.f, 50.f, 50.f)
+#define MS_GridSizeInt FVector(50, 50, 50)
 
 
 UENUM(BlueprintType)

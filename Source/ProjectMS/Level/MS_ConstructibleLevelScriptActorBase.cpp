@@ -50,11 +50,6 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	for (AActor* PropActor : PropActors)
 	{
 		AMS_Prop* Prop = Cast<AMS_Prop>(PropActor);
-
-		if (Prop->GetPropType() == EMS_PropType::Furniture)
-		{
-			MS_LOG(TEXT("Debug"));
-		}
 		
 		// Center Position
 		FVector WorldCenterLocation = PropActor->GetActorLocation();
@@ -75,10 +70,10 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		
 		for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
 		{
-			FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
-			FIntVector GridNum = FIntVector::ZeroValue;
+			FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+			FIntVector2 GridNum = FIntVector2::ZeroValue;
 			
-			PropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
+			PropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
 			
 			// Set With Grid
 			for (int i = 0; i < GridNum.Y; ++i)
@@ -184,7 +179,7 @@ void AMS_ConstructibleLevelScriptActorBase::UnregisterGridObjectData(
 }
 
 bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations(class AMS_Prop* aInProp,
-                                                                                 TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector& aInAddtiveGridPosition) // Ret : AllGridInZones
+                                                                                 TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector2& aInAddtiveGridPosition) // Ret : AllGridInZones
 {
 	if (!IsValid(aInProp))
 	{
@@ -205,10 +200,10 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 		FMS_GridDataForPropSpace GridDataForPropSpace;
 		GridDataForPropSpace.PropSpaceComponent = PropSpaceComponent;
 		
-		FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
-		FIntVector GridNum = FIntVector::ZeroValue;
+		FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+		FIntVector2 GridNum = FIntVector2::ZeroValue;
 			
-		PropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
+		PropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
 		WorldStartGridPosition += aInAddtiveGridPosition;
 		
 		// Set With Grid
@@ -242,7 +237,7 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 
 bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 	UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas,
-	const FIntVector& aInAddtiveGridPosition)
+	const FIntVector2& aInAddtiveGridPosition)
 {
 	if (!IsValid(aPropSpaceComponent))
 	{
@@ -262,10 +257,10 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 
 	aOutGridDatas.Empty();
 	
-	FIntVector WorldStartGridPosition = FIntVector::ZeroValue;
-	FIntVector GridNum = FIntVector::ZeroValue;
+	FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+	FIntVector2 GridNum = FIntVector2::ZeroValue;
 		
-	aPropSpaceComponent->GetGridPositions(WorldStartGridPosition, GridNum);
+	aPropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
 	WorldStartGridPosition += aInAddtiveGridPosition;
 	
 	// Set With Grid
