@@ -5,8 +5,8 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Actor/Prop/Furniture/Storage/MS_Storage.h"
-#include "Component/Storage/MS_StorageBayComponent.h"
-#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
+#include "Component/Prop/Furniture/MS_StorageBayComponent.h"
+#include "Component/Prop/Furniture/MS_StorageAssemblyAreaComponent.h"
 
 AMS_DisplayStaffAIController::AMS_DisplayStaffAIController()
 {

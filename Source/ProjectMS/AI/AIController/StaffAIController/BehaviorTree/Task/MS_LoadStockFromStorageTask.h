@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AI/AIController/BehaviorTree/Task/MS_BehaviorTreeTask.h"
-#include "Component/Storage/MS_StorageSlotComponent.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 #include "MS_LoadStockFromStorageTask.generated.h"
 
 UCLASS() class PROJECTMS_API UMS_LoadStockFromStorageTask : public UMS_BehaviorTreeTask

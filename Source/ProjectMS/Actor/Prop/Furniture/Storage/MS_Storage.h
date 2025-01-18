@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Actor/Prop/Furniture/MS_Furniture.h"
-#include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
-#include "Component/Storage/MS_StorageBayComponent.h"
-#include "Component/Storage/MS_StorageSlotComponent.h"
+#include "Component/Prop/Furniture/MS_StorageAssemblyAreaComponent.h"
+#include "Component/Prop/Furniture/MS_StorageBayComponent.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 #include "MS_Storage.generated.h"
 
 USTRUCT(BlueprintType) struct FMS_StorageEachSlotStatus
@@ -56,7 +56,7 @@ public:
 
 	// Property
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName StorageRowName = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName StorageName = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int SlotComponentIndexSize = INT_MIN;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int BayComponentIndexSize = INT_MIN;
 };

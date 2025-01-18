@@ -12,7 +12,7 @@
 #include "Management/MS_ManagementClient.h"
 #include "Management/Manager_Client/MS_PlayerCameraManager.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
-#include "Component/Storage/MS_StorageSlotComponent.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 #include "Management/Manager_Both/MS_TableManager.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
 
