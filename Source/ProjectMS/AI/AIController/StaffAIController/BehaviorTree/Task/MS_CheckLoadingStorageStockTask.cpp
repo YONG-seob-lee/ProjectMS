@@ -11,6 +11,7 @@
 #include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
+
 UMS_CheckLoadingStorageStockTask::UMS_CheckLoadingStorageStockTask()
 {
 	NodeName = FString(TEXT("Check Loading Storage Stock"));
@@ -21,7 +22,6 @@ EBTNodeResult::Type UMS_CheckLoadingStorageStockTask::ExecuteTask(UBehaviorTreeC
 	EBTNodeResult::Type Result = Super::ExecuteTask(aOwnerComp, aNodeMemory);
 	return EBTNodeResult::InProgress;
 }
-
 
 void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uint8* aNodeMemory, float aDeltaSeconds)
 {

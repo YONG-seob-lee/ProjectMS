@@ -26,7 +26,6 @@ EBTNodeResult::Type UMS_LoadStockFromStorageTask::ExecuteTask(UBehaviorTreeCompo
 
 	TObjectPtr<UMS_ItemCacheTable> CachedItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
 	const FMS_ItemData* ItemData = CachedItemTable->GetItemByName(StuffName);
-
 	FString ItemDataPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, ItemData->PathFile);
 	UObject* ItemObject = gTableMng.LoadObjectFromFile(ItemDataPath);
 

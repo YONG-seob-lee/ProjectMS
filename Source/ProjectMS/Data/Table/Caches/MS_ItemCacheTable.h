@@ -27,6 +27,7 @@ public:
 	const FMS_ItemData* GetItemByName(const FName& aItemName);
 	TArray<FName> GetAllItemNames();
 	const int32 GetItemIDByName(const FName& aItemName);
+
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;
 	TMap<int32, FMS_ItemData*> MoneyDatas;
