@@ -91,11 +91,11 @@ UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const 
 	return nullptr;
 }
 
-void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
+void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition)
 {
 	OwnerZone = aOwnerZone;
 
-	PropCenterLocationInZone = aPropCenterLocationInZone;
+	GridPosition = aGridPosition;
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)

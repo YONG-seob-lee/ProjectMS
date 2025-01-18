@@ -39,7 +39,7 @@ public:
 
 	
 	// Zone Data :: Setter
-	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone);
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition);
 
 
 	// For Preview
@@ -80,7 +80,7 @@ protected:
 	TWeakObjectPtr<class AMS_Zone> OwnerZone;
 
 	UPROPERTY()
-	FVector PropCenterLocationInZone;
+	FIntVector2 GridPosition;
 	
 	// Arrangement Widget
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

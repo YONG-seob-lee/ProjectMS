@@ -56,12 +56,12 @@ struct FMS_GridData
 
 public:
 	FMS_GridData()
-	: ZoneGridPosition(FIntVector2::ZeroValue), WorldGridPosition(FIntVector2::ZeroValue)
+	: GridPosition(FIntVector2::ZeroValue)
 	{
 	}
 
-	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aZoneGridPosition, FIntVector2 aWorldGridPosition)
-		: OwnerZone(aOwnerZone), ZoneGridPosition(aZoneGridPosition), WorldGridPosition(aWorldGridPosition)
+	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aWorldGridPosition)
+		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition)
 	{
 	}
 	
@@ -70,22 +70,18 @@ public:
 	}
 
 	TWeakObjectPtr<AActor> GetOwnerZone() const { return OwnerZone; }
-	const FIntVector2& GetZoneGridPosition() const { return ZoneGridPosition; }
-	const FIntVector2& GetWorldGridPosition() const { return WorldGridPosition; }
+	const FIntVector2& GetGridPosition() const { return GridPosition; }
 
-	const FVector GetGridWorldLocation() const;
-	const FVector GetGridWorldCenterLocation() const;
+	const FVector GetGridLocation() const;
+	const FVector GetGridCenterLocation() const;
 
 	
 private:
 	UPROPERTY()
 	TWeakObjectPtr<AActor> OwnerZone;
-	
-	UPROPERTY()
-	FIntVector2 ZoneGridPosition;
 
 	UPROPERTY()
-	FIntVector2 WorldGridPosition;
+	FIntVector2 GridPosition;
 
 public:
 	UPROPERTY()

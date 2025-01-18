@@ -19,7 +19,7 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone) override;
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition) override;
 	
 	virtual void SetMaterial(const FName& MaterialKey);
 
@@ -33,10 +33,10 @@ protected:
 	TMap<FName, TObjectPtr<class UMaterialInterface>> Materials;
 
 	
-	/*
+	
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> WidgetComponent_ShowGridNum;
 #endif
-*/
+
 };

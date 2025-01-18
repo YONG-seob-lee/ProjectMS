@@ -34,9 +34,9 @@ public:
 	
 	bool GetGridDatasForAllPropSpaceLocations(class AMS_Prop* aInProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatasForPropSpaces, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
 	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
-	
-	bool ConvertWorldGridPositionToZoneGridPosition(const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition);
 
+	int32 GetGridZoneIndex(const FIntVector2& aGridPosition) const;
+	
 	void ShowUnconstructableGrid(bool bShow);
 	
 protected:

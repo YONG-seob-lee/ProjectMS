@@ -8,6 +8,7 @@
 
 #include "Prop/MS_Prop.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Zone/MS_Zone.h"
 
@@ -45,54 +46,51 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	
 	// Prop
 	TArray<AActor*> PropActors;
+	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop::StaticClass(), PropActors);
 	
 	for (AActor* PropActor : PropActors)
 	{
 		AMS_Prop* Prop = Cast<AMS_Prop>(PropActor);
 		
-		// Center Position
+		// Prop Center Grid
 		FVector WorldCenterLocation = PropActor->GetActorLocation();
-
-		// Set With Center
-		for (auto& Zone : Zones)
-		{
-			FVector PropCenterLocation;
-			if (Zone.Value->IsWorldLocationContained(WorldCenterLocation, PropCenterLocation))
-			{
-				Prop->SetZoneData(Zone.Value, PropCenterLocation);
-									
-				break;
-			}
-		}
 		
+		FIntVector2 PropCenterGridPosition = FIntVector2(FMath::RoundToInt32(WorldCenterLocation.X) / MS_GridSizeInt.X
+			, FMath::RoundToInt32(WorldCenterLocation.Y) / MS_GridSizeInt.Y);
+		
+		int32 PropCenterZoneIndex = GetGridZoneIndex(PropCenterGridPosition);
+		if (PropCenterZoneIndex == -1)
+		{
+			return;
+		}
+
+		Prop->SetZoneData(*Zones.Find(PropCenterZoneIndex), PropCenterGridPosition);
+		
+		// Prop Space
 		const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = Prop->GetPropSpaceComponents();
 		
 		for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
 		{
-			FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+			FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
 			FIntVector2 GridNum = FIntVector2::ZeroValue;
 			
-			PropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
+			PropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
 			
 			// Set With Grid
 			for (int i = 0; i < GridNum.Y; ++i)
 			{
 				for (int j = 0; j < GridNum.X; ++j)
 				{
-					FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
+					FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
 
 					switch (Prop->GetPropType())
 					{
 					case EMS_PropType::Floor:
 						{
-							int32 ZoneIndex;
-							FIntVector2 ZoneGridPosition;
+							int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 							
-							if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
-							{
-								(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(ZoneGridPosition, Prop);
-							}
+							(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(GridPosition, Prop);
 					
 							break;
 						}
@@ -102,13 +100,9 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 						{
 							for (auto& Zone : Zones)
 							{
-								FIntVector2 ZoneGridPosition = FIntVector2::ZeroValue;
-								if (Zone.Value->IsWorldGridContained(WorldGridPosition, ZoneGridPosition))
-								{
-									Zone.Value->RegisterObjectToGrid(ZoneGridPosition, PropSpaceComponent);
+								Zone.Value->RegisterObjectToGrid(GridPosition, PropSpaceComponent);
 									
-									break;
-								}
+								break;
 							}
 							break;
 							
@@ -128,7 +122,7 @@ void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(TArray<const 
 	for (const FMS_GridData* GridData : aGridDatas)
 	{
 		AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
-		Zone->RegisterObjectToGrid(GridData->GetZoneGridPosition(), aPropSpaceComponent);
+		Zone->RegisterObjectToGrid(GridData->GetGridPosition(), aPropSpaceComponent);
 	}
 }
 
@@ -149,7 +143,7 @@ void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(
 		for (const FMS_GridData* GridData : GridDatas)
 		{
 			AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
-			Zone->RegisterObjectToGrid(GridData->GetZoneGridPosition(), PropSpaceComponent);
+			Zone->RegisterObjectToGrid(GridData->GetGridPosition(), PropSpaceComponent);
 		}
 	}
 }
@@ -159,7 +153,7 @@ void AMS_ConstructibleLevelScriptActorBase::UnregisterGridObjectData(TArray<cons
 	for (const FMS_GridData* GridData : aGridDatas)
 	{
 		AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
-		Zone->UnregisterObjectToGrid(GridData->GetZoneGridPosition());
+		Zone->UnregisterObjectToGrid(GridData->GetGridPosition());
 	}
 }
 
@@ -173,7 +167,7 @@ void AMS_ConstructibleLevelScriptActorBase::UnregisterGridObjectData(
 		for (const FMS_GridData* GridData : GridDatas)
 		{
 			AMS_Zone* Zone = Cast<AMS_Zone>(GridData->GetOwnerZone());
-			Zone->UnregisterObjectToGrid(GridData->GetZoneGridPosition());
+			Zone->UnregisterObjectToGrid(GridData->GetGridPosition());
 		}
 	}
 }
@@ -200,32 +194,23 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 		FMS_GridDataForPropSpace GridDataForPropSpace;
 		GridDataForPropSpace.PropSpaceComponent = PropSpaceComponent;
 		
-		FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+		FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
 		FIntVector2 GridNum = FIntVector2::ZeroValue;
 			
-		PropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
-		WorldStartGridPosition += aInAddtiveGridPosition;
+		PropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
+		StartGridPosition += aInAddtiveGridPosition;
 		
 		// Set With Grid
 		for (int i = 0; i < GridNum.Y; ++i)
 		{
 			for (int j = 0; j < GridNum.X; ++j)
 			{
-				FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
+				FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
 
-				int32 ZoneIndex;
-				FIntVector2 ZoneGridPosition;
-							
-				if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
-				{
-					const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(ZoneGridPosition);
-					GridDataForPropSpace.GridDatas.Emplace(&GridData);
-				}
-				else
-				{
-					aOutGridDatasForPropSpaces.Empty();
-					return false;
-				}
+				int32 ZoneIndex = GetGridZoneIndex(GridPosition);
+				
+				const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+				GridDataForPropSpace.GridDatas.Emplace(&GridData);
 			}
 		}
 
@@ -257,53 +242,41 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 
 	aOutGridDatas.Empty();
 	
-	FIntVector2 WorldStartGridPosition = FIntVector2::ZeroValue;
+	FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
 	FIntVector2 GridNum = FIntVector2::ZeroValue;
 		
-	aPropSpaceComponent->GetWorldGridPositions(WorldStartGridPosition, GridNum);
-	WorldStartGridPosition += aInAddtiveGridPosition;
+	aPropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
+	StartGridPosition += aInAddtiveGridPosition;
 	
 	// Set With Grid
 	for (int i = 0; i < GridNum.Y; ++i)
 	{
 		for (int j = 0; j < GridNum.X; ++j)
 		{
-			FIntVector2 WorldGridPosition = FIntVector2(WorldStartGridPosition.X + j, WorldStartGridPosition.Y + i);
+			FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
 
-			int32 ZoneIndex;
-			FIntVector2 ZoneGridPosition;
-						
-			if (ConvertWorldGridPositionToZoneGridPosition(WorldGridPosition, ZoneIndex, ZoneGridPosition))
-			{
-				const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(ZoneGridPosition);
-				aOutGridDatas.Emplace(&GridData);
-			}
-			else
-			{
-				aOutGridDatas.Empty();
-				return false;
-			}
+			int32 ZoneIndex = GetGridZoneIndex(GridPosition);
+			
+			const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+			aOutGridDatas.Emplace(&GridData);
 		}
 	}
 
 	return true;
 }
 
-bool AMS_ConstructibleLevelScriptActorBase::ConvertWorldGridPositionToZoneGridPosition(
-	const FIntVector2& aInWorldGridPosition, int32& aOutZoneIndex, FIntVector2& aOutZoneGridPosition)
+int32 AMS_ConstructibleLevelScriptActorBase::GetGridZoneIndex(const FIntVector2& aGridPosition) const
 {
 	for (auto& Zone : Zones)
 	{
-		FIntVector2 ZoneGridPosition;
-		if (Zone.Value->IsWorldGridContained(aInWorldGridPosition, ZoneGridPosition))
+		if (Zone.Value->IsGridContained(aGridPosition))
 		{
-			aOutZoneIndex = Zone.Key;
-			aOutZoneGridPosition = ZoneGridPosition;
-			return true;
+			return Zone.Key;
 		}
 	}
 
-	return false;
+	// MS_Ensure(false);
+	return -1;
 }
 
 void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)

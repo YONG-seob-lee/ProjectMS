@@ -33,7 +33,7 @@ AMS_Prop* UMS_PropSpaceComponent::GetOwnerProp() const
 	return Cast<AMS_Prop>(GetOwner());
 }
 
-void UMS_PropSpaceComponent::GetWorldGridPositions(FIntVector2& aOutWorldStartGridPosition,
+void UMS_PropSpaceComponent::GetGridPositions(FIntVector2& aOutStartGridPosition,
 	FIntVector2& aOutGridNum) const
 {
 	// Prop Yaw
@@ -55,7 +55,7 @@ void UMS_PropSpaceComponent::GetWorldGridPositions(FIntVector2& aOutWorldStartGr
 	}
 			
 	FVector WorldStartLocation = GetComponentLocation() + SpaceStartOffset;
-	aOutWorldStartGridPosition = FIntVector2(FMath::RoundToInt32(WorldStartLocation.X) / MS_GridSizeInt.X, FMath::RoundToInt32(WorldStartLocation.Y) / MS_GridSizeInt.Y);
+	aOutStartGridPosition = FIntVector2(FMath::RoundToInt32(WorldStartLocation.X) / MS_GridSizeInt.X, FMath::RoundToInt32(WorldStartLocation.Y) / MS_GridSizeInt.Y);
 	
 	
 	// Grid Num

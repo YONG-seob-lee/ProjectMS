@@ -23,12 +23,12 @@ AMS_Floor::AMS_Floor()
 		MeshComponent->SetupAttachment(GetRootComponent());
 	}
 
-	/*
+	
 #if WITH_EDITORONLY_DATA
 	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
 	WidgetComponent_ShowGridNum->SetupAttachment(MeshComponent);
 #endif
-*/
+
 }
 
 void AMS_Floor::BeginPlay()
@@ -41,29 +41,26 @@ void AMS_Floor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FVector& aPropCenterLocationInZone)
+void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition)
 {
-	Super::SetZoneData(aOwnerZone, aPropCenterLocationInZone);
+	Super::SetZoneData(aOwnerZone, aGridPosition);
 
-	/*
+	
 #if WITH_EDITORONLY_DATA
 	if (WidgetComponent_ShowGridNum)
 	{
 		if (UMS_EditorTextWidget* EditorTextWidget = Cast<UMS_EditorTextWidget>(WidgetComponent_ShowGridNum->GetWidget()))
 		{
-			FVector FZoneGridPosition = FVector((PropCenterLocationInZone - MS_GridSize / 2.f) / MS_GridSize);
-			FIntVector ZoneGridPosition = FIntVector(FMath::RoundToInt32(FZoneGridPosition.X), FMath::RoundToInt32(FZoneGridPosition.Y), FMath::RoundToInt32(FZoneGridPosition.Z));
-			
 			if (OwnerZone != nullptr)
 			{
 				int32 OwnerZoneIndex = OwnerZone->GetZoneIndex();
 				EditorTextWidget->SetText(FString::FromInt(OwnerZoneIndex) + FString("-") +
-					FString::FromInt(ZoneGridPosition.X) + FString(",") + FString::FromInt(ZoneGridPosition.Y));
+					FString::FromInt(aGridPosition.X) + FString(",") + FString::FromInt(aGridPosition.Y));
 			}
 		}
 	}
 #endif
-*/
+
 }
 
 void AMS_Floor::SetMaterial(const FName& MaterialKey)

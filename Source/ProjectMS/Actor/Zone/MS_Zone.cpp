@@ -60,10 +60,9 @@ void AMS_Zone::CreateGrids()
 	{
 		for (int j = 0; j < ZoneGridNum.X; ++j)
 		{
-			FIntVector2 ZoneGridPosition = FIntVector2(j, i);
-			FIntVector2 WorldGridPosition = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + ZoneGridPosition;
+			FIntVector2 GridPosition = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(j, i);
 			
-			Grids.Emplace(ZoneGridPosition, FMS_GridData(this, ZoneGridPosition, WorldGridPosition));
+			Grids.Emplace(GridPosition, FMS_GridData(this, GridPosition));
 		}
 	}
 }
@@ -83,27 +82,16 @@ bool AMS_Zone::IsWorldLocationContained(const FVector& aInWorldLocation, FVector
 	return false;
 }
 
-bool AMS_Zone::IsWorldGridContained(const FIntVector2& aInWorldGridPosition, FIntVector2& aOutZoneGridPosition) const
+bool AMS_Zone::IsGridContained(const FIntVector2& aInGridPosition) const
 {
-	if (aInWorldGridPosition.X >= ZoneWorldGridPosition.X
-		&& aInWorldGridPosition.Y >= ZoneWorldGridPosition.Y
-		&& aInWorldGridPosition.X < ZoneWorldGridPosition.X + ZoneGridNum.X
-		&& aInWorldGridPosition.Y < ZoneWorldGridPosition.Y + ZoneGridNum.Y)
-	{
-		aOutZoneGridPosition = FIntVector2(aInWorldGridPosition.X - ZoneWorldGridPosition.X,
-			aInWorldGridPosition.Y - ZoneWorldGridPosition.Y);
-
-		return true;
-	}
-
-	return false;
+	return Grids.Contains(aInGridPosition);
 }
 
-void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aFloor)
+void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AActor> aFloor)
 {
-	if (Grids.Contains(aZoneGridPosition))
+	if (Grids.Contains(aGridPosition))
 	{
-		FMS_GridData& GridData = *Grids.Find(aZoneGridPosition);
+		FMS_GridData& GridData = *Grids.Find(aGridPosition);
 
 		if (GridData.Floor == nullptr)
 		{
@@ -112,25 +100,25 @@ void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakOb
 		else
 		{
 			MS_LOG_Verbosity(Error, TEXT("Floor data alreay exists [Zone %d - X : %d, Y : %d]"),
-				ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 			MS_Ensure(false);
 		}
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Floor's ZoneGridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+		MS_LOG_Verbosity(Error, TEXT("Floor's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 		MS_Ensure(false);
 	}
 }
 
-void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<UMS_PropSpaceComponent> aPropSpaceComponent)
+void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<UMS_PropSpaceComponent> aPropSpaceComponent)
 {
-	if (Grids.Contains(aZoneGridPosition))
+	if (Grids.Contains(aGridPosition))
 	{
-		FMS_GridData& GridData = *Grids.Find(aZoneGridPosition);
+		FMS_GridData& GridData = *Grids.Find(aGridPosition);
 
 		if (GridData.Object == nullptr)
 		{
@@ -139,7 +127,7 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 		else
 		{
 			MS_LOG_Verbosity(Error, TEXT("Object data alreay exists [Zone %d - X : %d, Y : %d]"),
-				ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 			MS_Ensure(false);
 		}
@@ -151,48 +139,48 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakO
 		else
 		{
 			MS_LOG_Verbosity(Error, TEXT("PropSpaceComponent data alreay exists [Zone %d - X : %d, Y : %d]"),
-				ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 			MS_Ensure(false);
 		}
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Object's ZoneGridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+		MS_LOG_Verbosity(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 		MS_Ensure(false);
 	}
 }
 
-void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aZoneGridPosition)
+void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 {
-	if (Grids.Contains(aZoneGridPosition))
+	if (Grids.Contains(aGridPosition))
 	{
-		FMS_GridData& GridData = *Grids.Find(aZoneGridPosition);
+		FMS_GridData& GridData = *Grids.Find(aGridPosition);
 
 		GridData.Object = nullptr;
 		GridData.PropSpaceComponent = nullptr;
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Object's ZoneGridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aZoneGridPosition.X, aZoneGridPosition.Y);
+		MS_LOG_Verbosity(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
 		MS_Ensure(false);
 	}
 }
 
-const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aZoneGridPosition) const
+const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const
 {
 	static FMS_GridData Dummy;
-	if (!Grids.Contains(aZoneGridPosition))
+	if (!Grids.Contains(aGridPosition))
 	{
 		MS_Ensure(false);
 		return Dummy;
 	}
 	
-	return *Grids.Find(aZoneGridPosition);
+	return *Grids.Find(aGridPosition);
 }
 
 void AMS_Zone::ShowDebugZoneData()

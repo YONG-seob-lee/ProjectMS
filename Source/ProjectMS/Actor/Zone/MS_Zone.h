@@ -31,11 +31,11 @@ private:
 
 public:
 	bool IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const;
-	bool IsWorldGridContained(const FIntVector2& aInWorldGridPosition, FIntVector2& aOutZoneGridPosition) const;
+	bool IsGridContained(const FIntVector2& aInGridPosition) const;
 
-	void RegisterFloorToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<AActor> aFloor);
-	void RegisterObjectToGrid(const FIntVector2& aZoneGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
-	void UnregisterObjectToGrid(const FIntVector2& aZoneGridPosition);
+	void RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AActor> aFloor);
+	void RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
+	void UnregisterObjectToGrid(const FIntVector2& aGridPosition);
 
 
 	// Setter
@@ -52,7 +52,7 @@ public:
 
 	const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
 	
-	const FMS_GridData& GetGrid(const FIntVector2& aZoneGridPosition) const;
+	const FMS_GridData& GetGrid(const FIntVector2& aGridPosition) const;
 
 	void ShowDebugZoneData();
 
