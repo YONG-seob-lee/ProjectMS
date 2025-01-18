@@ -13,6 +13,8 @@
 #include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Table/Caches/MS_ResourceWidgetCacheTable.h"
+#include "Table/Caches/MS_StaffAbilityCacheTable.h"
+#include "Table/Caches/MS_StaffCacheTable.h"
 #include "Table/Caches/MS_StorageCacheTable.h"
 #include "Table/RowBase/MS_BasePathImgFile.h"
 
@@ -269,6 +271,8 @@ void UMS_TableManager::MakeTableStructData()
 
 	CreateTableData(EMS_TableDataType::ItemData, TEXT("/Game/TableData/ItemData.ItemData"), UMS_ItemCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::Storage, TEXT("/Game/TableData/Storage.Storage"), UMS_StorageCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::Staff, TEXT("/Game/TableData/Staff.Staff"), UMS_StaffCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::Staff, TEXT("/Game/TableData/StaffAbility.StaffAbility"), UMS_StaffAbilityCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::MenuElement, TEXT("/Game/TableData/MenuElement.MenuElement"), UMS_MenuElementCacheTable::StaticClass());
 }
 
