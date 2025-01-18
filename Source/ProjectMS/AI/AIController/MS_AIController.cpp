@@ -52,6 +52,7 @@ void AMS_AIController::ExecuteBehaviorTree()
 	BehaviorTreeComponent = Cast<UBehaviorTreeComponent>(GetBrainComponent());
 
 	SynchronizeBlackboard();
+
 }
 
 void AMS_AIController::TerminateBehaviorTree()

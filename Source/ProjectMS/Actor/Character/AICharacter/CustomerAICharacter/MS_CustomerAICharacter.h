@@ -18,7 +18,5 @@ public:
 	// Property
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName CustomerName = NAME_None;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int32> CustomerWishlistArray = {};
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int32> CustomerOrderListArray = {};
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int Money = INT_MIN;
+
 };

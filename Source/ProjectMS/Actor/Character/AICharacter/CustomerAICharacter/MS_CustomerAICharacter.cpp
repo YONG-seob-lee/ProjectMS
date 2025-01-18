@@ -3,11 +3,15 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "AI/AIController/StaffAIController/AnimInstance/MS_StaffAIAnimInstance.h"
 
 AMS_CustomerAICharacter::AMS_CustomerAICharacter()
 {
+	AIControllerClass = AMS_CustomerAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 	// Temp Staff AI Animations
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMeshFinder(TEXT("/Game/3D/Character/Ch_Duck"));
 	static ConstructorHelpers::FClassFinder<UMS_StaffAIAnimInstance> AnimInstanceFinder(TEXT("/Game/AI/AIController/StaffAIController/AnimInstance/BP_StaffAIAnimInstance"));

@@ -6,7 +6,7 @@
 AMS_CustomerAIController::AMS_CustomerAIController()
 {
 	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BehaviorTreeObjectFinder(TEXT("/Game/AI/AIController/CustomerAIController/BehaviorTree/BP_CustomerAIBehaviorTree"));
-
+	
 	MS_CHECK(BehaviorTreeObjectFinder.Object);
 
 	BehaviorTree = BehaviorTreeObjectFinder.Object;
@@ -31,6 +31,7 @@ void AMS_CustomerAIController::OnUnPossess()
 
 void AMS_CustomerAIController::BeginPlay()
 {
+
 	Super::BeginPlay();
 
 	CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetPawn());

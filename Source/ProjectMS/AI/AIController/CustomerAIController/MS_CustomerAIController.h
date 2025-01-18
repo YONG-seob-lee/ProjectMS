@@ -20,4 +20,8 @@ public:
 	// Property
 public:
 	TObjectPtr<class AMS_CustomerAICharacter> CustomerAICharacter = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int32> CustomerWishlistArray = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int32> CustomerOrderListArray = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int Money = INT_MIN;
 };
