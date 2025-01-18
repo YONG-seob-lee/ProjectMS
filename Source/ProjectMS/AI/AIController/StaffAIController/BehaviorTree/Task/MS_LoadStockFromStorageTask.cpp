@@ -32,6 +32,7 @@ EBTNodeResult::Type UMS_LoadStockFromStorageTask::ExecuteTask(UBehaviorTreeCompo
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->UnreserveWorker();
 	TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->LoadStuff(StuffName, TargetStorage->SlotComponentArray[UnloadingStorageSlotOrder]->StockQuantity - EmptyStuffQuantity, SlotStaticMeshType);
 	OwnerCharacter->AttachStockStaticMesh(Cast<UStaticMesh>(ItemObject));
+	OwnerCharacter->CarriedStuffName = StuffName;
 
 	return Result;
 }

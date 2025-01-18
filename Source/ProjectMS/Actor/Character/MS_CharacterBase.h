@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Utility/MS_Define.h"
 #include "MS_CharacterBase.generated.h"
 
 USTRUCT(BlueprintType)

@@ -53,7 +53,10 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UStaticMeshComponent> StockStaticMeshComponent = nullptr;
 
-	// Properties
+	// Property
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName StaffName = NAME_None;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName CarriedStuffName = NAME_None;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int TargetStorageBayOrder = INT_MIN;
 };

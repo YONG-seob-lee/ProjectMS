@@ -46,24 +46,9 @@ void AMS_AICharacter::PostInitializeComponents()
 void AMS_AICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	LoadResourceDelegate.BindUFunction(this, TEXT("OnLoadResource"));
 }
 
 void AMS_AICharacter::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
-}
-
-void AMS_AICharacter::OnLoadResource(FString aName, UObject* aObject)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *aName);
-	if (aObject != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ItemName: %s"), *aObject->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Object nullptr"));
-	}
 }

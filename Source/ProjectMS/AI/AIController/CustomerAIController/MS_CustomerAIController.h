@@ -2,15 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "AI/AIController/MS_AIController.h"
-#include "MS_StaffAIController.generated.h"
+#include "MS_CustomerAIController.generated.h"
 
-UCLASS() class PROJECTMS_API AMS_StaffAIController : public AMS_AIController
+UCLASS() class PROJECTMS_API AMS_CustomerAIController : public AMS_AIController
 {
 	GENERATED_BODY()
 	
 public:
-	AMS_StaffAIController();
+	AMS_CustomerAIController();
 
+	virtual void PostInitializeComponents() override;
 	virtual void OnPossess(APawn* aInPawn) override;
 	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
@@ -18,5 +19,5 @@ public:
 
 	// Property
 public:
-	TObjectPtr<class AMS_StaffAICharacter> StaffAICharacter = nullptr;
+	TObjectPtr<class AMS_CustomerAICharacter> CustomerAICharacter = nullptr;
 };

@@ -25,7 +25,6 @@ void AMS_StaffAIController::BeginPlay()
 	ExecuteBehaviorTree();
 
 	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
-	UE_LOG(LogTemp, Warning, TEXT("%d"), static_cast<uint8>(BlackboardComponent->GetValueAsEnum(FName(TEXT("AIBehaviorPattern")))));
 }
 
 void AMS_StaffAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)

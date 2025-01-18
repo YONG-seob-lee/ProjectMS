@@ -24,7 +24,7 @@ AMS_StaffAICharacter::AMS_StaffAICharacter()
 	bUseControllerRotationRoll = true;
 	bUseControllerRotationYaw = true;
 
-	CollisionCapsuleComponent->SetCollisionProfileName(TEXT("StaffCollisionPreset"));
+	CollisionCapsuleComponent->SetCollisionProfileName(TEXT("CustomerCollisionPreset"));
 
 	StockStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StockStaticMeshComponent"));
 	StockStaticMeshComponent->SetupAttachment(SkeletalMeshComponent);
