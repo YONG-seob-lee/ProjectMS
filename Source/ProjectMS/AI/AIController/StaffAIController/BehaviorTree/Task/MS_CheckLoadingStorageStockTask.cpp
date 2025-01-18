@@ -11,7 +11,6 @@
 #include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
-
 UMS_CheckLoadingStorageStockTask::UMS_CheckLoadingStorageStockTask()
 {
 	NodeName = FString(TEXT("Check Loading Storage Stock"));
