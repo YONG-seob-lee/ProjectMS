@@ -6,7 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/Button.h"
 
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Management/MS_ManagementClient.h"

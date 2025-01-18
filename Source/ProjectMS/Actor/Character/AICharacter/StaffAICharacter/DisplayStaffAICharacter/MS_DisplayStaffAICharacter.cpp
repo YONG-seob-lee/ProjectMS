@@ -1,8 +1,8 @@
 #include "Actor/Character/AICharacter/StaffAICharacter/DisplayStaffAICharacter/MS_DisplayStaffAICharacter.h"
 
 #include "AI/AIController/StaffAIController/DisplayStaffAIController/MS_DisplayStaffAIController.h"
-#include "Actor/Storage/Display/MS_DisplayStorage.h"
-#include "Actor/Storage/Shelf/MS_ShelfStorage.h"
+#include "Actor/Prop/Furniture/Storage/Display/MS_DisplayStorage.h"
+#include "Actor/Prop/Furniture/Storage/Shelf/MS_ShelfStorage.h"
 
 AMS_DisplayStaffAICharacter::AMS_DisplayStaffAICharacter()
 {

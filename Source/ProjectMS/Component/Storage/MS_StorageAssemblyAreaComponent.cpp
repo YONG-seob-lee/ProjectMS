@@ -3,7 +3,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/LineBatchComponent.h"
 
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Component/Storage/MS_StorageBayComponent.h"
 

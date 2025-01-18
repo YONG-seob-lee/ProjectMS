@@ -1,13 +1,12 @@
 #include "Actor/Character/AICharacter/StaffAICharacter/ShelfStaffAICharacter/MS_ShelfStaffAICharacter.h"
 
 #include "AI/AIController/StaffAIController/ShelfStaffAIController/MS_ShelfStaffAIController.h"
-#include "Actor/Storage/Shelf/MS_ShelfStorage.h"
-#include "Actor/Storage/Pallet/MS_PalletStorage.h"
+#include "Actor/Prop/Furniture/Storage/Shelf/MS_ShelfStorage.h"
+#include "Actor/Prop/Furniture/Storage/Pallet/MS_PalletStorage.h"
 
 AMS_ShelfStaffAICharacter::AMS_ShelfStaffAICharacter()
 {
 	AIControllerClass = AMS_ShelfStaffAIController::StaticClass();
-	// /Script/Engine.SkeletalMesh'/Game/3D/Character/Ch_Duck.Ch_Duck'
 
 }
 

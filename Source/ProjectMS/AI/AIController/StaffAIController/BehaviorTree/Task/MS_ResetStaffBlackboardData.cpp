@@ -1,6 +1,6 @@
 #include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_ResetStaffBlackboardData.h"
 
-//#include "Actor/Storage/MS_Storage.h"
+//#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 //#include "Component/Storage/MS_StorageBayComponent.h"
 
 UMS_ResetStaffBlackboardData::UMS_ResetStaffBlackboardData()

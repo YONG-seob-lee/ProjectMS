@@ -26,7 +26,7 @@ void AMS_TopViewCamera::Deactivate()
 {
 	Super::Deactivate();
 
-	PlayerCameraManager->RestrictCameraMovement(true);
+	PlayerCameraManager->RestrictCameraMovement(false);
 }
 
 void AMS_TopViewCamera::AdjustCameraDistance(float aDistance)

@@ -1,0 +1,17 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
+#include "MS_ShelfStorage.generated.h"
+
+UCLASS() class PROJECTMS_API AMS_ShelfStorage : public AMS_Storage
+{
+	GENERATED_BODY()
+
+public:
+	AMS_ShelfStorage();
+
+	virtual void PostInitializeComponents() override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float aDeltaTime) override;
+};

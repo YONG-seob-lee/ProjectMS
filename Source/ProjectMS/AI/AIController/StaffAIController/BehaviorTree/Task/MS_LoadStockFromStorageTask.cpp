@@ -6,7 +6,7 @@
 #include "Data/Table/RowBase/MS_BasePathDirectory.h"
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
 UMS_LoadStockFromStorageTask::UMS_LoadStockFromStorageTask()
 {

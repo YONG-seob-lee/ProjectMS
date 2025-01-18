@@ -5,7 +5,7 @@
 #include "Management/Manager_Both/MS_TableManager.h"
 #include "Data/Table/Caches/MS_ItemCacheTable.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 UMS_CheckUnloadingStorageStockTask::UMS_CheckUnloadingStorageStockTask()

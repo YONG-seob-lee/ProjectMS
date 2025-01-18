@@ -1,6 +1,6 @@
 #include "Component/Storage/MS_StorageSlotComponent.h"
 
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
 #include "Components/LineBatchComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"

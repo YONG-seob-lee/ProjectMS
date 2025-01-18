@@ -4,7 +4,7 @@
 #include "Actor/Character/AICharacter/StaffAICharacter/DisplayStaffAICharacter/MS_DisplayStaffAICharacter.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Component/Storage/MS_StorageBayComponent.h"
 #include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
 

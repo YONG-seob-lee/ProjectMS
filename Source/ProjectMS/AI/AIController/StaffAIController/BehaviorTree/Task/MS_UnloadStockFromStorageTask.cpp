@@ -1,7 +1,7 @@
 #include "AI/AIController/StaffAIController/BehaviorTree/Task/MS_UnloadStockFromStorageTask.h"
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
 UMS_UnloadStockFromStorageTask::UMS_UnloadStockFromStorageTask()
 {

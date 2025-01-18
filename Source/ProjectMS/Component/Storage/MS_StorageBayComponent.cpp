@@ -4,7 +4,7 @@
 #include "Components/LineBatchComponent.h"
 
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Component/Storage/MS_StorageAssemblyAreaComponent.h"
 
 UMS_StorageBayComponent::UMS_StorageBayComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

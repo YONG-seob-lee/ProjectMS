@@ -4,7 +4,7 @@
 
 #include "Management/Manager_Both/MS_TableManager.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
-#include "Actor/Storage/MS_Storage.h"
+#include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Component/Storage/MS_StorageBayComponent.h"
 #include "Component/Storage/MS_StorageSlotComponent.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
