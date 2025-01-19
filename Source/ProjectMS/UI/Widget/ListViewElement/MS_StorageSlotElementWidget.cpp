@@ -33,6 +33,7 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 			}
 			else
 			{
+				CPP_RemainCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				CPP_RemainCount->SetText(FText::FromString(FString::Format(TEXT("{0} 개"), {ShelfCount})));
 			}
 		}
