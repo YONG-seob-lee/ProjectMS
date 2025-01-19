@@ -15,8 +15,7 @@ class PROJECTMS_API UMS_AbilityElementWidget : public UMS_Widget, public IUserOb
 {
 	GENERATED_BODY()
 public:
-	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
-
+	virtual void NativeConstruct() override;
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
 	
 private:

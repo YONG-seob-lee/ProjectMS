@@ -34,7 +34,7 @@ public:
 	virtual void Finalize() override;
 	
 	FMS_Staff* GetStaffData(int32 aStaffId);
-
+	void GetStaffDatas(TMap<int32, FMS_Staff*>& aStaffDatas);
 private:
 	TMap<int32, FMS_Staff*> StaffDatas;
 };

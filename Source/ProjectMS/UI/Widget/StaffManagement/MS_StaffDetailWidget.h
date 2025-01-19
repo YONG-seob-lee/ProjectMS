@@ -6,6 +6,16 @@
 #include "Widget/MS_Widget.h"
 #include "MS_StaffDetailWidget.generated.h"
 
+UENUM()
+enum class EMS_AbilityType : uint8
+{
+	Undefined = 0,
+	Work,
+	Endurance,
+	Diligence,
+	Kindness,
+	Plannedness,
+};
 /**
  * 
  */
@@ -14,9 +24,21 @@ class PROJECTMS_API UMS_StaffDetailWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
+	static FName GetWidgetName() { return TEXT("StaffDetail"); }
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	void SetDetail(int32 aStaffId);
 	
 private:
+	FString GetAbilityName(int32 aAbilityType);
+
+	UPROPERTY()
+	TArray<class UMS_AbilityElementData*> AbilityElementDatas;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_StaffProfileElementWidget> CPP_ProfileWidget = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ListView> CPP_AbilityListView = nullptr;
 

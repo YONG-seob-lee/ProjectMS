@@ -7,10 +7,9 @@
 #include "Components/TextBlock.h"
 #include "ElementData/MS_AbilityElementData.h"
 
-void UMS_AbilityElementWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
+void UMS_AbilityElementWidget::NativeConstruct()
 {
-	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
-
+	Super::NativeConstruct();
 	LevelArray.Emplace(CPP_Level01);
 	LevelArray.Emplace(CPP_Level02);
 	LevelArray.Emplace(CPP_Level03);
@@ -45,7 +44,7 @@ void UMS_AbilityElementWidget::SetLevel(int32 aLevel)
 		}
 		else
 		{
-			LevelArray[i]->SetColorAndOpacity(FLinearColor::White);
+			LevelArray[i]->SetColorAndOpacity(FLinearColor::Gray);
 		}
 	}
 }

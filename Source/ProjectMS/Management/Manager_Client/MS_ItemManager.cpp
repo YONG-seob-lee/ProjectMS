@@ -6,6 +6,8 @@
 #include "Item/MS_Item.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
+#include "Table/Caches/MS_StaffCacheTable.h"
+#include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
 
 UMS_ItemManager::UMS_ItemManager()
 {
@@ -38,6 +40,18 @@ void UMS_ItemManager::Initialize()
 	ShelfItems.Emplace(13, 1);
 	ShelfItems.Emplace(14, 3);
 	ShelfItems.Emplace(15, 1);
+
+	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
+	MS_Ensure(StaffTable);
+
+	TMap<int32, FMS_Staff*> StaffDatas;
+	StaffTable->GetStaffDatas(StaffDatas);
+	for(const auto& StaffData : StaffDatas)
+	{
+		UMS_StaffProfileElementData* Data = MS_NewObject<UMS_StaffProfileElementData>(this);
+		Data->SetStaffId(StaffData.Key);
+		StaffProfileDatas.Emplace(Data);
+	}
 }
 
 void UMS_ItemManager::PostInitialize()
@@ -63,6 +77,12 @@ void UMS_ItemManager::BuiltInFinalize()
 void UMS_ItemManager::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+}
+
+void UMS_ItemManager::GetStaffData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const
+{
+	aProfileDatas.Empty();
+	aProfileDatas = StaffProfileDatas;
 }
 
 UMS_ItemManager* UMS_ItemManager::GetInstance()

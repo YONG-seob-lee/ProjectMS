@@ -11,3 +11,5 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 10,Market,100,10,FALSE,0
 11,InMarket,100,11,FALSE,0
 12,StorageStatus,100,12,FALSE,0
+13,StaffManagement,100,13,FALSE,0
+14,StaffDetail,100,14,FALSE,0

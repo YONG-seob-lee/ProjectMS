@@ -19,7 +19,10 @@ public:
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
+	void SetProfile(int32 aStaffId);
 private:
+	int32 StaffId = INDEX_NONE;
+	
 	UPROPERTY(meta= (BindWidget))
 	TObjectPtr<class UImage> CPP_PortraitImage = nullptr;
 

@@ -78,6 +78,8 @@ public:
 	FORCEINLINE TMap<int32, int32> GetShelfItems() { return ShelfItems; }
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 
+	void GetStaffData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
+	
 	FMS_OnClickedItem OnClickedItemDelegate;
 	
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
@@ -85,7 +87,9 @@ private:
 	TMap<int32, int32> Items = {};
 	TMap<int32, int32> ShelfItems = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
-	
+
+	UPROPERTY()
+	TArray<TObjectPtr<UMS_StaffProfileElementData>> StaffProfileDatas;
 public:
 	inline static TObjectPtr<UMS_ItemManager> InventoryManager = nullptr;
 	static UMS_ItemManager* GetInstance();

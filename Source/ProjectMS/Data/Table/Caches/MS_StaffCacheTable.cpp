@@ -24,3 +24,9 @@ FMS_Staff* UMS_StaffCacheTable::GetStaffData(int32 aStaffId)
 
 	return nullptr;
 }
+
+void UMS_StaffCacheTable::GetStaffDatas(TMap<int32, FMS_Staff*>& aStaffDatas)
+{
+	aStaffDatas.Empty();
+	aStaffDatas = StaffDatas;
+}

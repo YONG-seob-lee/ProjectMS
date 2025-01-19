@@ -7,7 +7,7 @@ void UMS_StaffAbilityCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
 	Super::Initialize(aMng);
 
-	BuildTable(aMng, EMS_TableDataType::Staff, StaffAbilityDatas);
+	BuildTable(aMng, EMS_TableDataType::StaffAbility, StaffAbilityDatas);
 }
 
 void UMS_StaffAbilityCacheTable::Finalize()

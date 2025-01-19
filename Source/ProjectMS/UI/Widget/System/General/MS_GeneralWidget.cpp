@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
+#include "Widget/StaffManagement/Modal/MS_StaffManagementWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -44,6 +45,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Schedule);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
+			LeftButtonType = EMS_GeneralButtonType::Schedule;
 			RightButtonType = EMS_GeneralButtonType::Menu;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
@@ -70,6 +72,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
+			LeftButtonType = EMS_GeneralButtonType::Manage;
 			RightButtonType = EMS_GeneralButtonType::Menu;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_ExpanderButton->SetButtonType(EMS_GeneralButtonType::Setting);
@@ -104,7 +107,9 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 	}
 	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
 	{
-		gWidgetMng.ShowModalWidget();
+		FMS_ModalParameter Parameter;
+		Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffManagementWidget::GetWidgetName());
+		gWidgetMng.ShowModalWidget(Parameter);
 	}
 	else
 	{

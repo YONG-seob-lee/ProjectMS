@@ -15,9 +15,12 @@ Id,Directory
 409,UI/Widget/Market
 410,UI/Widget/InMarket
 411,UI/Widget/Market/Storage
+412,UI/Widget/StaffManagement
+413,UI/Widget/StaffManagement/Modal
 1001,UI/Image/Icon
 1002,UI/Image/Icon/Dummy
 1003,UI/Image/Storage
 1004,UI/Image/Item
+1005,UI/Image/Portrait
 4001,Environment/Prop/Furniture
 5001,3D/StaticMesh
