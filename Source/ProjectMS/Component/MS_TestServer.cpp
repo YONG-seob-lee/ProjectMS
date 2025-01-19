@@ -6,6 +6,7 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
 void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 {
@@ -136,9 +137,16 @@ void UMS_TestServer::RenewItems(TMap<int32, int32> aTransferItems)
 
 void UMS_TestServer::RenewStaff(int32 aStaffId)
 {
-	StaffPropertys.Emplace(aStaffId, FMS_StaffProperty(aStaffId));
-
-	gItemMng.SetStaffPropertys(&StaffPropertys[aStaffId]);
+	if(UMS_StaffPropertyElementData* StaffProperty = MS_NewObject<UMS_StaffPropertyElementData>())
+	{
+		StaffPropertys.Emplace(aStaffId, StaffProperty);
+		StaffProperty->SetStaffId(aStaffId);
+		StaffProperty->SetHP(100);
+		StaffProperty->SetCondition(100);
+		StaffProperty->SetFeeling(1);
+		StaffProperty->SetExpirationDate(5, 31);
+	}
+	gItemMng.SetStaffProperty(aStaffId, StaffPropertys[aStaffId]);
 }
 
 UMS_TestServer* UMS_TestServer::GetInstance()

@@ -3,7 +3,11 @@
 
 #include "MS_StaffDetailWidget.h"
 
+#include "Button/MS_Button.h"
+#include "Component/MS_TestServer.h"
+#include "Components/CanvasPanel.h"
 #include "Manager_Both/MS_TableManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_StaffAbilityCacheTable.h"
 #include "Widget/ListViewElement/MS_StaffProfileElementWidget.h"
 #include "Widget/ListViewElement/ElementData/MS_AbilityElementData.h"
@@ -12,7 +16,9 @@
 void UMS_StaffDetailWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
+	CPP_HireButton->GetOnClickedDelegate().AddUObject(this, &UMS_StaffDetailWidget::OnClickedHireButton);
+	CPP_ReconsiderButton->GetOnClickedDelegate().AddUObject(this, &UMS_StaffDetailWidget::OnClickedReconsiderButton);
 }
 
 void UMS_StaffDetailWidget::NativeDestruct()
@@ -27,6 +33,8 @@ void UMS_StaffDetailWidget::NativeDestruct()
 
 void UMS_StaffDetailWidget::SetDetail(int32 aStaffId)
 {
+	StaffId = aStaffId;
+	
 	CPP_ProfileWidget->SetProfile(aStaffId);
 	
 	const TObjectPtr<UMS_StaffAbilityCacheTable> StaffAbilityTable = Cast<UMS_StaffAbilityCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::StaffAbility));
@@ -63,6 +71,26 @@ void UMS_StaffDetailWidget::SetDetail(int32 aStaffId)
 		}
 		CPP_AbilityListView->SetListItems(AbilityElementDatas);
 	}
+}
+
+void UMS_StaffDetailWidget::ShowButtonPanel(bool bShow) const
+{
+	if(CPP_ButtonPanel)
+	{
+		CPP_ButtonPanel->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UMS_StaffDetailWidget::OnClickedHireButton()
+{
+	gTestServer.RenewStaff(StaffId);
+	gWidgetMng.CloseModalWidget();
+	gWidgetMng.ShowToastMessage(TEXT("새로운 스텝을 고용하였습니다!!"));
+}
+
+void UMS_StaffDetailWidget::OnClickedReconsiderButton()
+{
+	gWidgetMng.CloseModalWidget();
 }
 
 FString UMS_StaffDetailWidget::GetAbilityName(int32 aAbilityType)

@@ -79,15 +79,21 @@ void UMS_ItemManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-void UMS_ItemManager::GetStaffData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const
+void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const
 {
 	aProfileDatas.Empty();
 	aProfileDatas = StaffProfileDatas;
 }
 
-void UMS_ItemManager::SetStaffPropertys(FMS_StaffProperty* aStaffProperty)
+void UMS_ItemManager::SetStaffProperty(int32 aStaffId, UMS_StaffPropertyElementData* aStaffProperty)
 {
-	StaffPropertys.Emplace(aStaffProperty);
+	StaffPropertys.Emplace(aStaffId, aStaffProperty);
+}
+
+void UMS_ItemManager::GetStaffPropertys(TArray<UMS_StaffPropertyElementData*>& aStaffPropertys)
+{
+	aStaffPropertys.Empty();
+	StaffPropertys.GenerateValueArray(aStaffPropertys);
 }
 
 UMS_ItemManager* UMS_ItemManager::GetInstance()

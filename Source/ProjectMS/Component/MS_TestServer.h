@@ -42,17 +42,6 @@ private:
 	int32 Minute = 0;
 };
 
-struct FMS_StaffProperty
-{
-public:
-	FMS_StaffProperty();
-	FMS_StaffProperty(int32 aStaffId) : StaffId(aStaffId) {}
-
-private:
-	int32 StaffId = INDEX_NONE;
-	
-};
-
 /**
  * 
  */
@@ -83,7 +72,7 @@ private:
 	TMap<int32, int32> Items;
 
 	// Staff
-	TMap<int32, FMS_StaffProperty> StaffPropertys;
+	TMap<int32, class UMS_StaffPropertyElementData*> StaffPropertys;
 public:
 	inline static TObjectPtr<UMS_TestServer> TestServer = nullptr;
 	static UMS_TestServer* GetInstance();

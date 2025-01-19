@@ -29,10 +29,16 @@ public:
 	virtual void NativeDestruct() override;
 
 	void SetDetail(int32 aStaffId);
+	void ShowButtonPanel(bool bShow) const;
 	
 private:
+	void OnClickedHireButton();
+	void OnClickedReconsiderButton();
+	
 	FString GetAbilityName(int32 aAbilityType);
 
+	int32 StaffId = INDEX_NONE;
+	
 	UPROPERTY()
 	TArray<class UMS_AbilityElementData*> AbilityElementDatas;
 	
@@ -42,6 +48,9 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ListView> CPP_AbilityListView = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_ButtonPanel = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_HireButton = nullptr;
 

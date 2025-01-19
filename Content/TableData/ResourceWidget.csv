@@ -13,3 +13,4 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 12,StorageStatus,100,12,FALSE,0
 13,StaffManagement,100,13,FALSE,0
 14,StaffDetail,100,14,FALSE,0
+15,HireStaff,100,15,FALSE,0

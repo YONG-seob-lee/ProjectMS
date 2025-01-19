@@ -13,7 +13,7 @@ void UMS_HireStaffWidget::InitWidget(const FName& aTypeName, bool bManaged, bool
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
 
 	TArray<TObjectPtr<UMS_StaffProfileElementData>> ProfileElementDatas;
-	gItemMng.GetStaffData(ProfileElementDatas);
+	gItemMng.GetStaffProfileElementData(ProfileElementDatas);
 	CPP_ProfileTileView->SetElements(TArray<UObject*>(ProfileElementDatas));
 }
 
