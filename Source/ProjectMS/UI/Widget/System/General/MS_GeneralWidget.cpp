@@ -10,7 +10,7 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
-#include "Widget/StaffManagement/Modal/MS_StaffManagementWidget.h"
+#include "Widget/Staff/Modal/MS_HireStaffWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -174,7 +174,7 @@ void UMS_GeneralWidget::OnClickedMenuElementButton()
 void UMS_GeneralWidget::OnClickedHireStaffButton()
 {
 	FMS_ModalParameter Parameter;
-	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffManagementWidget::GetWidgetName());
+	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_HireStaffWidget::GetWidgetName());
 	gWidgetMng.ShowModalWidget(Parameter);
 
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);

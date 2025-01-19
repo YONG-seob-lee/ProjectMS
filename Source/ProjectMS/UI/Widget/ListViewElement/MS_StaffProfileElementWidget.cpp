@@ -9,7 +9,7 @@
 #include "Manager_Both/MS_TableManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
-#include "Widget/StaffManagement/MS_StaffDetailWidget.h"
+#include "Widget/Staff/MS_StaffDetailWidget.h"
 
 void UMS_StaffProfileElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {

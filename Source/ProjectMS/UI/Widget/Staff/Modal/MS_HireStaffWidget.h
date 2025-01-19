@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_StaffManagementWidget.generated.h"
+#include "MS_HireStaffWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_StaffManagementWidget : public UMS_Widget
+class PROJECTMS_API UMS_HireStaffWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
