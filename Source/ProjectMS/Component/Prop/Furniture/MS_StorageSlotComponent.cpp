@@ -107,7 +107,7 @@ void UMS_StorageSlotComponent::EraseSlotOutline()
 }
 #endif
 
-void UMS_StorageSlotComponent::ReserveWorker(AMS_StaffAICharacter* aTarget)
+void UMS_StorageSlotComponent::ReserveWorker(AMS_AICharacter* aTarget)
 {
 	ReservationFlag = true;
 	ReservationWorker = aTarget;
@@ -131,25 +131,6 @@ bool UMS_StorageSlotComponent::LoadStuff(FName aStuffRowName, int aStockQuantity
 	{
 		SetStaticMesh(nullptr);
 	}
-	//else
-	//{
-	//	switch (aSlotStaticMeshType)
-	//	{
-	//	case EMS_SlotStaticMeshType::Undefined:
-	//		break;
-	//	case EMS_SlotStaticMeshType::StuffStaticMesh:
-	//		SetStaticMesh(ItemDataTableRow->StuffStaticMesh);
-	//		break;
-	//	case EMS_SlotStaticMeshType::StuffBundleStaticMesh:
-	//		SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
-	//		break;
-	//	case EMS_SlotStaticMeshType::StuffBoxStaticMesh:
-	//		SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//}
 
 	return true;
 }

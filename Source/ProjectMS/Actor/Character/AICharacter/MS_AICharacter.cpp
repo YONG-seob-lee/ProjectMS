@@ -14,6 +14,8 @@ AMS_AICharacter::AMS_AICharacter()
 	bUseControllerRotationRoll = true;
 	bUseControllerRotationYaw = true;
 
+	SceneComponent = GetRootComponent();
+
 	CollisionCapsuleComponent = GetCapsuleComponent();
 	CollisionCapsuleComponent->SetupAttachment(SceneComponent);
 	CollisionCapsuleComponent->SetCapsuleRadius(20.0f);

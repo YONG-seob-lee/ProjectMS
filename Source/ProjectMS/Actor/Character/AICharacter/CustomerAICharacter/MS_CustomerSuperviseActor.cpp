@@ -3,6 +3,8 @@
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 
+#include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
+
 AMS_CustomerSuperviseActor::AMS_CustomerSuperviseActor()
 {
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
@@ -31,15 +33,14 @@ void AMS_CustomerSuperviseActor::SpawnCustomerCharacter(const FMS_CustomerSpawnP
     SpawnParams.Name = MakeUniqueObjectName(GetWorld(), AMS_CustomerAICharacter::StaticClass(), aSpawnParams.CustomerName);
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    auto CustomerCharacter = GetWorld()->SpawnActor<AMS_CustomerAICharacter>(AMS_CustomerAICharacter::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnParams);
+	AMS_CustomerAICharacter* CustomerCharacter = GetWorld()->SpawnActor<AMS_CustomerAICharacter>(AMS_CustomerAICharacter::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnParams);
+	AMS_CustomerAIController* TargetAIController = Cast<AMS_CustomerAIController>(CustomerCharacter->GetController());
 
-    if (!CustomerCharacter)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to spawn CustomerCharacter."));
-        return;
-    }
+	CustomerCharacter->CustomerName = aSpawnParams.CustomerName;
+	CustomerCharacter->Age = aSpawnParams.Age;
+	CustomerCharacter->Gender = aSpawnParams.Gender;
+	CustomerCharacter->WishlistArray = aSpawnParams.WishlistArray;
 
-    UE_LOG(LogTemp, Warning, TEXT("CustomerCharacter spawned successfully: %s"), *CustomerCharacter->GetName());
 }
 
 

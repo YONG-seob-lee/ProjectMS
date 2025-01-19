@@ -4,7 +4,6 @@
 #include "Components/CapsuleComponent.h"
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
-#include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "AI/AIController/StaffAIController/AnimInstance/MS_StaffAIAnimInstance.h"
 
 AMS_CustomerAICharacter::AMS_CustomerAICharacter()
@@ -19,7 +18,6 @@ AMS_CustomerAICharacter::AMS_CustomerAICharacter()
 	MS_CHECK(SkeletalMeshFinder.Object);
 	MS_CHECK(AnimInstanceFinder.Class);
 
-	AIControllerClass = AMS_StaffAIController::StaticClass();
 	SkeletalMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -50.0f));
 	SkeletalMeshComponent->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	SkeletalMeshComponent->SetSkeletalMesh(SkeletalMeshFinder.Object);

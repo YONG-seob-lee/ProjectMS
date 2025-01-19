@@ -106,7 +106,7 @@ void UMS_StorageAssemblyAreaComponent::EraseAssemblyAreaOutline()
 }
 #endif
 
-FVector UMS_StorageAssemblyAreaComponent::FindAdjacentLocationWithBay(int aBayOrder, AMS_StaffAICharacter* aTarget)
+FVector UMS_StorageAssemblyAreaComponent::FindAdjacentLocationWithBay(int aBayOrder, AMS_AICharacter* aTarget)
 {
 	return GetComponentLocation();
 }

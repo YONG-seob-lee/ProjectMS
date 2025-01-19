@@ -22,6 +22,11 @@ void AMS_CustomerAIController::PostInitializeComponents()
 void AMS_CustomerAIController::OnPossess(APawn* aInPawn)
 {
 	Super::OnPossess(aInPawn);
+
+	CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetPawn());
+	ExecuteBehaviorTree();
+
+	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
 }
 
 void AMS_CustomerAIController::OnUnPossess()
@@ -31,13 +36,7 @@ void AMS_CustomerAIController::OnUnPossess()
 
 void AMS_CustomerAIController::BeginPlay()
 {
-
 	Super::BeginPlay();
-
-	CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetPawn());
-	ExecuteBehaviorTree();
-
-	BlackboardComponent->SetValueAsEnum(FName(TEXT("AIBehaviorPattern")), static_cast<uint8>(EMS_AIBehaviorPattern::Idle));
 }
 
 void AMS_CustomerAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)

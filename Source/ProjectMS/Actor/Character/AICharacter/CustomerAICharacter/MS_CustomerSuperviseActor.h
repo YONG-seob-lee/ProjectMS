@@ -19,8 +19,8 @@ USTRUCT(BlueprintType) struct FMS_CustomerSpawnParameters
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName CustomerName = NAME_None;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Gender = NAME_None;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 Age = INT_MIN;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int32> WishlistArray = {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int Age = INT_MIN;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int> WishlistArray = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float RandomStuffSelectionFactor = 0.0f;
 };
 

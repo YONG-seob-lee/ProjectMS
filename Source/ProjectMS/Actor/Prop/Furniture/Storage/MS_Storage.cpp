@@ -93,3 +93,19 @@ FMS_StorageOverallSlotStatus AMS_Storage::CheckStorageOverallSlotStatus()
 
 	return StorageOverallSlotStatus;
 }
+
+void AMS_Storage::AddCharacterToStorageReservationArray(AMS_AICharacter* aCharacter)
+{
+	if (ReservedAICharacterArray.Contains(aCharacter) == false)
+	{
+		ReservedAICharacterArray.Add(aCharacter);
+	}
+}
+
+void AMS_Storage::RemoveCharacterFromStorageReservationArray(AMS_AICharacter* aCharacter)
+{
+	if (ReservedAICharacterArray.Contains(aCharacter) == true)
+	{
+		ReservedAICharacterArray.Remove(aCharacter);
+	}
+}

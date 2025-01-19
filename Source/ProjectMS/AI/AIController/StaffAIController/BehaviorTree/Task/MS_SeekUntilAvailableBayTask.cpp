@@ -29,7 +29,7 @@ void UMS_SeekUntilAvailableBayTask::TickTask(UBehaviorTreeComponent& aOwnerComp,
 	Super::TickTask(aOwnerComp, aNodeMemory, aDeltaSeconds);
 	SetNextTickTime(aNodeMemory, 0.75f);
 
-	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
+	AMS_AICharacter* OwnerCharacter = Cast<AMS_AICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	AMS_Storage* TargetStorage = Cast<AMS_Storage>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(StorageKey.SelectedKeyName));
 
 	for (int i = 0; i < TargetStorage->BayComponentArray.Num(); i++)

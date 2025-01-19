@@ -1,8 +1,0 @@
-{
-	"BuildId": "33043543",
-	"Modules": 
-	{
-		"NiagaraUIRenderer": "UnrealEditor-NiagaraUIRenderer-Win64-DebugGame.dll",
-		"NiagaraUIRendererEditor": "UnrealEditor-NiagaraUIRendererEditor-Win64-DebugGame.dll"
-	}
-}

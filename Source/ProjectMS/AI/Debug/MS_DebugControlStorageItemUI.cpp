@@ -141,20 +141,20 @@ void UMS_DebugControlStorageItemUI::OnAssignStoragePropertiesButtonClicked()
         {
             Storage->SlotComponentArray[i]->SetStaticMesh(nullptr);
         }
-        else
-        {
-            FMS_ItemData* ItemDataTableRow = ItemData->FindRow<FMS_ItemData>(Storage->SlotComponentArray[i]->StuffRowName, TEXT(""));
-            MS_CHECK(ItemDataTableRow);
+        //else
+        //{
+        //    FMS_ItemData* ItemDataTableRow = ItemData->FindRow<FMS_ItemData>(Storage->SlotComponentArray[i]->StuffRowName, TEXT(""));
+        //    MS_CHECK(ItemDataTableRow);
 
-            if (SlotStaticMeshSwitch == false)
-            {
-                Storage->SlotComponentArray[i]->SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
-            }
-            else
-            {
-                Storage->SlotComponentArray[i]->SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
-            }
-        }
+        //    if (SlotStaticMeshSwitch == false)
+        //    {
+        //        Storage->SlotComponentArray[i]->SetStaticMesh(ItemDataTableRow->StuffBoxStaticMesh);
+        //    }
+        //    else
+        //    {
+        //        Storage->SlotComponentArray[i]->SetStaticMesh(ItemDataTableRow->StuffBundleStaticMesh);
+        //    }
+        //}
 
         Storage->SlotComponentArray[i]->StockCapacity = FCString::Atoi(*CapacityEditableTextArray[i]->GetText().ToString());
     }

@@ -12,13 +12,19 @@ EBTNodeResult::Type UMS_UndeployStaffFromStorageBayTask::ExecuteTask(UBehaviorTr
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(aOwnerComp, aNodeMemory);
 
-	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
+	AMS_AICharacter* OwnerCharacter = Cast<AMS_AICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	AMS_Storage* TargetStorage = Cast<AMS_Storage>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetStorageKey.SelectedKeyName));
 
 	int TargetStorageBayOrder = INT_MIN;
 	TargetStorageBayOrder = aOwnerComp.GetBlackboardComponent()->GetValueAsInt(FName(TEXT("TargetStorageBayOrder")));
 	TargetStorage->BayComponentArray[TargetStorageBayOrder]->UndeployWorker();
-	OwnerCharacter->SetWorkAnimationFlag(false);
+	TargetStorage->RemoveCharacterFromStorageReservationArray(OwnerCharacter);
+
+	AMS_StaffAICharacter* StaffCharacter = Cast<AMS_StaffAICharacter>(OwnerCharacter);
+	if (StaffCharacter != nullptr)
+	{
+		StaffCharacter->SetWorkAnimationFlag(false);
+	}
 
 	return EBTNodeResult::Succeeded;
 }

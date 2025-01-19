@@ -28,9 +28,9 @@ private:
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable) void ReserveWorker(class AMS_StaffAICharacter* aTarget);
+	UFUNCTION(BlueprintCallable) void ReserveWorker(class AMS_AICharacter* aTarget);
 	UFUNCTION(BlueprintCallable) void UnreserveWorker();
-	UFUNCTION(BlueprintCallable) void DeployWorker(class AMS_StaffAICharacter* aTarget);
+	UFUNCTION(BlueprintCallable) void DeployWorker(class AMS_AICharacter* aTarget);
 	UFUNCTION(BlueprintCallable) void UndeployWorker();
 
 	// Property
@@ -41,9 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) float BayOutlineThickness = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool OccupancyFlag = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_StaffAICharacter* OccupancyWorker = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_AICharacter* OccupancyWorker = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool ReservationFlag = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_StaffAICharacter* ReservationWorker = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_AICharacter* ReservationWorker = nullptr;
 
 	// Instance
 public:

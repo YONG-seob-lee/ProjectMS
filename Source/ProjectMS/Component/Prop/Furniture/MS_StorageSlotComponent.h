@@ -37,7 +37,7 @@ private:
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable) void ReserveWorker(class AMS_StaffAICharacter* aTarget);
+	UFUNCTION(BlueprintCallable) void ReserveWorker(class AMS_AICharacter* aTarget);
 	UFUNCTION(BlueprintCallable) void UnreserveWorker();
 	UFUNCTION(BlueprintCallable) bool LoadStuff(FName aStuffRowName, int aStockQuantity, EMS_SlotStaticMeshType aSlotStaticMeshType);
 	UFUNCTION(BlueprintCallable) void UnloadStuff();
@@ -55,7 +55,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int StockQuantity = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int StockCapacity = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool ReservationFlag = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_StaffAICharacter* ReservationWorker = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) class AMS_AICharacter* ReservationWorker = nullptr;
 
 	// Instance
 public:

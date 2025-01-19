@@ -104,7 +104,7 @@ void UMS_StorageBayComponent::EraseBayOutline()
 }
 #endif
 
-void UMS_StorageBayComponent::ReserveWorker(AMS_StaffAICharacter* aTarget)
+void UMS_StorageBayComponent::ReserveWorker(AMS_AICharacter* aTarget)
 {
 	ReservationFlag = true;
 	ReservationWorker = aTarget;
@@ -116,7 +116,7 @@ void UMS_StorageBayComponent::UnreserveWorker()
 	ReservationWorker = nullptr;
 }
 
-void UMS_StorageBayComponent::DeployWorker(AMS_StaffAICharacter* aTarget)
+void UMS_StorageBayComponent::DeployWorker(AMS_AICharacter* aTarget)
 {
 	if (aTarget->GetRootComponent()->GetAttachParent() != nullptr)
 		return;
@@ -127,7 +127,6 @@ void UMS_StorageBayComponent::DeployWorker(AMS_StaffAICharacter* aTarget)
 	aTarget->CollisionCapsuleComponent->GetScaledCapsuleSize(ScaledCollisionRadius, ScaledCollisionHalfHeight);
 	aTarget->GetRootComponent()->SetRelativeLocation(FVector(0.0f, 0.0f, ScaledCollisionHalfHeight));
 	aTarget->GetRootComponent()->SetRelativeRotation(FRotator::ZeroRotator);
-	aTarget->TargetStorageBayOrder = BayOrder;
 	OccupancyFlag = true;
 	OccupancyWorker = aTarget;
 }
@@ -138,11 +137,10 @@ void UMS_StorageBayComponent::UndeployWorker()
 	if (AttachChildComponentArray.Num() == 0)
 		return;
 
-	AMS_StaffAICharacter* Target = Cast<AMS_StaffAICharacter>(AttachChildComponentArray[0]->GetOwner());
+	AMS_AICharacter* Target = Cast<AMS_AICharacter>(AttachChildComponentArray[0]->GetOwner());
 	Target->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
 	Target->SetActorLocation(OwnerStorage->StorageAssemblyAreaComponent->FindAdjacentLocationWithBay(BayOrder, Target));
 	Target->CollisionCapsuleComponent->SetCollisionProfileName("StaffCollisionPreset");
-	Target->TargetStorageBayOrder = INT_MIN;
 	OccupancyFlag = false;
 	OccupancyWorker = nullptr;
 }

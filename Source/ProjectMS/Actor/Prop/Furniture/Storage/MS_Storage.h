@@ -44,6 +44,9 @@ public:
 	UFUNCTION(BlueprintCallable) TArray<FMS_StorageEachSlotStatus> CheckStorageEachSlotStatus();
 	UFUNCTION(BlueprintCallable) FMS_StorageOverallSlotStatus CheckStorageOverallSlotStatus();
 
+	UFUNCTION() void AddCharacterToStorageReservationArray(class AMS_AICharacter* aCharacter);
+	UFUNCTION() void RemoveCharacterFromStorageReservationArray(class AMS_AICharacter* aCharacter);
+
 	// Component
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
@@ -59,4 +62,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName StorageName = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int SlotComponentIndexSize = INT_MIN;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int BayComponentIndexSize = INT_MIN;
+	UPROPERTY(EDitAnywhere, BlueprintReadWrite) TArray<class AMS_AICharacter*> ReservedAICharacterArray = {};
 };

@@ -28,7 +28,7 @@ private:
 #endif
 
 public:
-	UFUNCTION(BlueprintCallable) FVector FindAdjacentLocationWithBay(int aBayOrder, class AMS_StaffAICharacter* aTarget);
+	UFUNCTION(BlueprintCallable) FVector FindAdjacentLocationWithBay(int aBayOrder, class AMS_AICharacter* aTarget);
 
 	// Property
 public:

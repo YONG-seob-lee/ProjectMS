@@ -32,6 +32,11 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 	MS_CHECK(CachedItemTable);
 	TArray<FName> ItemDataNameArray = CachedItemTable->GetAllItemNames();
 
+	for (const FName& ItemDataName : ItemDataNameArray)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ItemDataName : %s"), *ItemDataName.ToString());
+	}
+
 	TArray<AActor*> AllStorageArray = {};
 	AMS_StaffAICharacter* OwnerCharacter = Cast<AMS_StaffAICharacter>(aOwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("OwnerCharacter"))));
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), OwnerCharacter->GetLoadingStorageType(), AllStorageArray);
@@ -62,7 +67,10 @@ void UMS_CheckLoadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerCo
 		}
 		else
 		{
-			Cast<AMS_Storage>(AllStorageArray[i])->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
+			AMS_Storage* TargetStorage = Cast<AMS_Storage>(AllStorageArray[i]);
+			TargetStorage->SlotComponentArray[UnoccupiedSlotOrder]->ReserveWorker(OwnerCharacter);
+			TargetStorage->AddCharacterToStorageReservationArray(OwnerCharacter);
+
 			aOwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("LoadingStorage")), AllStorageArray[i]);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("LoadingStorageSlotOrder")), UnoccupiedSlotOrder);
 			aOwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("EmptyStuffQuantity")), EmptyStuffQuantity);
