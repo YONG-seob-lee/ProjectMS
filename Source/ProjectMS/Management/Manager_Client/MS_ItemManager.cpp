@@ -85,6 +85,11 @@ void UMS_ItemManager::GetStaffData(TArray<TObjectPtr<UMS_StaffProfileElementData
 	aProfileDatas = StaffProfileDatas;
 }
 
+void UMS_ItemManager::SetStaffPropertys(FMS_StaffProperty* aStaffProperty)
+{
+	StaffPropertys.Emplace(aStaffProperty);
+}
+
 UMS_ItemManager* UMS_ItemManager::GetInstance()
 {
 	return InventoryManager;

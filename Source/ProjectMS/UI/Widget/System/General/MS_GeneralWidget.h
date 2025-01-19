@@ -28,19 +28,44 @@ public:
 	void SetType(EMS_GeneralWidgetType aType);
 	
 private:
+	void InitLeftExpander();
+	
 	void OnClickedLeftButton();
 	void OnClickedRightButton();
 	void OnClickedMenuElementButton();
 
+	// Left Expander Button
+	void OnClickedHireStaffButton();
+	void OnClickedManageStaffButton();
+	void OnClickedManageCustomerButton();
+	void OnClickedSalesDetailButton();
+
 	void OnUpdateTimer(int32 ScheduleType);
 	void OnUpdateMinute(int32 aMinute);
+
+	void OpenLeftExpander() const;
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_LeftPanel = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_LeftExpanderPanel = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton01 = nullptr;
 	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton02 = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton03 = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton04 = nullptr;
+
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_RightPanel = nullptr;
 

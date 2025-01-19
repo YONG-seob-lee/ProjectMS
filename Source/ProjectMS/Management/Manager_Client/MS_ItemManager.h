@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "Component/MS_TestServer.h"
 #include "Table/RowBase/MS_ItemData.h"
+#include "Table/RowBase/MS_Staff.h"
 #include "Table/RowBase/MS_StorageData.h"
 #include "MS_ItemManager.generated.h"
 
@@ -79,7 +81,8 @@ public:
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 
 	void GetStaffData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
-	
+	void SetStaffPropertys(FMS_StaffProperty* aStaffProperty);
+
 	FMS_OnClickedItem OnClickedItemDelegate;
 	
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
@@ -88,8 +91,12 @@ private:
 	TMap<int32, int32> ShelfItems = {};
 	TMap<int32, FMS_StorageData*> Stand = {};
 
+	// 나중에 서버에서 받을지 미리 캐싱해뒀다 쓸지 고려
 	UPROPERTY()
 	TArray<TObjectPtr<UMS_StaffProfileElementData>> StaffProfileDatas;
+
+	TArray<FMS_StaffProperty*> StaffPropertys;
+	
 public:
 	inline static TObjectPtr<UMS_ItemManager> InventoryManager = nullptr;
 	static UMS_ItemManager* GetInstance();

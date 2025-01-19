@@ -4,65 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "Component/MS_TestServer.h"
 #include "MS_ScheduleManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleDelegate, int32);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMinuteDelegate, int32);
-
-UENUM()
-enum class EMS_ScheduleType
-{
-	Prepare = 0,
-	UpAndDown = 1,
-	OpenMarket = 2,
-	Deadline = 3,
-	//BlackMarket = 4,
-};
-
-struct FMS_TimeSchedule
-{
-public:
-	FMS_TimeSchedule() {}
-	FMS_TimeSchedule(int32 aYear, int32 aMonth, int32 aDay, int32 aMinute, EMS_ScheduleType aType) : ScheduleType(aType), Year(aYear), Month(aMonth), Day(aDay), Minute(aMinute) {}
-
-	void SetScheduleType(EMS_ScheduleType aType);
-	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() const { return ScheduleType; }
-	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
-	FORCEINLINE int32 GetMinute() const { return Minute; }
-	
-	EMS_ScheduleType GetNextScheduleType();
-
-private:
-	void PassTheDay();
-	
-	EMS_ScheduleType ScheduleType = EMS_ScheduleType::Prepare;
-	
-	int32 GamePlayTimeSecond = 0;
-
-	int32 Year = 0;
-	int32 Month = 0;
-	int32 Day = 0;
-	int32 Minute = 0;
-};
-
-struct FMS_TestServerScheduler
-{
-public:
-	FMS_TestServerScheduler() {}
-
-	void SetManager(class UMS_ScheduleManager* aManager) { Manager = aManager; }
-	
-	void RenewSchedule(EMS_ScheduleType aType);
-	void RenewItems(TMap<int32, int32> aTransferItems);
-
-	FORCEINLINE FMS_TimeSchedule TransferSchedule() const { return CurrentTime; }
-
-private:
-	FMS_TimeSchedule CurrentTime;
-	TMap<int32, int32> Items;
-
-	class UMS_ScheduleManager* Manager = nullptr; 
-};
 
 /**
  * 현실시간 1분당 게임시간 2시간이 경과되는걸로 확인
@@ -106,8 +52,6 @@ private:
 
 	int32 CostTimeSecondReal = 0;
 	int32 IntervalSecondReal = 0; 
-	// Test
-	FMS_TestServerScheduler TestServer;
 
 public:
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;

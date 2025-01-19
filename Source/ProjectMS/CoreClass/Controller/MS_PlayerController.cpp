@@ -1,6 +1,7 @@
 ﻿#include "MS_PlayerController.h"
 
 #include "MS_ManagementClient.h"
+#include "Component/MS_TestServer.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
@@ -29,6 +30,9 @@ void AMS_PlayerController::PreInitializeComponents()
 	Super::PreInitializeComponents();
 
 	RegisterManagement();
+
+	TestServer = MS_NewObject<UMS_TestServer>(this);
+	TestServer->Initialize();
 }
 
 void AMS_PlayerController::PostInitializeComponents()
@@ -48,6 +52,8 @@ void AMS_PlayerController::BeginPlay()
 void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	DestroyModeHelper();
+
+	MS_DeleteObject(TestServer);
 	
 	UnRegisterManagement();
 	

@@ -13,7 +13,11 @@ enum class EMS_GeneralButtonType
 	Setting,
 	Menu,
 	Schedule,
-	Manage
+	Manage,
+	HireStaff,
+	StaffManage,
+	CustomerManage,
+	SalesDetail,
 };
 /**
  * 
@@ -28,11 +32,6 @@ public:
 	virtual void SynchronizeProperties() override;
 	
 private:
-	void OnClickedSettingButton();
-	void OnClickedMenuButton();
-	void OnClickedScheduleButton();
-	void OnClickedManageButton();
-	
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_Image = nullptr;

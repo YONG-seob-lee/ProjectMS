@@ -24,6 +24,8 @@ void UMS_GeneralWidget::NativeConstruct()
 
 	gScheduleMng.OnUpdateScheduleDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateMinute);
+
+	InitLeftExpander();
 }
 
 void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
@@ -99,6 +101,32 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 	}
 }
 
+void UMS_GeneralWidget::InitLeftExpander()
+{
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+	
+	if(CPP_LeftExpanderButton01)
+	{
+		CPP_LeftExpanderButton01->SetButtonType(EMS_GeneralButtonType::HireStaff);
+		CPP_LeftExpanderButton01->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedHireStaffButton);
+	}
+	if(CPP_LeftExpanderButton02)
+	{
+		CPP_LeftExpanderButton02->SetButtonType(EMS_GeneralButtonType::StaffManage);
+		CPP_LeftExpanderButton02->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageStaffButton);
+	}
+	if(CPP_LeftExpanderButton03)
+	{
+		CPP_LeftExpanderButton03->SetButtonType(EMS_GeneralButtonType::CustomerManage);
+		CPP_LeftExpanderButton03->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageCustomerButton);
+	}
+	if(CPP_LeftExpanderButton04)
+	{
+		CPP_LeftExpanderButton04->SetButtonType(EMS_GeneralButtonType::SalesDetail);
+		CPP_LeftExpanderButton04->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedSalesDetailButton);
+	}
+}
+
 void UMS_GeneralWidget::OnClickedLeftButton()
 {
 	if(LeftButtonType == EMS_GeneralButtonType::Schedule)
@@ -107,9 +135,7 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 	}
 	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
 	{
-		FMS_ModalParameter Parameter;
-		Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffManagementWidget::GetWidgetName());
-		gWidgetMng.ShowModalWidget(Parameter);
+		OpenLeftExpander();
 	}
 	else
 	{
@@ -145,6 +171,36 @@ void UMS_GeneralWidget::OnClickedMenuElementButton()
 	CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
+void UMS_GeneralWidget::OnClickedHireStaffButton()
+{
+	FMS_ModalParameter Parameter;
+	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffManagementWidget::GetWidgetName());
+	gWidgetMng.ShowModalWidget(Parameter);
+
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMS_GeneralWidget::OnClickedManageStaffButton()
+{
+	gWidgetMng.ShowModalWidget();
+	
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMS_GeneralWidget::OnClickedManageCustomerButton()
+{
+	gWidgetMng.ShowModalWidget();
+
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMS_GeneralWidget::OnClickedSalesDetailButton()
+{
+	gWidgetMng.ShowModalWidget();
+
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
 {
 	switch(static_cast<EMS_ScheduleType>(ScheduleType))
@@ -174,4 +230,9 @@ void UMS_GeneralWidget::OnUpdateMinute(int32 aMinute)
 	{
 		CPP_TimeLineWidget->UpdateTimer(aMinute);
 	}
+}
+
+void UMS_GeneralWidget::OpenLeftExpander() const
+{
+	CPP_LeftExpanderPanel->SetVisibility(CPP_LeftExpanderPanel->IsVisible() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 }

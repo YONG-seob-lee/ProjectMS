@@ -11,6 +11,10 @@ namespace ImagePath
 	const FString Menu = TEXT("/Game/UI/Image/Icon/MenuIcon.MenuIcon");
 	const FString Schedule = TEXT("/Game/UI/Image/Icon/BoardIcon.BoardIcon");
 	const FString Manage = TEXT("/Game/UI/Image/Icon/ManageIcon.ManageIcon");
+	const FString HireStaff = TEXT("/Game/UI/Image/Icon/HireStaffIcon.HireStaffIcon");
+	const FString StaffManage = TEXT("/Game/UI/Image/Icon/StaffManageIcon.StaffManageIcon");
+	const FString CustomerManage = TEXT("/Game/UI/Image/Icon/CustomerManageIcon.CustomerManageIcon");
+	const FString SalesDetail = TEXT("/Game/UI/Image/Icon/SalesDetailIcon.SalesDetailIcon");
 }
 
 void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
@@ -23,7 +27,6 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Setting));
 			CPP_Image->SetBrushFromTexture(Image);
-			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedSettingButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Menu:
@@ -31,7 +34,6 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Menu));
 			CPP_Image->SetBrushFromTexture(Image);
-			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedMenuButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Schedule:
@@ -39,7 +41,6 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Schedule));
 			CPP_Image->SetBrushFromTexture(Image);
-			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedScheduleButton);
 			break;
 		}
 	case EMS_GeneralButtonType::Manage:
@@ -47,7 +48,34 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::Manage));
 			CPP_Image->SetBrushFromTexture(Image);
-			//GetOnClickedDelegate().AddUObject(this, &UMS_GeneralButton::OnClickedManageButton);
+			break;
+		}
+	case EMS_GeneralButtonType::HireStaff:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::HireStaff));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::StaffManage:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::StaffManage));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::CustomerManage:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::CustomerManage));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::SalesDetail:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::SalesDetail));
+			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
 	default:
@@ -92,26 +120,38 @@ void UMS_GeneralButton::SynchronizeProperties()
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
+	case EMS_GeneralButtonType::HireStaff:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::HireStaff));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::StaffManage:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::StaffManage));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::CustomerManage:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::CustomerManage));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::SalesDetail:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::SalesDetail));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
 	default:
 		{
 			CPP_Image->SetVisibility(ESlateVisibility::Collapsed);
 			break;
 		}
 	}
-}
-
-void UMS_GeneralButton::OnClickedSettingButton()
-{
-}
-
-void UMS_GeneralButton::OnClickedMenuButton()
-{
-}
-
-void UMS_GeneralButton::OnClickedScheduleButton()
-{
-}
-
-void UMS_GeneralButton::OnClickedManageButton()
-{
 }
