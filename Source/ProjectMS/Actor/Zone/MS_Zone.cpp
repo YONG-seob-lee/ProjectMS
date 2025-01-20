@@ -6,8 +6,10 @@
 #include "MS_Define.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "Prop/MS_Prop.h"
+#include "Widget/Market/MS_ZoneOpenWidget.h"
 
 
 AMS_Zone::AMS_Zone()
@@ -46,6 +48,12 @@ AMS_Zone::AMS_Zone()
 	{
 		Rot270WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
 	}
+
+	ZoneOpendWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ZoneOpendWidgetComponent"));
+	if (ZoneOpendWidgetComponent)
+	{
+		ZoneOpendWidgetComponent->SetupAttachment(ZoneBoxComponent);
+	}
 }
 
 void AMS_Zone::PostInitializeComponents()
@@ -58,6 +66,14 @@ void AMS_Zone::PostInitializeComponents()
 void AMS_Zone::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (ZoneOpendWidgetComponent)
+	{
+		if (UMS_ZoneOpenWidget* ZoneOpenWidget = Cast<UMS_ZoneOpenWidget>(ZoneOpendWidgetComponent->GetWidget()))
+		{
+			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
+		}
+	}
 }
 
 void AMS_Zone::Tick(float DeltaTime)
@@ -258,6 +274,24 @@ void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 
 		MS_Ensure(false);
 	}
+}
+
+void AMS_Zone::OnClickZoneOpenWidget(UMS_ZoneOpenWidget* aZoneOpenWidget)
+{
+	SetZoneOpened(true);
+}
+
+void AMS_Zone::SetZoneOpened(bool aOpened)
+{
+	bOpened = aOpened;
+
+	FloorAttachedComponent->SetVisibility(aOpened, true);
+	Rot0WallAttachedComponent->SetVisibility(aOpened, true);
+	Rot90WallAttachedComponent->SetVisibility(aOpened, true);
+	Rot180WallAttachedComponent->SetVisibility(aOpened, true);
+	Rot270WallAttachedComponent->SetVisibility(aOpened, true);
+
+	ZoneOpendWidgetComponent->SetVisibility(!aOpened);
 }
 
 const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const

@@ -39,7 +39,12 @@ public:
 	void RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
 	void UnregisterObjectToGrid(const FIntVector2& aGridPosition);
 
-
+	// Zone Opend
+	UFUNCTION()
+	void OnClickZoneOpenWidget(class UMS_ZoneOpenWidget* aZoneOpenWidget);
+	
+	void SetZoneOpened(bool aOpened);
+	
 	// Setter
 	void SetZoneIndex(int32 aZoneIndex) { ZoneIndex = aZoneIndex; }
 	
@@ -53,6 +58,8 @@ public:
 	const FIntVector2& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
 	const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
+
+	bool IsOpened() const { return bOpened; }
 	
 	const FMS_GridData& GetGrid(const FIntVector2& aGridPosition) const;
 
@@ -79,6 +86,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* Rot270WallAttachedComponent;
 
+	// Widget Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UWidgetComponent> ZoneOpendWidgetComponent;
+
 
 private:
 	// Zone Data
@@ -96,6 +107,9 @@ private:
 
 	UPROPERTY()
 	FIntVector2 ZoneWorldGridPosition;
+
+	UPROPERTY()
+	bool bOpened;
 	
 	UPROPERTY()
 	TMap<FIntVector2, FMS_GridData> Grids;

@@ -42,6 +42,15 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	for (auto& Zone : Zones)
 	{
 		Zone.Value->SetZoneIndex(Zone.Key);
+
+		if (Zone.Key == 1)
+		{
+			Zone.Value->SetZoneOpened(true);
+		}
+		else
+		{
+			Zone.Value->SetZoneOpened(false);
+		}
 	}
 	
 	// Prop
