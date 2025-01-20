@@ -57,6 +57,9 @@ public:
 	UFUNCTION()
 	void OnClickCancelArrangementWidget(class UMS_ArrangementWidget* aArrangementWidget);
 
+	UFUNCTION()
+	void OnClickRotateArrangementWidget(class UMS_ArrangementWidget* aArrangementWidget);
+
 
 	// Select
 	void SelectProp(AActor* aSelectedActor);
@@ -73,6 +76,8 @@ private:
 	void CreateLinkedPreviewProp(class AMS_Prop* aSelectedProp);
 	
 	void MovePreviewProp(const FVector& aNewLocation);
+	void RotatePreviewProp();
+	
 	void ApplyPreviewProp();
 	void CancelPreviewProp();
 

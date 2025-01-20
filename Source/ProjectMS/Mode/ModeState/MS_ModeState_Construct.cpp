@@ -219,6 +219,14 @@ void UMS_ModeState_Construct::OnClickCancelArrangementWidget(UMS_ArrangementWidg
 	}
 }
 
+void UMS_ModeState_Construct::OnClickRotateArrangementWidget(UMS_ArrangementWidget* aArrangementWidget)
+{
+	if (IsValid(aArrangementWidget))
+	{
+		RotatePreviewProp();
+	}
+}
+
 void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
@@ -351,6 +359,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 			{
 				ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
 				ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
+				ArrangementWidget->OnClickRotateButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickRotateArrangementWidget);
 			}
 		}
 	}
@@ -380,6 +389,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 	{
 		ArrangementWidget->OnClickApplyButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickApplyArrangementWidget);
 		ArrangementWidget->OnClickCancelButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickCancelArrangementWidget);
+		ArrangementWidget->OnClickRotateButtonDelegate.BindUObject(this, &UMS_ModeState_Construct::OnClickRotateArrangementWidget);
 	}
 }
 
@@ -407,6 +417,17 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 			PreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
 		}
 	}
+}
+
+void UMS_ModeState_Construct::RotatePreviewProp()
+{
+	FRotator OldRotator = PreviewProp->GetActorRotation();
+	EMS_Rotation OldRotation = MS_RotationFunc::ConvertRotation(OldRotator.Yaw);
+
+	EMS_Rotation NewRotation  = MS_RotationFunc::RotateClockwise(OldRotation);
+	FRotator NewRotator = FRotator(0.f, MS_RotationFunc::ConvertRotation(NewRotation), 0.f);
+
+	PreviewProp->SetActorRotation(NewRotator);
 }
 
 void UMS_ModeState_Construct::ApplyPreviewProp()
@@ -487,8 +508,11 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 					LevelScriptActor->GetGridDatasForAllPropSpaceLocations(LinkedProp, OldLocationGridDatas);
 
 					LevelScriptActor->UnregisterGridObjectData(OldLocationGridDatas);
+
+					// Rotate New Rotator
+					LinkedProp->SetActorRotation(PreviewProp->GetActorRotation());
 					
-					// Move Location
+					// Move New Location
 					// ToDo : Level Script로 이동
 					FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
 					PreviewProp->GetGridNum().X % 2 != 0,

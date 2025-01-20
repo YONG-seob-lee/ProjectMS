@@ -12,6 +12,7 @@ void UMS_ArrangementWidget::NativeOnInitialized()
 
 	CPP_ApplyButton->GetOnClickedDelegate().AddUObject(this, &UMS_ArrangementWidget::OnClickApplyButton);
 	CPP_CancelButton->GetOnClickedDelegate().AddUObject(this, &UMS_ArrangementWidget::OnClickCancelButton);
+	CPP_RotateButton->GetOnClickedDelegate().AddUObject(this, &UMS_ArrangementWidget::OnClickRotateButton);
 }
 
 void UMS_ArrangementWidget::OnClickApplyButton()
@@ -22,4 +23,9 @@ void UMS_ArrangementWidget::OnClickApplyButton()
 void UMS_ArrangementWidget::OnClickCancelButton()
 {
 	OnClickCancelButtonDelegate.ExecuteIfBound(this);
+}
+
+void UMS_ArrangementWidget::OnClickRotateButton()
+{
+	OnClickRotateButtonDelegate.ExecuteIfBound(this);
 }

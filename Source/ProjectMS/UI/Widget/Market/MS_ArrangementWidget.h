@@ -9,8 +9,9 @@
 /**
  * 
  */
-DECLARE_DELEGATE_OneParam(FOnClickApplyButtonDelegate, UMS_ArrangementWidget*);
-DECLARE_DELEGATE_OneParam(FOnClickCancelButtonDelegate, UMS_ArrangementWidget*);
+DECLARE_DELEGATE_OneParam(FMS_OnClickApplyButtonDelegate, UMS_ArrangementWidget*);
+DECLARE_DELEGATE_OneParam(FMS_OnClickCancelButtonDelegate, UMS_ArrangementWidget*);
+DECLARE_DELEGATE_OneParam(FMS_OnClickRotateButtonDelegate, UMS_ArrangementWidget*);
 
 UCLASS()
 class PROJECTMS_API UMS_ArrangementWidget : public UMS_Widget
@@ -23,6 +24,7 @@ public:
 	
 	void OnClickApplyButton();
 	void OnClickCancelButton();
+	void OnClickRotateButton();
 
 	
 protected:
@@ -32,8 +34,12 @@ protected:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_CancelButton = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_RotateButton = nullptr;
+
 	
 public:
-	FOnClickApplyButtonDelegate OnClickApplyButtonDelegate;
-	FOnClickCancelButtonDelegate OnClickCancelButtonDelegate;
+	FMS_OnClickApplyButtonDelegate OnClickApplyButtonDelegate;
+	FMS_OnClickCancelButtonDelegate OnClickCancelButtonDelegate;
+	FMS_OnClickRotateButtonDelegate OnClickRotateButtonDelegate;
 };
