@@ -219,14 +219,24 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 
 				int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 
-				if (Zones.Contains(ZoneIndex))
+				if (ZoneIndex == -1 )
 				{
-					const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
-					if (GridData != nullptr)
-					{
-						GridDataForPropSpace.GridDatas.Emplace(GridData);
-					}
+					return false;
 				}
+
+				AMS_Zone* Zone = *Zones.Find(ZoneIndex);
+				if (!IsValid(Zone) || !Zone->IsOpened())
+				{
+					return false;
+				}
+				
+				const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+				if (GridData == nullptr)
+				{
+					return false;
+				}
+
+				GridDataForPropSpace.GridDatas.Emplace(GridData);
 			}
 		}
 
@@ -273,14 +283,24 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 
 			int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 
-			if (Zones.Contains(ZoneIndex))
+			if (ZoneIndex == -1 )
 			{
-				const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
-				if (GridData != nullptr)
-				{
-					aOutGridDatas.Emplace(GridData);
-				}
+				return false;
 			}
+
+			AMS_Zone* Zone = *Zones.Find(ZoneIndex);
+			if (!IsValid(Zone) || !Zone->IsOpened())
+			{
+				return false;
+			}
+				
+			const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+			if (GridData == nullptr)
+			{
+				return false;
+			}
+
+			aOutGridDatas.Emplace(GridData);
 		}
 	}
 
