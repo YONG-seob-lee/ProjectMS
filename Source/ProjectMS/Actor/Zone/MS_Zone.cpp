@@ -7,6 +7,7 @@
 #include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
+#include "Prop/MS_Prop.h"
 
 
 AMS_Zone::AMS_Zone()
@@ -50,6 +51,8 @@ void AMS_Zone::InitializeZoneData()
 		FMath::RoundToInt32(ZoneLocation.Y / MS_GridSize.Y));
 
 	CreateGrids();
+
+	RegisterDefalutAttachedProps();
 }
 
 void AMS_Zone::CreateGrids()
@@ -63,6 +66,62 @@ void AMS_Zone::CreateGrids()
 			FIntVector2 GridPosition = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(j, i);
 			
 			Grids.Emplace(GridPosition, FMS_GridData(this, GridPosition));
+		}
+	}
+}
+
+void AMS_Zone::RegisterDefalutAttachedProps()
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		if (AMS_Prop* Prop = Cast<AMS_Prop>(AttachedActor))
+		{
+			// Prop Center Grid
+			FVector WorldCenterLocation = Prop->GetActorLocation();
+		
+			FIntVector2 PropCenterGridPosition = FIntVector2(FMath::RoundToInt32(WorldCenterLocation.X) / MS_GridSizeInt.X
+				, FMath::RoundToInt32(WorldCenterLocation.Y) / MS_GridSizeInt.Y);
+			
+			Prop->SetZoneData(this, PropCenterGridPosition);
+		
+			// Prop Space
+			const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = Prop->GetPropSpaceComponents();
+		
+			for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+			{
+				FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
+				FIntVector2 GridNum = FIntVector2::ZeroValue;
+			
+				PropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
+			
+				// Set With Grid
+				for (int i = 0; i < GridNum.Y; ++i)
+				{
+					for (int j = 0; j < GridNum.X; ++j)
+					{
+						FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
+
+						EMS_PropType PropType = Prop->GetPropType();
+						
+						switch (PropType)
+						{
+						case EMS_PropType::Floor:
+							{
+								RegisterFloorToGrid(GridPosition, Prop);
+					
+								break;
+							}
+						default :
+							{
+								break;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

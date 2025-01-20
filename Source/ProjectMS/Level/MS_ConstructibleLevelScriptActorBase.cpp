@@ -86,15 +86,14 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 
 					switch (Prop->GetPropType())
 					{
-					case EMS_PropType::Floor:
+					/*case EMS_PropType::Floor:
 						{
 							int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 							
 							(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(GridPosition, Prop);
 					
 							break;
-						}
-
+						}*/
 					case EMS_PropType::Furniture:
 					case EMS_PropType::Structure:
 						{
@@ -281,6 +280,8 @@ int32 AMS_ConstructibleLevelScriptActorBase::GetGridZoneIndex(const FIntVector2&
 
 void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
 {
+	return;
+	
 	if (bShowUnconstructableGrid != bShow)
 	{
 		bShowUnconstructableGrid = bShow;

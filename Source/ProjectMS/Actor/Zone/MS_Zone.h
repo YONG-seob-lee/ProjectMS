@@ -28,6 +28,8 @@ private:
 	
 	void CreateGrids();
 
+	void RegisterDefalutAttachedProps();
+
 
 public:
 	bool IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const;
