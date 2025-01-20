@@ -59,6 +59,7 @@ void UMS_MarketOrderModalWidget::OnClickedConfirmButton()
 	
 	gScheduleMng.TransferItemsToServer(TransferItems);
 	gWidgetMng.CloseModalWidget();
+	gWidgetMng.ShowToastMessage(TEXT("물품 구매를 완료했습니다!!"));
 }
 
 void UMS_MarketOrderModalWidget::OnClickedCancelButton()

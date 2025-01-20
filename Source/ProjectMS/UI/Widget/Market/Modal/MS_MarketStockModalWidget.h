@@ -23,4 +23,8 @@ private:
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_TileView> CPP_ItemTileView = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_ItemSwitcher = nullptr;
+	
 };

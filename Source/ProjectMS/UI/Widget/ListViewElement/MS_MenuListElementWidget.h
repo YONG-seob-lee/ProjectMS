@@ -17,6 +17,7 @@ class PROJECTMS_API UMS_MenuListElementWidget : public UMS_Widget, public IUserO
 public:
 
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 	
 private:

@@ -21,10 +21,8 @@ void UMS_MenuListElementWidget::NativeOnListItemObjectSet(UObject* aListItemObje
 	CPP_MenuName->SetText(FText::FromString(ItemData->GetElementName()));
 }
 
-void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
+FReply UMS_MenuListElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
-
 	if(MenuName == TEXT("dollar"))
 	{
 		FMS_ModalParameter ModalParameter;
@@ -44,4 +42,10 @@ void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 	{
 		MenuElementData->OnClickMenuElementDelegate.Broadcast();
 	}
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
+{
+	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
 }

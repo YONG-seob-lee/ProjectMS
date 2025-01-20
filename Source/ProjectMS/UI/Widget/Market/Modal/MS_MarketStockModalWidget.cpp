@@ -8,6 +8,7 @@
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_StockItemElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
+#include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 void UMS_MarketStockModalWidget::NativeConstruct()
 {
@@ -16,9 +17,18 @@ void UMS_MarketStockModalWidget::NativeConstruct()
 	const TMap<int32, int32> Items = gItemMng.GetCurrentItems();
 	TArray<UMS_StockItemElementData*> StockItemElementDatas;
 	CreateStockElement(Items, StockItemElementDatas);
-	if(CPP_ItemTileView)
+
+	if(StockItemElementDatas.Num() == 0)
 	{
-		CPP_ItemTileView->SetElements(TArray<UObject*>(StockItemElementDatas));
+		CPP_ItemSwitcher->SetActiveWidgetIndex(0);
+	}
+	else
+	{
+		CPP_ItemSwitcher->SetActiveWidgetIndex(1);
+		if(CPP_ItemTileView)
+		{
+			CPP_ItemTileView->SetElements(TArray<UObject*>(StockItemElementDatas));
+		}
 	}
 }
 
@@ -50,6 +60,7 @@ void UMS_MarketStockModalWidget::CreateStockElement(TMap<int32, int32> aItems, T
 		{
 			OrderItemElementData->SetImage(ItemTexture);	
 		}
+		OrderItemElementData->SetItemName(ItemData->ItemName.ToString());
 		OrderItemElementData->SetItemCount(Item.Value);
 		aStockItemElementData.Emplace(OrderItemElementData);
 	}

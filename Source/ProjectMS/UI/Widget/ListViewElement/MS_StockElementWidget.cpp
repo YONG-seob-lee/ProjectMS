@@ -21,7 +21,20 @@ void UMS_StockElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 		CPP_ItemImage->SetBrushFromTexture(ItemData->GetImage());
 		
 		CPP_ItemName->SetText(FText::FromString(FString::Format(TEXT("품목 : {0}"), {ItemData->GetItemName()})));
-		CPP_ItemCount->SetText(FText::FromString(FString::Format(TEXT("수량 : \"{0}\" 개"), {ItemData->GetItemCount()})));
+
+		const int32 ItemCount = ItemData->GetItemCount();
+		CPP_ItemCount->SetText(FText::FromString(FString::Format(TEXT("수량 : \"{0}\" 개"), {ItemCount})));
+
+		if(ItemCount == 0)
+		{
+			CPP_ItemName->SetColorAndOpacity(FLinearColor(0.1f, 0.1f, 0.1f));
+			CPP_ItemCount->SetColorAndOpacity(FLinearColor(0.1f, 0.1f, 0.1f));
+		}
+		else
+		{
+			CPP_ItemName->SetColorAndOpacity(FLinearColor::White);
+			CPP_ItemCount->SetColorAndOpacity(FLinearColor::White);
+		}
 	}
 }
 

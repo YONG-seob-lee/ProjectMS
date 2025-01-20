@@ -43,5 +43,5 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TArray<TSoftObjectPtr<UWorld>> BaseLayerLevelArray = {};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool BaseLayerLevelCollectionSwitch = false;
 
-	TArray<TObjectPtr<AActor>> Actorss;
+	TArray<TObjectPtr<AActor>> Actors;
 };

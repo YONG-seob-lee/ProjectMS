@@ -47,11 +47,11 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 	GetWorldSettings()->bAllowTickBeforeBeginPlay = false;
 
 	const TObjectPtr<ULevel> Level = GetLevel();
-	Actorss = Level->Actors;
+	Actors = Level->Actors;
 
-	for (int i = 0; i < Actorss.Num(); ++i)
+	for (int i = 0; i < Actors.Num(); ++i)
 	{
-		TObjectPtr<AActor> Actor = Actorss[i].Get();
+		TObjectPtr<AActor> Actor = Actors[i].Get();
 		if (Actor == nullptr)
 		{
 			continue;
