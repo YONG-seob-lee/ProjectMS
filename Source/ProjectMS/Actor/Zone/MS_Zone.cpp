@@ -16,6 +16,36 @@ AMS_Zone::AMS_Zone()
 
 	// Component
 	ZoneBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ZoneBoxComponent"));
+	
+	FloorAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FloorAttachedComponent"));
+	if (FloorAttachedComponent)
+	{
+		FloorAttachedComponent->SetupAttachment(ZoneBoxComponent);
+	}
+
+	Rot0WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot0WallAttachedComponent"));
+	if (Rot0WallAttachedComponent)
+	{
+		Rot0WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+	}
+
+	Rot90WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot90WallAttachedComponent"));
+	if (Rot90WallAttachedComponent)
+	{
+		Rot90WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+	}
+
+	Rot180WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot180WallAttachedComponent"));
+	if (Rot180WallAttachedComponent)
+	{
+		Rot180WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+	}
+
+	Rot270WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot270WallAttachedComponent"));
+	if (Rot270WallAttachedComponent)
+	{
+		Rot270WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+	}
 }
 
 void AMS_Zone::PostInitializeComponents()

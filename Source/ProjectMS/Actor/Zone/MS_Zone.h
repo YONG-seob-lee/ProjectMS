@@ -64,6 +64,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* ZoneBoxComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* FloorAttachedComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Rot0WallAttachedComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Rot90WallAttachedComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Rot180WallAttachedComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Rot270WallAttachedComponent;
+
 
 private:
 	// Zone Data
