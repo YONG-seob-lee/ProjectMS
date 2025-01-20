@@ -294,16 +294,15 @@ void AMS_Zone::SetZoneOpened(bool aOpened)
 	ZoneOpendWidgetComponent->SetVisibility(!aOpened);
 }
 
-const FMS_GridData& AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const
+const FMS_GridData* AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const
 {
-	static FMS_GridData Dummy;
 	if (!Grids.Contains(aGridPosition))
 	{
 		MS_Ensure(false);
-		return Dummy;
+		return nullptr;
 	}
 	
-	return *Grids.Find(aGridPosition);
+	return Grids.Find(aGridPosition);
 }
 
 void AMS_Zone::ShowDebugZoneData()

@@ -61,7 +61,7 @@ public:
 
 	bool IsOpened() const { return bOpened; }
 	
-	const FMS_GridData& GetGrid(const FIntVector2& aGridPosition) const;
+	const FMS_GridData* GetGrid(const FIntVector2& aGridPosition) const;
 
 	void ShowDebugZoneData();
 

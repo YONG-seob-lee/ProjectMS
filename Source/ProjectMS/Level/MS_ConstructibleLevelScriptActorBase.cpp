@@ -98,9 +98,11 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 					/*case EMS_PropType::Floor:
 						{
 							int32 ZoneIndex = GetGridZoneIndex(GridPosition);
-							
-							(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(GridPosition, Prop);
-					
+
+							if (Zones.Contains(ZoneIndex))
+							{
+								(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(GridPosition, Prop);
+							}
 							break;
 						}*/
 					case EMS_PropType::Furniture:
@@ -216,9 +218,15 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 				FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
 
 				int32 ZoneIndex = GetGridZoneIndex(GridPosition);
-				
-				const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
-				GridDataForPropSpace.GridDatas.Emplace(&GridData);
+
+				if (Zones.Contains(ZoneIndex))
+				{
+					const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+					if (GridData != nullptr)
+					{
+						GridDataForPropSpace.GridDatas.Emplace(GridData);
+					}
+				}
 			}
 		}
 
@@ -264,9 +272,15 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 			FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
 
 			int32 ZoneIndex = GetGridZoneIndex(GridPosition);
-			
-			const FMS_GridData& GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
-			aOutGridDatas.Emplace(&GridData);
+
+			if (Zones.Contains(ZoneIndex))
+			{
+				const FMS_GridData* GridData = (*Zones.Find(ZoneIndex))->GetGrid(GridPosition);
+				if (GridData != nullptr)
+				{
+					aOutGridDatas.Emplace(GridData);
+				}
+			}
 		}
 	}
 
