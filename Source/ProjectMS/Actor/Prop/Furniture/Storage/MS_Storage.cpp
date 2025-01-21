@@ -1,5 +1,8 @@
 #include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
+#include "Component/Prop/Furniture/MS_StorageAssemblyAreaComponent.h"
+#include "Component/Prop/Furniture/MS_StorageBayComponent.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -7,6 +10,12 @@
 AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	if (ShapeCollisionComponent)
+	{
+		ShapeCollisionComponent->SetCollisionProfileName(TEXT("StorageCollisionPreset"));
+	}
+
+	// Temp
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
 	CollisionBoxComponent->SetupAttachment(SceneRootComponent);
 	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));

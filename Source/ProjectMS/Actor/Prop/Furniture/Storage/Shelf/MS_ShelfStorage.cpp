@@ -1,5 +1,7 @@
 #include "Actor/Prop/Furniture/Storage/Shelf/MS_ShelfStorage.h"
 
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
+
 AMS_ShelfStorage::AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
@@ -17,17 +19,17 @@ AMS_ShelfStorage::AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer)
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, -45.0f, 0.0f));
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));
-	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, 45.0f, 0.0f));
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No3StorageSlotComponent")));
-	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, -45.0f, 100.0f));
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No4StorageSlotComponent")));
-	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, 45.0f, 100.0f));
 }

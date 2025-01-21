@@ -126,3 +126,42 @@ public:
 	class UMS_PropSpaceComponent* PropSpaceComponent;
 	TArray<const FMS_GridData*> GridDatas;
 };
+
+USTRUCT(BlueprintType)
+struct FMS_StorageEachSlotStatus
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SlotOrder = INT_MIN;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName StuffRowName = {};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 StockQuantity = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 StockCapacity = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ReservationFlag = false;
+};
+
+USTRUCT(BlueprintType)
+struct FMS_StorageOverallSlotStatus
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 OccupiedSlotCount = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ReservedSlotCount = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 UnoccupiedSlotCount = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, int> StuffStockMap = {};
+};

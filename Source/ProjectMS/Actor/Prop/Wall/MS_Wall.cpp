@@ -7,6 +7,8 @@
 AMS_Wall::AMS_Wall(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	// Property
+	PropType = EMS_PropType::Wall;
 }
 
 void AMS_Wall::BeginPlay()

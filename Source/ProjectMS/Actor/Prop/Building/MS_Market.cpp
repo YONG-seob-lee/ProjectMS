@@ -14,7 +14,7 @@ AMS_Market::AMS_Market(const FObjectInitializer& aObjectInitializer)
 	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
 	if (InteractionComponent)
 	{
-		SetRootComponent(InteractionComponent);
+		InteractionComponent->SetupAttachment(SceneRootComponent);
 	}
 }
 

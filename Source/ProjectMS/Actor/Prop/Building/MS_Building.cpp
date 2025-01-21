@@ -12,7 +12,7 @@ AMS_Building::AMS_Building(const FObjectInitializer& aObjectInitializer)
 	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
 	if (InteractionComponent)
 	{
-		InteractionComponent->SetupAttachment(GetRootComponent());
+		InteractionComponent->SetupAttachment(SceneRootComponent);
 	}
 	
 	BuildingFront = CreateDefaultSubobject<UStaticMeshComponent>("BuildingFront");

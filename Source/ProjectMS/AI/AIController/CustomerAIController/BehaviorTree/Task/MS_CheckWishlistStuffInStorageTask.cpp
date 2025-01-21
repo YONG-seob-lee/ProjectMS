@@ -5,6 +5,7 @@
 #include "Actor/Prop/Furniture/Storage/Display/MS_DisplayStorage.h"
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 #include "Actor/Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 
 UMS_CheckWishlistStuffInStorageTask::UMS_CheckWishlistStuffInStorageTask()
 {

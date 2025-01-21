@@ -19,7 +19,7 @@ AMS_CheckoutCounter::AMS_CheckoutCounter(const FObjectInitializer& aObjectInitia
 	}
 	
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
-	CollisionBoxComponent->SetupAttachment(GetRootComponent());
+	CollisionBoxComponent->SetupAttachment(SceneRootComponent);
 	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
 	CollisionBoxComponent->SetCollisionProfileName(TEXT("CheckoutCounterCollisionPreset"));
 	CollisionBoxComponent->SetBoxExtent(FVector(50.0f, 150.0f, 50.0f));
