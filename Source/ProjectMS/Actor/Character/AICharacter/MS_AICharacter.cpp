@@ -13,36 +13,40 @@ AMS_AICharacter::AMS_AICharacter()
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationRoll = true;
 	bUseControllerRotationYaw = true;
-
-	SceneComponent = GetRootComponent();
-
+	
 	CollisionCapsuleComponent = GetCapsuleComponent();
-	CollisionCapsuleComponent->SetupAttachment(SceneComponent);
-	CollisionCapsuleComponent->SetCapsuleRadius(20.0f);
-	CollisionCapsuleComponent->SetCapsuleHalfHeight(50.0f);
-	CollisionCapsuleComponent->SetCollisionProfileName(TEXT("StaffCollisionPreset"));
+	if (CollisionCapsuleComponent)
+	{
+		CollisionCapsuleComponent->SetCapsuleRadius(20.0f);
+		CollisionCapsuleComponent->SetCapsuleHalfHeight(50.0f);
+		CollisionCapsuleComponent->SetCollisionProfileName(TEXT("StaffCollisionPreset"));
+	}
 
 	SkeletalMeshComponent = GetMesh();
-	SkeletalMeshComponent->SetupAttachment(CollisionCapsuleComponent);
-	SkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-	SkeletalMeshComponent->SetRenderCustomDepth(true);
-
-#if WITH_EDITOR
-	GetArrowComponent()->SetupAttachment(CollisionCapsuleComponent);
-#endif
+	if (SkeletalMeshComponent)
+	{
+		SkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+		SkeletalMeshComponent->SetRenderCustomDepth(true);
+	}
 
 	CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
-	CharacterMovementComponent->MaxAcceleration = 512.0f;
-	CharacterMovementComponent->MaxWalkSpeed = /*75.0f*/300.0f;
-	CharacterMovementComponent->MaxWalkSpeedCrouched = 150.0f;
-	CharacterMovementComponent->RotationRate = FRotator(0.0f, 630.0f, 0.0f);
+	if (CharacterMovementComponent)
+	{
+		CharacterMovementComponent->MaxAcceleration = 512.0f;
+		CharacterMovementComponent->MaxWalkSpeed = /*75.0f*/300.0f;
+		CharacterMovementComponent->MaxWalkSpeedCrouched = 150.0f;
+		CharacterMovementComponent->RotationRate = FRotator(0.0f, 630.0f, 0.0f);
+	}
 }
 
 void AMS_AICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	CharacterMovementComponent->SetAvoidanceEnabled(false);
+	if (CharacterMovementComponent)
+	{
+		CharacterMovementComponent->SetAvoidanceEnabled(false);
+	}
 }
 
 void AMS_AICharacter::BeginPlay()
