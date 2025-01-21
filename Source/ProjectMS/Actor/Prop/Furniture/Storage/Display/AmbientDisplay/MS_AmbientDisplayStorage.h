@@ -9,9 +9,10 @@ UCLASS() class PROJECTMS_API AMS_AmbientDisplayStorage : public AMS_DisplayStora
 	GENERATED_BODY()
 
 public:
-	AMS_AmbientDisplayStorage();
+	AMS_AmbientDisplayStorage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+	
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 };

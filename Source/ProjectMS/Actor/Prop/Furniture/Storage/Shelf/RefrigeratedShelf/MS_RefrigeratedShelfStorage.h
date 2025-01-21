@@ -9,9 +9,10 @@ UCLASS() class PROJECTMS_API AMS_RefrigeratedShelfStorage : public AMS_ShelfStor
 	GENERATED_BODY()
 	
 public:
-	AMS_RefrigeratedShelfStorage();
+	AMS_RefrigeratedShelfStorage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 };

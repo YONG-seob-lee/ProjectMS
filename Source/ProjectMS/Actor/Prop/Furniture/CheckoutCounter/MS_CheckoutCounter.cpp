@@ -4,7 +4,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-AMS_CheckoutCounter::AMS_CheckoutCounter()
+AMS_CheckoutCounter::AMS_CheckoutCounter(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CheckoutCounterFiner(TEXT("/Game/3D/StaticMesh/SM_FUR_COT_A"));
 	MS_CHECK(CheckoutCounterFiner.Object);
@@ -30,9 +31,4 @@ void AMS_CheckoutCounter::PostInitializeComponents()
 void AMS_CheckoutCounter::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_CheckoutCounter::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
 }

@@ -11,17 +11,29 @@
 #include "Zone/MS_Zone.h"
 
 
-AMS_Prop::AMS_Prop()
-	: PropType(EMS_PropType::None), TableIndex(0)
+AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer.SetDefaultSubobjectClass<UBoxComponent>(TEXT("ShapeCollisionComponent"))),
+	PropType(EMS_PropType::None), TableIndex(0)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	SceneRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
 	if (SceneRootComponent)
 	{
 		SetRootComponent(SceneRootComponent);
 	}
 
+	ShapeCollisionComponent = CreateDefaultSubobject<UPrimitiveComponent>(TEXT("ShapeCollisionComponent"));
+	if (ShapeCollisionComponent)
+	{
+		ShapeCollisionComponent->SetupAttachment(SceneRootComponent);
+		ShapeCollisionComponent->SetCollisionProfileName(TEXT("ShapeCollisionComponent"));
+		
+		if (UBoxComponent* Box = Cast<UBoxComponent>(ShapeCollisionComponent))
+		{
+			ShapeCollisionComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+			Box->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
+		}
+	}
+	
 	ArrangementWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ArrangementWidgetComponent"));
 	if (ArrangementWidgetComponent)
 	{
@@ -43,11 +55,6 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_Prop::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 TArray<UMS_PropSpaceComponent*> AMS_Prop::GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const
@@ -105,7 +112,6 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 	LinkedProp = aLinkedProp;
 	
 	// For PostProcess
-	TArray<UMeshComponent*> MeshComponents;
 	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
 
 	for (UMeshComponent* MeshComponent : MeshComponents)

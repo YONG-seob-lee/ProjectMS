@@ -9,10 +9,9 @@
 #include "Zone/MS_Zone.h"
 
 
-AMS_Floor::AMS_Floor()
+AMS_Floor::AMS_Floor(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	// Property
 	PropType = EMS_PropType::Floor;
 
@@ -34,11 +33,6 @@ AMS_Floor::AMS_Floor()
 void AMS_Floor::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_Floor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition)

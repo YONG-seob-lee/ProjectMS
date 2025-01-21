@@ -17,11 +17,20 @@ USTRUCT(BlueprintType) struct FMS_CustomerSpawnParameters
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName CustomerName = NAME_None;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName Gender = NAME_None;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int Age = INT_MIN;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int> WishlistArray = {};
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) float RandomStuffSelectionFactor = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName CustomerName = NAME_None;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName Gender = NAME_None;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Age = INT_MIN;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, int32> WishlistArray = {};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RandomStuffSelectionFactor = 0.0f;
 };
 
 UCLASS() class PROJECTMS_API AMS_CustomerSuperviseActor : public AMS_Actor
@@ -29,21 +38,29 @@ UCLASS() class PROJECTMS_API AMS_CustomerSuperviseActor : public AMS_Actor
 	GENERATED_BODY()
 	
 public:
-	AMS_CustomerSuperviseActor();
+	AMS_CustomerSuperviseActor(const FObjectInitializer& aObjectInitializer);
 
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 
-	UFUNCTION(BlueprintCallable) void SpawnCustomerCharacter(const FMS_CustomerSpawnParameters& aSpawnParams);
-	UFUNCTION(BlueprintCallable) void DestroyCustomerCharacter(class AMS_CustomerAICharacter* aCharacter);
+	
+public:
+	UFUNCTION(BlueprintCallable)
+	void SpawnCustomerCharacter(const FMS_CustomerSpawnParameters& aSpawnParams);
+	
+	UFUNCTION(BlueprintCallable)
+	void DestroyCustomerCharacter(class AMS_CustomerAICharacter* aCharacter);
 
 	// Component
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class USceneComponent> SceneComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<class UBoxComponent> BoxComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UBoxComponent> BoxComponent = nullptr;
 
 	// Property
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) EMS_AISuperviseType SuperviseType = EMS_AISuperviseType::Undefined;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EMS_AISuperviseType SuperviseType = EMS_AISuperviseType::Undefined;
 };

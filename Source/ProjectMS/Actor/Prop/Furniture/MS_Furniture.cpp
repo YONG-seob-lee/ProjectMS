@@ -4,10 +4,9 @@
 #include "MS_Furniture.h"
 
 
-AMS_Furniture::AMS_Furniture()
+AMS_Furniture::AMS_Furniture(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	// Property
 	PropType = EMS_PropType::Furniture;
 }
@@ -18,15 +17,14 @@ void AMS_Furniture::PostInitializeComponents()
 
 	// Component
 	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
+	for (UMeshComponent* MeshComponent : MeshComponents)
+	{
+		MeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	}
 }
 
 void AMS_Furniture::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_Furniture::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 

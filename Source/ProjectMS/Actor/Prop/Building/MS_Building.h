@@ -14,7 +14,7 @@ class PROJECTMS_API AMS_Building : public AMS_Prop
 {
 	GENERATED_BODY()
 public:
-	AMS_Building();
+	AMS_Building(const FObjectInitializer& aObjectInitializer);
 	
 	virtual void PostInitProperties() override;
 #if WITH_EDITOR

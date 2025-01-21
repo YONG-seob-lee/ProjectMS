@@ -11,7 +11,7 @@ class PROJECTMS_API AMS_Prop : public AMS_Actor
 	GENERATED_BODY()
 
 public:
-	AMS_Prop();
+	AMS_Prop(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
 	
@@ -19,9 +19,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
-
-	
 	// Property :: Getter
 	EMS_PropType GetPropType() const { return PropType; }
 	
@@ -58,8 +55,15 @@ public:
 
 	
 protected:
+	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class USceneComponent> SceneRootComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UPrimitiveComponent> ShapeCollisionComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class UMeshComponent*> MeshComponents;
 	
 	// Property
 	UPROPERTY(EditDefaultsOnly)

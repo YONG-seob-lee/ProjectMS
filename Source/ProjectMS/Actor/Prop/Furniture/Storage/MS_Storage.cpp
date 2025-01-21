@@ -4,7 +4,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-AMS_Storage::AMS_Storage()
+AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	SetRootComponent(SceneComponent);
@@ -42,11 +43,6 @@ void AMS_Storage::PostInitializeComponents()
 void AMS_Storage::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_Storage::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
 }
 
 TArray<FMS_StorageEachSlotStatus> AMS_Storage::CheckStorageEachSlotStatus()

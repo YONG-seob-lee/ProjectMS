@@ -11,14 +11,12 @@ class PROJECTMS_API AMS_Floor : public AMS_Prop
 	GENERATED_BODY()
 
 public:
-	AMS_Floor();
+	AMS_Floor(const FObjectInitializer& aObjectInitializer);
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition) override;
 	
 	virtual void SetMaterial(const FName& MaterialKey);
@@ -38,5 +36,4 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> WidgetComponent_ShowGridNum;
 #endif
-
 };

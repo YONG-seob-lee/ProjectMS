@@ -9,9 +9,10 @@ UCLASS() class PROJECTMS_API AMS_ShelfStorage : public AMS_Storage
 	GENERATED_BODY()
 
 public:
-	AMS_ShelfStorage();
+	AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 };

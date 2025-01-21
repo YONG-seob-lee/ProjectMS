@@ -4,19 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Prop/MS_Prop.h"
-#include "MS_Prop_Wall.generated.h"
+#include "MS_Wall.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Prop_Wall : public AMS_Prop
+class PROJECTMS_API AMS_Wall : public AMS_Prop
 {
 	GENERATED_BODY()
 
 public:
-	AMS_Prop_Wall();
+	AMS_Wall(const FObjectInitializer& aObjectInitializer);
 
 protected:
 	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
 };

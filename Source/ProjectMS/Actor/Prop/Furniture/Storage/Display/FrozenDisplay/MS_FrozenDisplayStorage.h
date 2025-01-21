@@ -10,9 +10,10 @@ class PROJECTMS_API AMS_FrozenDisplayStorage : public AMS_DisplayStorage
 	GENERATED_BODY()
 	
 public:
-	AMS_FrozenDisplayStorage();
+	AMS_FrozenDisplayStorage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+	
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 };

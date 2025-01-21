@@ -8,12 +8,9 @@
 #include "Manager_Client/MS_SceneManager.h"
 
 
-// Sets default values
-AMS_Market::AMS_Market()
+AMS_Market::AMS_Market(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	
 	InteractionComponent = CreateDefaultSubobject<UMS_InteractionComponent>("InteractionComponent");
 	if (InteractionComponent)
 	{
@@ -21,17 +18,10 @@ AMS_Market::AMS_Market()
 	}
 }
 
-// Called when the game starts or when spawned
 void AMS_Market::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void AMS_Market::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 bool AMS_Market::HasInteractionComponent()

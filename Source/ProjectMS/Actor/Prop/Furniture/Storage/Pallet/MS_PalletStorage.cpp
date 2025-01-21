@@ -1,6 +1,7 @@
 #include "Actor/Prop/Furniture/Storage/Pallet/MS_PalletStorage.h"
 
-AMS_PalletStorage::AMS_PalletStorage()
+AMS_PalletStorage::AMS_PalletStorage(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
@@ -23,9 +24,4 @@ void AMS_PalletStorage::PostInitializeComponents()
 void AMS_PalletStorage::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_PalletStorage::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
 }

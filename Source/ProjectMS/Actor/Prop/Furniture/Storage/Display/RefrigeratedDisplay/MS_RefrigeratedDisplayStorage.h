@@ -9,9 +9,10 @@ UCLASS() class PROJECTMS_API AMS_RefrigeratedDisplayStorage : public AMS_Display
 	GENERATED_BODY()
 	
 public:
-	AMS_RefrigeratedDisplayStorage();
+	AMS_RefrigeratedDisplayStorage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+	
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 };

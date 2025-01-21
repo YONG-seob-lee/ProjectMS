@@ -12,10 +12,9 @@
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
 
-AMS_Zone::AMS_Zone()
+AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	// Component
 	ZoneBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ZoneBoxComponent"));
 	
@@ -75,12 +74,6 @@ void AMS_Zone::BeginPlay()
 		}
 	}
 }
-
-void AMS_Zone::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 
 void AMS_Zone::InitializeZoneData()
 {

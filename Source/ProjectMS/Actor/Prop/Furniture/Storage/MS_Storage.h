@@ -35,12 +35,14 @@ UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Furniture
 	GENERATED_BODY()
 	
 public:
-	AMS_Storage();
+	AMS_Storage(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
-	virtual void BeginPlay() override;
-	virtual void Tick(float aDeltaTime) override;
 
+protected:
+	virtual void BeginPlay() override;
+
+public:
 	UFUNCTION(BlueprintCallable) TArray<FMS_StorageEachSlotStatus> CheckStorageEachSlotStatus();
 	UFUNCTION(BlueprintCallable) FMS_StorageOverallSlotStatus CheckStorageOverallSlotStatus();
 

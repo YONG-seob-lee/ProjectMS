@@ -13,11 +13,12 @@ class PROJECTMS_API AMS_Actor : public AActor
 	GENERATED_BODY()
 
 public:
-	AMS_Actor();
+	AMS_Actor(const FObjectInitializer& aObjectInitializer);
 	
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	
+
+public:
 	void Create(const FString& aLabelName);
 	
 	void Initialize();
@@ -36,11 +37,5 @@ protected:
 	MS_Handle UnitHandleId = InvalidUnitHandle;
 	
 private:
-	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	// TObjectPtr<class UStaticMeshComponent> StaticMeshComponent = nullptr;
-	
-	// UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	// TObjectPtr<class USphereComponent> TestSphere = nullptr;
-	
 	TWeakObjectPtr<UObject> UnitOwner = nullptr;
 };

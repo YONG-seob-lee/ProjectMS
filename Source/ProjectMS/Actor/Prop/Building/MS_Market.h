@@ -12,11 +12,12 @@ class PROJECTMS_API AMS_Market : public AMS_Prop
 	GENERATED_BODY()
 
 public:
-	AMS_Market();
+	AMS_Market(const FObjectInitializer& aObjectInitializer);
 
+protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	
+
+public:
 	virtual bool HasInteractionComponent() override;
 	virtual void OnPressDownEvent() override;
 	virtual void OnPressUpEvent() override;

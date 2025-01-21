@@ -1,6 +1,7 @@
 #include "Actor/Prop/Furniture/Storage/Display/MS_DisplayStorage.h"
 
-AMS_DisplayStorage::AMS_DisplayStorage()
+AMS_DisplayStorage::AMS_DisplayStorage(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
@@ -19,9 +20,4 @@ void AMS_DisplayStorage::PostInitializeComponents()
 void AMS_DisplayStorage::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_DisplayStorage::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
 }

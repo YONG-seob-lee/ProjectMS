@@ -3,25 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MS_Actor.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "MS_Zone.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Zone : public AActor
+class PROJECTMS_API AMS_Zone : public AMS_Actor
 {
 	GENERATED_BODY()
 
 public:
-	AMS_Zone();
+	AMS_Zone(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
 
 protected:
 	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
 
 private:
 	void InitializeZoneData();

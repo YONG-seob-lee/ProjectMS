@@ -5,7 +5,8 @@
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 
-AMS_CustomerSuperviseActor::AMS_CustomerSuperviseActor()
+AMS_CustomerSuperviseActor::AMS_CustomerSuperviseActor(const FObjectInitializer& aObjectInitializer)
+	: Super(aObjectInitializer)
 {
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	RootComponent = SceneComponent;
@@ -19,11 +20,6 @@ AMS_CustomerSuperviseActor::AMS_CustomerSuperviseActor()
 void AMS_CustomerSuperviseActor::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMS_CustomerSuperviseActor::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
 }
 
 void AMS_CustomerSuperviseActor::SpawnCustomerCharacter(const FMS_CustomerSpawnParameters& aSpawnParams)
@@ -42,7 +38,6 @@ void AMS_CustomerSuperviseActor::SpawnCustomerCharacter(const FMS_CustomerSpawnP
 	CustomerCharacter->WishlistArray = aSpawnParams.WishlistArray;
 
 }
-
 
 void AMS_CustomerSuperviseActor::DestroyCustomerCharacter(AMS_CustomerAICharacter* aCharacter)
 {

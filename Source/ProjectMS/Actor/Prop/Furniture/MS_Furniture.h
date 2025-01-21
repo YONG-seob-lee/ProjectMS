@@ -12,19 +12,10 @@ class PROJECTMS_API AMS_Furniture : public AMS_Prop
 	GENERATED_BODY()
 
 public:
-	AMS_Furniture();
+	AMS_Furniture(const FObjectInitializer& aObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
 	
 protected:
 	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
-	
-protected:
-	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UMeshComponent*> MeshComponents;
 };
