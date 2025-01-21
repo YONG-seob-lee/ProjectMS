@@ -8,6 +8,13 @@ AMS_Actor::AMS_Actor(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	// Component
+	SceneRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
+	if (SceneRootComponent)
+	{
+		SetRootComponent(SceneRootComponent);
+	}
 }
 
 void AMS_Actor::BeginPlay()

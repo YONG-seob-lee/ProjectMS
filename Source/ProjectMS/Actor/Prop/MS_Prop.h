@@ -57,9 +57,6 @@ public:
 protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class USceneComponent> SceneRootComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPrimitiveComponent> ShapeCollisionComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -12,15 +12,12 @@
 
 
 AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
-	: Super(aObjectInitializer.SetDefaultSubobjectClass<UBoxComponent>(TEXT("ShapeCollisionComponent"))),
-	PropType(EMS_PropType::None), TableIndex(0)
+	: Super(aObjectInitializer.SetDefaultSubobjectClass<UBoxComponent>(TEXT("ShapeCollisionComponent"))
+	.SetDefaultSubobjectClass<UStaticMeshComponent>(TEXT("FirstMeshComponent")))
+	, PropType(EMS_PropType::None), TableIndex(0)
 {
-	SceneRootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRootComponent"));
-	if (SceneRootComponent)
-	{
-		SetRootComponent(SceneRootComponent);
-	}
-
+	// Component
+	// Shape Collision Component
 	ShapeCollisionComponent = CreateDefaultSubobject<UPrimitiveComponent>(TEXT("ShapeCollisionComponent"));
 	if (ShapeCollisionComponent)
 	{
@@ -33,7 +30,17 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 			Box->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
 		}
 	}
-	
+
+	// Mesh Components
+	UMeshComponent* FirstMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FirstMeshComponent"));
+	if (FirstMeshComponent)
+	{
+		MeshComponents.Add(FirstMeshComponent);
+		FirstMeshComponent->SetupAttachment(SceneRootComponent);
+		FirstMeshComponent->SetCollisionProfileName(TEXT("ClickableShape"));
+	}
+
+	// Widget Component
 	ArrangementWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ArrangementWidgetComponent"));
 	if (ArrangementWidgetComponent)
 	{
@@ -48,7 +55,7 @@ void AMS_Prop::PostInitializeComponents()
 	// Component
 	GetComponents(UMS_PropSpaceComponent::StaticClass(), PropSpaceComponents);
 
-
+	// Widget Component
 	ShowArrangementWidget(false);
 }
 

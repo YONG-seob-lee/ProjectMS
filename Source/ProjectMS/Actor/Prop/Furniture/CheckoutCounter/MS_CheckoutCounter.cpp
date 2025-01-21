@@ -7,15 +7,17 @@
 AMS_CheckoutCounter::AMS_CheckoutCounter(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CheckoutCounterFiner(TEXT("/Game/3D/StaticMesh/SM_FUR_COT_A"));
-	MS_CHECK(CheckoutCounterFiner.Object);
-
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
-	StaticMeshComponent->SetupAttachment(GetRootComponent());
-	StaticMeshComponent->SetStaticMesh(CheckoutCounterFiner.Object);
-	StaticMeshComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
-	StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-
+	if (MeshComponents.IsValidIndex(0))
+	{
+		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(MeshComponents[0]))
+		{
+			const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_FUR_COT_A"));
+			MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
+		
+			StaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
+		}
+	}
+	
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
 	CollisionBoxComponent->SetupAttachment(GetRootComponent());
 	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));

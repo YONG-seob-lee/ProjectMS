@@ -3,6 +3,7 @@
 
 #include "MS_Floor.h"
 
+#include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Environment/MS_LevelPropDatas.h"
 #include "Widget/Editor/MS_EditorTextWidget.h"
@@ -16,18 +17,19 @@ AMS_Floor::AMS_Floor(const FObjectInitializer& aObjectInitializer)
 	PropType = EMS_PropType::Floor;
 
 	// Component
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	if (MeshComponent)
+	if (UBoxComponent* Box = Cast<UBoxComponent>(ShapeCollisionComponent))
 	{
-		MeshComponent->SetupAttachment(GetRootComponent());
+		ShapeCollisionComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		Box->SetBoxExtent(FVector(25.0f, 25.0f, 0.0f));
 	}
-
 	
-#if WITH_EDITORONLY_DATA
-	WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
-	WidgetComponent_ShowGridNum->SetupAttachment(MeshComponent);
-#endif
-
+/*#if WITH_EDITORONLY_DATA
+	if (MeshComponents.IsValidIndex(0))
+	{
+		WidgetComponent_ShowGridNum = CreateEditorOnlyDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent_ShowGridNum"));
+		WidgetComponent_ShowGridNum->SetupAttachment(MeshComponents[0]);
+	}
+#endif*/
 }
 
 void AMS_Floor::BeginPlay()
@@ -39,8 +41,7 @@ void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIn
 {
 	Super::SetZoneData(aOwnerZone, aGridPosition);
 
-	
-#if WITH_EDITORONLY_DATA
+/*#if WITH_EDITORONLY_DATA
 	if (WidgetComponent_ShowGridNum)
 	{
 		if (UMS_EditorTextWidget* EditorTextWidget = Cast<UMS_EditorTextWidget>(WidgetComponent_ShowGridNum->GetWidget()))
@@ -53,23 +54,25 @@ void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIn
 			}
 		}
 	}
-#endif
-
+#endif*/
 }
 
 void AMS_Floor::SetMaterial(const FName& MaterialKey)
 {
-	if (Materials.Contains(MaterialKey))
+	for (UMeshComponent* MeshComponent : MeshComponents)
 	{
-		MeshComponent->SetMaterial(0, *Materials.Find(MaterialKey));
-	}
-	else
-	{
-		MS_LOG_Verbosity(Error, TEXT("Material Key isn't valid"));
-		
-		if (Materials.Contains(FName("Normal")))
+		if (Materials.Contains(MaterialKey))
 		{
-			MeshComponent->SetMaterial(0, *Materials.Find(FName("Normal")));
+			MeshComponent->SetMaterial(0, *Materials.Find(MaterialKey));
+		}
+		else
+		{
+			MS_LOG_Verbosity(Error, TEXT("Material Key isn't valid"));
+		
+			if (Materials.Contains(FName("Normal")))
+			{
+				MeshComponent->SetMaterial(0, *Materials.Find(FName("Normal")));
+			}
 		}
 	}
 }

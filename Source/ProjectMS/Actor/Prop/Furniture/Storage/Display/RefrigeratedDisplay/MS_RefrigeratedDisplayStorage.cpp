@@ -3,10 +3,16 @@
 AMS_RefrigeratedDisplayStorage::AMS_RefrigeratedDisplayStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
-	const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_FUR_FZ_A"));
-	MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
-
-	StorageStaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
+	if (MeshComponents.IsValidIndex(0))
+	{
+		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(MeshComponents[0]))
+		{
+			const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_FUR_FZ_A"));
+			MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
+		
+			StaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
+		}
+	}
 }
 
 void AMS_RefrigeratedDisplayStorage::PostInitializeComponents()

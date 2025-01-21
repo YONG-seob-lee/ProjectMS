@@ -19,14 +19,8 @@ protected:
 	// Component
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class USceneComponent> SceneComponent = nullptr;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* CollisionBoxComponent = nullptr;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent = nullptr;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UMS_StorageAssemblyAreaComponent> StorageAssemblyAreaComponent = nullptr;
 	

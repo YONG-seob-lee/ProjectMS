@@ -14,13 +14,6 @@ AMS_Furniture::AMS_Furniture(const FObjectInitializer& aObjectInitializer)
 void AMS_Furniture::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	// Component
-	GetComponents(UMeshComponent::StaticClass(), MeshComponents);
-	for (UMeshComponent* MeshComponent : MeshComponents)
-	{
-		MeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-	}
 }
 
 void AMS_Furniture::BeginPlay()

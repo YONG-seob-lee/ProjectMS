@@ -3,11 +3,17 @@
 AMS_ShelfStorage::AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
-	const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_WH_RACK"));
-	MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
-
-	StorageStaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
-
+	if (MeshComponents.IsValidIndex(0))
+	{
+		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(MeshComponents[0]))
+		{
+			const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_WH_RACK"));
+			MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
+		
+			StaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
+		}
+	}
+	
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, -45.0f, 0.0f));
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));

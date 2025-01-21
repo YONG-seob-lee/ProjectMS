@@ -22,18 +22,14 @@ public:
 	virtual void SetMaterial(const FName& MaterialKey);
 
 protected:
-	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UMeshComponent* MeshComponent;
-
 	// Material
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FName, TObjectPtr<class UMaterialInterface>> Materials;
 
 	
 	
-#if WITH_EDITORONLY_DATA
+/*#if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> WidgetComponent_ShowGridNum;
-#endif
+#endif*/
 };

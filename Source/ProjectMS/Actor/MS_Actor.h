@@ -33,9 +33,17 @@ public:
 	virtual void LaunchEvent() {}
 
 	FORCEINLINE MS_Handle GetUnitHandleId() const { return UnitHandleId; }
+
+	
 protected:
 	MS_Handle UnitHandleId = InvalidUnitHandle;
 	
 private:
 	TWeakObjectPtr<UObject> UnitOwner = nullptr;
+
+protected:
+	// Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class USceneComponent> SceneRootComponent;
+
 };
