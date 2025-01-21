@@ -27,27 +27,24 @@ void UMS_ItemUnit::Tick(float aDeltaTime)
 
 bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
 {
-	Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator);
-
-	// ToDo
-	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
-	if(ItemData == nullptr)
+	if (Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator))
 	{
-		return false;
+		// ToDo : Data는 Actor로 이동
+		ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
+		if(ItemData == nullptr)
+		{
+			return false;
+		}
+	
+		if(const TObjectPtr<AMS_Actor> NewActor = CreateActor(aUnitTableId, aChildTableId, aPosition, aRotator))
+		{
+			NewActor->SetOwnerUnitBase(this);
+			
+			return true;
+		}
 	}
 	
-	if(const TObjectPtr<AMS_Actor> NewActor = CreateActor(aUnitTableId, aChildTableId, aPosition, aRotator))
-	{
-		Actor = NewActor;
-		Actor->SetOwnerUnitBase(this);
-		
-		// if(const TObjectPtr<UMS_AnimInstance> AnimInstance = Cast<UMS_AnimInstance>(GetAnimInstance()))
-		// {
-		// 	AnimInstance->InitializeAnimation();
-		// }
-		return true;
-	}
-
+	MS_Ensure(false);
 	return false;
 }
 

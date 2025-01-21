@@ -12,8 +12,8 @@
  */
 
 
-typedef int32 MS_Handle;
-constexpr int32 InvalidUnitHandle = 0;
+typedef uint32 MS_Handle; // ToDo : 장시간 접속 시 StackOverflow 대비
+constexpr uint32 InvalidUnitHandle = 0;
 
 DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 
@@ -88,6 +88,16 @@ static FString GetBPNameFromFullPath(const FString& FullPath)
 
  return FullPath.Mid(LastSlash + 1, LastPoint - LastSlash - 1);
 }
+
+// Unit
+UENUM()
+enum class EMS_UnitType : int32
+{
+ Default = 0,
+ BasePlayer = 1,
+ Item = 2,
+ Furniture = 3,
+};
 
 // Widget
 

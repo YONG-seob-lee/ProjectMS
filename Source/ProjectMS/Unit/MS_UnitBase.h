@@ -37,7 +37,7 @@ public:
 protected:
 	UClass* GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const;
 	
-	TObjectPtr<AActor> SpawnBlueprintActor(UClass* BlueprintClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
+	TObjectPtr<AActor> MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
 										   ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn) const;
 
 

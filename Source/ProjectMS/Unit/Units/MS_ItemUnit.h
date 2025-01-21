@@ -24,16 +24,10 @@ public:
 
 	virtual bool CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator) override;
 	virtual void DestroyUnit() override;
-
-	FORCEINLINE TObjectPtr<AMS_Actor> GetActor() { return Actor; }
 	
 protected:
 	virtual void ChangeState(EMS_UnitState aUnitState) const override;
 
-	
 private:
-	UPROPERTY()
-	TObjectPtr<AMS_Actor> Actor = nullptr;
-
 	FMS_ItemData* ItemData = nullptr;
 };

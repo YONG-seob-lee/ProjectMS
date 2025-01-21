@@ -201,10 +201,10 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, 0, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
+	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.MS_CreateUnit(Practice::DefaultCharacterIndex, 0, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
-	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacterBase())
+	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacter())
 	{
 		CharacterBase->GetCharacterRootComponent()->ComponentTags.Emplace(FName("Title"));
 	}

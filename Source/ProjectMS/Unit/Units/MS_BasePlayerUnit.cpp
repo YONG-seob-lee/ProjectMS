@@ -30,12 +30,11 @@ void UMS_BasePlayerUnit::Tick(float aDeltaTime)
 bool UMS_BasePlayerUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
 {
 	Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator);
-
-	// ToDo : Setting Unit Table
-	if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(1, aChildTableId, aPosition, aRotator))
+	
+	// 예외적으로 Table을 통하지 않고 Class를 직접 지정하여 사용
+	if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(AMS_CharacterBase::StaticClass(), aPosition, aRotator))
 	{
-		Character = NewCharacter;
-		Character->SetOwnerUnitBase(this);
+		NewCharacter->SetOwnerUnitBase(this);
 	
 		// if(const TObjectPtr<UMS_AnimInstance> AnimInstance = Cast<UMS_AnimInstance>(GetAnimInstance()))
 		// {
@@ -54,15 +53,15 @@ void UMS_BasePlayerUnit::DestroyUnit()
 
 void UMS_BasePlayerUnit::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const
 {
-	if(Character)
+	if(GetCharacter())
 	{
-		Character->SetLodScaleValues(aCullDistanceScale, aOutLineCullDistanceScale, bVisibleOutLine);
+		GetCharacter()->SetLodScaleValues(aCullDistanceScale, aOutLineCullDistanceScale, bVisibleOutLine);
 	}
 }
 
 void UMS_BasePlayerUnit::ChangeState(EMS_UnitState aActionType) const
 {
-	if(APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
+	if(APlayerController* PlayerController = Cast<APlayerController>(GetCharacter()->GetController()))
 	{
 		PlayerController->FlushPressedKeys();
 	}

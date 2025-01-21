@@ -79,18 +79,19 @@ UClass* UMS_UnitBase::GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId)
 	return nullptr;
 }
 
-TObjectPtr<AActor> UMS_UnitBase::SpawnBlueprintActor(UClass* BlueprintClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent, ESpawnActorCollisionHandlingMethod Method) const
+TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot,
+	bool bNeedRootComponent, ESpawnActorCollisionHandlingMethod Method) const
 {
-	if (IsValid(BlueprintClass))
+	if (!IsValid(aClass))
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Blueprint Class is not valid."), *MS_FUNC_STRING);
+		MS_LOG_Verbosity(Error, TEXT("[%s] Class is not valid."), *MS_FUNC_STRING);
 		MS_Ensure(false);
 		
 		return nullptr;
 	}
 	
 	const TObjectPtr<UWorld> World = GetWorld();
-	if(IsValid(World) == false)
+	if(!IsValid(World))
 	{
 		return nullptr;	
 	}
@@ -98,7 +99,7 @@ TObjectPtr<AActor> UMS_UnitBase::SpawnBlueprintActor(UClass* BlueprintClass, con
 	FActorSpawnParameters Parameters;
 	Parameters.OverrideLevel = World->GetCurrentLevel();
 	Parameters.SpawnCollisionHandlingOverride = Method;
-	const TObjectPtr<AActor> ResultActor = World->SpawnActor(BlueprintClass, &Pos, &Rot, Parameters);
+	const TObjectPtr<AActor> ResultActor = World->SpawnActor(aClass, &Pos, &Rot, Parameters);
 
 	if(ResultActor)
 	{

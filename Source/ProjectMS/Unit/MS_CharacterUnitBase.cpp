@@ -11,13 +11,29 @@ TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(int32 aUnit
 {
 	if (UClass* BPClass = GetBlueprintClass(aUnitTableId, aChildTableId))
 	{
-		const TObjectPtr<AMS_CharacterBase> NewCharacter = Cast<AMS_CharacterBase>(SpawnBlueprintActor(BPClass, aPosition, aRotator));
-		if(IsValid(NewCharacter))
-		{
-			NewCharacter->Create(BPClass->GetName());
-			return NewCharacter;
-		}
+		return CreateCharacter(BPClass, aPosition, aRotator);
 	}
 
+	return nullptr;
+}
+
+TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(UClass* aClass, const FVector& aPosition,
+	const FRotator& aRotator)
+{
+	if (Character != nullptr)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+	}
+	
+	Character = Cast<AMS_CharacterBase>(MS_SpawnActor(aClass, aPosition, aRotator));
+	if(IsValid(Character))
+	{
+		Character->Create(aClass->GetName());
+		return Character;
+	}
+	
+	MS_LOG_Verbosity(Error, TEXT("[%s] Character not created"), *MS_FUNC_STRING);
+	MS_Ensure(false);
 	return nullptr;
 }

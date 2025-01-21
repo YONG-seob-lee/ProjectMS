@@ -25,7 +25,7 @@ void UMS_UnitManager::Finalize()
 	Super::Finalize();
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 aChildTableId,  const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition, const FRotator& aRotator)
+TObjectPtr<UMS_UnitBase> UMS_UnitManager::MS_CreateUnit(int32 aUnitTableId, int32 aChildTableId,  const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
 	++LastUnitHandle;
@@ -34,8 +34,9 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 a
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, aUnitType);
 	Unit->Initialize(LastUnitHandle);
 	
-	if(Unit->CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator) == false)
+	if (Unit->CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator) == false)
 	{
+		Unit->DestroyUnit();
 		return nullptr;
 	}
 
@@ -54,7 +55,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 a
 	return Unit;
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 aChildTableId,  EMS_UnitType aUnitType, const FVector& aPosition, const FRotator& aRotator)
+TObjectPtr<UMS_UnitBase> UMS_UnitManager::MS_CreateUnit(int32 aUnitTableId, int32 aChildTableId,  EMS_UnitType aUnitType, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
 	++LastUnitHandle;
@@ -71,6 +72,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 a
 	
 	if(Unit->CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator) == false)
 	{
+		Unit->DestroyUnit();
 		return nullptr;
 	}
 

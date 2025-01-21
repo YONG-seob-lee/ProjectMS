@@ -12,25 +12,23 @@ DECLARE_DELEGATE_TwoParams(FMS_LoadResourceDelegate, const FString&, TObjectPtr<
 UENUM()
 enum class EMS_TableDataType : uint8
 {
-	Common = 0						UMETA(DisplayName = "Common"),
-	ResourceWidget					UMETA(DisplayName = "ResourceWidget"),
-	ResourceUnit					UMETA(DisplayName = "ResourceUnit"),
+	Common = 0							UMETA(DisplayName = "Common"),
+	ResourceWidget = 1					UMETA(DisplayName = "ResourceWidget"),
+	ResourceUnit = 2					UMETA(DisplayName = "ResourceUnit"),
 
-	BasePathDirectory				UMETA(DisplayName = "BasePathDirectory"),
-	BasePathBPFile					UMETA(DisplayName = "BasePathBP_File"),
-	BasePathImgFile					UMETA(DisplayName = "BasePathImgFile"),
+	BasePathDirectory = 3				UMETA(DisplayName = "BasePathDirectory"),
+	BasePathBPFile = 4					UMETA(DisplayName = "BasePathBP_File"),
+	BasePathImgFile	= 5					UMETA(DisplayName = "BasePathImgFile"),
 
-	Level							UMETA(DisplayName = "Level"),
-	PlayerStatus					UMETA(DisplayName = "PlayerStatus"),
-	Staff							UMETA(DisplayName = "Staff"),
-	StaffAbility					UMETA(DisplayName = "StaffAbility"),
+	Level = 6							UMETA(DisplayName = "Level"),
+	PlayerStatus = 7					UMETA(DisplayName = "PlayerStatus"),
+	Staff = 8							UMETA(DisplayName = "Staff"),
+	StaffAbility = 9					UMETA(DisplayName = "StaffAbility"),
 	
-	Env_Zone						UMETA(DisplayName = "Env_Zone"),
-	Env_Prop_FloorTile				UMETA(DisplayName = "Env_Prop_FloorTile"),
-
-	ItemData							UMETA(DisplayName = "ItemData"),
-	Storage						UMETA(DisplayName = "SaleStand"),
-	MenuElement						UMETA(DisplayName = "MenuElement"),
+	ItemData = 10						UMETA(DisplayName = "ItemData"),
+	Furniture = 11						UMETA(DisplayName = "Furniture"),
+	Storage = 12						UMETA(DisplayName = "Storage"),
+	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
 };
 
 USTRUCT()

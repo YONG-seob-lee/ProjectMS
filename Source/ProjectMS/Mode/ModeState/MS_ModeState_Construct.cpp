@@ -11,6 +11,7 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/MS_Prop.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 
 
@@ -465,18 +466,25 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 
 				int32 UnitTableId = static_cast<int32>(EMS_UnitType::Furniture);
 				int32 ChildTableId = PreviewProp->GetTableIndex();
-				
-				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateUnit(UnitTableId, ChildTableId, EMS_UnitType::Furniture, NewLocationOnGrid, PreviewProp->GetActorRotation())))
-				{
-					// Register New Datas
-					TArray<FMS_GridDataForPropSpace> PropGridDatas;
-					ConvertObjectDataProp(PreviewPropGridDatas, NewProp, PropGridDatas);
-					LevelScriptActor->RegisterGridObjectData(PropGridDatas);
-				}
-				else
+
+				TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.MS_CreateUnit(UnitTableId, ChildTableId, EMS_UnitType::Furniture, NewLocationOnGrid, PreviewProp->GetActorRotation()));
+				if (!IsValid(NewUnit))
 				{
 					MS_Ensure(false);
+					return;
 				}
+				
+				AMS_Prop* NewProp = Cast<AMS_Prop>(NewUnit->GetActor());
+				if (!IsValid(NewProp))
+				{
+					MS_Ensure(false);
+					return;
+				}
+				
+				// Register New Datas
+				TArray<FMS_GridDataForPropSpace> PropGridDatas;
+				ConvertObjectDataProp(PreviewPropGridDatas, NewProp, PropGridDatas);
+				LevelScriptActor->RegisterGridObjectData(PropGridDatas);
 			}
 			
 			else

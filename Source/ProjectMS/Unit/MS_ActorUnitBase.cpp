@@ -8,15 +8,23 @@
 TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(int32 aUnitTableId, int32 aChildTableId, const FVector& aVector,
                                                      const FRotator& aRotator)
 {
+	if (Actor != nullptr)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+	}
+	
 	if (UClass* BPClass = GetBlueprintClass(aUnitTableId, aChildTableId))
 	{
-		const TObjectPtr<AMS_Actor> NewActor = Cast<AMS_Actor>(SpawnBlueprintActor(BPClass, aVector, aRotator));
-		if(IsValid(NewActor))
+		Actor = Cast<AMS_Actor>(MS_SpawnActor(BPClass, aVector, aRotator));
+		if(IsValid(Actor))
 		{
-			NewActor->Create(BPClass->GetName());
-			return NewActor;
+			Actor->Create(BPClass->GetName());
+			return Actor;
 		}
 	}
 
+	MS_LOG_Verbosity(Error, TEXT("[%s] Actor not created"), *MS_FUNC_STRING);
+	MS_Ensure(false);
 	return nullptr;	
 }

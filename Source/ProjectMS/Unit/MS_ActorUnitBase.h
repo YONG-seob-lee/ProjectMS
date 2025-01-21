@@ -16,4 +16,11 @@ class PROJECTMS_API UMS_ActorUnitBase : public UMS_UnitBase
 
 protected:
 	TObjectPtr<class AMS_Actor> CreateActor(int32 aUnitTableId, int32 aChildTableId, const FVector& aVector, const FRotator& aRotator);
+
+public:
+	FORCEINLINE TObjectPtr<AMS_Actor> GetActor() const { return Actor; }
+	
+private:
+	UPROPERTY()
+	TObjectPtr<class AMS_Actor> Actor = nullptr;
 };

@@ -21,8 +21,8 @@ public:
 	virtual void Finalize() override;
 	void DestroyAllUnits();
 	
-	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, int32 aChildTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
-	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, int32 aChildTableId,  EMS_UnitType aUnitType, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	TObjectPtr<class UMS_UnitBase> MS_CreateUnit(int32 aUnitTableId, int32 aChildTableId, const TSubclassOf<UMS_UnitBase>& aUnitType, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	TObjectPtr<class UMS_UnitBase> MS_CreateUnit(int32 aUnitTableId, int32 aChildTableId,  EMS_UnitType aUnitType, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 
 	
 private:

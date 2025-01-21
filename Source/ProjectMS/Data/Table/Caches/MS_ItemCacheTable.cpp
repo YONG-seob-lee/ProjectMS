@@ -149,5 +149,6 @@ int32 UMS_ItemCacheTable::GetUnitBaseBPIndex(int32 aId) const
 		return ItemData->PathFile;
 	}
 	
-	return Super::GetUnitBaseBPIndex(aId);
+	MS_Ensure(false);
+	return INDEX_NONE;
 }
