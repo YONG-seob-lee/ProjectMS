@@ -5,10 +5,21 @@
 
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
-#include "Manager_Both/MS_UnitManager.h"
+#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 
-void UMS_UnitBase::Initialize()
+class UMS_ResourceUnitCacheTable;
+
+void UMS_UnitBase::Initialize(MS_Handle aUnitHandle)
 {
+	if (aUnitHandle == InvalidUnitHandle)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return;
+	}
+	
+	UnitHandle = aUnitHandle;
 }
 
 void UMS_UnitBase::Finalize()
@@ -24,9 +35,26 @@ void UMS_UnitBase::Tick(float aDeltaTime)
 {
 }
 
-bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
 {
-	UnitHandle = aUnitTableId;
+	if (aUnitTableId == INDEX_NONE)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Unit Key is invalid"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return false;
+	}
+	
+	ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
+	if(ResourceUnitData == nullptr)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_Ensure(false);
+		
+		return false;
+	}
+
+	UnitType = static_cast<EMS_UnitType>(ResourceUnitData->UnitType);
 	
 	return true;
 }
@@ -38,6 +66,57 @@ void UMS_UnitBase::DestroyUnit()
 		UnitStateMachine->Destroy();
 		UnitStateMachine = nullptr;
 	}
+}
+
+UClass* UMS_UnitBase::GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const
+{
+	TObjectPtr<UMS_CacheTable> CacheTable = gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit);
+	if (UMS_ResourceUnitCacheTable* ResourceUnitCacheTable = Cast<UMS_ResourceUnitCacheTable>(CacheTable))
+	{
+		return ResourceUnitCacheTable->GetBlueprintClass(aUnitTableId, aChildTableId);
+	}
+
+	return nullptr;
+}
+
+TObjectPtr<AActor> UMS_UnitBase::SpawnBlueprintActor(UClass* BlueprintClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent, ESpawnActorCollisionHandlingMethod Method) const
+{
+	if (IsValid(BlueprintClass))
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Blueprint Class is not valid."), *MS_FUNC_STRING);
+		MS_Ensure(false);
+		
+		return nullptr;
+	}
+	
+	const TObjectPtr<UWorld> World = GetWorld();
+	if(IsValid(World) == false)
+	{
+		return nullptr;	
+	}
+			
+	FActorSpawnParameters Parameters;
+	Parameters.OverrideLevel = World->GetCurrentLevel();
+	Parameters.SpawnCollisionHandlingOverride = Method;
+	const TObjectPtr<AActor> ResultActor = World->SpawnActor(BlueprintClass, &Pos, &Rot, Parameters);
+
+	if(ResultActor)
+	{
+		//ResultActor->SetActorLabel(GetBPNameFromFullPath(BlueprintPath));
+
+		if(bNeedRootComponent && ResultActor->GetRootComponent() == nullptr)
+		{
+			const TObjectPtr<USceneComponent> RootComponent = MS_NewObject<USceneComponent>(ResultActor, USceneComponent::GetDefaultSceneRootVariableName(), RF_Transactional);
+			RootComponent->Mobility = EComponentMobility::Movable;
+
+			ResultActor->SetRootComponent(RootComponent);
+			ResultActor->AddInstanceComponent(RootComponent);
+
+			RootComponent->RegisterComponent();
+		}
+	}
+
+	return ResultActor != nullptr ? ResultActor : nullptr;
 }
 
 void UMS_UnitBase::CreateUnitStateMachine()

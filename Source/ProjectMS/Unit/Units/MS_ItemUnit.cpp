@@ -5,9 +5,9 @@
 
 #include "Manager_Both/MS_UnitManager.h"
 
-void UMS_ItemUnit::Initialize()
+void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle)
 {
-	Super::Initialize();
+	Super::Initialize(aUnitHandle);
 }
 
 void UMS_ItemUnit::Finalize()
@@ -25,21 +25,20 @@ void UMS_ItemUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
 {
-	Super::CreateUnit(aUnitTableId, aPosition, aRotator);
-	
+	Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator);
+
+	// ToDo
 	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
 	if(ItemData == nullptr)
 	{
 		return false;
 	}
 	
-	const FString BPPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, ItemData->PathFile, true);
-
-	if(const TObjectPtr<AMS_Actor> NewCharacter = gUnitMng.CreateActor(BPPath, aPosition, aRotator))
+	if(const TObjectPtr<AMS_Actor> NewActor = CreateActor(aUnitTableId, aChildTableId, aPosition, aRotator))
 	{
-		Actor = NewCharacter;
+		Actor = NewActor;
 		Actor->SetOwnerUnitBase(this);
 		
 		// if(const TObjectPtr<UMS_AnimInstance> AnimInstance = Cast<UMS_AnimInstance>(GetAnimInstance()))

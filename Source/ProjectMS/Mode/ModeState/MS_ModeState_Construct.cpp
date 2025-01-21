@@ -457,30 +457,16 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 		{
 			if (PreviewProp->GetLinkedProp() == nullptr)
 			{
-				FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, PreviewProp->GetTableIndex());
-				if(StorageData == nullptr)
-				{
-					MS_LOG_Verbosity(Error, TEXT("Storage Data is invalid"));
-					return;
-				}
-
-				const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, StorageData->PathFile, true);
-
-				UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
-				if(IsValid(BlueprintClass) == false)
-				{
-					MS_CHECK(false);
-					MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
-					return;
-				}
-				
 				// Move Location
 				// ToDo : Level Script로 이동
 				FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
 				PreviewProp->GetGridNum().X % 2 != 0,
 				PreviewProp->GetGridNum().Y % 2 != 0);
 
-				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateActor(BlueprintPath, NewLocationOnGrid, PreviewProp->GetActorRotation())))
+				int32 UnitTableId = static_cast<int32>(EMS_UnitType::Furniture);
+				int32 ChildTableId = PreviewProp->GetTableIndex();
+				
+				if (AMS_Prop* NewProp = Cast<AMS_Prop>(gUnitMng.CreateUnit(UnitTableId, ChildTableId, EMS_UnitType::Furniture, NewLocationOnGrid, PreviewProp->GetActorRotation())))
 				{
 					// Register New Datas
 					TArray<FMS_GridDataForPropSpace> PropGridDatas;

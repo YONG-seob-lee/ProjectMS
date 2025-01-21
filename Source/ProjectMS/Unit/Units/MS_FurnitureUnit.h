@@ -1,0 +1,25 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "MS_UnitBase.h"
+#include "MS_FurnitureUnit.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECTMS_API UMS_FurnitureUnit : public UMS_UnitBase
+{
+	GENERATED_BODY()
+
+public:
+	virtual void Initialize(MS_Handle aUnitHandle) override;
+	virtual void Finalize() override;
+	virtual void PostInitialize() override;
+	virtual void Tick(float aDeltaTime) override;
+
+	virtual bool CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator) override;
+	virtual void DestroyUnit() override;
+};

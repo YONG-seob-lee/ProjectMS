@@ -11,7 +11,7 @@
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
-#include "Unit/MS_BasePlayerUnit.h"
+#include "Units/MS_BasePlayerUnit.h"
 #include "Utility/MS_Define.h"
 
 
@@ -65,8 +65,9 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 			{
 				continue;
 			}
-			
-			gUnitMng.CreateUnit(UnitKey, UnitData->UnitType, Actor->GetActorLocation(), Actor->GetActorRotation());
+
+			// ToDo : 코드 이동
+			// gUnitMng.CreateUnit(UnitKey, UnitData->UnitType, Actor->GetActorLocation(), Actor->GetActorRotation());
 		}
 		//gUnitMng.CreateUnit()
 		// if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
@@ -200,7 +201,7 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
+	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(Practice::DefaultCharacterIndex, 0, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
 	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacterBase())

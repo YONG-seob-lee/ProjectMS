@@ -42,11 +42,12 @@ void UMS_StorageCacheTable::GetStorageData(EMS_StorageType aStorageType, TArray<
 	}
 }
 
-FMS_StorageData* UMS_StorageCacheTable::GetStorageData(int32 aStorageId)
+FMS_StorageData* UMS_StorageCacheTable::GetStorageData(int32 aStorageId) const
 {
-	if(FMS_StorageData** StorageData = StorageDatas.Find(aStorageId))
+	if(StorageDatas.Contains(aStorageId))
 	{
-		return *StorageData;
+		FMS_StorageData* StorageData = *StorageDatas.Find(aStorageId);
+		return StorageData;
 	}
 
 	return nullptr;
@@ -62,4 +63,14 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 		Category->SetStorageType(i);
 		aCategoryArray.Emplace(Category);
 	}
+}
+
+int32 UMS_StorageCacheTable::GetUnitBaseBPIndex(int32 aId) const
+{
+	if (FMS_StorageData* StorageData = GetStorageData(aId))
+	{
+		return StorageData->PathFile;
+	}
+	
+	return Super::GetUnitBaseBPIndex(aId);
 }

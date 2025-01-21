@@ -29,15 +29,15 @@ void UMS_ItemCacheTable::Finalize()
 	Super::Finalize();
 }
 
-FMS_ItemData* UMS_ItemCacheTable::GetItem(int32 aItemId)
+FMS_ItemData* UMS_ItemCacheTable::GetItem(int32 aItemId) const
 {
-	FMS_ItemData** ItemData = ItemDatas.Find(aItemId);
-	if(!ItemData)
+	if(ItemDatas.Contains(aItemId))
 	{
-		return nullptr;
+		FMS_ItemData* ItemData = *ItemDatas.Find(aItemId);
+		return ItemData;
 	}
-	
-	return *ItemData;
+
+	return nullptr;
 }
 
 void UMS_ItemCacheTable::GetItems(TMap<int32, FMS_ItemData*>& aItemDatas) const
@@ -140,4 +140,14 @@ const int32 UMS_ItemCacheTable::GetItemIDByName(const FName& aItemName)
 	}
 
 	return INDEX_NONE;
+}
+
+int32 UMS_ItemCacheTable::GetUnitBaseBPIndex(int32 aId) const
+{
+	if (FMS_ItemData* ItemData = GetItem(aId))
+	{
+		return ItemData->PathFile;
+	}
+	
+	return Super::GetUnitBaseBPIndex(aId);
 }

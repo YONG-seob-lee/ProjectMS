@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_ItemUnit.h"
+#include "MS_Define.h"
 
 #include "MS_Actor.generated.h"
 
@@ -45,5 +45,4 @@ protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class USceneComponent> SceneRootComponent;
-
 };

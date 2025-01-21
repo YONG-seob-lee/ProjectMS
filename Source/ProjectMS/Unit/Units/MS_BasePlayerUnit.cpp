@@ -5,12 +5,11 @@
 
 #include "Character/MS_CharacterBase.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
-#include "Manager_Both/MS_UnitManager.h"
-#include "Table/RowBase/MS_ResourceUnit.h"
 
-void UMS_BasePlayerUnit::Initialize()
+
+void UMS_BasePlayerUnit::Initialize(MS_Handle aUnitHandle)
 {
-	Super::Initialize();
+	Super::Initialize(aUnitHandle);
 }
 
 void UMS_BasePlayerUnit::Finalize()
@@ -28,30 +27,23 @@ void UMS_BasePlayerUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_BasePlayerUnit::CreateUnit(int32 aUnitTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_BasePlayerUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
 {
-	Super::CreateUnit(aUnitTableId, aPosition, aRotator);
-	
-	UnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
-	if(UnitData == nullptr)
-	{
-		return false;
-	}
-	
-	const FString BPPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, UnitData->Base_Path, true);
+	Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator);
 
-	if(const TObjectPtr<AMS_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, aPosition, aRotator))
+	// ToDo : Setting Unit Table
+	if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(1, aChildTableId, aPosition, aRotator))
 	{
 		Character = NewCharacter;
 		Character->SetOwnerUnitBase(this);
-		
+	
 		// if(const TObjectPtr<UMS_AnimInstance> AnimInstance = Cast<UMS_AnimInstance>(GetAnimInstance()))
 		// {
 		// 	AnimInstance->InitializeAnimation();
 		// }
 		return true;
 	}
-
+	
 	return false;
 }
 
