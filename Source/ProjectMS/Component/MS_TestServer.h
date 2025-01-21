@@ -67,7 +67,7 @@ public:
 private:
 	// Schedule
 	FMS_TimeSchedule CurrentTime;
-
+	
 	// Order Item
 	TMap<int32, int32> Items;
 

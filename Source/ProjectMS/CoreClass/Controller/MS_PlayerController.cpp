@@ -47,6 +47,8 @@ void AMS_PlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	SetupInputComponent();
+
+	//FText::FromStringTable()
 }
 
 void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
