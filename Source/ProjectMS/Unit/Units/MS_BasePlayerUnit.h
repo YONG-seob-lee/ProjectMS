@@ -16,13 +16,13 @@ class PROJECTMS_API UMS_BasePlayerUnit : public UMS_CharacterUnitBase
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle) override;
+	virtual void Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId) override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 	
-	virtual bool CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator) override;
-	virtual void DestroyUnit() override;
+	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
+	virtual void DestroyUnitActor() override;
 	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
 

@@ -6,10 +6,65 @@
 #include "Character/MS_CharacterBase.h"
 
 
-TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(int32 aUnitTableId, int32 aChildTableId,
-                                                                     const FVector& aPosition, const FRotator& aRotator)
+void UMS_CharacterUnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
-	if (UClass* BPClass = GetBlueprintClass(aUnitTableId, aChildTableId))
+	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+}
+
+void UMS_CharacterUnitBase::Finalize()
+{
+	Super::Finalize();
+}
+
+void UMS_CharacterUnitBase::PostInitialize()
+{
+	Super::PostInitialize();
+}
+
+void UMS_CharacterUnitBase::Tick(float aDeltaTime)
+{
+	Super::Tick(aDeltaTime);
+}
+
+bool UMS_CharacterUnitBase::CreateUnitActor(const FVector& aPosition,
+	const FRotator& aRotator)
+{
+	if (Character != nullptr)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+	}
+	
+	if (Super::CreateUnitActor(aPosition, aRotator))
+	{
+		Character = CreateCharacter(aPosition, aRotator);
+		
+		if(IsValid(Character))
+		{
+			Character->SetOwnerUnitBase(this);
+			
+			return true;
+		}
+	}
+	
+	MS_Ensure(false);
+	return false;
+}
+
+void UMS_CharacterUnitBase::DestroyUnitActor()
+{
+	if(IsValid(Character))
+	{
+		Character->Destroy();
+		Character = nullptr;
+	}
+	
+	Super::DestroyUnitActor();
+}
+
+TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(const FVector& aPosition, const FRotator& aRotator)
+{
+	if (UClass* BPClass = GetBlueprintClass())
 	{
 		return CreateCharacter(BPClass, aPosition, aRotator);
 	}
@@ -20,17 +75,11 @@ TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(int32 aUnit
 TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(UClass* aClass, const FVector& aPosition,
 	const FRotator& aRotator)
 {
-	if (Character != nullptr)
+	TObjectPtr<AMS_CharacterBase> NewCharacter = Cast<AMS_CharacterBase>(MS_SpawnActor(aClass, aPosition, aRotator));
+	if(IsValid(NewCharacter))
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
-		MS_Ensure(false);
-	}
-	
-	Character = Cast<AMS_CharacterBase>(MS_SpawnActor(aClass, aPosition, aRotator));
-	if(IsValid(Character))
-	{
-		Character->Create(aClass->GetName());
-		return Character;
+		NewCharacter->Create(aClass->GetName());
+		return NewCharacter;
 	}
 	
 	MS_LOG_Verbosity(Error, TEXT("[%s] Character not created"), *MS_FUNC_STRING);

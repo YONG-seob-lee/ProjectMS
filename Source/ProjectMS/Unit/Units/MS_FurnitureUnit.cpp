@@ -6,9 +6,9 @@
 #include "MS_Actor.h"
 
 
-void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle)
+void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
-	Super::Initialize(aUnitHandle);
+	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
 }
 
 void UMS_FurnitureUnit::Finalize()
@@ -26,23 +26,12 @@ void UMS_FurnitureUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_FurnitureUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_FurnitureUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
-	if (Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator))
-	{
-		if(const TObjectPtr<AMS_Actor> NewActor = CreateActor(aUnitTableId, aChildTableId, aPosition, aRotator))
-		{
-			NewActor->SetOwnerUnitBase(this);
-			
-			return true;
-		}
-	}
-
-	MS_Ensure(false);
-	return false;
+	return Super::CreateUnitActor(aPosition, aRotator);
 }
 
-void UMS_FurnitureUnit::DestroyUnit()
+void UMS_FurnitureUnit::DestroyUnitActor()
 {
-	Super::DestroyUnit();
+	Super::DestroyUnitActor();
 }

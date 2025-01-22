@@ -5,9 +5,9 @@
 
 #include "Manager_Both/MS_UnitManager.h"
 
-void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle)
+void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
-	Super::Initialize(aUnitHandle);
+	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
 }
 
 void UMS_ItemUnit::Finalize()
@@ -25,22 +25,14 @@ void UMS_ItemUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_ItemUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
-	if (Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator))
+	if (Super::CreateUnitActor(aPosition, aRotator))
 	{
-		// ToDo : Data는 Actor로 이동
-		ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
+		ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, ChildTableId);
 		if(ItemData == nullptr)
 		{
 			return false;
-		}
-	
-		if(const TObjectPtr<AMS_Actor> NewActor = CreateActor(aUnitTableId, aChildTableId, aPosition, aRotator))
-		{
-			NewActor->SetOwnerUnitBase(this);
-			
-			return true;
 		}
 	}
 	
@@ -48,9 +40,9 @@ bool UMS_ItemUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVe
 	return false;
 }
 
-void UMS_ItemUnit::DestroyUnit()
+void UMS_ItemUnit::DestroyUnitActor()
 {
-	Super::DestroyUnit();
+	Super::DestroyUnitActor();
 }
 
 void UMS_ItemUnit::ChangeState(EMS_UnitState aUnitState) const

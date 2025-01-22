@@ -468,7 +468,7 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 				int32 UnitTableId = static_cast<int32>(EMS_UnitType::Furniture);
 				int32 ChildTableId = PreviewProp->GetTableIndex();
 
-				TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.MS_CreateUnit(UnitTableId, ChildTableId, EMS_UnitType::Furniture, NewLocationOnGrid, PreviewProp->GetActorRotation()));
+				TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(UnitTableId, ChildTableId, NewLocationOnGrid, PreviewProp->GetActorRotation()));
 				if (!IsValid(NewUnit))
 				{
 					MS_Ensure(false);

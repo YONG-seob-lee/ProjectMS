@@ -22,20 +22,23 @@ UCLASS()
 class PROJECTMS_API UMS_UnitBase : public UObject
 {
 	GENERATED_BODY()
+	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle);
+	virtual void Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId);
 	virtual void Finalize();
 	virtual void PostInitialize();
 	virtual void Tick(float aDeltaTime);
+
+	void DestroyUnit();
 	
-	virtual bool CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
-	virtual void DestroyUnit();
+	virtual bool CreateUnitActor(const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	virtual void DestroyUnitActor();
 	
 	FORCEINLINE void SetUnitHandle(MS_Handle aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
 
 protected:
-	UClass* GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const;
+	UClass* GetBlueprintClass() const;
 	
 	TObjectPtr<AActor> MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
 										   ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn) const;
@@ -46,15 +49,22 @@ public:
 	void CreateUnitStateMachine();
 	void RegisterUnitState(EMS_UnitState aState, const FName& aName, TSubclassOf<class UMS_StateBase> aClassType);
 	TObjectPtr<UMS_StateBase> GetCurrentUnitState() const;
-	
+
 protected:
 	virtual void ChangeState(EMS_UnitState aUnitState) const;
-	
+
+
+protected:
 	MS_Handle UnitHandle = InvalidUnitHandle;
+	
+	UPROPERTY()
+	int32 UnitTableId = INDEX_NONE;
+	
+	UPROPERTY()
+	int32 ChildTableId = INDEX_NONE;
 
 	struct FMS_ResourceUnit* ResourceUnitData = nullptr;
 
-	EMS_UnitType UnitType = EMS_UnitType::Default;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_StateMachine> UnitStateMachine = nullptr;

@@ -35,8 +35,7 @@ public:
 protected:
 	virtual TObjectPtr<class AMS_SpawnPoint> GetSpawnPoint(const FName& aCharacterName) const;
 	virtual TObjectPtr<class UMS_UnitBase> CreatePlayer(const TObjectPtr<class AMS_SpawnPoint> aSpawnPoint);
-	
-	FMS_ResourceUnit* GetUnitData(const TObjectPtr<AActor>& aActor, int32& aUnitKey);
+
 public:
 	
 	// Property

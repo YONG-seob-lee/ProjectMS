@@ -59,15 +59,8 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 
 		if(Actor->Tags.IsValidIndex(0))
 		{
-			int32 UnitKey = 0;
-			const FMS_ResourceUnit* UnitData = GetUnitData(Actor, UnitKey);
-			if(!UnitData)
-			{
-				continue;
-			}
-
 			// ToDo : 코드 이동
-			// gUnitMng.CreateUnit(UnitKey, UnitData->UnitType, Actor->GetActorLocation(), Actor->GetActorRotation());
+			// gUnitMng.CreateUnit(UnitKey, Actor->GetActorLocation(), Actor->GetActorRotation());
 		}
 		//gUnitMng.CreateUnit()
 		// if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
@@ -88,8 +81,6 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 
 void AMS_LevelScriptActorBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	gUnitMng.DestroyAllUnits();
-	
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -201,7 +192,7 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.MS_CreateUnit(Practice::DefaultCharacterIndex, 0, UMS_BasePlayerUnit::StaticClass(), aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
+	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(1, INDEX_NONE, aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
 	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacter())
@@ -212,13 +203,4 @@ TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr
 	//AssignUnitHandle(gUnitMng.GetUnitHandle(Cody));
 
 	return Player;
-}
-
-FMS_ResourceUnit* AMS_LevelScriptActorBase::GetUnitData(const TObjectPtr<AActor>& aActor, int32& aUnitKey)
-{
-	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-	const FString UnitKeyString = aActor->Tags[0].ToString();
-	aUnitKey = FCString::Atoi(*UnitKeyString);
-
-	return UnitTable->GetResourceUnitData(aUnitKey);
 }

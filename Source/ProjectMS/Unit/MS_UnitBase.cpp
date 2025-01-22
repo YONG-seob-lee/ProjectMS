@@ -5,26 +5,55 @@
 
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 
-class UMS_ResourceUnitCacheTable;
 
-void UMS_UnitBase::Initialize(MS_Handle aUnitHandle)
+void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
-	if (aUnitHandle == InvalidUnitHandle)
+	// Unit Handle
+	UnitHandle = aUnitHandle;
+	
+	if (UnitHandle == InvalidUnitHandle)
 	{
 		MS_LOG_Verbosity(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
 		MS_Ensure(false);
 
 		return;
 	}
-	
-	UnitHandle = aUnitHandle;
+
+	// Table
+	UnitTableId = aUnitTableId;
+	if (UnitTableId == INDEX_NONE)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return;
+	}
+
+	ChildTableId = aChildTableId;
+
+	// Table Data Cache
+	ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
+	if(ResourceUnitData == nullptr)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_Ensure(false);
+	}
 }
 
 void UMS_UnitBase::Finalize()
 {
-	DestroyUnit();
+	DestroyUnitActor();
+	
+	if(UnitStateMachine)
+	{
+		UnitStateMachine->Destroy();
+		UnitStateMachine = nullptr;
+	}
+
+	UnitHandle = InvalidUnitHandle;
 }
 
 void UMS_UnitBase::PostInitialize()
@@ -35,45 +64,66 @@ void UMS_UnitBase::Tick(float aDeltaTime)
 {
 }
 
-bool UMS_UnitBase::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
+void UMS_UnitBase::DestroyUnit()
 {
-	if (aUnitTableId == INDEX_NONE)
+	gUnitMng.DestroyUnit(UnitHandle);
+}
+
+bool UMS_UnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
+{
+	if (UnitTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Unit Key is invalid"), *MS_FUNC_STRING);
+		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return false;
+	}
+
+	if (ChildTableId == INDEX_NONE)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] ChildTableId is invalid"), *MS_FUNC_STRING);
 		MS_Ensure(false);
 
 		return false;
 	}
 	
-	ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
 	if(ResourceUnitData == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr"), *MS_FUNC_STRING);
 		MS_Ensure(false);
 		
 		return false;
 	}
-
-	UnitType = static_cast<EMS_UnitType>(ResourceUnitData->UnitType);
 	
 	return true;
 }
 
-void UMS_UnitBase::DestroyUnit()
+void UMS_UnitBase::DestroyUnitActor()
 {
-	if(UnitStateMachine)
-	{
-		UnitStateMachine->Destroy();
-		UnitStateMachine = nullptr;
-	}
 }
 
-UClass* UMS_UnitBase::GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const
+UClass* UMS_UnitBase::GetBlueprintClass() const
 {
+	if (UnitTableId == INDEX_NONE)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is None"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return nullptr;
+	}
+
+	if (ChildTableId == INDEX_NONE)
+	{
+		MS_LOG_Verbosity(Error, TEXT("[%s] ChildTableId is None"), *MS_FUNC_STRING);
+		MS_Ensure(false);
+
+		return nullptr;
+	}
+	
 	TObjectPtr<UMS_CacheTable> CacheTable = gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit);
 	if (UMS_ResourceUnitCacheTable* ResourceUnitCacheTable = Cast<UMS_ResourceUnitCacheTable>(CacheTable))
 	{
-		return ResourceUnitCacheTable->GetBlueprintClass(aUnitTableId, aChildTableId);
+		return ResourceUnitCacheTable->GetBlueprintClass(UnitTableId, ChildTableId);
 	}
 
 	return nullptr;

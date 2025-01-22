@@ -7,9 +7,9 @@
 #include "CoreClass/Controller/MS_PlayerController.h"
 
 
-void UMS_BasePlayerUnit::Initialize(MS_Handle aUnitHandle)
+void UMS_BasePlayerUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
-	Super::Initialize(aUnitHandle);
+	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
 }
 
 void UMS_BasePlayerUnit::Finalize()
@@ -27,28 +27,26 @@ void UMS_BasePlayerUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_BasePlayerUnit::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
+bool UMS_BasePlayerUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
-	Super::CreateUnit(aUnitTableId, aChildTableId, aPosition, aRotator);
-	
 	// 예외적으로 Table을 통하지 않고 Class를 직접 지정하여 사용
-	if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(AMS_CharacterBase::StaticClass(), aPosition, aRotator))
+	if (Super::Super::CreateUnitActor(aPosition, aRotator))
 	{
-		NewCharacter->SetOwnerUnitBase(this);
-	
-		// if(const TObjectPtr<UMS_AnimInstance> AnimInstance = Cast<UMS_AnimInstance>(GetAnimInstance()))
-		// {
-		// 	AnimInstance->InitializeAnimation();
-		// }
-		return true;
+		if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(AMS_CharacterBase::StaticClass(), aPosition, aRotator))
+		{
+			NewCharacter->SetOwnerUnitBase(this);
+		
+			return true;
+		}
 	}
-	
+
+	MS_Ensure(false);
 	return false;
 }
 
-void UMS_BasePlayerUnit::DestroyUnit()
+void UMS_BasePlayerUnit::DestroyUnitActor()
 {
-	Super::DestroyUnit();
+	Super::DestroyUnitActor();
 }
 
 void UMS_BasePlayerUnit::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const
