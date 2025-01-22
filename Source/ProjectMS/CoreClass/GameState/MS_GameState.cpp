@@ -30,10 +30,11 @@ void AMS_GameState::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_GameState::FinishDestroy()
+void AMS_GameState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	DestroyManagement();
-	Super::FinishDestroy();
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void AMS_GameState::RegisterManagement()
