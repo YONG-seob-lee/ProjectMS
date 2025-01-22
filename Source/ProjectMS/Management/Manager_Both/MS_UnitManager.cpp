@@ -35,7 +35,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
 	return nullptr;
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition, const FRotator& aRotator)
+TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 aChildTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
 	const MS_Handle NewUnitHandle = MakeUnitHandle(aUnitTableId, aChildTableId);
@@ -73,18 +73,22 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 a
 
 	// Create Unit
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, UnitTypeClass);
-	Unit->Initialize(LastUnitHandle, aUnitTableId, aChildTableId);
-	
-	if(Unit->CreateUnitActor(aPosition, aRotator) == false)
-	{
-		DestroyUnit_Internal(Unit);
-		return nullptr;
-	}
+	Unit->Initialize(NewUnitHandle, aUnitTableId, aChildTableId);
 
+	// Create Actor
+	if (bCreateActor)
+	{
+		if (Unit->CreateUnitActor(aPosition, aRotator) == false)
+		{
+			DestroyUnit_Internal(Unit);
+			return nullptr;
+		}
+	}
+	
 	Unit->PostInitialize();
 
 	// Add To Map
-	Units.Add(LastUnitHandle, Unit);
+	Units.Add(NewUnitHandle, Unit);
 	
 	return Unit;
 }
@@ -116,7 +120,7 @@ void UMS_UnitManager::DestroyAllUnits()
 {
 	for(auto& Unit : Units)
 	{
-		DestroyUnit(Unit.Key);
+		DestroyUnit_Internal(Unit.Value);
 	}
 
 	Units.Empty();

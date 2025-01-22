@@ -24,7 +24,7 @@ public:
 
 	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
 	
-	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, int32 aChildTableId, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, int32 aChildTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	
 	void DestroyUnit(MS_Handle aHandle);
 

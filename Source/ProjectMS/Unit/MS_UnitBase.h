@@ -34,7 +34,6 @@ public:
 	virtual bool CreateUnitActor(const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	virtual void DestroyUnitActor();
 	
-	FORCEINLINE void SetUnitHandle(MS_Handle aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
 
 protected:

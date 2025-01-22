@@ -8,8 +8,10 @@
 
 #include "Prop/MS_Prop.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/Floor/MS_Floor.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -55,7 +57,8 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	
 	// Prop
 	TArray<AActor*> PropActors;
-	
+
+	// ToDo : 스트리밍 레벨 뿐 아니라 모든 레벨의 액터를 불러오나?
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop::StaticClass(), PropActors);
 	
 	for (AActor* PropActor : PropActors)
@@ -71,10 +74,33 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		int32 PropCenterZoneIndex = GetGridZoneIndex(PropCenterGridPosition);
 		if (PropCenterZoneIndex == -1)
 		{
-			return;
+			continue;
 		}
 
 		Prop->SetZoneData(*Zones.Find(PropCenterZoneIndex), PropCenterGridPosition);
+
+		// Check Prop Type
+		if (Prop->GetPropType() != EMS_PropType::Furniture && Prop->GetPropType() != EMS_PropType::Structure)
+		{
+			continue;
+		}
+
+		// Create Unit
+		TObjectPtr<UMS_FurnitureUnit> Unit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(3, Prop->GetTableIndex(), false));
+		if (IsValid(Unit))
+		{
+			// Set Unit Actor
+			if (!Unit->SetUnitActor(Prop))
+			{
+				MS_LOG_Verbosity(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+				MS_Ensure(false);
+			}
+		}
+		else
+		{
+			MS_LOG_Verbosity(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+			MS_Ensure(false);
+		}
 		
 		// Prop Space
 		const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = Prop->GetPropSpaceComponents();
@@ -92,32 +118,13 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 				for (int j = 0; j < GridNum.X; ++j)
 				{
 					FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
-
-					switch (Prop->GetPropType())
+					
+					for (auto& Zone : Zones)
 					{
-					/*case EMS_PropType::Floor:
+						if (Zone.Value->IsGridContained(GridPosition))
 						{
-							int32 ZoneIndex = GetGridZoneIndex(GridPosition);
-
-							if (Zones.Contains(ZoneIndex))
-							{
-								(*Zones.Find(ZoneIndex))->RegisterFloorToGrid(GridPosition, Prop);
-							}
+							Zone.Value->RegisterObjectToGrid(GridPosition, PropSpaceComponent);
 							break;
-						}*/
-					case EMS_PropType::Furniture:
-					case EMS_PropType::Structure:
-						{
-							for (auto& Zone : Zones)
-							{
-								Zone.Value->RegisterObjectToGrid(GridPosition, PropSpaceComponent);
-									
-								break;
-							}
-							break;
-							
-							default:
-								break;
 						}
 					}
 				}

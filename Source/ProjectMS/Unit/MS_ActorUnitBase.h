@@ -23,6 +23,7 @@ public:
 	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
 	virtual void DestroyUnitActor() override;
 
+	virtual bool SetUnitActor(TObjectPtr<class AMS_Actor> aUnitActor, bool bForced = false);
 	
 protected:
 	TObjectPtr<class AMS_Actor> CreateActor(const FVector& aVector, const FRotator& aRotator);

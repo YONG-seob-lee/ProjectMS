@@ -61,6 +61,33 @@ void UMS_ActorUnitBase::DestroyUnitActor()
 	Super::DestroyUnitActor();
 }
 
+bool UMS_ActorUnitBase::SetUnitActor(TObjectPtr<AMS_Actor> aUnitActor, bool bForced)
+{
+	if (Actor != nullptr)
+	{
+		if (!bForced)
+		{
+			MS_LOG_Verbosity(Error, TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
+			MS_Ensure(false);
+
+			return false;
+		}
+
+		DestroyUnitActor();
+	}
+	
+	if(IsValid(aUnitActor))
+	{
+		Actor = aUnitActor;
+		Actor->SetOwnerUnitBase(this);
+			
+		return true;
+	}
+
+	MS_Ensure(false);
+	return false;
+}
+
 TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(const FVector& aVector, const FRotator& aRotator)
 {
 	if (UClass* BPClass = GetBlueprintClass())

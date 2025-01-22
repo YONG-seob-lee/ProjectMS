@@ -10,7 +10,6 @@
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Manager_Both/MS_UnitManager.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Units/MS_BasePlayerUnit.h"
 #include "Utility/MS_Define.h"
 
@@ -56,13 +55,7 @@ void AMS_LevelScriptActorBase::PostInitializeComponents()
 		{
 			continue;
 		}
-
-		if(Actor->Tags.IsValidIndex(0))
-		{
-			// ToDo : 코드 이동
-			// gUnitMng.CreateUnit(UnitKey, Actor->GetActorLocation(), Actor->GetActorRotation());
-		}
-		//gUnitMng.CreateUnit()
+		
 		// if (ActorArray[i]->ActorHasTag(FName(TEXT("BaseLayerLevel"))) == true)
 		// {
 		// 	ActorArray[i]->Destroy();
@@ -192,15 +185,13 @@ TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& 
 
 TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr<AMS_SpawnPoint> aSpawnPoint)
 {
-	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(1, INDEX_NONE, aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
+	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(1, INDEX_NONE, true, aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
 	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacter())
 	{
 		CharacterBase->GetCharacterRootComponent()->ComponentTags.Emplace(FName("Title"));
 	}
-
-	//AssignUnitHandle(gUnitMng.GetUnitHandle(Cody));
 
 	return Player;
 }
