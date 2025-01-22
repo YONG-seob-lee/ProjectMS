@@ -25,7 +25,6 @@ public:
 
 	virtual bool SetUnitCharacter(TObjectPtr<class AMS_CharacterBase> aUnitCharacter, bool bForced = false);
 
-	
 protected:
 	TObjectPtr<class AMS_CharacterBase> CreateCharacter(const FVector& aPosition, const FRotator& aRotator);
 	TObjectPtr<class AMS_CharacterBase> CreateCharacter(UClass* aClass, const FVector& aPosition, const FRotator& aRotator);

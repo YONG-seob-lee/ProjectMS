@@ -57,6 +57,16 @@ void UMS_ScheduleManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+int32 UMS_ScheduleManager::GetCurrentMinute() const
+{
+	if(TimeSchedule)
+	{
+		return TimeSchedule->GetMinute();
+	}
+
+	return 0;
+}
+
 void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 {
 	// 나중에는 서버에서 전달받음.

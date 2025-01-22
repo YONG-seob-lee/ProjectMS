@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
+#include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "Utility/MS_Define.h"
 #include "MS_UnitManager.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateChattingDelegate, FMS_ChattingParameter)
 /**
  * 
  */
@@ -28,6 +30,8 @@ public:
 	
 	void DestroyUnit(MS_Handle aHandle);
 
+	FOnUpdateChattingDelegate OnChattingDelegate;
+	
 protected:
 	void DestroyUnit_Internal(TObjectPtr<class UMS_UnitBase> aUnitBase);
 
@@ -43,7 +47,6 @@ private:
 
 	uint32 LastUnitHandle = InvalidUnitHandle;
 
-	
 public:
 	inline static TObjectPtr<UMS_UnitManager> UnitManager = nullptr;
 	static UMS_UnitManager* GetInstance();

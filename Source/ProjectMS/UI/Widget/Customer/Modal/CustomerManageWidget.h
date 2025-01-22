@@ -3,9 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MS_Define.h"
 #include "Widget/MS_Widget.h"
 #include "CustomerManageWidget.generated.h"
 
+UENUM()
+enum class EMS_PopulationNumber
+{
+	One = 0,
+	Many = 1
+};
+
+UENUM()
+enum class EMS_CustomerDetailType
+{
+	Chatting = 0,
+	Behavior = 1,
+	Purchase = 2
+};
 /**
  * 
  */
@@ -16,7 +31,11 @@ class PROJECTMS_API UCustomerManageWidget : public UMS_Widget
 public:
 	static FName GetWidgetName() { return TEXT("CustomerManage");}
 
+	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
+	
 private:
+	MS_Handle InitComboBox() const;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_CustomerButton> CPP_PersonChatButton = nullptr;
 
@@ -24,5 +43,17 @@ private:
 	TObjectPtr<UMS_CustomerButton> CPP_PeopleChatButton = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UComboBoxString> CPP_PersonComboBox = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_WidgetSwitcher> CPP_DetailWidgetSwitcher = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_CustomerDetailWidget> CPP_PersonDetailWidget = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_CustomerDetailWidget> CPP_PeopleDetailWidget = nullptr;
+	
+	EMS_PopulationNumber PopulationNumber;
+	EMS_CustomerDetailType CustomerDetailType;
 };

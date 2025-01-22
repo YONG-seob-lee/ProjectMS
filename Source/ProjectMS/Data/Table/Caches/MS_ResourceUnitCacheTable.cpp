@@ -82,3 +82,26 @@ UClass* UMS_ResourceUnitCacheTable::GetBlueprintClass(int32 aUnitTableId, int32 
 
 	return BPClass;
 }
+
+FString UMS_ResourceUnitCacheTable::GetUnitName(MS_Handle aUnitHandle)
+{
+	if(FMS_ResourceUnit** ResourceUnitData = ResourceUnitDatas.Find(aUnitHandle))
+	{
+		return (*ResourceUnitData)->UnitName;
+	}
+
+	return FString();
+}
+
+void UMS_ResourceUnitCacheTable::GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TArray<FString>& aUnitsName)
+{
+	aUnitsName.Empty();
+	
+	for(const auto& UnitTableId : aUnitsTableId)
+	{
+		if(FMS_ResourceUnit** ResourceUnitData = ResourceUnitDatas.Find(UnitTableId))
+		{
+			aUnitsName.Emplace((*ResourceUnitData)->UnitName);
+		}
+	}
+}

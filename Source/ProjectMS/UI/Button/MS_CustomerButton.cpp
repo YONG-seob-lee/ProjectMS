@@ -17,3 +17,8 @@ void UMS_CustomerButton::SynchronizeProperties()
 		}
 	}
 }
+
+void UMS_CustomerButton::SetActive(bool bActive) const
+{
+	CPP_ActiveImage->SetVisibility(bActive ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+}

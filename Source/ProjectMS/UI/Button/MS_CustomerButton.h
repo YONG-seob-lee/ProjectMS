@@ -15,6 +15,8 @@ class PROJECTMS_API UMS_CustomerButton : public UMS_Button
 	GENERATED_BODY()
 public:
 	virtual void SynchronizeProperties() override;
+
+	void SetActive(bool bActive) const;
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
@@ -22,4 +24,7 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_ButtonImage = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UImage> CPP_ActiveImage = nullptr;
 };

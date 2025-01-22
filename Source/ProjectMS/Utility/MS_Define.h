@@ -19,6 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 
 #define MS_LOG(InFormat, ...) UE_LOG(My_Log, Log, InFormat, ##__VA_ARGS__)
 #define MS_LOG_Verbosity(verbosity, msg, ...) UE_LOG(My_Log, verbosity, msg, ##__VA_ARGS__)
+#define MS_ERROR(InFormat, ...) UE_LOG(My_Log, Warning, InFormat, ##__VA_ARGS__)
 
 #define MS_CHECK(expr) check(expr)
 #define MS_Ensure(expr) ensure(expr)

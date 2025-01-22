@@ -30,6 +30,8 @@ public:
 
 	virtual void Tick(float aDeltaTime);
 
+	int32 GetCurrentMinute() const;
+	
 	void TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule);
 	void TakeItems(const TMap<int32, int32>* aTakeItems);
 

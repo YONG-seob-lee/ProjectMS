@@ -31,6 +31,11 @@ enum class EMS_TableDataType : uint8
 	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
 };
 
+namespace MS_LocalizedTableId
+{
+	const FName StringTable = TEXT("StringTable");
+}
+
 USTRUCT()
 struct FMS_CacheTableData
 {

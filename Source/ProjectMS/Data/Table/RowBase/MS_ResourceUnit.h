@@ -16,5 +16,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 UnitType = 0;
 	UPROPERTY(EditAnywhere)
+	FString UnitName = FString();
+	UPROPERTY(EditAnywhere)
 	int32 ChildTableDataType = 0;
 };

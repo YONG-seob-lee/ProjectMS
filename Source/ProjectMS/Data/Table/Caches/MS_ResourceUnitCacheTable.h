@@ -22,7 +22,10 @@ public:
 
 	int32 GetBlueprintPathId(int32 aUnitTableId, int32 aChildTableId) const;
 	UClass* GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const;
-	
+
+	FString GetUnitName(MS_Handle aUnitHandle);
+	void GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TArray<FString>& aUnitsName);
+
 private:
 	TMap<int32, FMS_ResourceUnit*> ResourceUnitDatas;
 };
