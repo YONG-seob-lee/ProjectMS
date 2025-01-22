@@ -13,6 +13,7 @@
 #include "Prop/MS_Prop.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
+#include "MathUtility/MS_MathUtility.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
@@ -423,10 +424,10 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 void UMS_ModeState_Construct::RotatePreviewProp()
 {
 	FRotator OldRotator = PreviewProp->GetActorRotation();
-	EMS_Rotation OldRotation = MS_RotationFunc::ConvertRotation(OldRotator.Yaw);
+	EMS_Rotation OldRotation = UMS_MathUtility::ConvertRotation(OldRotator.Yaw);
 
-	EMS_Rotation NewRotation  = MS_RotationFunc::RotateClockwise(OldRotation);
-	FRotator NewRotator = FRotator(0.f, MS_RotationFunc::ConvertRotation(NewRotation), 0.f);
+	EMS_Rotation NewRotation  = UMS_MathUtility::RotateClockwise(OldRotation);
+	FRotator NewRotator = FRotator(0.f, UMS_MathUtility::ConvertRotation(NewRotation), 0.f);
 
 	PreviewProp->SetActorRotation(NewRotator);
 }

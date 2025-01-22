@@ -48,23 +48,6 @@ enum class EMS_PurposeType : uint8
 	Any = 100,	// != None
 };
 
-UENUM(BlueprintType)
-enum class EMS_Rotation : uint8
-{
-	Rot0,
-	Rot90,
-	Rot180,
-	Rot270
-};
-
-namespace MS_RotationFunc
-{
-	EMS_Rotation ConvertRotation(float aValue);
-	float ConvertRotation(EMS_Rotation aEnum);
-
-	EMS_Rotation RotateClockwise(EMS_Rotation aRotation);
-}
-
 // GridDatas
 USTRUCT(BlueprintType)
 struct FMS_GridData
