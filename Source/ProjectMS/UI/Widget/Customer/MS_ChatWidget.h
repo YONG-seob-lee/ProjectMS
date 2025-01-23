@@ -20,5 +20,8 @@ public:
 	void SetChat(MS_Handle aUnitHandle, EMS_PopulationNumber aPopulationNumber) const;
 private:
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_ChatWidgetSwitcher = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ChatEntryWidget> CPP_ChatEntry = nullptr;
 };

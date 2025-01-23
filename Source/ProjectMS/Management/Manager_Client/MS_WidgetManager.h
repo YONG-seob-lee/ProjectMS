@@ -36,6 +36,7 @@ public:
 
 	void PreDestroyWidget(TObjectPtr<class UMS_Widget> aWidget);
 	bool DestroyWidget(const FName& aTypeName);
+	bool DestroyWidget(TObjectPtr<UMS_Widget> aWidget);
 	void PostDestroyWidget(const FName& aTypeName);
 
 	void ActivatePreventionCover(bool bActivate) const;

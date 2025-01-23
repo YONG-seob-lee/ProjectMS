@@ -93,7 +93,7 @@ FString UMS_ResourceUnitCacheTable::GetUnitName(MS_Handle aUnitHandle)
 	return FString();
 }
 
-void UMS_ResourceUnitCacheTable::GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TArray<FString>& aUnitsName)
+void UMS_ResourceUnitCacheTable::GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TMap<FString, int32>& aUnitsName)
 {
 	aUnitsName.Empty();
 	
@@ -101,7 +101,7 @@ void UMS_ResourceUnitCacheTable::GetUnitsName(TArray<MS_Handle>& aUnitsTableId, 
 	{
 		if(FMS_ResourceUnit** ResourceUnitData = ResourceUnitDatas.Find(UnitTableId))
 		{
-			aUnitsName.Emplace((*ResourceUnitData)->UnitName);
+			aUnitsName.Emplace((*ResourceUnitData)->UnitName, UnitTableId);
 		}
 	}
 }

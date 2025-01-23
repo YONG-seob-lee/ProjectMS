@@ -3,6 +3,7 @@
 
 #include "MS_ModalWidget.h"
 
+#include "MS_Define.h"
 #include "Button/MS_Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -36,8 +37,15 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 		{
 			OnCloseModalWidgetCallback();
 		}
-		
+
 		gInputMng.SetAllowGlide(true);
+		
+		const TObjectPtr<UMS_Widget> InWidget = Cast<UMS_Widget>(CPP_InModalPanel->GetChildAt(0));
+		if(!InWidget)
+		{
+			return;
+		}
+		gWidgetMng.DestroyWidget(InWidget);
 		SetModalInternal(gWidgetMng.Create_Widget_NotManaging(DefaultModal::InModalWidgetPath));
 	}
 }

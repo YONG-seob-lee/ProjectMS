@@ -39,7 +39,7 @@ void AMS_MarketLevelScriptActor::GetUnitChatting(MS_Handle aUnitHandle, TArray<F
 	}
 }
 
-void AMS_MarketLevelScriptActor::GetAllChattingCollection(TMap<MS_Handle, TArray<FMS_ChattingParameter>>& aChattingCollection) const
+void AMS_MarketLevelScriptActor::GetAllChattingCollection(TArray<FMS_ChattingParameter>& aChattingCollection) const
 {
 	if(ChattingCollectComponent)
 	{

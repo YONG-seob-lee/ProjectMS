@@ -20,11 +20,15 @@ void UMS_UnitChattingCollectComponent::SetOnUpdateChatting(FMS_ChattingParameter
 	if(TArray<FMS_ChattingParameter>* Parameters = ChattingCollection.Find(aParameter.UnitHandle))
 	{
 		Parameters->Emplace(aParameter);
+		TimelineChattingCollection.Emplace(aParameter);
 	}
 	else
 	{
-		MS_LOG(TEXT("Worng Process!"));
-		MS_Ensure(false);
+		MS_LOG(TEXT("Cheat Process!"));
+		TArray<FMS_ChattingParameter> UnitChattingParameterArray;
+		UnitChattingParameterArray.Emplace(aParameter);
+		ChattingCollection.Emplace(aParameter.UnitHandle, UnitChattingParameterArray);
+		TimelineChattingCollection.Emplace(aParameter);
 	}
 }
 
@@ -48,9 +52,9 @@ void UMS_UnitChattingCollectComponent::GetUnitChatting(MS_Handle aUnitHandle, TA
 	}
 }
 
-void UMS_UnitChattingCollectComponent::GetAllChatting(TMap<MS_Handle, TArray<FMS_ChattingParameter>>& aChattingCollection) const
+void UMS_UnitChattingCollectComponent::GetAllChatting(TArray<FMS_ChattingParameter>& aChattingCollection) const
 {
 	aChattingCollection.Empty();
 
-	aChattingCollection = ChattingCollection;
+	aChattingCollection = TimelineChattingCollection;
 }

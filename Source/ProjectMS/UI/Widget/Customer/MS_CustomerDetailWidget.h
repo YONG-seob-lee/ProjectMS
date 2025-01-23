@@ -15,7 +15,10 @@ class PROJECTMS_API UMS_CustomerDetailWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeConstruct() override;
+	
 	FORCEINLINE void InitPersonHandle(MS_Handle aUnitHandle) { PersonUnitHandle = aUnitHandle; }
+	
 	void SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType) const;
 
 private:

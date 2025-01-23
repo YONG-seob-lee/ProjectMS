@@ -19,7 +19,7 @@ public:
 
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const;
 	void GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters) const;
-	void GetAllChattingCollection(TMap<MS_Handle, TArray<FMS_ChattingParameter>>& aChattingCollection) const;
+	void GetAllChattingCollection(TArray<FMS_ChattingParameter>& aChattingCollection) const;
 
 protected:
 	virtual void BeginPlay() override;

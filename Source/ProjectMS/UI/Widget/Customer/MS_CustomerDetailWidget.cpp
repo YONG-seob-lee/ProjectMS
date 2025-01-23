@@ -10,9 +10,17 @@
 #include "Button/MS_CustomerButton.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
+void UMS_CustomerDetailWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	
+	ResetActivateButton();
+	CPP_ChatButton->SetActive(true);
+}
+
 void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType) const
 {
-	if(PersonUnitHandle == INDEX_NONE)
+	if(aPopulationNumber == EMS_PopulationNumber::One && PersonUnitHandle == INDEX_NONE)
 	{
 		MS_ERROR(TEXT("Warning : \'UMS_CustomerDetailWidget\' Do not have PersonUnitHandle MemberVariable. Please Check"));
 		return;

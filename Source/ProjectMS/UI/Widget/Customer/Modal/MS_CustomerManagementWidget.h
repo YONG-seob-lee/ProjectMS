@@ -31,10 +31,24 @@ class PROJECTMS_API UMS_CustomerManagementWidget : public UMS_Widget
 public:
 	static FName GetWidgetName() { return TEXT("CustomerManagement");}
 
+	UFUNCTION()
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
-	
+
 private:
-	MS_Handle InitComboBox() const;
+	void InitManageParameter(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType);
+	MS_Handle InitComboBox();
+	
+	void ClearActivateButton() const;
+
+	void OnClickedPersonChatButton();
+	void OnClickedPeopleChatButton();
+	UFUNCTION()
+	void OnSelectionChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
+
+	TMap<FString, int32> UnitsName = {};
+	
+	EMS_PopulationNumber PopulationNumber;
+	EMS_CustomerDetailType CustomerDetailType;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_CustomerButton> CPP_PersonChatButton = nullptr;
@@ -53,7 +67,4 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_CustomerDetailWidget> CPP_PeopleDetailWidget = nullptr;
-	
-	EMS_PopulationNumber PopulationNumber;
-	EMS_CustomerDetailType CustomerDetailType;
 };

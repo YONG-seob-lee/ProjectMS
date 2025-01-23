@@ -24,7 +24,7 @@ public:
 	UClass* GetBlueprintClass(int32 aUnitTableId, int32 aChildTableId) const;
 
 	FString GetUnitName(MS_Handle aUnitHandle);
-	void GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TArray<FString>& aUnitsName);
+	void GetUnitsName(TArray<MS_Handle>& aUnitsTableId, TMap<FString, int32>& aUnitsName);
 
 private:
 	TMap<int32, FMS_ResourceUnit*> ResourceUnitDatas;

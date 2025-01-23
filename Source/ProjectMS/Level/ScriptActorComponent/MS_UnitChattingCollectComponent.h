@@ -34,9 +34,10 @@ public:
 
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle);
 	void GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters);
-	void GetAllChatting(TMap<MS_Handle, TArray<FMS_ChattingParameter>>& aChattingCollection) const;
+	void GetAllChatting(TArray<FMS_ChattingParameter>& aChattingCollection) const;
 
 private:
 	// Key : UnitHandle, Value : Value's Key is TimeStamp, Value's Value is LocalizedStringTableId
 	TMap<MS_Handle, TArray<FMS_ChattingParameter>> ChattingCollection;
+	TArray<FMS_ChattingParameter> TimelineChattingCollection;
 };

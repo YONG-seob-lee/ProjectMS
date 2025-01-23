@@ -19,12 +19,13 @@ void UMS_ChatEntryWidget::NativeDestruct()
 void UMS_ChatEntryWidget::SetChatting(TArray<FMS_ChattingParameter>& aChattingParameters) const
 {
 	TArray<UMS_ChatElementData*> ChatElementDatas;
-	UMS_ChatElementData* ChatElementData = MS_NewObject<UMS_ChatElementData>();
 	for(const auto& ChattingParameter : aChattingParameters)
 	{
+		UMS_ChatElementData* ChatElementData = MS_NewObject<UMS_ChatElementData>();
 		ChatElementData->SetUnitHandle(ChattingParameter.UnitHandle);
 		ChatElementData->SetMinute(ChattingParameter.Minute);
 		ChatElementData->SetChatting(ChattingParameter.Chatting);
+		ChatElementDatas.Emplace(ChatElementData);
 	}
 	CPP_ChatListView->SetListItems(ChatElementDatas);
 }

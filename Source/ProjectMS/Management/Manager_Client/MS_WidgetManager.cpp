@@ -143,6 +143,29 @@ bool UMS_WidgetManager::DestroyWidget(const FName& aTypeName)
 	return true;
 }
 
+bool UMS_WidgetManager::DestroyWidget(TObjectPtr<UMS_Widget> aWidget)
+{
+	if(aWidget == nullptr)
+	{
+		return false;
+	}
+
+	const FName* TypeName = ManagedWidgets.FindKey(aWidget);
+	if(!TypeName)
+	{
+		return false;
+	}
+	
+	PreDestroyWidget(aWidget);
+	aWidget->FinishWidget();
+
+	ManagedWidgets.Remove(*TypeName);
+	aWidget->RemoveFromParent();
+	aWidget = nullptr;
+	PostDestroyWidget(*TypeName);	
+	return true;
+}
+
 void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
