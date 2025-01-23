@@ -12,6 +12,7 @@
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
 #include "Widget/Staff/Modal/MS_HireStaffWidget.h"
 #include "Widget/Staff/Modal/MS_StaffManagementWidget.h"
+#include "Widget/Customer/Modal/MS_CustomerManagementWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -192,7 +193,9 @@ void UMS_GeneralWidget::OnClickedManageStaffButton()
 
 void UMS_GeneralWidget::OnClickedManageCustomerButton()
 {
-	gWidgetMng.ShowModalWidget();
+	FMS_ModalParameter Parameter;
+	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_CustomerManagementWidget::GetWidgetName());
+	gWidgetMng.ShowModalWidget(Parameter);
 
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }

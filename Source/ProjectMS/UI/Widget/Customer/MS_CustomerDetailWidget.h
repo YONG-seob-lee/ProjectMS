@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Modal/CustomerManageWidget.h"
+#include "Modal/MS_CustomerManagementWidget.h"
 #include "Widget/MS_Widget.h"
 #include "MS_CustomerDetailWidget.generated.h"
 

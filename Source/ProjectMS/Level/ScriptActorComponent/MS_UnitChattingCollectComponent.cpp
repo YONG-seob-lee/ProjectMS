@@ -10,6 +10,11 @@ void UMS_UnitChattingCollectComponent::Initialize()
 	gUnitMng.OnChattingDelegate.AddUObject(this, &UMS_UnitChattingCollectComponent::SetOnUpdateChatting);
 }
 
+void UMS_UnitChattingCollectComponent::Finalize() const
+{
+	gUnitMng.OnChattingDelegate.RemoveAll(this);
+}
+
 void UMS_UnitChattingCollectComponent::SetOnUpdateChatting(FMS_ChattingParameter aParameter)
 {
 	if(TArray<FMS_ChattingParameter>* Parameters = ChattingCollection.Find(aParameter.UnitHandle))

@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CustomerManageWidget.h"
+#include "MS_CustomerManagementWidget.h"
 
 #include "Components/ComboBoxString.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
@@ -9,7 +9,7 @@
 #include "Widget/Customer/MS_CustomerDetailWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
-void UCustomerManageWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
+void UMS_CustomerManagementWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
 {
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
 
@@ -31,7 +31,7 @@ void UCustomerManageWidget::InitWidget(const FName& aTypeName, bool bManaged, bo
 
 }
 
-MS_Handle UCustomerManageWidget::InitComboBox() const
+MS_Handle UMS_CustomerManagementWidget::InitComboBox() const
 {
 	const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(GetWorld()->GetLevelScriptActor());
 	if(!MarketLevelScriptActor)

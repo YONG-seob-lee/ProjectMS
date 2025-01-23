@@ -24,7 +24,7 @@ void UMS_ChatEntryWidget::SetChatting(TArray<FMS_ChattingParameter>& aChattingPa
 	{
 		ChatElementData->SetUnitHandle(ChattingParameter.UnitHandle);
 		ChatElementData->SetMinute(ChattingParameter.Minute);
-		ChatElementData->SetChatting(ChattingParameter.LocalizedTableStringId);
+		ChatElementData->SetChatting(ChattingParameter.Chatting);
 	}
 	CPP_ChatListView->SetListItems(ChatElementDatas);
 }

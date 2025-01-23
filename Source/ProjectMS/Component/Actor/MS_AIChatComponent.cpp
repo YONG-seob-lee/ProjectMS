@@ -4,7 +4,6 @@
 #include "MS_AIChatComponent.h"
 
 #include "MS_UnitBase.h"
-#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 
 
@@ -26,8 +25,4 @@ void UMS_AIChatComponent::BeginPlay()
 	{
 		UnitHandle = ParentUnit->GetUnitHandle();
 	}
-
-	// 나중에 AI 이벤트가 활성화 되는 트리거를 통해 추가적으로 브로드캐스트
-	const FString LocalizedTableString = TEXT("Customer_Comment_01");
-	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), LocalizedTableString));
 }

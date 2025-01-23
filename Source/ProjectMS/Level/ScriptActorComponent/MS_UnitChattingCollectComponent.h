@@ -5,13 +5,14 @@
 struct FMS_ChattingParameter
 {
 	FMS_ChattingParameter() {}
-	FMS_ChattingParameter(int32 aUnitHandleId, int32 aMinute, const FString& aChatting) : UnitHandle(aUnitHandleId), bIsInMarket(true), Minute(aMinute), LocalizedTableStringId(aChatting) {}
-
+	FMS_ChattingParameter(int32 aUnitHandleId, int32 aMinute, const FText& aChatting) : UnitHandle(aUnitHandleId), bIsInMarket(true), Minute(aMinute), Chatting(aChatting) {}
+	FMS_ChattingParameter(int32 aUnitHandleId, bool abIsInMarket, int32 aMinute, const FText& aChatting) : UnitHandle(aUnitHandleId), bIsInMarket(abIsInMarket), Minute(aMinute), Chatting(aChatting) {}
+	
 	int32 UnitHandle = INDEX_NONE;
 	bool bIsInMarket = false;
 	
 	int32 Minute = 0;
-	FString LocalizedTableStringId = FString(); 
+	FText Chatting = FText(); 
 };
 #include "CoreMinimal.h"
 #include "MarketLevelScriptActorComponent.h"
@@ -27,6 +28,8 @@ class PROJECTMS_API UMS_UnitChattingCollectComponent : public UMarketLevelScript
 	GENERATED_BODY()
 public:
 	void Initialize();
+	void Finalize() const;
+	
 	void SetOnUpdateChatting(FMS_ChattingParameter aParameter);
 
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle);

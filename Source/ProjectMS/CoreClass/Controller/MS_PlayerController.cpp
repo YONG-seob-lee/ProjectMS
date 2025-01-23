@@ -1,6 +1,7 @@
 ﻿#include "MS_PlayerController.h"
 
 #include "MS_ManagementClient.h"
+#include "CheatManager/MS_CheatManager.h"
 #include "Component/MS_TestServer.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
@@ -23,6 +24,8 @@ AMS_PlayerController::AMS_PlayerController()
 	bEnableTouchEvents = true;
 	bEnableMouseOverEvents = true;
 	bEnableTouchOverEvents = true;
+
+	CheatClass = UMS_CheatManager::StaticClass();
 }
 
 void AMS_PlayerController::PreInitializeComponents()

@@ -28,7 +28,7 @@ void UMS_ChatElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 		const FString UnitName = UnitTable->GetUnitName(ChatElementData->GetUnitHandle());
 		
 		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("  {0}시 {1}분  : "), {ChatElementData->GetMinute() / Time::MinutePerOneHour, ChatElementData->GetMinute() % Time::MinutePerOneHour})));
-		CPP_ChatDesc->SetText(FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChatElementData->GetChatting())));
+		CPP_ChatDesc->SetText(ChatElementData->GetChatting());
 	}
 
 }

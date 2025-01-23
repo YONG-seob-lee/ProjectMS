@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_Define.h"
 #include "Widget/MS_Widget.h"
-#include "CustomerManageWidget.generated.h"
+#include "MS_CustomerManagementWidget.generated.h"
 
 UENUM()
 enum class EMS_PopulationNumber
@@ -25,11 +25,11 @@ enum class EMS_CustomerDetailType
  * 
  */
 UCLASS()
-class PROJECTMS_API UCustomerManageWidget : public UMS_Widget
+class PROJECTMS_API UMS_CustomerManagementWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	static FName GetWidgetName() { return TEXT("CustomerManage");}
+	static FName GetWidgetName() { return TEXT("CustomerManagement");}
 
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
 	

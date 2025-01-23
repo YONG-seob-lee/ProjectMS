@@ -16,14 +16,14 @@ class PROJECTMS_API UMS_ChatElementData : public UObject
 public:
 	FORCEINLINE void SetUnitHandle(int32 aUnitHandle) { UnitHandle = aUnitHandle; }
 	FORCEINLINE void SetMinute(int32 aMinute) { Minute = aMinute; }
-	FORCEINLINE void SetChatting(const FString& aChatting) { Chatting = aChatting; }
+	FORCEINLINE void SetChatting(const FText& aChatting) { Chatting = aChatting; }
 
 	FORCEINLINE int32 GetUnitHandle() const { return UnitHandle; }
 	FORCEINLINE int32 GetMinute() const { return Minute; }
-	FORCEINLINE FString GetChatting() { return Chatting; }
+	FORCEINLINE FText GetChatting() { return Chatting; }
 
 private:
 	int32 UnitHandle = INDEX_NONE;
 	int32 Minute = 0;
-	FString Chatting = FString();
+	FText Chatting = FText();
 };

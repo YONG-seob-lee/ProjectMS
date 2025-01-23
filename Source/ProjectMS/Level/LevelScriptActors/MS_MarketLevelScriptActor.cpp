@@ -68,11 +68,20 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 	});
 
 	ChattingCollectComponent = MS_NewObject<UMS_UnitChattingCollectComponent>(this);
+	if(ChattingCollectComponent)
+	{
+		ChattingCollectComponent->Initialize();
+	}
 }
 
 void AMS_MarketLevelScriptActor::Destroyed()
 {
-	MS_DeleteObject(ChattingCollectComponent);
+	if(ChattingCollectComponent)
+	{
+		ChattingCollectComponent->Finalize();
+		MS_DeleteObject(ChattingCollectComponent);
+	}
+	
 	Super::Destroyed();
 }
 
