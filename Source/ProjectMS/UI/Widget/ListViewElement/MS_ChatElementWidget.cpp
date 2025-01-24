@@ -8,7 +8,7 @@
 #include "Manager_Both/MS_TableManager.h"
 #include "Table/Caches/MS_ResourceUnitCacheTable.h"
 
-namespace Time
+namespace ChatTime
 {
 	constexpr int32 MinutePerOneHour = 60; 
 }
@@ -27,7 +27,7 @@ void UMS_ChatElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 
 		const FString UnitName = UnitTable->GetUnitName(ChatElementData->GetUnitHandle());
 		
-		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {UnitName, ChatElementData->GetMinute() / Time::MinutePerOneHour, ChatElementData->GetMinute() % Time::MinutePerOneHour})));
+		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {UnitName, ChatElementData->GetMinute() / ChatTime::MinutePerOneHour, ChatElementData->GetMinute() % ChatTime::MinutePerOneHour})));
 		CPP_ChatDesc->SetText(ChatElementData->GetChatting());
 	}
 
