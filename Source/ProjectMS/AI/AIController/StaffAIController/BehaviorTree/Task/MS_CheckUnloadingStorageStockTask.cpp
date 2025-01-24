@@ -7,6 +7,7 @@
 #include "Data/Table/RowBase/MS_ItemData.h"
 #include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 #include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 
 UMS_CheckUnloadingStorageStockTask::UMS_CheckUnloadingStorageStockTask()
 {
@@ -34,7 +35,7 @@ void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwner
 
 	for (int i = 0; i < AllStorageArray.Num(); i++)
 	{
-		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->CheckStorageEachSlotStatus();
+		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->GetStorageEachSlotStatus();
 		bool UnoccupiedSlotExistenceFlag = false;
 		int UnoccupiedSlotOrder = INT_MIN;
 

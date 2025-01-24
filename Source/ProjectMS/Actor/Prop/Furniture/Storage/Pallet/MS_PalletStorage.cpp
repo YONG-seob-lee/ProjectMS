@@ -5,6 +5,7 @@
 AMS_PalletStorage::AMS_PalletStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	/*
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
@@ -16,6 +17,7 @@ AMS_PalletStorage::AMS_PalletStorage(const FObjectInitializer& aObjectInitialize
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No4StorageSlotComponent")));
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
+	*/
 }
 
 void AMS_PalletStorage::PostInitializeComponents()
