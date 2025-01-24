@@ -3,21 +3,116 @@
 
 #include "MS_CheatManager.h"
 
+#include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 
+#if WITH_EDITOR
 void UMS_CheatManager::TestCheatManager(const FString aTestString)
 {
 	gWidgetMng.ShowMessageOnScreen(aTestString);
 }
+#endif
 
+#if WITH_EDITOR
+void UMS_CheatManager::AIComeInMarket(int32 UnitId)
+{
+	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+	MS_Ensure(UnitTable);
+
+	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
+	const FString UnitName = UnitTable->GetUnitName(UnitId);
+	const FString Behavior = TEXT("\"") + UnitTable->GetUnitName(UnitId) + TEXT("\" 이(가) 마켓에 입장했습니다.");
+
+	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		MarketLevelScriptActor->AddTestAIActorComeInMarket(UnitId);
+	}
+	
+	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, CurrentMinute, FText::FromString(Behavior)));
+
+	const FString Chatting = TEXT("(마켓 문을 열며)아 오늘은 어떤걸 구매해볼까나아");
+	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, true, CurrentMinute, FText::FromString(Chatting)));
+
+	gWidgetMng.ShowToastMessage(Behavior);
+}
+#endif
+
+#if WITH_EDITOR
+void UMS_CheatManager::AIExitMarket(int32 UnitId)
+{
+	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+	MS_Ensure(UnitTable);
+
+	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
+	const FString UnitName = UnitTable->GetUnitName(UnitId);
+	const FString Behavior = TEXT("\"") + UnitTable->GetUnitName(UnitId) + TEXT("\" 이(가) 마켓에 퇴장했습니다.");
+
+	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, CurrentMinute, FText::FromString(Behavior)));
+	
+	const FString Chatting = TEXT("(마켓 을 나가며) 헤헷 다음에 또 와야찡~!");
+	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, false, CurrentMinute, FText::FromString(Behavior)));
+	
+	gWidgetMng.ShowToastMessage(Behavior);
+}
+#endif
+
+#if WITH_EDITOR
 void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 {
+	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
+		{
+			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+			MS_Ensure(UnitTable);
+
+			const FString UnitName = UnitTable->GetUnitName(UnitId);
+			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			return;
+		}
+	}
 	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, gScheduleMng.GetCurrentMinute(), FText::FromString(Chatting)));
 }
+#endif
 
+#if WITH_EDITOR
+void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
+{
+	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
+		{
+			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+			MS_Ensure(UnitTable);
+
+			const FString UnitName = UnitTable->GetUnitName(UnitId);
+			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			return;
+		}
+	}
+	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, gScheduleMng.GetCurrentMinute(), FText::FromString(Behavior)));
+}
+#endif
+
+#if WITH_EDITOR
 void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 {
+	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
+		{
+			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
+			MS_Ensure(UnitTable);
+
+			const FString UnitName = UnitTable->GetUnitName(UnitId);
+			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			return;
+		}
+	}
 	gUnitMng.OnPurchaseDelegate.Broadcast(FMS_PurchaseParameter(UnitId, ItemId, ItemCount));
 }
+#endif

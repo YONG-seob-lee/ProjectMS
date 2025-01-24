@@ -29,11 +29,11 @@ void UMS_UnitPurchaseCollectComponent::SetOnUpdatePurchase(FMS_PurchaseParameter
 	}
 }
 
-void UMS_UnitPurchaseCollectComponent::GetUnitPurchase(MS_Handle aHandle, TArray<FMS_PurchaseParameter>& aParameters)
+void UMS_UnitPurchaseCollectComponent::GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters)
 {
 	aParameters.Empty();
 	
-	if(const TArray<FMS_PurchaseParameter>* Parameters = PurchaseCollection.Find(aHandle))
+	if(const TArray<FMS_PurchaseParameter>* Parameters = PurchaseCollection.Find(aUnitHandle))
 	{
 		aParameters = *Parameters;
 	}
@@ -58,3 +58,10 @@ void UMS_UnitPurchaseCollectComponent::GetAllUnitPurchase(TMap<int32, int32>& aP
 		}
 	}
 }
+
+#if WITH_EDITOR
+void UMS_UnitPurchaseCollectComponent::TestInitialize(int32 aUnitHandle)
+{
+	PurchaseCollection.Emplace(aUnitHandle, {});
+}
+#endif

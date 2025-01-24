@@ -32,9 +32,12 @@ public:
 
 	void SetOnUpdatePurchase(FMS_PurchaseParameter aParameter);
 
-	void GetUnitPurchase(MS_Handle aHandle, TArray<FMS_PurchaseParameter>& aParameters);
+	void GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters);
 	void GetAllUnitPurchase(TMap<int32, int32>& aPurchaseItemList);
-	
+
+#if WITH_EDITOR
+	void TestInitialize(int32 aUnitHandle);
+#endif
 private:
 	TMap<MS_Handle, TArray<FMS_PurchaseParameter>> PurchaseCollection;
 };

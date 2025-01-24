@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Management/MS_ManagerBase.h"
+#include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "Utility/MS_Define.h"
 #include "MS_UnitManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateChattingDelegate, FMS_ChattingParameter);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateBehaviorDelegate, FMS_BehaviorParameter);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdatePurchaseDelegate, FMS_PurchaseParameter);
 /**
  * 
@@ -33,6 +35,7 @@ public:
 	void DestroyUnit(MS_Handle aHandle);
 
 	FOnUpdateChattingDelegate OnChattingDelegate;
+	FOnUpdateBehaviorDelegate OnBehaviorDelegate;
 	FOnUpdatePurchaseDelegate OnPurchaseDelegate;
 	
 protected:

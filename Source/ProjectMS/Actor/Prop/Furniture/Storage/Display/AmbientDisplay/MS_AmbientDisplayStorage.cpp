@@ -1,5 +1,7 @@
 #include "Actor/Prop/Furniture/Storage/Display/AmbientDisplay/MS_AmbientDisplayStorage.h"
 
+#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
+
 AMS_AmbientDisplayStorage::AMS_AmbientDisplayStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {

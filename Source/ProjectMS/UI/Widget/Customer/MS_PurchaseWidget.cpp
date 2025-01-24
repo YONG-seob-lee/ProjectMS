@@ -47,13 +47,20 @@ void UMS_PurchaseWidget::SetPurchaseOne_Internal(MS_Handle aUnitHandle) const
 		MS_Ensure(UnitTable);
 		
 		CPP_ComeInMarketText->SetText(FText::FromString(FString::Format(TEXT("   들어온 시각 : {0}시 {1}분"), {ComeInMinute / Time::MinutePerOneHour, ComeInMinute % Time::MinutePerOneHour})));
-		if(ComeOutMinute == 0)
+		if(aUnitHandle == INDEX_NONE)
 		{
-			CPP_ComeOutMarketText->SetText(FText::FromString(TEXT("   나간 시각 : \"아직 매장 내에 있습니다!\"")));
+			CPP_ComeOutMarketText->SetText(FText::FromString(TEXT("   나간 시각 : 0시 0분")));
 		}
 		else
 		{
-			CPP_ComeOutMarketText->SetText(FText::FromString(FString::Format(TEXT("   나간 시각 : {0}시 {1}분"), {ComeOutMinute / Time::MinutePerOneHour, ComeOutMinute % Time::MinutePerOneHour})));
+			if(ComeOutMinute == 0)
+			{
+				CPP_ComeOutMarketText->SetText(FText::FromString(TEXT("   나간 시각 : \"매장 내에 있습니다!\"")));
+			}
+			else
+			{
+				CPP_ComeOutMarketText->SetText(FText::FromString(FString::Format(TEXT("   나간 시각 : {0}시 {1}분"), {ComeOutMinute / Time::MinutePerOneHour, ComeOutMinute % Time::MinutePerOneHour})));
+			}	
 		}
 			
 		TArray<FMS_PurchaseParameter> Parameters;

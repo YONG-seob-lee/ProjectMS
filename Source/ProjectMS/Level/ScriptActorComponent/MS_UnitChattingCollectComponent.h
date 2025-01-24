@@ -40,6 +40,10 @@ public:
 	void GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters);
 	void GetAllChatting(TArray<FMS_ChattingParameter>& aChattingCollection) const;
 
+#if WITH_EDITOR
+	void TestInitialize(int32 aUnitHandle);
+	bool IsUnitInMarket(int32 aUnitHandle);
+#endif
 private:
 	// Key : UnitHandle, Value : Value's Key is TimeStamp, Value's Value is LocalizedStringTableId
 	TMap<MS_Handle, TArray<FMS_ChattingParameter>> ChattingCollection;

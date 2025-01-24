@@ -23,16 +23,40 @@ enum class EMS_ChattingType
 	ExitOutMarket // 마켓 나감
 };
 
+UENUM()
+enum class EMS_BehaviorType
+{
+	Idle = 0,
+	ComeInMarket,
+	ComeOutMarket,
+	FindItem,
+	TalkToStaff,
+	LostWay,
+	PickUpItem,
+	BuyItem,
+};
+
 namespace ChattingLocalizedString
 {
 	const FString ComeInMarket = TEXT("Customer_Comment_01");
-	const FString ExitOutMarket = TEXT("Customer_Comment_02");
+	const FString ExitMarket = TEXT("Customer_Comment_02");
 	const FString PriceTooExpansive = TEXT("Customer_Comment_03");
 	const FString PriceResonable = TEXT("Customer_Comment_04");
 	const FString PriceCheap = TEXT("Customer_Comment_05");
 	const FString Hungry = TEXT("Customer_Comment_06");
 	const FString Thirsty = TEXT("Customer_Comment_07");
 	const FString NuclearMissile = TEXT("Customer_Comment_08");
+}
+
+namespace BehaviorLocalizedString
+{
+	const FString ComeInMarket = TEXT("Customer_Behavior_01");
+	const FString ComeOutMarket = TEXT("Customer_Behavior_02");
+	const FString FindItem = TEXT("Customer_Behavior_03");
+	const FString TalkToStaff = TEXT("Customer_Behavior_04");
+	const FString LostWay = TEXT("Customer_Behavior_05");
+	const FString PickUpItem = TEXT("Customer_Behavior_06");
+	const FString BuyItem = TEXT("Customer_Behavior_07");
 }
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -106,7 +130,7 @@ protected:
 			}
 		}
 	}
-
+	void BehaviorTrigger(EMS_BehaviorType aBehaviorType);
 	void PurchaseTrigger(int32 aItemId, int32 aItemCount) const;
 	
 private:

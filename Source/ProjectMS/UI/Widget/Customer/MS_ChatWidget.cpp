@@ -13,6 +13,7 @@ namespace ChatNumber
 	constexpr int32 None = 0;
 	constexpr int32 Exist = 1;
 }
+
 void UMS_ChatWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

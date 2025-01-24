@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_Define.h"
 #include "Level/MS_ConstructibleLevelScriptActorBase.h"
+#include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "MS_MarketLevelScriptActor.generated.h"
@@ -17,7 +18,7 @@ class PROJECTMS_API AMS_MarketLevelScriptActor : public AMS_ConstructibleLevelSc
 public:
 	AMS_MarketLevelScriptActor();
 	virtual void Tick(float DeltaTime) override;
-
+	
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const;
 	int32 GetComeInMarketPeoplePerDay() const;
 	void GetUnitComeMarketData(MS_Handle aUnitHandle, int32& ComeInMinute, int32& ComeOutMinute) const;
@@ -26,20 +27,30 @@ public:
 	void GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters) const;
 	void GetAllChattingCollection(TArray<FMS_ChattingParameter>& aChattingCollection) const;
 
+	// AI Behavior
+	void GetUnitBehavior(MS_Handle aUnitHandle, TArray<FMS_BehaviorParameter>& aParameters) const;
+	void GetAllBehaviorCollection(TArray<FMS_BehaviorParameter>& aBehaviorCollection) const;
+	
 	// AI Purchase
 	void GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters) const;
 	void GetAllPurchaseCollection(TMap<int32, int32>& aPurchaseCollection) const;
 
+#if WITH_EDITOR
+	void AddTestAIActorComeInMarket(int32 aUnitId) const;
+	bool IsUnitInMarket(int32 aUnitHandle) const;
+#endif
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
-	
-public:
 
 private:
 	UPROPERTY()
 	TObjectPtr<class UMS_UnitChattingCollectComponent> ChattingCollectComponent = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<class UMS_UnitBehaviorCollectComponent> BehaviorCollectComponent = nullptr;
+	
 	UPROPERTY()
 	TObjectPtr<class UMS_UnitPurchaseCollectComponent> PurchaseCollectComponent = nullptr;
 };

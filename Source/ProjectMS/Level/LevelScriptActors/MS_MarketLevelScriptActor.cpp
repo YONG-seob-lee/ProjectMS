@@ -8,6 +8,7 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "Widget/Market/Modal/MS_MarketStartModal.h"
@@ -74,6 +75,24 @@ void AMS_MarketLevelScriptActor::GetAllChattingCollection(TArray<FMS_ChattingPar
 	}
 }
 
+void AMS_MarketLevelScriptActor::GetUnitBehavior(MS_Handle aUnitHandle,	TArray<FMS_BehaviorParameter>& aParameters) const
+{
+	if(BehaviorCollectComponent)
+	{
+		aParameters.Empty();
+		BehaviorCollectComponent->GetUnitBehavior(aUnitHandle, aParameters);
+	}
+}
+
+void AMS_MarketLevelScriptActor::GetAllBehaviorCollection(TArray<FMS_BehaviorParameter>& aBehaviorCollection) const
+{
+	if(BehaviorCollectComponent)
+	{
+		aBehaviorCollection.Empty();
+		BehaviorCollectComponent->GetAllBehavior(aBehaviorCollection);
+	}
+}
+
 void AMS_MarketLevelScriptActor::GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters) const
 {
 	if(PurchaseCollectComponent)
@@ -91,6 +110,30 @@ void AMS_MarketLevelScriptActor::GetAllPurchaseCollection(TMap<int32, int32>& aP
 		PurchaseCollectComponent->GetAllUnitPurchase(aPurchaseCollection);
 	}
 }
+
+#if WITH_EDITOR
+void AMS_MarketLevelScriptActor::AddTestAIActorComeInMarket(int32 aUnitId) const
+{
+	if(PurchaseCollectComponent)
+	{
+		PurchaseCollectComponent->TestInitialize(aUnitId);
+	}
+	if(ChattingCollectComponent)
+	{
+		ChattingCollectComponent->TestInitialize(aUnitId);
+	}
+}
+
+bool AMS_MarketLevelScriptActor::IsUnitInMarket(int32 aUnitHandle) const
+{
+	if(ChattingCollectComponent)
+	{
+		return ChattingCollectComponent->IsUnitInMarket(aUnitHandle);
+	}
+
+	return false;
+}
+#endif
 
 void AMS_MarketLevelScriptActor::BeginPlay()
 {
@@ -116,6 +159,11 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 	{
 		ChattingCollectComponent->Initialize();
 	}
+	BehaviorCollectComponent =MS_NewObject<UMS_UnitBehaviorCollectComponent>(this);
+	if(BehaviorCollectComponent)
+	{
+		BehaviorCollectComponent->Initialize();
+	}
 	PurchaseCollectComponent = MS_NewObject<UMS_UnitPurchaseCollectComponent>(this);
 	if(PurchaseCollectComponent)
 	{
@@ -129,6 +177,11 @@ void AMS_MarketLevelScriptActor::Destroyed()
 	{
 		ChattingCollectComponent->Finalize();
 		MS_DeleteObject(ChattingCollectComponent);
+	}
+	if(BehaviorCollectComponent)
+	{
+		BehaviorCollectComponent->Finalize();
+		MS_DeleteObject(BehaviorCollectComponent);
 	}
 	if(PurchaseCollectComponent)
 	{

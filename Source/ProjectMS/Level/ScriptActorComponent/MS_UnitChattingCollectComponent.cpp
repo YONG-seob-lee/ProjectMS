@@ -24,11 +24,7 @@ void UMS_UnitChattingCollectComponent::SetOnUpdateChatting(FMS_ChattingParameter
 	}
 	else
 	{
-		MS_LOG(TEXT("Cheat Process!"));
-		TArray<FMS_ChattingParameter> UnitChattingParameterArray;
-		UnitChattingParameterArray.Emplace(aParameter);
-		ChattingCollection.Emplace(aParameter.UnitHandle, UnitChattingParameterArray);
-		TimelineChattingCollection.Emplace(aParameter);
+		MS_LOG(TEXT("Wrong Process!"));
 	}
 }
 
@@ -58,3 +54,20 @@ void UMS_UnitChattingCollectComponent::GetAllChatting(TArray<FMS_ChattingParamet
 
 	aChattingCollection = TimelineChattingCollection;
 }
+
+#if WITH_EDITOR
+void UMS_UnitChattingCollectComponent::TestInitialize(int32 aUnitHandle)
+{
+	ChattingCollection.Emplace(aUnitHandle, {});
+}
+
+bool UMS_UnitChattingCollectComponent::IsUnitInMarket(int32 aUnitHandle)
+{
+	if(TArray<FMS_ChattingParameter>* Parameters = ChattingCollection.Find(aUnitHandle))
+	{
+		return Parameters->Last().bIsInMarket;
+	}
+
+	return false;
+}
+#endif
