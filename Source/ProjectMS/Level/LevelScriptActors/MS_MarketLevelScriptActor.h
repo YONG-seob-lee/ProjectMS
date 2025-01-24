@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "Level/MS_ConstructibleLevelScriptActorBase.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
+#include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "MS_MarketLevelScriptActor.generated.h"
 
 UCLASS()
@@ -18,8 +19,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const;
+	int32 GetComeInMarketPeoplePerDay() const;
+	void GetUnitComeMarketData(MS_Handle aUnitHandle, int32& ComeInMinute, int32& ComeOutMinute) const;
+	
+	// AI Chatting
 	void GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters) const;
 	void GetAllChattingCollection(TArray<FMS_ChattingParameter>& aChattingCollection) const;
+
+	// AI Purchase
+	void GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters) const;
+	void GetAllPurchaseCollection(TMap<int32, int32>& aPurchaseCollection) const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -30,4 +39,7 @@ public:
 private:
 	UPROPERTY()
 	TObjectPtr<class UMS_UnitChattingCollectComponent> ChattingCollectComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_UnitPurchaseCollectComponent> PurchaseCollectComponent = nullptr;
 };

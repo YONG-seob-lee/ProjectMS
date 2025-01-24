@@ -14,11 +14,15 @@ void UMS_CustomerDetailWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	ResetActivateButton();
+	ResetActivateCustomerDetailButton();
 	CPP_ChatButton->SetActive(true);
+
+	CPP_ChatButton->GetOnClickedDelegate().AddUObject(this, &UMS_CustomerDetailWidget::OnClickedDetailButton, EMS_CustomerDetailType::Chatting);
+	CPP_BehaviorButton->GetOnClickedDelegate().AddUObject(this, &UMS_CustomerDetailWidget::OnClickedDetailButton, EMS_CustomerDetailType::Behavior);
+	CPP_PurchaseButton->GetOnClickedDelegate().AddUObject(this, &UMS_CustomerDetailWidget::OnClickedDetailButton, EMS_CustomerDetailType::Purchase);
 }
 
-void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType) const
+void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType)
 {
 	if(aPopulationNumber == EMS_PopulationNumber::One && PersonUnitHandle == INDEX_NONE)
 	{
@@ -26,7 +30,9 @@ void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, E
 		return;
 	}
 	
-	ResetActivateButton();
+	PopulationNumber = aPopulationNumber;
+	CustomerDetailType = aDetailType;
+	ResetActivateCustomerDetailButton();
 	
 	if(aDetailType == EMS_CustomerDetailType::Chatting)
 	{
@@ -41,7 +47,7 @@ void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, E
 	else if(aDetailType == EMS_CustomerDetailType::Purchase)
 	{
 		CPP_PurchaseButton->SetActive(true);
-		//CPP_PurchaseWidget->SetPurchase(aPopulationNumber);
+		CPP_PurchaseWidget->SetPurchase(PersonUnitHandle, aPopulationNumber);
 	}
 	else
 	{
@@ -52,9 +58,41 @@ void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, E
 	CPP_DetailWidgetSwitcher->SetActiveWidgetIndex(static_cast<int32>(aDetailType));
 }
 
-void UMS_CustomerDetailWidget::ResetActivateButton() const
+void UMS_CustomerDetailWidget::ResetActivateCustomerDetailButton() const
 {
 	CPP_ChatButton->SetActive(false);
 	CPP_BehaviorButton->SetActive(false);
 	CPP_PurchaseButton->SetActive(false);
+}
+
+void UMS_CustomerDetailWidget::OnClickedDetailButton(EMS_CustomerDetailType aCustomerDetailButtonType)
+{
+	ResetActivateCustomerDetailButton();
+	
+	CPP_DetailWidgetSwitcher->SetActiveWidgetIndex(static_cast<int32>(aCustomerDetailButtonType));
+	CustomerDetailType = aCustomerDetailButtonType;
+	if(aCustomerDetailButtonType == EMS_CustomerDetailType::Chatting)
+	{
+		CPP_ChatButton->SetActive(true);
+		CPP_ChatWidget->SetChat(PersonUnitHandle, PopulationNumber);
+	}
+	else if(aCustomerDetailButtonType == EMS_CustomerDetailType::Behavior)
+	{
+		CPP_BehaviorButton->SetActive(true);
+		//CPP_BehaviorWidget->SetBehavior(aPopulationNumber);
+	}
+	else if(aCustomerDetailButtonType == EMS_CustomerDetailType::Purchase)
+	{
+		CPP_PurchaseButton->SetActive(true);
+		CPP_PurchaseWidget->SetPurchase(PersonUnitHandle, PopulationNumber);
+	}
+	else
+	{
+		return;
+	}
+
+	if(OnUpdateCustomerDetailTypeCallback)
+	{
+		OnUpdateCustomerDetailTypeCallback(CustomerDetailType);
+	}
 }

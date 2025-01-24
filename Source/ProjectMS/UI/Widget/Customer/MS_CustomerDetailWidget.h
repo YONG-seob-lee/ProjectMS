@@ -18,13 +18,20 @@ public:
 	virtual void NativeConstruct() override;
 	
 	FORCEINLINE void InitPersonHandle(MS_Handle aUnitHandle) { PersonUnitHandle = aUnitHandle; }
+	FORCEINLINE void SetOnUpdateCustomerDetailTypeFunc(const TFunction<void(EMS_CustomerDetailType)>& aFunc) { OnUpdateCustomerDetailTypeCallback = aFunc; }
 	
-	void SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType) const;
+	void SetType(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType);
 
 private:
-	void ResetActivateButton() const;
+	void ResetActivateCustomerDetailButton() const;
 
+	void OnClickedDetailButton(EMS_CustomerDetailType aCustomerDetailButtonType);
+	
 	MS_Handle PersonUnitHandle = INDEX_NONE;
+	EMS_PopulationNumber PopulationNumber = EMS_PopulationNumber::One;
+	EMS_CustomerDetailType CustomerDetailType = EMS_CustomerDetailType::Chatting;
+
+	TFunction<void(EMS_CustomerDetailType)> OnUpdateCustomerDetailTypeCallback = nullptr;;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_CustomerButton> CPP_ChatButton = nullptr;

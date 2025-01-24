@@ -19,4 +19,7 @@ public:
 	
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void AIChatting(int32 UnitId, const FString& Chatting);
+
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount);
 };

@@ -16,3 +16,8 @@ void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 {
 	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, gScheduleMng.GetCurrentMinute(), FText::FromString(Chatting)));
 }
+
+void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
+{
+	gUnitMng.OnPurchaseDelegate.Broadcast(FMS_PurchaseParameter(UnitId, ItemId, ItemCount));
+}

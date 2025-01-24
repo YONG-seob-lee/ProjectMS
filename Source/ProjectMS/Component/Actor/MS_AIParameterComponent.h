@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
-#include "MS_AIChatComponent.generated.h"
+#include "MS_AIParameterComponent.generated.h"
 
 UENUM()
 enum class EMS_ChattingType
@@ -36,12 +36,12 @@ namespace ChattingLocalizedString
 }
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PROJECTMS_API UMS_AIChatComponent : public UActorComponent
+class PROJECTMS_API UMS_AIParameterComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	UMS_AIChatComponent();
+	UMS_AIParameterComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 protected:
@@ -106,6 +106,8 @@ protected:
 			}
 		}
 	}
+
+	void PurchaseTrigger(int32 aItemId, int32 aItemCount) const;
 	
 private:
 	MS_Handle UnitHandle = INDEX_NONE;

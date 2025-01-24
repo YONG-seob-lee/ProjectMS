@@ -34,6 +34,22 @@ void UMS_CustomerManagementWidget::InitWidget(const FName& aTypeName, bool bMana
 	{
 		CPP_PersonComboBox->OnSelectionChanged.AddDynamic(this, &UMS_CustomerManagementWidget::OnSelectionChanged);
 	}
+
+	if(CPP_PersonDetailWidget)
+	{
+		CPP_PersonDetailWidget->SetOnUpdateCustomerDetailTypeFunc([this](EMS_CustomerDetailType aDetailType)
+		{
+			CustomerDetailType = aDetailType;
+		});
+	}
+
+	if(CPP_PeopleDetailWidget)
+	{
+		CPP_PeopleDetailWidget->SetOnUpdateCustomerDetailTypeFunc([this](EMS_CustomerDetailType aDetailType)
+		{
+			CustomerDetailType = aDetailType;
+		});
+	}
 }
 
 void UMS_CustomerManagementWidget::InitManageParameter(EMS_PopulationNumber aPopulationNumber, EMS_CustomerDetailType aDetailType)

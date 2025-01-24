@@ -9,6 +9,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
+#include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "Widget/Market/Modal/MS_MarketStartModal.h"
 
 
@@ -30,6 +31,31 @@ void AMS_MarketLevelScriptActor::GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHan
 	}
 }
 
+int32 AMS_MarketLevelScriptActor::GetComeInMarketPeoplePerDay() const
+{
+	TMap<MS_Handle, bool> UnitsHandle;
+	UnitsHandle.Empty();
+	GetUnitsHandle(UnitsHandle);
+
+	return UnitsHandle.Num();
+}
+
+void AMS_MarketLevelScriptActor::GetUnitComeMarketData(MS_Handle aUnitHandle, int32& ComeInMinute, int32& ComeOutMinute) const
+{
+	TArray<FMS_ChattingParameter> Parameters;
+	GetUnitChatting(aUnitHandle, Parameters);
+
+	if(Parameters.IsValidIndex(0))
+	{
+		ComeInMinute = Parameters[0].Minute;
+
+		if(Parameters.Last().bIsInMarket == false)
+		{
+			ComeOutMinute = Parameters.Last().Minute;
+		}
+	}
+}
+
 void AMS_MarketLevelScriptActor::GetUnitChatting(MS_Handle aUnitHandle, TArray<FMS_ChattingParameter>& aParameters) const
 {
 	if(ChattingCollectComponent)
@@ -45,6 +71,24 @@ void AMS_MarketLevelScriptActor::GetAllChattingCollection(TArray<FMS_ChattingPar
 	{
 		aChattingCollection.Empty();
 		ChattingCollectComponent->GetAllChatting(aChattingCollection);
+	}
+}
+
+void AMS_MarketLevelScriptActor::GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters) const
+{
+	if(PurchaseCollectComponent)
+	{
+		aParameters.Empty();
+		PurchaseCollectComponent->GetUnitPurchase(aUnitHandle, aParameters);
+	}
+}
+
+void AMS_MarketLevelScriptActor::GetAllPurchaseCollection(TMap<int32, int32>& aPurchaseCollection) const
+{
+	if(PurchaseCollectComponent)
+	{
+		aPurchaseCollection.Empty();
+		PurchaseCollectComponent->GetAllUnitPurchase(aPurchaseCollection);
 	}
 }
 
@@ -72,6 +116,11 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 	{
 		ChattingCollectComponent->Initialize();
 	}
+	PurchaseCollectComponent = MS_NewObject<UMS_UnitPurchaseCollectComponent>(this);
+	if(PurchaseCollectComponent)
+	{
+		PurchaseCollectComponent->Initialize();
+	}
 }
 
 void AMS_MarketLevelScriptActor::Destroyed()
@@ -81,7 +130,11 @@ void AMS_MarketLevelScriptActor::Destroyed()
 		ChattingCollectComponent->Finalize();
 		MS_DeleteObject(ChattingCollectComponent);
 	}
-	
+	if(PurchaseCollectComponent)
+	{
+		PurchaseCollectComponent->Finalize();
+		MS_DeleteObject(PurchaseCollectComponent);
+	}
 	Super::Destroyed();
 }
 

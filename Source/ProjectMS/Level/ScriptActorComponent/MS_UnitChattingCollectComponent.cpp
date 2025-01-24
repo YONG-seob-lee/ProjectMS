@@ -10,7 +10,7 @@ void UMS_UnitChattingCollectComponent::Initialize()
 	gUnitMng.OnChattingDelegate.AddUObject(this, &UMS_UnitChattingCollectComponent::SetOnUpdateChatting);
 }
 
-void UMS_UnitChattingCollectComponent::Finalize() const
+void UMS_UnitChattingCollectComponent::Finalize()
 {
 	gUnitMng.OnChattingDelegate.RemoveAll(this);
 }
