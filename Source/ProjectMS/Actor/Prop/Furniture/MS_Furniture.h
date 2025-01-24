@@ -13,8 +13,6 @@ class PROJECTMS_API AMS_Furniture : public AMS_Prop
 
 public:
 	AMS_Furniture(const FObjectInitializer& aObjectInitializer);
-
-	virtual void PostInitializeComponents() override;
 	
 protected:
 	virtual void BeginPlay() override;

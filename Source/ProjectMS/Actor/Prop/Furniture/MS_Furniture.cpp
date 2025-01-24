@@ -11,11 +11,6 @@ AMS_Furniture::AMS_Furniture(const FObjectInitializer& aObjectInitializer)
 	PropType = EMS_PropType::Furniture;
 }
 
-void AMS_Furniture::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-}
-
 void AMS_Furniture::BeginPlay()
 {
 	Super::BeginPlay();

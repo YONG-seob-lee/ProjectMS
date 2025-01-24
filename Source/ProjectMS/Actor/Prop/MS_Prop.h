@@ -5,6 +5,7 @@
 #include "Environment/MS_LevelPropDatas.h"
 #include "MS_Prop.generated.h"
 
+
 UCLASS()
 class PROJECTMS_API AMS_Prop : public AMS_Actor
 {
@@ -12,6 +13,8 @@ class PROJECTMS_API AMS_Prop : public AMS_Actor
 
 public:
 	AMS_Prop(const FObjectInitializer& aObjectInitializer);
+
+	virtual void PreInitializeComponents() override;
 
 	virtual void PostInitializeComponents() override;
 	
@@ -28,6 +31,11 @@ public:
 
 	
 	// Component :: Getter
+	class UPrimitiveComponent* GetShapeCollisionComponent() const { return ShapeCollisionComponent; }
+	
+	TArray<class UMeshComponent*> GetMeshComponents() const { return MeshComponents; }
+	class UMeshComponent* GetMeshComponent(int32 aArrayIndex = 0) const;
+	
 	TArray<class UMS_PropSpaceComponent*> GetPropSpaceComponents() const { return PropSpaceComponents; }
 	
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;

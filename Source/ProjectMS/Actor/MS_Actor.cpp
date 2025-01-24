@@ -20,7 +20,6 @@ AMS_Actor::AMS_Actor(const FObjectInitializer& aObjectInitializer)
 void AMS_Actor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AMS_Actor::Create(const FString& aLabelName)

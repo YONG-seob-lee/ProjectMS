@@ -21,7 +21,7 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 	if (ShapeCollisionComponent)
 	{
 		ShapeCollisionComponent->SetupAttachment(SceneRootComponent);
-		ShapeCollisionComponent->SetCollisionProfileName(TEXT("ShapeCollisionComponent"));
+		ShapeCollisionComponent->SetCollisionProfileName(TEXT("ShapeCollision"));
 		
 		if (UBoxComponent* Box = Cast<UBoxComponent>(ShapeCollisionComponent))
 		{
@@ -47,13 +47,18 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 	}
 }
 
+void AMS_Prop::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+	
+	// Component
+	GetComponents<UMS_PropSpaceComponent>(PropSpaceComponents);
+}
+
 void AMS_Prop::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	// Component
-	GetComponents(UMS_PropSpaceComponent::StaticClass(), PropSpaceComponents);
-
+	
 	// Widget Component
 	ShowArrangementWidget(false);
 }
@@ -61,6 +66,16 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+UMeshComponent* AMS_Prop::GetMeshComponent(int32 aArrayIndex /* = 0 */ ) const
+{
+	if (MeshComponents.IsValidIndex(aArrayIndex))
+	{
+		return MeshComponents[aArrayIndex];
+	}
+
+	return nullptr;
 }
 
 TArray<UMS_PropSpaceComponent*> AMS_Prop::GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const
