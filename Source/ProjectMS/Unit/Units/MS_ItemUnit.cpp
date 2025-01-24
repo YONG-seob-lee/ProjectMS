@@ -5,9 +5,13 @@
 
 #include "Manager_Both/MS_UnitManager.h"
 
+
 void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
 {
 	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+
+	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, ChildTableId);
+	MS_Ensure(ItemData != nullptr);
 }
 
 void UMS_ItemUnit::Finalize()
@@ -27,17 +31,7 @@ void UMS_ItemUnit::Tick(float aDeltaTime)
 
 bool UMS_ItemUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
-	if (Super::CreateUnitActor(aPosition, aRotator))
-	{
-		ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, ChildTableId);
-		if(ItemData == nullptr)
-		{
-			return false;
-		}
-	}
-	
-	MS_Ensure(false);
-	return false;
+	return Super::CreateUnitActor(aPosition, aRotator);
 }
 
 void UMS_ItemUnit::DestroyUnitActor()
