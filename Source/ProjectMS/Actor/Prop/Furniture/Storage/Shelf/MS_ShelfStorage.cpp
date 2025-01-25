@@ -15,8 +15,7 @@ AMS_ShelfStorage::AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer)
 			StaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
 		}
 	}
-
-	/*
+	
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, -45.0f, 0.0f));
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No2StorageSlotComponent")));
@@ -33,7 +32,6 @@ AMS_ShelfStorage::AMS_ShelfStorage(const FObjectInitializer& aObjectInitializer)
 	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 	SlotComponentArray[SlotComponentIndexSize]->SetRelativeLocation(FVector(0.0f, 45.0f, 100.0f));
-	*/
 }
 
 void AMS_ShelfStorage::PostInitializeComponents()

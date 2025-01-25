@@ -51,7 +51,7 @@ void UMS_CheckStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uin
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), OwnerCharacter->GetLoadingStorageType(), AllLoadingStorageArray);
 	for (int i = 0; i < AllLoadingStorageArray.Num(); i++)
 	{
-		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllLoadingStorageArray[i])->GetStorageEachSlotStatus();
+		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllLoadingStorageArray[i])->CheckStorageEachSlotStatus();
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{
@@ -85,7 +85,7 @@ void UMS_CheckStorageStockTask::TickTask(UBehaviorTreeComponent& aOwnerComp, uin
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), OwnerCharacter->GetUnloadingStorageType(), AllUnloadingStorageArray);
 	for (int i = 0; i < AllUnloadingStorageArray.Num(); i++)
 	{
-		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllUnloadingStorageArray[i])->GetStorageEachSlotStatus();
+		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllUnloadingStorageArray[i])->CheckStorageEachSlotStatus();
 
 		for (int j = 0; j < StorageEachSlotStatus.Num(); ++j)
 		{

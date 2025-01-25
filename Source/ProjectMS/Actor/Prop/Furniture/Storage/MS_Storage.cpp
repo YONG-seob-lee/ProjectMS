@@ -1,10 +1,11 @@
 #include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
-#include "Character/AICharacter/MS_AICharacter.h"
 #include "Component/Prop/Furniture/MS_StorageAssemblyAreaComponent.h"
 #include "Component/Prop/Furniture/MS_StorageBayComponent.h"
 #include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
-
+#include "Components/SceneComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
@@ -14,21 +15,25 @@ AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
 		ShapeCollisionComponent->SetCollisionProfileName(TEXT("StorageCollisionPreset"));
 	}
 
+	// Temp
+	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
+	CollisionBoxComponent->SetupAttachment(SceneRootComponent);
+	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	CollisionBoxComponent->SetCollisionProfileName(TEXT("StorageCollisionPreset"));
+	CollisionBoxComponent->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
+
 	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
-	if (StorageAssemblyAreaComponent)
-	{
-		StorageAssemblyAreaComponent->SetupAttachment(SceneRootComponent);
-		StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-150.0f, 0.0f, 0.0f));
-	}
-}
+	StorageAssemblyAreaComponent->SetupAttachment(SceneRootComponent);
+	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-150.0f, 0.0f, 0.0f));
 
-void AMS_Storage::PreInitializeComponents()
-{
-	Super::PreInitializeComponents();
+	BayComponentIndexSize = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("No1StorageBayComponent")));
+	BayComponentArray[BayComponentIndexSize]->SetupAttachment(SceneRootComponent);
+	BayComponentArray[BayComponentIndexSize]->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
+	BayComponentArray[BayComponentIndexSize]->BayOrder = BayComponentIndexSize;
 
-	// Component
-	GetComponents<UMS_StorageBayComponent>(BayComponentArray);
-	GetComponents<UMS_StorageSlotComponent>(SlotComponentArray);
+	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No1StorageSlotComponent")));
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
+	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 }
 
 void AMS_Storage::PostInitializeComponents()
@@ -41,28 +46,20 @@ void AMS_Storage::BeginPlay()
 	Super::BeginPlay();
 }
 
-TArray<FMS_StorageEachSlotStatus> AMS_Storage::GetStorageEachSlotStatus()
+TArray<FMS_StorageEachSlotStatus> AMS_Storage::CheckStorageEachSlotStatus()
 {
+	TArray<UMS_StorageSlotComponent*> StorageSlotComponentArray = {};
+	GetComponents<UMS_StorageSlotComponent>(StorageSlotComponentArray);
 	TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatusArray = {};
-	
-	for (int i = 0; i < SlotComponentArray.Num(); ++i)
+	for (int i = 0; i < StorageSlotComponentArray.Num(); ++i)
 	{
-		if (!IsValid(SlotComponentArray[i]))
-		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
-			MS_ENSURE(false);
-
-			// Add Empty
-			StorageEachSlotStatusArray.Add(FMS_StorageEachSlotStatus{});
-		}
-		
 		StorageEachSlotStatusArray.Add(
 			FMS_StorageEachSlotStatus{
-				.SlotOrder = SlotComponentArray[i]->SlotOrder,
-				.StuffRowName = SlotComponentArray[i]->StuffRowName,
-				.StockQuantity = SlotComponentArray[i]->StockQuantity,
-				.StockCapacity = SlotComponentArray[i]->StockCapacity,
-				.ReservationFlag = SlotComponentArray[i]->ReservationFlag
+				.SlotOrder = StorageSlotComponentArray[i]->SlotOrder,
+				.StuffRowName = StorageSlotComponentArray[i]->StuffRowName,
+				.StockQuantity = StorageSlotComponentArray[i]->StockQuantity,
+				.StockCapacity = StorageSlotComponentArray[i]->StockCapacity,
+				.ReservationFlag = StorageSlotComponentArray[i]->ReservationFlag
 			}
 		);
 	}
@@ -70,33 +67,25 @@ TArray<FMS_StorageEachSlotStatus> AMS_Storage::GetStorageEachSlotStatus()
 	return StorageEachSlotStatusArray;
 }
 
-FMS_StorageOverallSlotStatus AMS_Storage::GetStorageOverallSlotStatus()
+FMS_StorageOverallSlotStatus AMS_Storage::CheckStorageOverallSlotStatus()
 {
+	TArray<UMS_StorageSlotComponent*> StorageSlotComponentArray = {};
+	GetComponents<UMS_StorageSlotComponent>(StorageSlotComponentArray);
 	FMS_StorageOverallSlotStatus StorageOverallSlotStatus = {};
 	StorageOverallSlotStatus.OccupiedSlotCount = StorageOverallSlotStatus.UnoccupiedSlotCount = 0;
-	
-	for (int i = 0; i < SlotComponentArray.Num(); ++i)
+	for (int i = 0; i < StorageSlotComponentArray.Num(); ++i)
 	{
-		if (!IsValid(SlotComponentArray[i]))
-		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
-			MS_ENSURE(false);
-
-			// To Do : 문제가 생겼을 때 어떻게 처리해야하는지 확인
-			continue;
-		}
-		
-		if (SlotComponentArray[i]->ReservationFlag == true)
+		if (StorageSlotComponentArray[i]->ReservationFlag == true)
 			StorageOverallSlotStatus.ReservedSlotCount += 1;
-		else if (SlotComponentArray[i]->StuffRowName == NAME_None)
+		else if (StorageSlotComponentArray[i]->StuffRowName == NAME_None)
 			StorageOverallSlotStatus.UnoccupiedSlotCount += 1;
 		else
 			StorageOverallSlotStatus.OccupiedSlotCount += 1;
 
-		if (StorageOverallSlotStatus.StuffStockMap.Contains(SlotComponentArray[i]->StuffRowName) == true)
-			StorageOverallSlotStatus.StuffStockMap[SlotComponentArray[i]->StuffRowName] += SlotComponentArray[i]->StockQuantity;
+		if (StorageOverallSlotStatus.StuffStockMap.Contains(StorageSlotComponentArray[i]->StuffRowName) == true)
+			StorageOverallSlotStatus.StuffStockMap[StorageSlotComponentArray[i]->StuffRowName] += StorageSlotComponentArray[i]->StockQuantity;
 		else
-			StorageOverallSlotStatus.StuffStockMap.Add(SlotComponentArray[i]->StuffRowName, SlotComponentArray[i]->StockQuantity);
+			StorageOverallSlotStatus.StuffStockMap.Add(StorageSlotComponentArray[i]->StuffRowName, StorageSlotComponentArray[i]->StockQuantity);
 	}
 
 	return StorageOverallSlotStatus;
@@ -104,70 +93,16 @@ FMS_StorageOverallSlotStatus AMS_Storage::GetStorageOverallSlotStatus()
 
 void AMS_Storage::AddCharacterToStorageReservationArray(AMS_AICharacter* aCharacter)
 {
-	if (IsValid(aCharacter))
+	if (ReservedAICharacterArray.Contains(aCharacter) == false)
 	{
-		if (ReservedAICharacterArray.Contains(aCharacter) == false)
-		{
-			ReservedAICharacterArray.Add(aCharacter);
-		}
+		ReservedAICharacterArray.Add(aCharacter);
 	}
 }
 
 void AMS_Storage::RemoveCharacterFromStorageReservationArray(AMS_AICharacter* aCharacter)
 {
-	if (IsValid(aCharacter))
+	if (ReservedAICharacterArray.Contains(aCharacter) == true)
 	{
-		if (ReservedAICharacterArray.Contains(aCharacter) == true)
-		{
-			ReservedAICharacterArray.Remove(aCharacter);
-		}
+		ReservedAICharacterArray.Remove(aCharacter);
 	}
-}
-
-TObjectPtr<UMS_StorageBayComponent> AMS_Storage::GetBayComponent(int32 aIndex) const
-{
-	if (BayComponentArray.IsValidIndex(aIndex))
-	{
-		return BayComponentArray[aIndex];
-	}
-
-	return nullptr;
-}
-
-TObjectPtr<UMS_StorageSlotComponent> AMS_Storage::GetSlotComponent(int32 aIndex) const
-{
-	if (SlotComponentArray.IsValidIndex(aIndex))
-	{
-		return SlotComponentArray[aIndex];
-	}
-
-	return nullptr;
-}
-
-TArray<TWeakObjectPtr<AMS_AICharacter>> AMS_Storage::GetReservedAICharacterArray(bool bCleanUp /* = true */)
-{
-	if (bCleanUp)
-	{
-		CleanUpReservedAICharacterArray();
-	}
-	
-	return ReservedAICharacterArray;
-}
-
-bool AMS_Storage::HasReservedAICharacter(bool bCleanUp)
-{
-	if (bCleanUp)
-	{
-		CleanUpReservedAICharacterArray();
-	}
-	
-	return ReservedAICharacterArray.Num() == 0;
-}
-
-void AMS_Storage::CleanUpReservedAICharacterArray()
-{
-	ReservedAICharacterArray.RemoveAll([] (const TWeakObjectPtr<AMS_AICharacter> Character)
-	{
-		return Character == nullptr;
-	});
 }

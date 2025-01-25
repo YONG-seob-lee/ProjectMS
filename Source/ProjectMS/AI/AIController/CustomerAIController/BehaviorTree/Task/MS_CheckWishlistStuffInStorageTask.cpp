@@ -45,7 +45,7 @@ void UMS_CheckWishlistStuffInStorageTask::TickTask(UBehaviorTreeComponent& aOwne
 	for (int i = 0; i < AllStorageArray.Num(); i++)
 	{
 		AMS_DisplayStorage* Storage = Cast<AMS_DisplayStorage>(AllStorageArray[i]);
-		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Storage->GetStorageEachSlotStatus();
+		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Storage->CheckStorageEachSlotStatus();
 
 		for (const FMS_StorageEachSlotStatus& StorageSlotStatus : StorageEachSlotStatus)
 		{
@@ -84,7 +84,7 @@ void UMS_CheckWishlistStuffInStorageTask::TickTask(UBehaviorTreeComponent& aOwne
 
 	for (int i = 0; i < StorageConditionArray.Num(); i++)
 	{
-		if (StorageConditionArray[i].CandidateStorage->HasReservedAICharacter() == false)
+		if (StorageConditionArray[i].CandidateStorage->ReservedAICharacterArray.Num() == 0)
 		{
 			SelectedStorage = StorageConditionArray[i].CandidateStorage;
 			SelectedConditionArrayIndex = i;

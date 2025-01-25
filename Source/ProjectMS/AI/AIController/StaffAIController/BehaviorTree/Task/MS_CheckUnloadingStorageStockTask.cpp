@@ -35,7 +35,7 @@ void UMS_CheckUnloadingStorageStockTask::TickTask(UBehaviorTreeComponent& aOwner
 
 	for (int i = 0; i < AllStorageArray.Num(); i++)
 	{
-		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->GetStorageEachSlotStatus();
+		TArray<FMS_StorageEachSlotStatus> StorageEachSlotStatus = Cast<AMS_Storage>(AllStorageArray[i])->CheckStorageEachSlotStatus();
 		bool UnoccupiedSlotExistenceFlag = false;
 		int UnoccupiedSlotOrder = INT_MIN;
 
