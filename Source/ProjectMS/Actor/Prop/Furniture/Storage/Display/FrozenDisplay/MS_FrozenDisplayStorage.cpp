@@ -3,16 +3,10 @@
 AMS_FrozenDisplayStorage::AMS_FrozenDisplayStorage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
-	if (MeshComponents.IsValidIndex(0))
-	{
-		if (UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(MeshComponents[0]))
-		{
-			const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_FUR_FG_A"));
-			MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
-		
-			StaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
-		}
-	}
+	const ConstructorHelpers::FObjectFinder<UStaticMesh> AmbientDisplayStaticMeshFinder(TEXT("/Game/3D/StaticMesh/SM_FUR_FG_A"));
+	MS_CHECK(AmbientDisplayStaticMeshFinder.Object);
+
+	StorageStaticMeshComponent->SetStaticMesh(AmbientDisplayStaticMeshFinder.Object);
 }
 
 void AMS_FrozenDisplayStorage::PostInitializeComponents()

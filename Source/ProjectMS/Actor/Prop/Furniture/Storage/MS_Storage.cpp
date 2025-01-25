@@ -7,23 +7,31 @@
 AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SetRootComponent(SceneComponent);
+
+	StorageStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StorageStaticMeshComponent"));
+	StorageStaticMeshComponent->SetupAttachment(GetRootComponent());
+	StorageStaticMeshComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
+	StorageStaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
-	CollisionBoxComponent->SetupAttachment(SceneRootComponent);
+	CollisionBoxComponent->SetupAttachment(GetRootComponent());
 	CollisionBoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
 	CollisionBoxComponent->SetCollisionProfileName(TEXT("StorageCollisionPreset"));
 	CollisionBoxComponent->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
 
 	StorageAssemblyAreaComponent = CreateDefaultSubobject<UMS_StorageAssemblyAreaComponent>(TEXT("StorageAssemblyAreaComponent"));
-	StorageAssemblyAreaComponent->SetupAttachment(SceneRootComponent);
+	StorageAssemblyAreaComponent->SetupAttachment(GetRootComponent());
 	StorageAssemblyAreaComponent->SetRelativeLocation(FVector(-150.0f, 0.0f, 0.0f));
 
 	BayComponentIndexSize = BayComponentArray.Add(CreateDefaultSubobject<UMS_StorageBayComponent>(TEXT("No1StorageBayComponent")));
-	BayComponentArray[BayComponentIndexSize]->SetupAttachment(SceneRootComponent);
+	BayComponentArray[BayComponentIndexSize]->SetupAttachment(GetRootComponent());
 	BayComponentArray[BayComponentIndexSize]->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 	BayComponentArray[BayComponentIndexSize]->BayOrder = BayComponentIndexSize;
 
 	SlotComponentIndexSize = SlotComponentArray.Add(CreateDefaultSubobject<UMS_StorageSlotComponent>(TEXT("No1StorageSlotComponent")));
-	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(SceneRootComponent);
+	SlotComponentArray[SlotComponentIndexSize]->SetupAttachment(GetRootComponent());
 	SlotComponentArray[SlotComponentIndexSize]->SlotOrder = SlotComponentIndexSize;
 }
 
