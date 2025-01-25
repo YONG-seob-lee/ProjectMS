@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Prop/Furniture/MS_Furniture.h"
+#include "MS_Actor.h"
 #include "Component/Prop/Furniture/MS_StorageAssemblyAreaComponent.h"
 #include "Component/Prop/Furniture/MS_StorageBayComponent.h"
 #include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TMap<FName, int> StuffStockMap = {};
 };
 
-UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Furniture
+UCLASS() class PROJECTMS_API AMS_Storage : public AMS_Actor
 {
 	GENERATED_BODY()
 	
