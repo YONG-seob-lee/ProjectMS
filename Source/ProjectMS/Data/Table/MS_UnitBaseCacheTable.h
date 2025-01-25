@@ -17,8 +17,8 @@ class PROJECTMS_API UMS_UnitBaseCacheTable : public UMS_CacheTable
 public:
 	virtual int32 GetUnitBaseBPIndex(int32 aId) const
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Please override this fuction in your cache table"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Please override this fuction in your cache table"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 		
 		return INDEX_NONE;
 	}

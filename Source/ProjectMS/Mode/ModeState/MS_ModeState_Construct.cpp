@@ -164,7 +164,7 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 			{
 				DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Yellow, false, 1.f);
 				FVector NewObjectLocation = SpaceHitResult.Location;
-				MS_LOG_Verbosity(VeryVerbose, TEXT("NewObjectLocation : %f, %f, %f"), NewObjectLocation.X, NewObjectLocation.Y, NewObjectLocation.Z);
+				MS_LOG_VERBOSITY(VeryVerbose, TEXT("NewObjectLocation : %f, %f, %f"), NewObjectLocation.X, NewObjectLocation.Y, NewObjectLocation.Z);
 
 				MovePreviewProp(NewObjectLocation);
 			}
@@ -189,7 +189,7 @@ void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aIt
 		FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aStorageId);
 		if(StorageData == nullptr)
 		{
-			MS_LOG_Verbosity(Error, TEXT("Storage Data is invalid"));
+			MS_LOG_VERBOSITY(Error, TEXT("Storage Data is invalid"));
 			return;
 		}
 		
@@ -340,7 +340,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		{
 			DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Green, false, 1.f);
 			FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 10.f);
-			MS_LOG_Verbosity(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
+			MS_LOG_VERBOSITY(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
 			FRotator Rotator = FRotator(0.f, 90.f, 0.f);
 		
 			const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aStorageData->PathFile, true);
@@ -471,14 +471,14 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 				TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(UnitTableId, ChildTableId, true, NewLocationOnGrid, PreviewProp->GetActorRotation()));
 				if (!IsValid(NewUnit))
 				{
-					MS_Ensure(false);
+					MS_ENSURE(false);
 					return;
 				}
 				
 				AMS_Prop* NewProp = Cast<AMS_Prop>(NewUnit->GetActor());
 				if (!IsValid(NewProp))
 				{
-					MS_Ensure(false);
+					MS_ENSURE(false);
 					return;
 				}
 				
@@ -652,7 +652,7 @@ void UMS_ModeState_Construct::ConvertObjectDataProp(const TArray<FMS_GridDataFor
 			FMS_GridDataForPropSpace NewGridData;
 			NewGridData.GridDatas = OldGridData.GridDatas;
 			
-			MS_Ensure(IsValid(OldGridData.PropSpaceComponent));
+			MS_ENSURE(IsValid(OldGridData.PropSpaceComponent));
 			NewGridData.PropSpaceComponent = aInNewProp->GetPropSpaceComponentByRelativeLocation(OldGridData.PropSpaceComponent->GetRelativeLocation());
 
 			aOutGridDatas.Emplace(NewGridData);

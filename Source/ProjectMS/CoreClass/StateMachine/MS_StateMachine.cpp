@@ -27,7 +27,7 @@ void UMS_StateMachine::RegisterState(int8 aIndex, const FName& aName, const TSub
 {
 	if (EntireState.Contains(aIndex))
 	{
-		MS_Ensure(false);
+		MS_ENSURE(false);
 		return;
 	}
 

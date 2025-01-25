@@ -23,7 +23,7 @@ void UMS_BehaviorElementWidget::NativeOnListItemObjectSet(UObject* aListItemObje
 		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
 		if(!UnitTable)
 		{
-			MS_Ensure(UnitTable);
+			MS_ENSURE(UnitTable);
 			return;
 		}
 

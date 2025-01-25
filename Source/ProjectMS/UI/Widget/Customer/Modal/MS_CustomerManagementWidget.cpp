@@ -82,14 +82,14 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 	const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor());
 	if(!MarketLevelScriptActor)
 	{
-		MS_Ensure(MarketLevelScriptActor);
+		MS_ENSURE(MarketLevelScriptActor);
 		return INDEX_NONE;
 	}
 
 	TMap<MS_Handle, bool> UnitsHandleMap;
 	MarketLevelScriptActor->GetUnitsHandle(UnitsHandleMap);
 	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-	MS_Ensure(UnitTable);
+	MS_ENSURE(UnitTable);
 
 	TArray<MS_Handle> UnitsHandleArray;
 	UnitsHandleMap.GenerateKeyArray(UnitsHandleArray);

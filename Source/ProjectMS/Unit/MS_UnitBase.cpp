@@ -16,8 +16,8 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 a
 	
 	if (UnitHandle == InvalidUnitHandle)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return;
 	}
@@ -26,8 +26,8 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 a
 	UnitTableId = aUnitTableId;
 	if (UnitTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return;
 	}
@@ -38,8 +38,8 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 a
 	ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
 	if(ResourceUnitData == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_ENSURE(false);
 	}
 }
 
@@ -73,24 +73,24 @@ bool UMS_UnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRo
 {
 	if (UnitTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return false;
 	}
 
 	if (ChildTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ChildTableId is invalid"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ChildTableId is invalid"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return false;
 	}
 	
 	if(ResourceUnitData == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 		
 		return false;
 	}
@@ -106,16 +106,16 @@ UClass* UMS_UnitBase::GetBlueprintClass() const
 {
 	if (UnitTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] UnitTableId is None"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is None"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return nullptr;
 	}
 
 	if (ChildTableId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ChildTableId is None"), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ChildTableId is None"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 
 		return nullptr;
 	}
@@ -134,8 +134,8 @@ TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Po
 {
 	if (!IsValid(aClass))
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] Class is not valid."), *MS_FUNC_STRING);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Class is not valid."), *MS_FUNC_STRING);
+		MS_ENSURE(false);
 		
 		return nullptr;
 	}

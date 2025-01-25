@@ -145,7 +145,7 @@ UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 {
 	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
 	
 	return ArrangementWidgetComponent;
@@ -155,7 +155,7 @@ UMS_ArrangementWidget* AMS_Prop::GetArrangementWidget() const
 {
 	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
 	
 	if (IsValid(ArrangementWidgetComponent))
@@ -175,7 +175,7 @@ void AMS_Prop::ShowArrangementWidget(bool bShow) const
 	{
 		if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
 		{
-			MS_LOG_Verbosity(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 		}
 	}
 

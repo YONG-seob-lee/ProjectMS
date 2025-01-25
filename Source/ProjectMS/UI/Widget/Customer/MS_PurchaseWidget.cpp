@@ -44,7 +44,7 @@ void UMS_PurchaseWidget::SetPurchaseOne_Internal(MS_Handle aUnitHandle) const
 		MarketLevelScriptActor->GetUnitComeMarketData(aUnitHandle, ComeInMinute, ComeOutMinute);
 
 		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-		MS_Ensure(UnitTable);
+		MS_ENSURE(UnitTable);
 		
 		CPP_ComeInMarketText->SetText(FText::FromString(FString::Format(TEXT("   들어온 시각 : {0}시 {1}분"), {ComeInMinute / Time::MinutePerOneHour, ComeInMinute % Time::MinutePerOneHour})));
 		if(aUnitHandle == INDEX_NONE)
@@ -70,7 +70,7 @@ void UMS_PurchaseWidget::SetPurchaseOne_Internal(MS_Handle aUnitHandle) const
 		int32 TotalItemCount = 0;
 		int32 TotalItemGoldAmount = 0;
 		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
-		MS_Ensure(ItemTable);
+		MS_ENSURE(ItemTable);
 
 		for(const auto& Parameter : Parameters)
 		{
@@ -111,7 +111,7 @@ void UMS_PurchaseWidget::SetPurchaseMany_Internal() const
 		int32 TotalBuyItemCount = 0;
 		int32 TotalBuyGoldAmount = 0;
 		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
-		MS_Ensure(ItemTable);
+		MS_ENSURE(ItemTable);
 		
 		for(const auto& PurchaseData : PurchaseCollection)
 		{

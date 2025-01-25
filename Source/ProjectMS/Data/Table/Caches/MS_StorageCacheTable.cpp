@@ -72,6 +72,6 @@ int32 UMS_StorageCacheTable::GetUnitBaseBPIndex(int32 aId) const
 		return StorageData->PathFile;
 	}
 
-	MS_Ensure(false);
+	MS_ENSURE(false);
 	return INDEX_NONE;
 }

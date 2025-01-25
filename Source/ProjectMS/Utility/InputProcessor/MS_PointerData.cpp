@@ -62,7 +62,7 @@ void FMS_PointerData::CalculateIntervalTime()
 
 void FMS_PointerData::HandlePointerHold()
 {
-	MS_LOG_Verbosity(VeryVerbose, TEXT("ElapsedHoldTime : %f"), ElapsedHoldTime);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("ElapsedHoldTime : %f"), ElapsedHoldTime);
 	
 	PointerHoldPosition = gInputMng.AcquirePointerPositionOnViewport();
 

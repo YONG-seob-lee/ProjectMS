@@ -138,8 +138,8 @@ FMS_ResourceUnit* UMS_UnitManager::GetResourceUnitData(int32 aUnitTableId) const
 	FMS_ResourceUnit* ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
 	if(ResourceUnitData == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_ENSURE(false);
 	}
 	
 	return ResourceUnitData;

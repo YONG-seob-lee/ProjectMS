@@ -40,7 +40,7 @@ bool UMS_BasePlayerUnit::CreateUnitActor(const FVector& aPosition, const FRotato
 		}
 	}
 
-	MS_Ensure(false);
+	MS_ENSURE(false);
 	return false;
 }
 

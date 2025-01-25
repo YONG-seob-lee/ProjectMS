@@ -22,7 +22,7 @@ void UMS_StaffPropertyElementWidget::NativeOnListItemObjectSet(UObject* aListIte
 	StaffId = StaffPropertyData->GetStaffId();
 	
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
-	MS_Ensure(StaffTable);
+	MS_ENSURE(StaffTable);
 	
 	const FMS_Staff* StaffData = StaffTable->GetStaffData(StaffId);
 

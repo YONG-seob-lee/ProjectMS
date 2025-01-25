@@ -85,7 +85,7 @@ public:
 			return EMS_Rotation::Rot270;
 		}
 	
-		MS_Ensure(false);
+		MS_ENSURE(false);
 		return EMS_Rotation::Rot0;
 	}
 	
@@ -103,7 +103,7 @@ public:
 			return 270.f;
 		}
 
-		MS_Ensure(false);
+		MS_ENSURE(false);
 		return 0.f;
 	}
 
@@ -121,7 +121,7 @@ public:
 			return EMS_Rotation::Rot0;
 		}
 
-		MS_Ensure(false);
+		MS_ENSURE(false);
 		return EMS_Rotation::Rot0;
 	}
 };

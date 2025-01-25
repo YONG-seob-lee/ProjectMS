@@ -42,7 +42,7 @@ void UMS_StaffProfileElementWidget::SetProfile(int32 aStaffId)
 	StaffId = aStaffId;
 	
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
-	MS_Ensure(StaffTable);
+	MS_ENSURE(StaffTable);
 	
 	const FMS_Staff* StaffData = StaffTable->GetStaffData(aStaffId);
 

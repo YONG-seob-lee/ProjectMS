@@ -197,18 +197,18 @@ void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObject
 		}
 		else
 		{
-			MS_LOG_Verbosity(Error, TEXT("Floor data alreay exists [Zone %d - X : %d, Y : %d]"),
+			MS_LOG_VERBOSITY(Error, TEXT("Floor data alreay exists [Zone %d - X : %d, Y : %d]"),
 				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-			MS_Ensure(false);
+			MS_ENSURE(false);
 		}
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Floor's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+		MS_LOG_VERBOSITY(Error, TEXT("Floor's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
 			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-		MS_Ensure(false);
+		MS_ENSURE(false);
 	}
 }
 
@@ -224,10 +224,10 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 		}
 		else
 		{
-			MS_LOG_Verbosity(Error, TEXT("Object data alreay exists [Zone %d - X : %d, Y : %d]"),
+			MS_LOG_VERBOSITY(Error, TEXT("Object data alreay exists [Zone %d - X : %d, Y : %d]"),
 				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-			MS_Ensure(false);
+			MS_ENSURE(false);
 		}
 
 		if (GridData.PropSpaceComponent == nullptr)
@@ -236,18 +236,18 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 		}
 		else
 		{
-			MS_LOG_Verbosity(Error, TEXT("PropSpaceComponent data alreay exists [Zone %d - X : %d, Y : %d]"),
+			MS_LOG_VERBOSITY(Error, TEXT("PropSpaceComponent data alreay exists [Zone %d - X : %d, Y : %d]"),
 				ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-			MS_Ensure(false);
+			MS_ENSURE(false);
 		}
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
 			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-		MS_Ensure(false);
+		MS_ENSURE(false);
 	}
 }
 
@@ -262,10 +262,10 @@ void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 	}
 	else
 	{
-		MS_LOG_Verbosity(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
+		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
 			ZoneIndex, aGridPosition.X, aGridPosition.Y);
 
-		MS_Ensure(false);
+		MS_ENSURE(false);
 	}
 }
 
@@ -291,7 +291,7 @@ const FMS_GridData* AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const
 {
 	if (!Grids.Contains(aGridPosition))
 	{
-		MS_Ensure(false);
+		MS_ENSURE(false);
 		return nullptr;
 	}
 	
@@ -309,7 +309,7 @@ void AMS_Zone::ShowDebugZoneData()
 			{
 				if (pGrid->Object != nullptr && pGrid->PropSpaceComponent != nullptr)
 				{
-					MS_LOG_Verbosity(VeryVerbose, TEXT("ZoneGrid %d-%d,%d : %s, SpaceType : %d, PurposeType : %d"),
+					MS_LOG_VERBOSITY(VeryVerbose, TEXT("ZoneGrid %d-%d,%d : %s, SpaceType : %d, PurposeType : %d"),
 						ZoneIndex, j, i, *pGrid->Object->GetName(),
 						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropSpaceType()),
 						static_cast<uint8>(pGrid->PropSpaceComponent->GetPropPurposeSpaceType()));

@@ -11,7 +11,7 @@ void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 a
 	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
 
 	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, ChildTableId);
-	MS_Ensure(ItemData != nullptr);
+	MS_ENSURE(ItemData != nullptr);
 }
 
 void UMS_ItemUnit::Finalize()

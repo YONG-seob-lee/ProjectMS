@@ -18,11 +18,11 @@ constexpr uint32 InvalidUnitHandle = 0;
 DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 
 #define MS_LOG(InFormat, ...) UE_LOG(My_Log, Log, InFormat, ##__VA_ARGS__)
-#define MS_LOG_Verbosity(verbosity, msg, ...) UE_LOG(My_Log, verbosity, msg, ##__VA_ARGS__)
+#define MS_LOG_VERBOSITY(verbosity, msg, ...) UE_LOG(My_Log, verbosity, msg, ##__VA_ARGS__)
 #define MS_ERROR(InFormat, ...) UE_LOG(My_Log, Warning, InFormat, ##__VA_ARGS__)
 
 #define MS_CHECK(expr) check(expr)
-#define MS_Ensure(expr) ensure(expr)
+#define MS_ENSURE(expr) ensure(expr)
 
 #define MS_FUNC_TEXT __FUNCTION__
 #define MS_FUNC_STRING FString(__FUNCTION__)

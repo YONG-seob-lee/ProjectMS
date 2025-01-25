@@ -26,14 +26,14 @@ const FVector2D& UMS_GridBasedMoveHelper::SetPositionOffset(AActor* aTargetActor
 	TargetActor = aTargetActor;
 	
 	FVector2D PointerScreenPosition = gInputMng.AcquirePointerPositionOnViewport();
-	MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::PointerScreenPosition : %f, %f"), PointerScreenPosition.X, PointerScreenPosition.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("OnSelectProp::PointerScreenPosition : %f, %f"), PointerScreenPosition.X, PointerScreenPosition.Y);
 
 	FVector2D ActorCenterScreenPosition;
 	World->GetFirstPlayerController()->ProjectWorldLocationToScreen(aTargetActor->GetActorLocation(), ActorCenterScreenPosition);
-	MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::ActorCenterScreenPosition : %f, %f"), ActorCenterScreenPosition.X, ActorCenterScreenPosition.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("OnSelectProp::ActorCenterScreenPosition : %f, %f"), ActorCenterScreenPosition.X, ActorCenterScreenPosition.Y);
 		
 	PointerPostionToObjectScreenPositionOffset = ActorCenterScreenPosition - PointerScreenPosition;
-	MS_LOG_Verbosity(VeryVerbose, TEXT("OnSelectProp::ClickPositionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("OnSelectProp::ClickPositionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
 
 	return PointerPostionToObjectScreenPositionOffset;
 }
@@ -59,12 +59,12 @@ bool UMS_GridBasedMoveHelper::GetHitResultUnderObjectScreenPosition(const FVecto
 		return false;
 	}
 
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::aPointerPostion : %f, %f"), aPointerPostion.X, aPointerPostion.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("PlayerController::aPointerPostion : %f, %f"), aPointerPostion.X, aPointerPostion.Y);
 
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::PointerPostionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("PlayerController::PointerPostionToObjectScreenPositionOffset : %f, %f"), PointerPostionToObjectScreenPositionOffset.X, PointerPostionToObjectScreenPositionOffset.Y);
 
 	FVector2D ScreenPosition = aPointerPostion + PointerPostionToObjectScreenPositionOffset;
-	MS_LOG_Verbosity(VeryVerbose, TEXT("PlayerController::ScreenPosition : %f, %f"), ScreenPosition.X, ScreenPosition.Y);
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("PlayerController::ScreenPosition : %f, %f"), ScreenPosition.X, ScreenPosition.Y);
 		
 	return PlayerController->GetHitResultAtScreenPosition(ScreenPosition, aTraceChannel, bTraceComplex, aOutHitResult);
 }
@@ -73,7 +73,7 @@ bool UMS_GridBasedMoveHelper::GetCheckedHitResultUnderObjectScreenPosition(AActo
 	const FVector2D& aPointerPostion, ECollisionChannel aTraceChannel, bool bTraceComplex,
 	FHitResult& aOutHitResult) const
 {
-	MS_Ensure (aTargetActor == TargetActor);
+	MS_ENSURE (aTargetActor == TargetActor);
 
 	return GetHitResultUnderObjectScreenPosition(aPointerPostion, aTraceChannel, bTraceComplex, aOutHitResult);
 }

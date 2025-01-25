@@ -32,8 +32,8 @@ int32 UMS_ResourceUnitCacheTable::GetBlueprintPathId(int32 aUnitTableId, int32 a
 	FMS_ResourceUnit* ResourceUnitData = GetResourceUnitData(aUnitTableId);
 	if (ResourceUnitData == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] ResourceUnitData is nullptr [Key : %d]"), *MS_FUNC_STRING, aUnitTableId);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr [Key : %d]"), *MS_FUNC_STRING, aUnitTableId);
+		MS_ENSURE(false);
 
 		return INDEX_NONE;
 	}
@@ -43,8 +43,8 @@ int32 UMS_ResourceUnitCacheTable::GetBlueprintPathId(int32 aUnitTableId, int32 a
 	UMS_UnitBaseCacheTable* UnitBaseCacheTable = Cast<UMS_UnitBaseCacheTable>(gTableMng.GetCacheTable(ChildTableType));
 	if (UnitBaseCacheTable == nullptr)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] UnitBaseCacheTable is nullptr [TableType : %d]"), *MS_FUNC_STRING, ResourceUnitData->ChildTableDataType);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitBaseCacheTable is nullptr [TableType : %d]"), *MS_FUNC_STRING, ResourceUnitData->ChildTableDataType);
+		MS_ENSURE(false);
 
 		return INDEX_NONE;
 	}
@@ -52,8 +52,8 @@ int32 UMS_ResourceUnitCacheTable::GetBlueprintPathId(int32 aUnitTableId, int32 a
 	int32 BPPathId = UnitBaseCacheTable->GetUnitBaseBPIndex(aChildTableId);
 	if (BPPathId == INDEX_NONE)
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] BPPathId is invalid [TableType : %d] [TableId : %d]"), *MS_FUNC_STRING, ResourceUnitData->ChildTableDataType, aChildTableId);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] BPPathId is invalid [TableType : %d] [TableId : %d]"), *MS_FUNC_STRING, ResourceUnitData->ChildTableDataType, aChildTableId);
+		MS_ENSURE(false);
 
 		return INDEX_NONE;
 	}
@@ -74,8 +74,8 @@ UClass* UMS_ResourceUnitCacheTable::GetBlueprintClass(int32 aUnitTableId, int32 
 	UClass* BPClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BPPath);
 	if(!IsValid(BPClass))
 	{
-		MS_LOG_Verbosity(Error, TEXT("[%s] BPClass is invalid [BPPathId : %d] [BPPath : %s]"), *MS_FUNC_STRING, BPPathId, *BPPath);
-		MS_Ensure(false);
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] BPClass is invalid [BPPathId : %d] [BPPath : %s]"), *MS_FUNC_STRING, BPPathId, *BPPath);
+		MS_ENSURE(false);
 
 		return nullptr;
 	}

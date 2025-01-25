@@ -21,7 +21,7 @@ void UMS_CheatManager::TestCheatManager(const FString aTestString)
 void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 {
 	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-	MS_Ensure(UnitTable);
+	MS_ENSURE(UnitTable);
 
 	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
 	const FString UnitName = UnitTable->GetUnitName(UnitId);
@@ -45,7 +45,7 @@ void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 void UMS_CheatManager::AIExitMarket(int32 UnitId)
 {
 	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-	MS_Ensure(UnitTable);
+	MS_ENSURE(UnitTable);
 
 	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
 	const FString UnitName = UnitTable->GetUnitName(UnitId);
@@ -68,7 +68,7 @@ void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
 		{
 			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-			MS_Ensure(UnitTable);
+			MS_ENSURE(UnitTable);
 
 			const FString UnitName = UnitTable->GetUnitName(UnitId);
 			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
@@ -87,7 +87,7 @@ void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
 		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
 		{
 			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-			MS_Ensure(UnitTable);
+			MS_ENSURE(UnitTable);
 
 			const FString UnitName = UnitTable->GetUnitName(UnitId);
 			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
@@ -106,7 +106,7 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 		if(MarketLevelScriptActor->IsUnitInMarket(UnitId) == false)
 		{
 			const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-			MS_Ensure(UnitTable);
+			MS_ENSURE(UnitTable);
 
 			const FString UnitName = UnitTable->GetUnitName(UnitId);
 			gWidgetMng.ShowToastMessage(TEXT("\"") + UnitName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));

@@ -21,7 +21,7 @@ void UMS_ChatElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
 		if(!UnitTable)
 		{
-			MS_Ensure(UnitTable);
+			MS_ENSURE(UnitTable);
 			return;
 		}
 

@@ -38,7 +38,7 @@ void UMS_StaffDetailWidget::SetDetail(int32 aStaffId)
 	CPP_ProfileWidget->SetProfile(aStaffId);
 	
 	const TObjectPtr<UMS_StaffAbilityCacheTable> StaffAbilityTable = Cast<UMS_StaffAbilityCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::StaffAbility));
-	MS_Ensure(StaffAbilityTable);
+	MS_ENSURE(StaffAbilityTable);
 
 	if(const FMS_StaffAbility* StaffAbilityData = StaffAbilityTable->GetStaffAbilityData(aStaffId))
 	{

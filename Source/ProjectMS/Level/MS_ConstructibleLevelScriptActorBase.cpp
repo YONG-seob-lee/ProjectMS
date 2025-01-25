@@ -92,14 +92,14 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 			// Set Unit Actor
 			if (!Unit->SetUnitActor(Prop))
 			{
-				MS_LOG_Verbosity(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
-				MS_Ensure(false);
+				MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+				MS_ENSURE(false);
 			}
 		}
 		else
 		{
-			MS_LOG_Verbosity(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
-			MS_Ensure(false);
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+			MS_ENSURE(false);
 		}
 		
 		// Prop Space
@@ -151,7 +151,7 @@ void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(
 		UMS_PropSpaceComponent* PropSpaceComponent = GridDataForPropSpace.PropSpaceComponent;
 		if (!IsValid(PropSpaceComponent))
 		{
-			MS_Ensure(false);
+			MS_ENSURE(false);
 			return;
 		}
 		

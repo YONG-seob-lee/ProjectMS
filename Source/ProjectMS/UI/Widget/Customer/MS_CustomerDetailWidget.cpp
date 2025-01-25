@@ -52,7 +52,7 @@ void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, E
 	else
 	{
 		MS_ERROR(TEXT("Warning!!!!!!!"));
-		MS_Ensure(false);
+		MS_ENSURE(false);
 	}
 
 	CPP_DetailWidgetSwitcher->SetActiveWidgetIndex(static_cast<int32>(aDetailType));

@@ -49,8 +49,8 @@ TArray<FMS_StorageEachSlotStatus> AMS_Storage::GetStorageEachSlotStatus()
 	{
 		if (!IsValid(SlotComponentArray[i]))
 		{
-			MS_LOG_Verbosity(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
-			MS_Ensure(false);
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
+			MS_ENSURE(false);
 
 			// Add Empty
 			StorageEachSlotStatusArray.Add(FMS_StorageEachSlotStatus{});
@@ -79,8 +79,8 @@ FMS_StorageOverallSlotStatus AMS_Storage::GetStorageOverallSlotStatus()
 	{
 		if (!IsValid(SlotComponentArray[i]))
 		{
-			MS_LOG_Verbosity(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
-			MS_Ensure(false);
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Slot component is invaild [Index : %d]"), *MS_FUNC_STRING, i);
+			MS_ENSURE(false);
 
 			// To Do : 문제가 생겼을 때 어떻게 처리해야하는지 확인
 			continue;

@@ -67,7 +67,7 @@ void AMS_Floor::SetMaterial(const FName& MaterialKey)
 		}
 		else
 		{
-			MS_LOG_Verbosity(Error, TEXT("Material Key isn't valid"));
+			MS_LOG_VERBOSITY(Error, TEXT("Material Key isn't valid"));
 		
 			if (Materials.Contains(FName("Normal")))
 			{

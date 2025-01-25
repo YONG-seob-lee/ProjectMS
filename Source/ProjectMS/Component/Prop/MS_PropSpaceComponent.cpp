@@ -38,7 +38,7 @@ void UMS_PropSpaceComponent::GetGridPositions(FIntVector2& aOutStartGridPosition
 {
 	// Prop Yaw
 	float PropYaw = GetOwner()->GetActorRotation().Yaw;
-	MS_LOG_Verbosity(VeryVerbose, TEXT("[%s] PropYaw : %f [PropName : %s]"), *MS_FUNC_STRING, PropYaw, *GetOwner()->GetName());
+	MS_LOG_VERBOSITY(VeryVerbose, TEXT("[%s] PropYaw : %f [PropName : %s]"), *MS_FUNC_STRING, PropYaw, *GetOwner()->GetName());
 
 	bool bTransposeAxis = !(FMath::IsNearlyEqual(PropYaw, 0.f) || FMath::IsNearlyEqual(PropYaw, 180.f) || FMath::IsNearlyEqual(PropYaw, -180.f));
 
