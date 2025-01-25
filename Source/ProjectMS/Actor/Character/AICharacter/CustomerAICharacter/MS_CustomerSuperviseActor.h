@@ -54,6 +54,9 @@ public:
 	// Component
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UBoxComponent> BoxComponent = nullptr;
 
 	// Property

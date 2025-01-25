@@ -58,5 +58,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName StaffName = NAME_None;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName CarriedStuffName = NAME_None;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 TargetStorageBayOrder = INT_MIN;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int TargetStorageBayOrder = INT_MIN;
 };

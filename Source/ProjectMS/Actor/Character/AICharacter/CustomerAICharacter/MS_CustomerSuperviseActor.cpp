@@ -8,6 +8,9 @@
 AMS_CustomerSuperviseActor::AMS_CustomerSuperviseActor(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	RootComponent = SceneComponent;
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->SetupAttachment(SceneRootComponent);
 	BoxComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
