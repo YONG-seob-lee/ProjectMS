@@ -34,3 +34,12 @@ const FVector FMS_GridData::GetGridCenterLocation() const
 		, MS_GridSize.Y * static_cast<float>(GridPosition.Y) + MS_GridSize.Y / 2.f
 		, OwnerZone->GetActorLocation().Z);
 }
+
+FIntVector2 FMS_GridData::ConvertLocationToGridPosition(const FVector& aLocation)
+{
+	// Location이 Grid의 중간 값이라면 나머지 연산에 의해 자동으로 나머지 값 삭제
+	
+	return  FIntVector2(
+	FMath::RoundToInt32(aLocation.X) / MS_GridSizeInt.X,
+	FMath::RoundToInt32(aLocation.Y) / MS_GridSizeInt.Y);
+}

@@ -36,6 +36,10 @@ public:
 	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
 
 	int32 GetGridZoneIndex(const FIntVector2& aGridPosition) const;
+	bool IsGridOpened(const FIntVector2& aGridPosition) const;
+
+	UFUNCTION()
+	void SetWallVisibilities();
 	
 	void ShowUnconstructableGrid(bool bShow);
 	

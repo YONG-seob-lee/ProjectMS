@@ -75,6 +75,8 @@ public:
 	const FVector GetGridLocation() const;
 	const FVector GetGridCenterLocation() const;
 
+	static FIntVector2 ConvertLocationToGridPosition(const FVector& aLocation);
+
 	
 private:
 	UPROPERTY()

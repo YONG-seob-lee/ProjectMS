@@ -66,7 +66,7 @@ public:
 		return Result;
 	}
 	
-	static	EMS_Rotation ConvertRotation(float aValue)
+	static EMS_Rotation ConvertRotation(float aValue)
 	{
 		if (FMath::IsNearlyEqual(aValue, 0.f))
 		{
@@ -89,7 +89,7 @@ public:
 		return EMS_Rotation::Rot0;
 	}
 	
-	static	float ConvertRotation(EMS_Rotation aEnum)
+	static float ConvertRotation(EMS_Rotation aEnum)
 	{
 		switch (aEnum)
 		{
@@ -107,7 +107,7 @@ public:
 		return 0.f;
 	}
 
-	static	EMS_Rotation RotateClockwise(EMS_Rotation aRotation)
+	static EMS_Rotation RotateClockwise(EMS_Rotation aRotation)
 	{
 		switch (aRotation)
 		{

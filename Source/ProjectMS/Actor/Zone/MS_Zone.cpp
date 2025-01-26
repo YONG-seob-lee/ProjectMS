@@ -125,7 +125,7 @@ void AMS_Zone::RegisterDefalutAttachedFloors()
 			FIntVector2 GridPosition = FIntVector2(FMath::RoundToInt32(WorldLocation.X) / MS_GridSizeInt.X
 				, FMath::RoundToInt32(WorldLocation.Y) / MS_GridSizeInt.Y);
 			
-			Prop->SetZoneData(this, GridPosition);
+			Prop->SetZoneData(this);
 
 			RegisterFloorToGrid(GridPosition, Prop);
 		}
@@ -246,12 +246,12 @@ void AMS_Zone::SetZoneOpened(bool aOpened)
 	bOpened = aOpened;
 
 	FloorAttachedComponent->SetVisibility(aOpened, true);
-	Rot0WallAttachedComponent->SetVisibility(aOpened, true);
-	Rot90WallAttachedComponent->SetVisibility(aOpened, true);
-	Rot180WallAttachedComponent->SetVisibility(aOpened, true);
-	Rot270WallAttachedComponent->SetVisibility(aOpened, true);
-
 	ZoneOpendWidgetComponent->SetVisibility(!aOpened);
+
+	if (aOpened)
+	{
+		OnZoneOpendDelegate.Broadcast();
+	}
 }
 
 const FMS_GridData* AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const

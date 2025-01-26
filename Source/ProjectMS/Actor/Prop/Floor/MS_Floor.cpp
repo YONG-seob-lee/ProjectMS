@@ -35,23 +35,13 @@ AMS_Floor::AMS_Floor(const FObjectInitializer& aObjectInitializer)
 void AMS_Floor::BeginPlay()
 {
 	Super::BeginPlay();
-}
 
-void AMS_Floor::SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition)
-{
-	Super::SetZoneData(aOwnerZone, aGridPosition);
-
-/*#if WITH_EDITORONLY_DATA
+	/*#if WITH_EDITORONLY_DATA
 	if (WidgetComponent_ShowGridNum)
 	{
 		if (UMS_EditorTextWidget* EditorTextWidget = Cast<UMS_EditorTextWidget>(WidgetComponent_ShowGridNum->GetWidget()))
 		{
-			if (OwnerZone != nullptr)
-			{
-				int32 OwnerZoneIndex = OwnerZone->GetZoneIndex();
-				EditorTextWidget->SetText(FString::FromInt(OwnerZoneIndex) + FString("-") +
-					FString::FromInt(aGridPosition.X) + FString(",") + FString::FromInt(aGridPosition.Y));
-			}
+			EditorTextWidget->SetText(FString::FromInt(GridPosition.X) + FString(",") + FString::FromInt(GridPosition.Y));
 		}
 	}
 #endif*/

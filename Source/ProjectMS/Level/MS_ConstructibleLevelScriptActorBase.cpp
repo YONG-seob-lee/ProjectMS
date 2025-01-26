@@ -11,6 +11,7 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/Floor/MS_Floor.h"
+#include "Prop/Wall/MS_Wall.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Zone/MS_Zone.h"
 
@@ -30,6 +31,8 @@ void AMS_ConstructibleLevelScriptActorBase::BeginPlay()
 		HasBegun = true;
 		
 		ParsingDefaultPropDatas();
+
+		SetWallVisibilities();
 	}
 }
 
@@ -53,6 +56,8 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		{
 			Zone.Value->SetZoneOpened(false);
 		}
+
+		Zone.Value->OnZoneOpendDelegate.AddDynamic(this, &AMS_ConstructibleLevelScriptActorBase::SetWallVisibilities);
 	}
 	
 	// Prop
@@ -72,12 +77,12 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 			, FMath::RoundToInt32(WorldCenterLocation.Y) / MS_GridSizeInt.Y);
 		
 		int32 PropCenterZoneIndex = GetGridZoneIndex(PropCenterGridPosition);
-		if (PropCenterZoneIndex == -1)
+		if (PropCenterZoneIndex == INDEX_NONE)
 		{
 			continue;
 		}
 
-		Prop->SetZoneData(*Zones.Find(PropCenterZoneIndex), PropCenterGridPosition);
+		Prop->SetZoneData(*Zones.Find(PropCenterZoneIndex));
 
 		// Check Prop Type
 		if (Prop->GetPropType() != EMS_PropType::Furniture && Prop->GetPropType() != EMS_PropType::Structure)
@@ -85,7 +90,7 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 			continue;
 		}
 
-		// Create Unit
+		// Create Unit (임시)
 		TObjectPtr<UMS_FurnitureUnit> Unit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(3, Prop->GetTableIndex(), false));
 		if (IsValid(Unit))
 		{
@@ -226,7 +231,7 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForAllPropSpaceLocations
 
 				int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 
-				if (ZoneIndex == -1 )
+				if (ZoneIndex == INDEX_NONE)
 				{
 					return false;
 				}
@@ -290,7 +295,7 @@ bool AMS_ConstructibleLevelScriptActorBase::GetGridDatasForPropSpaceLocations(
 
 			int32 ZoneIndex = GetGridZoneIndex(GridPosition);
 
-			if (ZoneIndex == -1 )
+			if (ZoneIndex == INDEX_NONE)
 			{
 				return false;
 			}
@@ -325,7 +330,43 @@ int32 AMS_ConstructibleLevelScriptActorBase::GetGridZoneIndex(const FIntVector2&
 	}
 
 	// MS_Ensure(false);
-	return -1;
+	return INDEX_NONE;
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGridPosition) const
+{
+	int32 GridZoneIndex = GetGridZoneIndex(aGridPosition);
+	if (GridZoneIndex == INDEX_NONE)
+	{
+		return false;
+	}
+
+	AMS_Zone* Zone = *Zones.Find(GridZoneIndex); // GetGridZoneIndex에서 ContainsCheck 완료
+	if (IsValid(Zone))
+	{
+		return Zone->IsOpened();
+	}
+
+	return false;
+}
+
+void AMS_ConstructibleLevelScriptActorBase::SetWallVisibilities()
+{
+	// Prop
+	TArray<AActor*> WallActors;
+
+	// ToDo : 스트리밍 레벨 뿐 아니라 모든 레벨의 액터를 불러오나?
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Wall::StaticClass(), WallActors);
+	
+	for (AActor* WallActor : WallActors)
+	{
+		AMS_Wall* Wall = Cast<AMS_Wall>(WallActor);
+		
+		if (IsValid(Wall))
+		{
+			Wall->SetVisibilityByGridOpened(this);
+		}
+	}
 }
 
 void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)

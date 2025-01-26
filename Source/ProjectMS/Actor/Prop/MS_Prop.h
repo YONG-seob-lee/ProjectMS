@@ -44,7 +44,7 @@ public:
 
 	
 	// Zone Data :: Setter
-	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition);
+	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone);
 
 
 	// For Preview

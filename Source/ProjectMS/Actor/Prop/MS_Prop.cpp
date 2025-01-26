@@ -66,6 +66,9 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Property
+	GridPosition = FMS_GridData::ConvertLocationToGridPosition(GetActorLocation());
 }
 
 UMeshComponent* AMS_Prop::GetMeshComponent(int32 aArrayIndex /* = 0 */ ) const
@@ -119,11 +122,9 @@ UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const 
 	return nullptr;
 }
 
-void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition)
+void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 {
 	OwnerZone = aOwnerZone;
-
-	GridPosition = aGridPosition;
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)

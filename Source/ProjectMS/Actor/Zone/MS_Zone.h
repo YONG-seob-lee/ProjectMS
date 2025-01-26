@@ -7,6 +7,8 @@
 #include "Environment/MS_LevelPropDatas.h"
 #include "MS_Zone.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMS_OnZoneOpendDelegate);
+
 UCLASS()
 class PROJECTMS_API AMS_Zone : public AMS_Actor
 {
@@ -110,4 +112,7 @@ private:
 	
 	UPROPERTY()
 	TMap<FIntVector2, FMS_GridData> Grids;
+
+public:
+	FMS_OnZoneOpendDelegate OnZoneOpendDelegate;
 };

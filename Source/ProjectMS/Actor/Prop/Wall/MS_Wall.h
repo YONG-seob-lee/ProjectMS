@@ -16,4 +16,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void GetGridPositionOnBothSides(FIntVector2& OutGridPosition1, FIntVector2& OutGridPosition2) const;
+	
+	void SetVisibilityByGridOpened(class AMS_ConstructibleLevelScriptActorBase* OwnerLevelScriptActor);
 };

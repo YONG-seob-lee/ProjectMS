@@ -17,8 +17,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone, const FIntVector2& aGridPosition) override;
-	
 	virtual void SetMaterial(const FName& MaterialKey);
 
 protected:
