@@ -25,7 +25,7 @@ private:
 	
 	void CreateGrids();
 
-	void RegisterDefalutAttachedProps();
+	void RegisterDefalutAttachedFloors();
 
 
 public:
