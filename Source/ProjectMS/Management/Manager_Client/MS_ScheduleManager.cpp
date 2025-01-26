@@ -7,6 +7,7 @@
 #include "MS_ItemManager.h"
 #include "MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Widget/ListViewElement/ElementData/MS_MonthFinancialElementData.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
 
 UMS_ScheduleManager::UMS_ScheduleManager()
@@ -30,6 +31,21 @@ void UMS_ScheduleManager::Initialize()
 	MS_CHECK(CommonTable);
 
 	IntervalSecondReal = CommonTable->GetParameter01(CommonContents::INTERVAL_SECOND);
+
+	// for test
+	for(int32 i = 1 ; i <=6 ; i++)
+	{
+		UMS_MonthFinancialElementData* Data = MS_NewObject<UMS_MonthFinancialElementData>(this);
+		Data->SetMonth(i);
+		Data->SetCostBuildingStorage(1000 + i * 200);
+		Data->SetMaintenanceCostMart(300 + i * 50);
+		Data->SetLandPurchaseNumber(i + 1);
+		Data->SetAverageAmount(30 + i * 2);
+		Data->SetShelfCapacity(60 + 5 * i);
+		Data->SetStaffSalary(800 + i * 100);
+		Data->SetLoanInterest(600 + i * 100);
+		MonthFinancialElementDatas.Emplace(Data);
+	}
 }
 
 void UMS_ScheduleManager::PostInitialize()
@@ -142,6 +158,12 @@ void UMS_ScheduleManager::TransferItemsToServer(const TMap<int32, int32>& aTrans
 void UMS_ScheduleManager::SetTest()
 {
 	IntervalSecondReal = 30;
+}
+
+void UMS_ScheduleManager::GetFinancialData(TArray<UMS_MonthFinancialElementData*>& aMonthFinancialElementDatas) const
+{
+	aMonthFinancialElementDatas.Empty();
+	aMonthFinancialElementDatas = MonthFinancialElementDatas;
 }
 
 void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)

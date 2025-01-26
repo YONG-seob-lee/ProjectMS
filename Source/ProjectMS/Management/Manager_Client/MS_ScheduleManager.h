@@ -44,6 +44,8 @@ public:
 	FMS_OnUpdateScheduleDelegate OnUpdateScheduleDelegate;
 	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
 	
+	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
+	
 private:
 	void PlayTimer(int32 aGamePlayMinute);
 	void DuringTimer();
@@ -55,7 +57,10 @@ private:
 	int32 CostTimeSecondReal = 0;
 
 	// 현실시간 1초에 게임시간이 몇분 지나가야하는지에 대한 멤버변수
-	int32 IntervalSecondReal = 0; 
+	int32 IntervalSecondReal = 0;
+
+	UPROPERTY()
+	TArray<UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
 
 public:
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;

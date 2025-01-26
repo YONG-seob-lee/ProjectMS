@@ -13,6 +13,7 @@
 #include "Widget/Staff/Modal/MS_HireStaffWidget.h"
 #include "Widget/Staff/Modal/MS_StaffManagementWidget.h"
 #include "Widget/Customer/Modal/MS_CustomerManagementWidget.h"
+#include "Widget/Finance/Modal/MS_FinancialManagementWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -125,7 +126,7 @@ void UMS_GeneralWidget::InitLeftExpander()
 	if(CPP_LeftExpanderButton04)
 	{
 		CPP_LeftExpanderButton04->SetButtonType(EMS_GeneralButtonType::SalesDetail);
-		CPP_LeftExpanderButton04->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedSalesDetailButton);
+		CPP_LeftExpanderButton04->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedFinancialIndicatorButton);
 	}
 }
 
@@ -200,9 +201,11 @@ void UMS_GeneralWidget::OnClickedManageCustomerButton()
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UMS_GeneralWidget::OnClickedSalesDetailButton()
+void UMS_GeneralWidget::OnClickedFinancialIndicatorButton()
 {
-	gWidgetMng.ShowModalWidget();
+	FMS_ModalParameter Parameter;
+	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_FinancialManagementWidget::GetWidgetName());
+	gWidgetMng.ShowModalWidget(Parameter);
 
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }

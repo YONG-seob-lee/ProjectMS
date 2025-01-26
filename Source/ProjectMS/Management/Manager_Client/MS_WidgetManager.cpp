@@ -79,7 +79,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName, 
 	}
 
 	const TObjectPtr<UMS_Widget> Widget = Cast<UMS_Widget>(CreateWidget_Internal(aTypeName, true, bAttachToRoot));
-	MS_CHECK(Widget != nullptr);
+	MS_ENSURE(Widget != nullptr);
 
 	ManagedWidgets.Emplace(aTypeName, Widget);
 

@@ -38,7 +38,7 @@ private:
 	void OnClickedHireStaffButton();
 	void OnClickedManageStaffButton();
 	void OnClickedManageCustomerButton();
-	void OnClickedSalesDetailButton();
+	void OnClickedFinancialIndicatorButton();
 
 	void OnUpdateTimer(int32 ScheduleType);
 	void OnUpdateMinute(int32 aMinute);

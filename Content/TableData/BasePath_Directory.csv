@@ -18,6 +18,7 @@ Id,Directory
 412,UI/Widget/Staff
 413,UI/Widget/Staff/Modal
 414,UI/Widget/Customer/Modal
+415,UI/Widget/Finance/Modal
 1001,UI/Image/Icon
 1002,UI/Image/Icon/Dummy
 1003,UI/Image/Storage
