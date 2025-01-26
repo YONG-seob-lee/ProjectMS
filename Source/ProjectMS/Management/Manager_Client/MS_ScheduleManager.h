@@ -53,6 +53,8 @@ private:
 	FMS_TimeSchedule* TimeSchedule = nullptr;
 
 	int32 CostTimeSecondReal = 0;
+
+	// 현실시간 1초에 게임시간이 몇분 지나가야하는지에 대한 멤버변수
 	int32 IntervalSecondReal = 0; 
 
 public:

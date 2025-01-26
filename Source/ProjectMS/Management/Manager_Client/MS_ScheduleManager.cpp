@@ -146,14 +146,9 @@ void UMS_ScheduleManager::SetTest()
 
 void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)
 {
-	if(IntervalSecondReal != 1)
-	{
-		CostTimeSecondReal = aGamePlayMinute;
-	}
-	else
-	{
-		CostTimeSecondReal = aGamePlayMinute / 2;
-	}
+	// 현실시간 30초에 게임시간 1시간
+	// 예시) 게임시간 2시간을 플레이하려면 현실시간 60초가 필요.
+	CostTimeSecondReal = aGamePlayMinute;
 	
 	MS_LOG(TEXT("====== UMS_ScheduleManager::PlayTimer Start \' In Rate Time : %d \'"), CostTimeSecondReal);
 
