@@ -14,6 +14,7 @@
 #include "Widget/Staff/Modal/MS_StaffManagementWidget.h"
 #include "Widget/Customer/Modal/MS_CustomerManagementWidget.h"
 #include "Widget/Finance/Modal/MS_FinancialManagementWidget.h"
+#include "Widget/Schedule/Modal/MS_ScheduleModalWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -134,7 +135,9 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 {
 	if(LeftButtonType == EMS_GeneralButtonType::Schedule)
 	{
-		gWidgetMng.ShowModalWidget();
+		FMS_ModalParameter Parameter;
+		Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_ScheduleModalWidget::GetWidgetName());
+		gWidgetMng.ShowModalWidget(Parameter);
 	}
 	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
 	{

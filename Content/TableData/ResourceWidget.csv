@@ -16,3 +16,4 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 15,HireStaff,100,15,FALSE,0
 16,CustomerManagement,100,16,FALSE,0
 17,FinancialManagement,100,17,FALSE,0
+18,Schedule,100,18,FALE,0

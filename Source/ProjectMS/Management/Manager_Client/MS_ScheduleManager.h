@@ -44,6 +44,7 @@ public:
 	FMS_OnUpdateScheduleDelegate OnUpdateScheduleDelegate;
 	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
 	
+	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
 	
 private:
@@ -60,7 +61,10 @@ private:
 	int32 IntervalSecondReal = 0;
 
 	UPROPERTY()
-	TArray<UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
+	TArray<class UMS_ScheduleDayElementData*> ScheduleDayElementData;
+	
+	UPROPERTY()
+	TArray<class UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
 
 public:
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;

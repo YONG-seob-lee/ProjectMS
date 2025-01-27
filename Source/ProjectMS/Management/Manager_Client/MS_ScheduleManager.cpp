@@ -8,6 +8,7 @@
 #include "MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MonthFinancialElementData.h"
+#include "Widget/ListViewElement/ElementData/MS_ScheduleDayElementData.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
 
 UMS_ScheduleManager::UMS_ScheduleManager()
@@ -32,6 +33,26 @@ void UMS_ScheduleManager::Initialize()
 
 	IntervalSecondReal = CommonTable->GetParameter01(CommonContents::INTERVAL_SECOND);
 
+	// for test
+	for(int32 i = 1 ; i <= 28; i++)
+	{
+		UMS_ScheduleDayElementData* Data = MS_NewObject<UMS_ScheduleDayElementData>(this);
+		Data->SetDays(i);
+		if( i % 7 == 6)
+		{
+			Data->SetColor(FLinearColor::Blue);
+		}
+		else if( i % 7 == 0)
+		{
+			Data->SetColor(FLinearColor::Red);
+		}
+		else
+		{
+			Data->SetColor(FLinearColor::Black);
+		}
+		ScheduleDayElementData.Emplace(Data);
+	}
+	
 	// for test
 	for(int32 i = 1 ; i <=6 ; i++)
 	{
@@ -60,6 +81,18 @@ void UMS_ScheduleManager::PreFinalize()
 
 void UMS_ScheduleManager::Finalize()
 {
+	for(const auto& Data : MonthFinancialElementDatas)
+	{
+		MS_DeleteObject(Data);
+	}
+	MonthFinancialElementDatas.Empty();
+
+	for(const auto& Data : ScheduleDayElementData)
+	{
+		MS_DeleteObject(Data);
+	}
+	ScheduleDayElementData.Empty();
+	
 	Super::Finalize();
 }
 
@@ -158,6 +191,12 @@ void UMS_ScheduleManager::TransferItemsToServer(const TMap<int32, int32>& aTrans
 void UMS_ScheduleManager::SetTest()
 {
 	IntervalSecondReal = 30;
+}
+
+void UMS_ScheduleManager::GetScheduleData(TArray<UMS_ScheduleDayElementData*>& aScheduleDayElementData)
+{
+	aScheduleDayElementData.Empty();
+	aScheduleDayElementData = ScheduleDayElementData;
 }
 
 void UMS_ScheduleManager::GetFinancialData(TArray<UMS_MonthFinancialElementData*>& aMonthFinancialElementDatas) const
