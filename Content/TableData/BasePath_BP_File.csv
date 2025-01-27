@@ -16,7 +16,8 @@ Id,Directory_Table_Id,BP_File_Name
 15,413,HireStaffWidget
 16,414,CustomerManagementWidget
 17,415,FinancialManagementWidget
-18,416,ScheduleModalWidget
+18,417,ScheduleModalWidget
+19,416,ScheduleDetailWidget
 4001,4001,BP_Counter_6x2_A
 4002,4001,BP_Counter_6x2_B
 4003,4001,BP_Discount_2x2_A
