@@ -6,6 +6,7 @@
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ScheduleDayElementData.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Slate/SceneViewport.h"
 #include "Widget/Schedule/MS_ScheduleDetailWidget.h"
 #include "Widget/System/Modal/MS_ModalWidget.h"
 
@@ -30,7 +31,10 @@ void UMS_ScheduleDayElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 
 FReply UMS_ScheduleDayElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false), InMouseEvent.GetScreenSpacePosition());
+	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	
+	gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false), AbsoluteScreenPosition);
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

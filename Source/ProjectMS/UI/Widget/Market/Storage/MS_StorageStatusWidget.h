@@ -21,6 +21,7 @@ public:
 private:
 	void OnClickedConfirmButton();
 	void OnClickedStorageSlotButton(int32 aSlotIndex);
+	void OnClickedCloseButton();
 
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;
 
@@ -32,4 +33,7 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ShelfStatus> CPP_ShelfStatusWidget = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
 };

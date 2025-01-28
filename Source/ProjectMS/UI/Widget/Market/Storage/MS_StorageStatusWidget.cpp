@@ -43,6 +43,12 @@ void UMS_StorageStatusWidget::NativeConstruct()
 	
 	CPP_TileView->SetScrollbarVisibility(ESlateVisibility::Collapsed);
 	CPP_TileView->SetListItems(StorageItemElementDatas);
+
+	if (CPP_SkipButton)
+	{
+		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
+		CPP_SkipButton->GetOnClickedDelegate().AddUObject(this, &UMS_StorageStatusWidget::OnClickedCloseButton);
+	}
 }
 
 void UMS_StorageStatusWidget::NativeDestruct()
@@ -66,4 +72,9 @@ void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 		CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Visible);
 		CPP_ShelfStatusWidget->SetTileView(aSlotIndex);	
 	}
+}
+
+void UMS_StorageStatusWidget::OnClickedCloseButton()
+{
+	gWidgetMng.DestroyWidget(this);
 }

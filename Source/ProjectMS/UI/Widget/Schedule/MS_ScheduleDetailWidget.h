@@ -19,9 +19,14 @@ public:
 
 	void SetDay(int32 aDay) const;
 private:
+	void OnClickedBlankButton();
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_FinancialIndicator = nullptr;
-
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_FinancialDetailWidget> CPP_FinancialDetailWidget = nullptr;
 };
