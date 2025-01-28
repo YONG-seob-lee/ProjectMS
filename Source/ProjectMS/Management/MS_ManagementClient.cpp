@@ -130,4 +130,9 @@ void UMS_ManagementClient::Tick(float aDeltaTime)
 	{
 		InputManager->Tick(aDeltaTime);
 	}
+
+	if (WidgetManager)
+	{
+		WidgetManager->Tick(aDeltaTime);
+	}
 }

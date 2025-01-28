@@ -32,7 +32,7 @@ void UMS_ScheduleModalWidget::InitWidget(const FName& aTypeName, bool bManaged, 
 	if(CPP_DaysTileView)
 	{
 		TArray<UMS_ScheduleDayElementData*> Data;
-		 gScheduleMng.GetScheduleData(Data);
+		gScheduleMng.GetScheduleData(Data);
 		CPP_DaysTileView->SetElements(TArray<UObject*>(Data));
 	}
 }

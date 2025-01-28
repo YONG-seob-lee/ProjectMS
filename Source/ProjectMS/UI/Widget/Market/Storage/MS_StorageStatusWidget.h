@@ -18,17 +18,12 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
-	FORCEINLINE void SetMousePosition(const FVector2D& aMousePosition) { MousePosition = aMousePosition; }
 private:
 	void OnClickedConfirmButton();
 	void OnClickedStorageSlotButton(int32 aSlotIndex);
 
-	bool bFixedPosition = false;
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;
-	
-	FVector2D MousePosition = FVector2D::ZeroVector;
+
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ConfirmButton = nullptr;
 	

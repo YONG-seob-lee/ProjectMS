@@ -50,25 +50,6 @@ void UMS_StorageStatusWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_StorageStatusWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if(bFixedPosition)
-	{
-		return;
-	}
-	const FVector2D DesiredSize = GetDesiredSize();
-	const float Scale = GetCachedGeometry().Scale;
-	if(Scale != 1.f)
-	{
-		const FVector2D ScaleSize = FVector2D(DesiredSize.X * Scale, DesiredSize.Y * Scale);
-		SetPositionInViewport(MousePosition - ScaleSize);
-		
-		bFixedPosition = true;
-	}
-}
-
 void UMS_StorageStatusWidget::OnClickedConfirmButton()
 {
 	gWidgetMng.DestroyWidget(UMS_StorageStatusWidget::GetWidgetName());

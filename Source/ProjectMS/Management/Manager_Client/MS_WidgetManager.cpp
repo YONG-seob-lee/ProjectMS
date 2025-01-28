@@ -51,6 +51,22 @@ void UMS_WidgetManager::BuiltInFinalize()
 void UMS_WidgetManager::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+
+	if (CustomPositionWidget.IsValid())
+	{
+		const float Scale = CustomPositionWidget->GetCachedGeometry().Scale;
+		if(Scale == 1.f)
+		{
+			return;
+		}
+		
+		const FVector2D DesiredSize = CustomPositionWidget->GetDesiredSize();
+		const FVector2D ScaleSize = FVector2D(DesiredSize.X * Scale, DesiredSize.Y * Scale);
+		CustomPositionWidget->SetPositionInViewport(CustomPosition - ScaleSize);
+		CustomPositionWidget->SetRenderOpacity(1.f);
+		CustomPositionWidget = nullptr;
+		CustomPosition = FVector2D::ZeroVector;
+	}
 }
 
 TObjectPtr<UMS_Widget> UMS_WidgetManager::GetWidget(const FName& aTypeName)
@@ -225,6 +241,16 @@ void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
 	RootWidget->ShowGeneralWidget(bShow);
 }
 
+void UMS_WidgetManager::SetCustomPositionWidget(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition)
+{
+	if (!aWidget)
+	{
+		return;
+	}
+	
+	RequestCustomPosition(aWidget, aPosition);
+}
+
 void UMS_WidgetManager::CreateRoot()
 {
 	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
@@ -321,6 +347,13 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::CreateWidget_Internal_NotManaging(cons
 void UMS_WidgetManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aWidgetData)
 {
 	
+}
+
+void UMS_WidgetManager::RequestCustomPosition(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition)
+{
+	CustomPositionWidget = aWidget;
+	CustomPositionWidget->SetRenderOpacity(0.001f);
+	CustomPosition = aPosition;
 }
 
 UMS_WidgetManager* UMS_WidgetManager::GetInstance()

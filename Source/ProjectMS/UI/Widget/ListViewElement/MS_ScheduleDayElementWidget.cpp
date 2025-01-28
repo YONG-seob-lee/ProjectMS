@@ -30,10 +30,7 @@ void UMS_ScheduleDayElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 
 FReply UMS_ScheduleDayElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	FMS_ModalParameter Parameter;
-	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName());
-	
-	gWidgetMng.ShowModalWidget(Parameter);
+	gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false), InMouseEvent.GetScreenSpacePosition());
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

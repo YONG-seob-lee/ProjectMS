@@ -52,13 +52,17 @@ public:
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 
+	void SetCustomPositionWidget(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition);
+	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
 	void CreateRoot();
 	void AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget);
 	void RefreshContentWidget();
+	
 	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }
+	
 private:
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal(const FName& aTypeName, bool bManaged, bool bAttachToRoot = true);
 	TObjectPtr<class UMS_Widget> CreateWidget_Internal_Managing(const FString& aPath);
@@ -66,11 +70,16 @@ private:
 	
 	void LoadComplete(const FString& aTableName, TObjectPtr<UObject> aWidgetData);
 	
+	void RequestCustomPosition(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition);
+	
 	UPROPERTY()
 	TMap<FName, TWeakObjectPtr<class UMS_Widget>> ManagedWidgets;
 
 	UPROPERTY()
 	TObjectPtr<UMS_RootWidget> RootWidget = nullptr;
+
+	TWeakObjectPtr<UMS_Widget> CustomPositionWidget = nullptr;
+	FVector2D CustomPosition = FVector2D::ZeroVector;
 	
 public:
 	inline static TObjectPtr<UMS_WidgetManager> WidgetManager = nullptr;

@@ -124,10 +124,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 				
 				PropActor->GetUnitHandleId();
 
-				if(const TObjectPtr<UMS_StorageStatusWidget> StorageStatusWidget = Cast<UMS_StorageStatusWidget>(gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false)))
-				{
-					StorageStatusWidget->SetMousePosition(aPosition);
-				}
+				gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false), aPosition);
 			}
 		}
 	}
