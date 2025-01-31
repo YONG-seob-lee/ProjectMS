@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
-#include "Environment/MS_LevelPropDatas.h"
+#include "Level/MS_LevelDefine.h"
 #include "MS_PropSpaceComponent.generated.h"
 
 

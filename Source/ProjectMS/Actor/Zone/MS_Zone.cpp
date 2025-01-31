@@ -7,7 +7,7 @@
 #include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Environment/MS_LevelPropDatas.h"
+#include "Level/MS_LevelDefine.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_LevelPropDatas.generated.h"
+#include "MS_LevelDefine.generated.h"
 
 
 #define MS_GridSize FVector(50.f, 50.f, 50.f)

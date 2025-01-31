@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_LevelScriptActorBase.h"
-#include "Environment/MS_LevelPropDatas.h"
+#include "Level/MS_LevelDefine.h"
 #include "MS_ConstructibleLevelScriptActorBase.generated.h"
 
 UCLASS()

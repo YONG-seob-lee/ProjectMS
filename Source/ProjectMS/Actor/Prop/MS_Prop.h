@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Actor.h"
-#include "Environment/MS_LevelPropDatas.h"
+#include "Level/MS_LevelDefine.h"
 #include "MS_Prop.generated.h"
 
 
