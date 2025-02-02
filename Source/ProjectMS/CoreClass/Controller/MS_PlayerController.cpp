@@ -1,8 +1,8 @@
 ﻿#include "MS_PlayerController.h"
 
 #include "MS_ManagementClient.h"
-#include "CheatManager/MS_CheatManager.h"
-#include "Component/MS_TestServer.h"
+#include "Test/CheatManager/MS_CheatManager.h"
+#include "Test/TestServer/MS_TestServer.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"

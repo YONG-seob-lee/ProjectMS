@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "Component/MS_TestServer.h"
+#include "Test/TestServer/MS_TestServer.h"
 #include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_Staff.h"
 #include "Table/RowBase/MS_StorageData.h"

@@ -4,7 +4,7 @@
 #include "MS_StaffDetailWidget.h"
 
 #include "Button/MS_Button.h"
-#include "Component/MS_TestServer.h"
+#include "Test/TestServer/MS_TestServer.h"
 #include "Components/CanvasPanel.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "Manager_Client/MS_WidgetManager.h"

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "Component/MS_TestServer.h"
+#include "Test/TestServer/MS_TestServer.h"
 #include "MS_ScheduleManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleDelegate, int32);
