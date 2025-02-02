@@ -24,7 +24,7 @@ void UMS_MarketEndModal::OnClickedClosingPlayButton()
 	gScheduleMng.TransferServer();
 	
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::Stage01);
+	Command->SetLevelType(EMS_LevelType::LobbyLevel);
 	Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);

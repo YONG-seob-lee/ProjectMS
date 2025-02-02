@@ -34,7 +34,7 @@ void UMS_LobbyWidget::OnClickedStartButton()
 		{
 			gInputMng.SetAllowInteractActor(true);
 		gWidgetMng.Create_Widget(UMS_TownWidget::GetWidgetName());
-		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
+		gWidgetMng.SetGeneralWidget(EMS_LevelType::LobbyLevel);
 		});
 	});
 

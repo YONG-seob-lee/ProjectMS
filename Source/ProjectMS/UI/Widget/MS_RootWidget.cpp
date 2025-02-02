@@ -237,11 +237,11 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
 	}
-	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
+	/*else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
-	}
+	}*/
 	else if(aLevelType == EMS_LevelType::MarketLevel)
 	{
 		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
