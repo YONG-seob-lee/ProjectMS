@@ -129,19 +129,6 @@ TArray<FName> UMS_ItemCacheTable::GetAllItemNames()
 	return ItemNameArray;
 }
 
-const int32 UMS_ItemCacheTable::GetItemIDByName(const FName& aItemName)
-{
-	for (const auto& PairData : ItemDatas)
-	{
-		if (PairData.Value != nullptr && PairData.Value->ItemName == aItemName)
-		{
-			return PairData.Value->Id;
-		}
-	}
-
-	return INDEX_NONE;
-}
-
 int32 UMS_ItemCacheTable::GetUnitBaseBPIndex(int32 aId) const
 {
 	if (FMS_ItemData* ItemData = GetItem(aId))

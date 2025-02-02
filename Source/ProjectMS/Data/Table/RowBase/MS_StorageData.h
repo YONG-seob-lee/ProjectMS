@@ -14,8 +14,6 @@ struct FMS_StorageData : public FTableRowBase
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	int32 Index = 0;
-	UPROPERTY(EditAnywhere)
 	int32 StorageType = 0;
 	UPROPERTY(EditAnywhere)
 	int32 TemperatureType = 0;

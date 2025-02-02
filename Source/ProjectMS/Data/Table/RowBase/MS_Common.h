@@ -15,8 +15,6 @@ struct FMS_Common : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	int32 Id = 0;
-	UPROPERTY(EditAnywhere)
 	FString Contents = FString();
 	UPROPERTY(EditAnywhere)
 	int32 Parameter01 = 0;

@@ -26,7 +26,6 @@ public:
 	UTexture2D* GetItemImage(int32 aItemId);
 	const FMS_ItemData* GetItemByName(const FName& aItemName);
 	TArray<FName> GetAllItemNames();
-	const int32 GetItemIDByName(const FName& aItemName);
 
 	virtual int32 GetUnitBaseBPIndex(int32 aId) const override;
 

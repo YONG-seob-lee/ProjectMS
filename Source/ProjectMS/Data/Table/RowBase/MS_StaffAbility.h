@@ -12,8 +12,6 @@ struct FMS_StaffAbility : public FTableRowBase
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	int32 Id = 0;
-	UPROPERTY(EditAnywhere)
 	int32 StaffId = 0;
 	UPROPERTY(EditAnywhere)
 	int32 Work = 0;
