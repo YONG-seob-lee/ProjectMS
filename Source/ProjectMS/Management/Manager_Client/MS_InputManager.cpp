@@ -56,15 +56,12 @@ void UMS_InputManager::Initialize()
 	FSlateApplication::Get().RegisterInputPreProcessor(TouchInputProcessor);
 	TouchInputProcessor->Initialize();
 	
-	GetWorld()->GetTimerManager().SetTimer(HandlePointerMoveTimerHandle, this, &UMS_InputManager::HandlePointerMove, 0.01f, true);
 }
 
 void UMS_InputManager::Finalize()
 {
 	FSlateApplication::Get().UnregisterInputPreProcessor(TouchInputProcessor);
 	TouchInputProcessor->Finalize();
-	
-	GetWorld()->GetTimerManager().ClearTimer(HandlePointerMoveTimerHandle);
 	
 	Super::Finalize();
 }
@@ -88,8 +85,6 @@ void UMS_InputManager::SetupInputComponent(const TObjectPtr<UInputComponent>& aI
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(aInputComponent);
 	MS_CHECK(EnhancedInputComponent);
 
-	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Started, this, TEXT("HandlePointerDown"));
-	EnhancedInputComponent->BindAction(PointerPressInputAction, ETriggerEvent::Completed, this, TEXT("HandlePointerUp"));
 	EnhancedInputComponent->BindAction(PinchInputAction, ETriggerEvent::Started, this, TEXT("HandlePinchAction"));
 
 	// DEBUG
@@ -119,205 +114,6 @@ FVector2D UMS_InputManager::AcquirePointerPositionOnViewport() const
 	PlayerController->GetInputTouchState(ETouchIndex::Touch1, PointerPosition.X, PointerPosition.Y, CurrentlyTouchPressFlag);
 #endif
 	return PointerPosition;
-}
-
-void UMS_InputManager::HandlePointerDown(const FInputActionValue& aValue)
-{
-	// if (PointerPressFlag == true)
-	// {
-	// 	return;
-	// }
-	// PointerPressFlag = true;
-	//
-	// PointerDownTimestamp = FDateTime::UtcNow().GetTicks();
-	// PointerDownPosition = AcquirePointerPositionOnViewport();
-	// MS_LOG(TEXT("================================ PointerDownPosition : %s"), *PointerDownPosition.ToString());
-	// FHitResult InteractableHitResult = {};
-	// GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	//
-	// UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// if (IsValid(CurrentModeState))
-	// {
-	// 	CurrentModeState->OnInputPointerDownEvent(PointerDownPosition, InteractableHitResult);
-	// }
-	//
-	// //OnPointerDownDelegate.Broadcast(PointerDownPosition, InteractableHitResult);
-	//
-	// const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-	// MS_CHECK(CommonTable);
-	//
-	// ElapsedHoldTime = 0.f;
-	// GetWorld()->GetTimerManager().SetTimer(HandlePointerHoldTimerHandle, this, &UMS_InputManager::HandlePointerHold, CommonTable->GetParameter02(CommonContents::POINTER_HOLD_DELAY), true);
-}
-
-void UMS_InputManager::HandlePointerUp(const FInputActionValue& aValue)
-{
-	// if (PointerPressFlag == false)
-	// {
-	// 	return;
-	// }
-	// PointerPressFlag = false;
-	//
-	// PointerUpTimestamp = FDateTime::UtcNow().GetTicks();
-	// PointerUpPosition = AcquirePointerPositionOnViewport();
-	//
-	// FHitResult InteractableHitResult = {};
-	// GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	//
-	// UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// if (IsValid(CurrentModeState))
-	// {
-	// 	CurrentModeState->OnInputPointerUpEvent(PointerUpPosition, InteractableHitResult);
-	// }
-	//
-	// //OnPointerUpDelegate.Broadcast(PointerUpPosition, InteractableHitResult);
-	//
-	// ElapsedHoldTime = 0.f;
-	// GetWorld()->GetTimerManager().ClearTimer(HandlePointerHoldTimerHandle);
-	// PointerDownUpIntervalTime = (PointerUpTimestamp - PointerDownTimestamp) / IntervalTimeValue::Separation;
-	//
-	// HandlePointerClick();
-}
-
-void UMS_InputManager::HandlePointerHold()
-{
-	// MS_LOG_Verbosity(Warning, TEXT("ElapsedHoldTime : %f"), ElapsedHoldTime);
-	//
-	// PointerHoldPosition = AcquirePointerPositionOnViewport();
-	//
-	// FHitResult InteractableHitResult = {};
-	// GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	//
-	// UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// if (IsValid(CurrentModeState))
-	// {
-	// 	CurrentModeState->OnInputPointerHold(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
-	// }
-	
-	//OnPointerHoldDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
-}
-
-void UMS_InputManager::HandlePointerClick()
-{
-	// const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-	// MS_CHECK(CommonTable);
-	//
-	// if (PointerDownUpIntervalTime < CommonTable->GetParameter02(CommonContents::POINTER_CLICK_DELAY))
-	// {
-	// 	PointerClickIntervalTime = (FDateTime::UtcNow().GetTicks() - PointerClickTimestamp) / IntervalTimeValue::Separation;
-	// 	PointerClickTimestamp = FDateTime::UtcNow().GetTicks();
-	// 	PointerClickPosition = AcquirePointerPositionOnViewport();
-	//
-	// 	FHitResult InteractableHitResult = {};
-	// 	GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
-	// 	
-	// 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// 	if (IsValid(CurrentModeState))
-	// 	{
-	// 		CurrentModeState->OnInputPointerClick(PointerClickPosition, InteractableHitResult);
-	// 	}
-	// 	
-	// 	OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult);
-	// }
-}
-
-void UMS_InputManager::HandlePointerMove()
-{
-	// FVector2D PreviousPointerMovePosition = PointerMovePosition;
-	// PointerMovePosition = AcquirePointerPositionOnViewport();
-	//
-	// if (PreviousPointerMovePosition.Equals(FVector2D(-FLT_MAX, -FLT_MAX)) == true)
-	// {
-	// 	PointerMovePositionDelta = FVector2D::ZeroVector;
-	// }
-	// else
-	// {
-	// 	PointerMovePositionDelta = PointerMovePosition - PreviousPointerMovePosition;
-	// }
-	//
-	// PointerMovePositionDeltaArray.Add(PointerMovePositionDelta);
-	// if (PointerMovePositionDeltaArray.Num() > PointerParameter::MoveDeltaArrayMax)
-	// {
-	// 	PointerMovePositionDeltaArray.RemoveAt(PointerParameter::ArrayFirst, EAllowShrinking::Yes);
-	// }
-	//
-	// PointerMovePositionDeltaTrend = FVector2D::ZeroVector;
-	// for (int i = 0; i < PointerMovePositionDeltaArray.Num(); ++i)
-	// {
-	// 	PointerMovePositionDeltaTrend += PointerMovePositionDeltaArray[i];
-	// }
-	// PointerMovePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
-	//
-	// UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// if (IsValid(CurrentModeState))
-	// {
-	// 	CurrentModeState->OnInputPointerMove(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
-	// }
-	//
-	// OnPointerMoveDelegate.Broadcast(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
-	//
-	// HandlePointerGlide();
-}
-
-void UMS_InputManager::HandlePointerGlide()
-{
-	// DEBUG
-	// if (PointerPressFlag == true || MouseRightButtonPressFlag == true)
-	// {
-	// 	FVector2D PreviousPointerGlidePosition = PointerGlidePosition;
-	// 	PointerGlidePosition = PointerMovePosition;
-	// 	if (PreviousPointerGlidePosition.Equals(FVector2D(-FLT_MAX, -FLT_MAX)) == true)
-	// 	{
-	// 		PointerGlidePositionDelta = FVector2D::ZeroVector;
-	// 	}
-	// 	else
-	// 	{
-	// 		PointerGlidePositionDelta = PointerGlidePosition - PreviousPointerGlidePosition;
-	// 	}
-	//
-	// 	PointerGlidePositionDeltaArray.Add(PointerGlidePositionDelta);
-	// 	if (PointerGlidePositionDeltaArray.Num() > PointerParameter::MoveDeltaArrayMax)
-	// 	{
-	// 		PointerGlidePositionDeltaArray.RemoveAt(PointerParameter::ArrayFirst, EAllowShrinking::Yes);
-	// 	}
-	//
-	// 	PointerGlidePositionDeltaTrend = FVector2D::ZeroVector;
-	// 	for (int i = 0; i < PointerGlidePositionDeltaArray.Num(); ++i)
-	// 	{
-	// 		PointerGlidePositionDeltaTrend += PointerGlidePositionDeltaArray[i];
-	// 	}
-	// 	PointerGlidePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
-	//
-	// 	if (PointerPressFlag == true)
-	// 	{
-	// 		UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// 		if (IsValid(CurrentModeState))
-	// 		{
-	// 			CurrentModeState->OnInputPointerGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
-	// 		}
-	// 		
-	// 		OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
-	// 	}
-	//
-	// 	// DEBUG
-	// 	if (MouseRightButtonPressFlag == true)
-	// 	{
-	// 		UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-	// 		if (IsValid(CurrentModeState))
-	// 		{
-	// 			CurrentModeState->OnMouseRightButtonGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
-	// 		}
-	// 		
-	// 		OnMouseRightButtonGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
-	// 	}
-	// }
-	// else
-	// {
-	// 	PointerGlidePosition = { -FLT_MAX, -FLT_MAX };
-	// 	PointerGlidePositionDelta = { -FLT_MAX, -FLT_MAX };
-	// 	PointerGlidePositionDeltaArray.Empty();
-	// 	PointerGlidePositionDeltaTrend = { -FLT_MAX, -FLT_MAX };
-	// }
 }
 
 void UMS_InputManager::HandlePinchAction(const FInputActionValue& aValue)

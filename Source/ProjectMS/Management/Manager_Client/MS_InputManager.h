@@ -37,13 +37,6 @@ public:
 public:
 	FVector2D AcquirePointerPositionOnViewport() const;
 
-	UFUNCTION() void HandlePointerDown(const FInputActionValue& aValue);
-	UFUNCTION() void HandlePointerUp(const FInputActionValue& aValue);
-	UFUNCTION() void HandlePointerHold();
-	UFUNCTION() void HandlePointerClick();
-	UFUNCTION() void HandlePointerMove();
-	UFUNCTION() void HandlePointerGlide();
-
 	UFUNCTION() void HandlePinchAction(const FInputActionValue& aValue);
 
 	// DEBUG
@@ -71,7 +64,6 @@ private:
 	UPROPERTY() AActor* PointerUpActor = nullptr;
 	UPROPERTY() float PointerDownUpIntervalTime = -FLT_MAX;
 
-	FTimerHandle HandlePointerMoveTimerHandle = {};
 	UPROPERTY() FVector2D PointerMovePosition = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() FVector2D PointerMovePositionDelta = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() TArray<FVector2D> PointerMovePositionDeltaArray = {};
@@ -82,7 +74,6 @@ private:
 	UPROPERTY() TArray<FVector2D> PointerGlidePositionDeltaArray = {};
 	UPROPERTY() FVector2D PointerGlidePositionDeltaTrend = { -FLT_MAX, -FLT_MAX };
 
-	FTimerHandle HandlePointerHoldTimerHandle = {};
 	float ElapsedHoldTime;
 	UPROPERTY() FVector2D PointerHoldPosition = { -FLT_MAX, -FLT_MAX };
 	UPROPERTY() AActor* PointerHoldActor = nullptr;

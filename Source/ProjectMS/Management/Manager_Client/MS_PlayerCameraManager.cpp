@@ -1,5 +1,6 @@
 ﻿#include "Management/Manager_Client/MS_PlayerCameraManager.h"
 
+#include "MS_SceneManager.h"
 #include "Camera/CameraModifier_CameraShake.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,6 +16,8 @@
 
 #include "Camera/CameraEffect/MS_CameraEffect.h"
 #include "Camera/CameraEffect/CameraShake/MS_CameraShake.h"
+#include "LevelScriptActors/MS_MarketLevelScriptActor.h"
+#include "LevelScriptActors/MS_StageLevelScriptActor.h"
 
 namespace ViewCamera
 {
@@ -288,8 +291,18 @@ void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVe
 		return;
 	}
 
+	if(const TObjectPtr<AMS_StageLevelScriptActor> StageLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		aPointerGlidePositionDeltaTrend = FVector2D(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X);
+		MoveDensity = 3.f;
+	}
+	else if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		MoveDensity = 0.8f;
+	}
+	
 	ViewCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
-	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * 0.85f);
+	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveDensity);
 }
 
 void AMS_PlayerCameraManager::PedestalUp(const FInputActionValue& aValue)

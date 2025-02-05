@@ -85,6 +85,7 @@ private:
 	float ZoomMagnification = 1.0f;
 	FTimerHandle ZoomTimerHandle = {};
 	float MoveSensitivity = 1.0f;
+	float MoveDensity = 1.f;
 	float TurnSensitivity = 1.0f;
 	FTimerHandle GenerateInertiaForceTimerHandle = {};
 	FVector InertiaForceMagnitude = {};
