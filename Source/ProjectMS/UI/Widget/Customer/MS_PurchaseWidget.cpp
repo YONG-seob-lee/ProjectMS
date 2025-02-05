@@ -7,7 +7,6 @@
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 namespace Time
@@ -43,9 +42,6 @@ void UMS_PurchaseWidget::SetPurchaseOne_Internal(MS_Handle aUnitHandle) const
 		int32 ComeOutMinute = 0;
 		MarketLevelScriptActor->GetUnitComeMarketData(aUnitHandle, ComeInMinute, ComeOutMinute);
 
-		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-		MS_ENSURE(UnitTable);
-		
 		CPP_ComeInMarketText->SetText(FText::FromString(FString::Format(TEXT("   들어온 시각 : {0}시 {1}분"), {ComeInMinute / Time::MinutePerOneHour, ComeInMinute % Time::MinutePerOneHour})));
 		if(aUnitHandle == INDEX_NONE)
 		{

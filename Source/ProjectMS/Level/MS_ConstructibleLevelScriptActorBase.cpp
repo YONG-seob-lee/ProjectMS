@@ -91,7 +91,7 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		}
 
 		// Create Unit (임시)
-		TObjectPtr<UMS_FurnitureUnit> Unit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(3, Prop->GetTableIndex(), false));
+		TObjectPtr<UMS_FurnitureUnit> Unit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, Prop->GetTableIndex(), false));
 		if (IsValid(Unit))
 		{
 			// Set Unit Actor

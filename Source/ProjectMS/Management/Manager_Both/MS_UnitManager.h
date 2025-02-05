@@ -29,9 +29,9 @@ public:
 	void DestroyAllUnits();
 
 	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
-	
-	TObjectPtr<class UMS_UnitBase> CreateUnit(int32 aUnitTableId, int32 aChildTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
-	
+	void GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
+
+	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aUnitTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);
 
 	FOnUpdateChattingDelegate OnChattingDelegate;
@@ -42,10 +42,9 @@ protected:
 	void DestroyUnit_Internal(TObjectPtr<class UMS_UnitBase> aUnitBase);
 
 private:
-	MS_Handle MakeUnitHandle(int32 aUnitTableId, int32 aChildTableId);
+	TSubclassOf<UMS_UnitBase> GetUnitTypeClass(EMS_UnitType aUnitType);
 	
-	struct FMS_ResourceUnit* GetResourceUnitData(int32 aUnitTableId) const;
-
+	MS_Handle MakeUnitHandle();
 	
 private:
 	UPROPERTY()

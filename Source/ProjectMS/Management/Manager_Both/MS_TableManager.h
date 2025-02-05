@@ -14,21 +14,20 @@ enum class EMS_TableDataType : uint8
 {
 	Common = 0							UMETA(DisplayName = "Common"),
 	ResourceWidget = 1					UMETA(DisplayName = "ResourceWidget"),
-	ResourceUnit = 2					UMETA(DisplayName = "ResourceUnit"),
 
-	BasePathDirectory = 3				UMETA(DisplayName = "BasePathDirectory"),
-	BasePathBPFile = 4					UMETA(DisplayName = "BasePathBP_File"),
-	BasePathImgFile	= 5					UMETA(DisplayName = "BasePathImgFile"),
+	BasePathDirectory = 2				UMETA(DisplayName = "BasePathDirectory"),
+	BasePathBPFile = 3					UMETA(DisplayName = "BasePathBP_File"),
+	BasePathImgFile	= 4					UMETA(DisplayName = "BasePathImgFile"),
 
-	Level = 6							UMETA(DisplayName = "Level"),
-	PlayerStatus = 7					UMETA(DisplayName = "PlayerStatus"),
-	Staff = 8							UMETA(DisplayName = "Staff"),
-	StaffAbility = 9					UMETA(DisplayName = "StaffAbility"),
+	Level = 5							UMETA(DisplayName = "Level"),
+	PlayerStatus = 6					UMETA(DisplayName = "PlayerStatus"),
+	Staff = 7							UMETA(DisplayName = "Staff"),
+	StaffAbility = 8					UMETA(DisplayName = "StaffAbility"),
 	
-	ItemData = 10						UMETA(DisplayName = "ItemData"),
-	Furniture = 11						UMETA(DisplayName = "Furniture"),
-	Storage = 12						UMETA(DisplayName = "Storage"),
-	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
+	ItemData = 9						UMETA(DisplayName = "ItemData"),
+	Furniture = 10						UMETA(DisplayName = "Furniture"),
+	Storage = 11						UMETA(DisplayName = "Storage"),
+	MenuElement = 12					UMETA(DisplayName = "MenuElement"),
 };
 
 namespace MS_LocalizedTableId

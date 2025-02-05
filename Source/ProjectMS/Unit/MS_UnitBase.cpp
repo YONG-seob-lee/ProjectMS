@@ -6,14 +6,13 @@
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
 #include "Manager_Both/MS_UnitManager.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
 
 
-void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
+void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
 	// Unit Handle
 	UnitHandle = aUnitHandle;
-	
+	UnitType = aUnitType;
 	if (UnitHandle == InvalidUnitHandle)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
@@ -24,21 +23,9 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 a
 
 	// Table
 	UnitTableId = aUnitTableId;
-	if (UnitTableId == INDEX_NONE)
+	if (UnitTableId == INDEX_NONE && UnitType != EMS_UnitType::Spline)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-
-		return;
-	}
-
-	ChildTableId = aChildTableId;
-
-	// Table Data Cache
-	ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
-	if(ResourceUnitData == nullptr)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
 		MS_ENSURE(false);
 	}
 }
@@ -78,55 +65,11 @@ bool UMS_UnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRo
 
 		return false;
 	}
-
-	if (ChildTableId == INDEX_NONE)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ChildTableId is invalid"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-
-		return false;
-	}
-	
-	if(ResourceUnitData == nullptr)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-		
-		return false;
-	}
-	
 	return true;
 }
 
 void UMS_UnitBase::DestroyUnitActor()
 {
-}
-
-UClass* UMS_UnitBase::GetBlueprintClass() const
-{
-	if (UnitTableId == INDEX_NONE)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is None"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-
-		return nullptr;
-	}
-
-	if (ChildTableId == INDEX_NONE)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ChildTableId is None"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-
-		return nullptr;
-	}
-	
-	TObjectPtr<UMS_CacheTable> CacheTable = gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit);
-	if (UMS_ResourceUnitCacheTable* ResourceUnitCacheTable = Cast<UMS_ResourceUnitCacheTable>(CacheTable))
-	{
-		return ResourceUnitCacheTable->GetBlueprintClass(UnitTableId, ChildTableId);
-	}
-
-	return nullptr;
 }
 
 TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot,

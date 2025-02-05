@@ -6,11 +6,11 @@
 #include "Manager_Both/MS_UnitManager.h"
 
 
-void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
+void UMS_ItemUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
 
-	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, ChildTableId);
+	ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aUnitTableId);
 	MS_ENSURE(ItemData != nullptr);
 }
 

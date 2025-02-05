@@ -6,7 +6,7 @@
 #include "MS_Define.h"
 #include "Components/TextBlock.h"
 #include "ElementData/MS_BehaviorElementData.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
+#include "Table/Caches/MS_StaffCacheTable.h"
 
 namespace BehaviorTime
 {
@@ -20,16 +20,13 @@ void UMS_BehaviorElementWidget::NativeOnListItemObjectSet(UObject* aListItemObje
 
 	if(const TObjectPtr<UMS_BehaviorElementData> BehaviorElementData = Cast<UMS_BehaviorElementData>(aListItemObject))
 	{
-		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-		if(!UnitTable)
-		{
-			MS_ENSURE(UnitTable);
-			return;
-		}
+		const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
+		MS_ENSURE(StaffTable);
 
-		const FString UnitName = UnitTable->GetUnitName(BehaviorElementData->GetUnitHandle());
+		FName StaffName = FName();
+		StaffTable->GetStaffName(BehaviorElementData->GetUnitHandle(), StaffName);
 		
-		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {UnitName, BehaviorElementData->GetMinute() / BehaviorTime::MinutePerOneHour, BehaviorElementData->GetMinute() % BehaviorTime::MinutePerOneHour})));
+		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {StaffName.ToString(), BehaviorElementData->GetMinute() / BehaviorTime::MinutePerOneHour, BehaviorElementData->GetMinute() % BehaviorTime::MinutePerOneHour})));
 		CPP_BehaviorDesc->SetText(BehaviorElementData->GetBehavior());
 	}
 }

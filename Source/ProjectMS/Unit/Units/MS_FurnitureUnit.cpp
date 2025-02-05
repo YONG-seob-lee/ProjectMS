@@ -6,9 +6,9 @@
 #include "MS_Actor.h"
 
 
-void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
+void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
 }
 
 void UMS_FurnitureUnit::Finalize()

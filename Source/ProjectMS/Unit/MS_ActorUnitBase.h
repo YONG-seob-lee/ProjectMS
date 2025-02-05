@@ -15,7 +15,7 @@ class PROJECTMS_API UMS_ActorUnitBase : public UMS_UnitBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId) override;
+	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId) override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
@@ -24,6 +24,9 @@ public:
 	virtual void DestroyUnitActor() override;
 
 	virtual bool SetUnitActor(TObjectPtr<class AMS_Actor> aUnitActor, bool bForced = false);
+
+	FVector GetUnitPosition() const;
+	
 	
 protected:
 	TObjectPtr<class AMS_Actor> CreateActor(const FVector& aVector, const FRotator& aRotator);

@@ -30,3 +30,16 @@ void UMS_StaffCacheTable::GetStaffDatas(TMap<int32, FMS_Staff*>& aStaffDatas)
 	aStaffDatas.Empty();
 	aStaffDatas = StaffDatas;
 }
+
+void UMS_StaffCacheTable::GetStaffName(int32 aStaffId, FName& aStaffName)
+{
+	aStaffName = FName();
+	
+	FMS_Staff** Staff = StaffDatas.Find(aStaffId);
+	if(!Staff)
+	{
+		return;
+	}
+
+	aStaffName = (*Staff)->StaffName;
+}

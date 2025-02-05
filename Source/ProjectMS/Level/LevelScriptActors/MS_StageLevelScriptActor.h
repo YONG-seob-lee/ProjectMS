@@ -18,6 +18,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
 private:
+	void ParsingSplineActors() const;
+	
 	UFUNCTION()
 	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);
 	

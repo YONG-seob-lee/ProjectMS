@@ -20,7 +20,7 @@
 
 UMS_DebugControlStorageItemUI::UMS_DebugControlStorageItemUI(const FObjectInitializer& aObjectInitializer) : Super(aObjectInitializer)
 {
-	bIsFocusable = true;
+	//bIsFocusable = true;
 }
 
 void UMS_DebugControlStorageItemUI::NativeOnInitialized()

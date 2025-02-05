@@ -6,8 +6,9 @@
 #include "Button/MS_CustomerButton.h"
 #include "Components/ComboBoxString.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
+#include "Units/MS_BasePlayerUnit.h"
 #include "Widget/Customer/MS_CustomerDetailWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -88,13 +89,18 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 
 	TMap<MS_Handle, bool> UnitsHandleMap;
 	MarketLevelScriptActor->GetUnitsHandle(UnitsHandleMap);
-	const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-	MS_ENSURE(UnitTable);
-
 	TArray<MS_Handle> UnitsHandleArray;
 	UnitsHandleMap.GenerateKeyArray(UnitsHandleArray);
-	
-	UnitTable->GetUnitsName(UnitsHandleArray, UnitsName);
+
+	for(const auto& UnitHandle : UnitsHandleArray)
+	{
+		TObjectPtr<UMS_BasePlayerUnit> Unit = Cast<UMS_BasePlayerUnit>(gUnitMng.GetUnit(UnitHandle));
+		if(!Unit)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
+		}
+		UnitsName.Emplace(Unit->GetUnitName().ToString(), Unit->GetUnitTableId());
+	}
 
 	CPP_PersonComboBox->ClearOptions();
 	

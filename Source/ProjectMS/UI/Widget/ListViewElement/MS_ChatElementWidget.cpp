@@ -6,7 +6,7 @@
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ChatElementData.h"
 #include "Manager_Both/MS_TableManager.h"
-#include "Table/Caches/MS_ResourceUnitCacheTable.h"
+#include "Table/Caches/MS_StaffCacheTable.h"
 
 namespace ChatTime
 {
@@ -18,16 +18,13 @@ void UMS_ChatElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 
 	if(const TObjectPtr<UMS_ChatElementData> ChatElementData = Cast<UMS_ChatElementData>(aListItemObject))
 	{
-		const TObjectPtr<UMS_ResourceUnitCacheTable> UnitTable = Cast<UMS_ResourceUnitCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ResourceUnit));
-		if(!UnitTable)
-		{
-			MS_ENSURE(UnitTable);
-			return;
-		}
+		const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
+		MS_ENSURE(StaffTable);
 
-		const FString UnitName = UnitTable->GetUnitName(ChatElementData->GetUnitHandle());
+		FName StaffName = FName();
+		StaffTable->GetStaffName(ChatElementData->GetUnitHandle(), StaffName);
 		
-		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {UnitName, ChatElementData->GetMinute() / ChatTime::MinutePerOneHour, ChatElementData->GetMinute() % ChatTime::MinutePerOneHour})));
+		CPP_Minute->SetText(FText::FromString(FString::Format(TEXT("({0}){1}시 {2}분 : "), {StaffName.ToString(), ChatElementData->GetMinute() / ChatTime::MinutePerOneHour, ChatElementData->GetMinute() % ChatTime::MinutePerOneHour})));
 		CPP_ChatDesc->SetText(ChatElementData->GetChatting());
 	}
 

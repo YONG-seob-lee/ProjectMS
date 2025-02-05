@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/LevelScriptActor.h"
-#include "Table/RowBase/MS_ResourceUnit.h"
 #include "MS_LevelScriptActorBase.generated.h"
 
 namespace Practice

@@ -4,8 +4,12 @@
 #include "MS_StageLevelScriptActor.h"
 
 #include "MS_Actor.h"
+#include "Kismet/GameplayStatics.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
+#include "Units/MS_SplineUnit.h"
+#include "Vehicle/MS_VehicleSplineActor.h"
 
 
 // Sets default values
@@ -25,6 +29,8 @@ void AMS_StageLevelScriptActor::BeginPlay()
 
 	gCameraMng.LocateAndRotateCamera(FVector(12600.f, -6380.f, 3200.f), FRotator(0.f, -90.f, 0.f), EMS_ViewCameraType::QuarterView);
 	gCameraMng.LocateAndRotateCamera(FVector(13310.f, -8000.f, 390.f), FRotator(45.f, -90.f, 0.f), EMS_ViewCameraType::SideView);
+
+	ParsingSplineActors();
 }
 
 // Called every frame
@@ -37,8 +43,40 @@ void AMS_StageLevelScriptActor::Destroyed()
 {
 	gInputMng.OnPointerDownDelegate.RemoveAll(this);
 	gInputMng.OnPointerUpDelegate.RemoveAll(this);
+	
 	Super::Destroyed();
-	Super::Destroyed();
+}
+
+void AMS_StageLevelScriptActor::ParsingSplineActors() const
+{
+	TArray<AActor*> SplineActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_VehicleSplineActor::StaticClass(), SplineActors);
+	
+	for (AActor* Spline : SplineActors)
+	{
+		AMS_VehicleSplineActor* SplineActor = Cast<AMS_VehicleSplineActor>(Spline);
+		if(!SplineActor)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_VehicleSplineActor"));
+			return;
+		}
+		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::Spline, INDEX_NONE, false));
+		 if (IsValid(SplineUnit))
+		 {
+		 	// Set Unit Actor
+		 	if (!SplineUnit->SetUnitActor(SplineActor))
+		 	{
+		 		MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+		 		MS_ENSURE(false);
+		 	}
+		 }
+		 else
+		 {
+		 	MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+		 	MS_ENSURE(false);
+		 }
+	}
 }
 
 void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)

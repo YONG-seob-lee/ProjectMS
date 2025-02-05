@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "MS_CharacterUnitBase.h"
-#include "Table/RowBase/MS_ResourceUnit.h"
 #include "MS_BasePlayerUnit.generated.h"
 
 /**
@@ -16,7 +15,7 @@ class PROJECTMS_API UMS_BasePlayerUnit : public UMS_CharacterUnitBase
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId) override;
+	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId) override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
@@ -25,12 +24,15 @@ public:
 	virtual void DestroyUnitActor() override;
 	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
+	
+	FORCEINLINE FName GetUnitName() const { return UnitName; }
+	FORCEINLINE int32 GetUnitTableId() const { return UnitTableId; }
 
 protected:
 	virtual void ChangeState(EMS_UnitState aActionType) const override;
 	
 private:
-	FMS_ResourceUnit* UnitData = nullptr;
+	FName UnitName = FName();
 
 	float LodScale = 1.f;
 	bool bOutLineModeOn = true;

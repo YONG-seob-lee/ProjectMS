@@ -6,9 +6,9 @@
 #include "MS_Actor.h"
 
 
-void UMS_ActorUnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
+void UMS_ActorUnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
 }
 
 void UMS_ActorUnitBase::Finalize()
@@ -86,6 +86,16 @@ bool UMS_ActorUnitBase::SetUnitActor(TObjectPtr<AMS_Actor> aUnitActor, bool bFor
 
 	MS_ENSURE(false);
 	return false;
+}
+
+FVector UMS_ActorUnitBase::GetUnitPosition() const
+{
+	if(IsValid(Actor))
+	{
+		return Actor->GetActorLocation();
+	}
+
+	return FVector();
 }
 
 TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(const FVector& aVector, const FRotator& aRotator)

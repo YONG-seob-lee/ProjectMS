@@ -6,9 +6,9 @@
 #include "Character/MS_CharacterBase.h"
 
 
-void UMS_CharacterUnitBase::Initialize(MS_Handle aUnitHandle, int32 aUnitTableId, int32 aChildTableId)
+void UMS_CharacterUnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitTableId, aChildTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
 }
 
 void UMS_CharacterUnitBase::Finalize()

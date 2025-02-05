@@ -35,6 +35,8 @@ public:
 	
 	FMS_Staff* GetStaffData(int32 aStaffId);
 	void GetStaffDatas(TMap<int32, FMS_Staff*>& aStaffDatas);
+	void GetStaffName(int32 aStaffId, FName& aStaffName);
+
 private:
 	TMap<int32, FMS_Staff*> StaffDatas;
 };

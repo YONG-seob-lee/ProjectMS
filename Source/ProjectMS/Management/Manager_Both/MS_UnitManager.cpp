@@ -7,6 +7,8 @@
 #include "Units/MS_BasePlayerUnit.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_ItemUnit.h"
+#include "Units/MS_SplineUnit.h"
+#include "Units/MS_VehicleUnit.h"
 
 
 UMS_UnitManager::UMS_UnitManager()
@@ -35,45 +37,32 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
 	return nullptr;
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(int32 aUnitTableId, int32 aChildTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
+void UMS_UnitManager::GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
+{
+	aUnits.Empty();
+
+	for(const auto& Unit : Units)
+	{
+		if(Unit.Value->GetUnitType() == aUnitType)
+		{
+			aUnits.Emplace(Unit.Value);
+		}
+	}
+}
+
+TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int32 aUnitTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
-	const MS_Handle NewUnitHandle = MakeUnitHandle(aUnitTableId, aChildTableId);
+	const MS_Handle NewUnitHandle = MakeUnitHandle();
 	
 	if(NewUnitHandle == InvalidUnitHandle)
 	{
 		return nullptr;
 	}
-
-	// Resource Unit Data
-	FMS_ResourceUnit* ResourceUnitData = GetResourceUnitData(aUnitTableId);
-	if (ResourceUnitData == nullptr)
-	{
-		return nullptr;
-	}
-
-	// Unit Type
-	EMS_UnitType UnitType = static_cast<EMS_UnitType>(ResourceUnitData->UnitType);
-	if (UnitType == EMS_UnitType::Default)
-	{
-		return nullptr;
-	}
 	
-	// Unit Type Class
-	TSubclassOf<UMS_UnitBase> UnitTypeClass = nullptr;
-	if (UnitTypeClasses.Contains(UnitType))
-	{
-		UnitTypeClass = *UnitTypeClasses.Find(UnitType);
-	}
-	
-	if(UnitTypeClass == nullptr)
-	{
-		return nullptr; 
-	}
-
 	// Create Unit
-	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, UnitTypeClass);
-	Unit->Initialize(NewUnitHandle, aUnitTableId, aChildTableId);
+	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, GetUnitTypeClass(aUnitType));
+	Unit->Initialize(NewUnitHandle, aUnitType, aUnitTableId);
 
 	// Create Actor
 	if (bCreateActor)
@@ -116,6 +105,37 @@ void UMS_UnitManager::DestroyUnit_Internal(TObjectPtr<UMS_UnitBase> aUnitBase)
 	}
 }
 
+TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitType)
+{
+	switch(aUnitType)
+	{
+	case EMS_UnitType::BasePlayer:
+		{
+			return UMS_BasePlayerUnit::StaticClass();
+		}
+	case EMS_UnitType::Item:
+		{
+			return UMS_ItemUnit::StaticClass();
+		}
+	case EMS_UnitType::Furniture:
+		{
+			return UMS_FurnitureUnit::StaticClass();
+		}
+	case EMS_UnitType::Vehicle:
+		{
+			return UMS_VehicleUnit::StaticClass();
+		}
+	case EMS_UnitType::Spline:
+		{
+			return UMS_SplineUnit::StaticClass();
+		}
+	default:
+		{
+			return nullptr;
+		}
+	}
+}
+
 void UMS_UnitManager::DestroyAllUnits()
 {
 	for(auto& Unit : Units)
@@ -126,23 +146,11 @@ void UMS_UnitManager::DestroyAllUnits()
 	Units.Empty();
 }
 
-MS_Handle UMS_UnitManager::MakeUnitHandle(int32 aUnitTableId, int32 aChildTableId)
+MS_Handle UMS_UnitManager::MakeUnitHandle()
 {
 	++LastUnitHandle;
 
 	return LastUnitHandle;
-}
-
-FMS_ResourceUnit* UMS_UnitManager::GetResourceUnitData(int32 aUnitTableId) const
-{
-	FMS_ResourceUnit* ResourceUnitData = gTableMng.GetTableRowData<FMS_ResourceUnit>(EMS_TableDataType::ResourceUnit, aUnitTableId);
-	if(ResourceUnitData == nullptr)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ResourceUnitData is nullptr [UnitTableId : %d]"), *MS_FUNC_STRING, aUnitTableId);
-		MS_ENSURE(false);
-	}
-	
-	return ResourceUnitData;
 }
 
 UMS_UnitManager* UMS_UnitManager::GetInstance()
