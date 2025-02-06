@@ -15,6 +15,9 @@ enum class EMS_LevelType
 	PersistenceLevel = 1,
 	AccountLevel = 2,
 	LobbyLevel = 3,
+	Stage01 = 4,
+	Stage02 = 5,
+	Stage03 = 6,
 	MarketLevel = 7,
 	
 	PracticeLevel_01 = 1000,
