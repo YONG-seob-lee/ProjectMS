@@ -13,6 +13,7 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Toturial/MS_TutorialHelper.h"
 
 void UMS_ManagementClient::Initialize()
 {
@@ -50,13 +51,24 @@ void UMS_ManagementClient::Initialize()
 	ScheduleManager = MS_NewObject<UMS_ScheduleManager>(this);
 	MS_CHECK(ScheduleManager);
 	ScheduleManager->Initialize();
+
+	TutorialHelper = MS_NewObject<UMS_TutorialHelper>(this);
+	MS_CHECK(TutorialHelper);
+	TutorialHelper->Initialize();
 }
 
 void UMS_ManagementClient::Finalize()
 {
+	if(TutorialHelper)
+	{
+		TutorialHelper->Destroyed();
+		TutorialHelper = nullptr;
+	}
+	
 	if(CameraManager)
 	{
 		CameraManager->Destroyed();
+		CameraManager = nullptr;
 	}
 	
 	if(WidgetManager)
