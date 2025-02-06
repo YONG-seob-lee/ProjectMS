@@ -8,8 +8,10 @@
 
 #include "Prop/MS_Prop.h"
 #include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Prop/Wall/MS_Wall.h"
 #include "Units/MS_FurnitureUnit.h"
@@ -43,12 +45,32 @@ void AMS_ConstructibleLevelScriptActorBase::Tick(float DeltaTime)
 
 void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 {
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+	
 	// Zone
+	const TArray<int32>& OpenedZoneIds = PlayerState->GetOpenedZoneIds();
+	
 	for (auto& Zone : Zones)
 	{
 		Zone.Value->SetZoneIndex(Zone.Key);
 
-		if (Zone.Key == 1)
+		if (OpenedZoneIds.Contains(Zone.Key))
 		{
 			Zone.Value->SetZoneOpened(true);
 		}

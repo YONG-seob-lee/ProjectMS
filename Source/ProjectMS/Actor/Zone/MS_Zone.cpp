@@ -7,12 +7,17 @@
 #include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Controller/MS_PlayerController.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Level/MS_LevelDefine.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Prop/Wall/MS_Wall.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
+
+class AMS_PlayerState;
+class AMS_PlayerController;
 
 AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
@@ -235,6 +240,26 @@ void AMS_Zone::OnClickZoneOpenWidget(UMS_ZoneOpenWidget* aZoneOpenWidget)
 
 void AMS_Zone::SetZoneOpened(bool aOpened)
 {
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+
+	MS_ENSURE (ZoneIndex != 0);
+	
 	bOpened = aOpened;
 
 	FloorAttachedComponent->SetVisibility(aOpened, true);
@@ -242,6 +267,8 @@ void AMS_Zone::SetZoneOpened(bool aOpened)
 
 	if (aOpened)
 	{
+		PlayerState->AddOpenedZoneId(ZoneIndex);
+		
 		OnZoneOpenedDelegate.Broadcast();
 	}
 }

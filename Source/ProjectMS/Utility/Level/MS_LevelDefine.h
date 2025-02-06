@@ -108,7 +108,9 @@ public:
 	{
 		GridDatas.Empty();
 	}
-	
+
+	UPROPERTY()
 	class UMS_PropSpaceComponent* PropSpaceComponent;
+	
 	TArray<const FMS_GridData*> GridDatas;
 };

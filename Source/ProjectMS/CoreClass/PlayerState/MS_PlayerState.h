@@ -13,4 +13,24 @@ UCLASS()
 class PROJECTMS_API AMS_PlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
+public:
+	AMS_PlayerState();
+
+	const TArray<int32>& GetOpenedZoneIds();
+	void AddOpenedZoneId(int32 aZoneId);
+
+	void InitDefaultPlayerData();
+	
+	void InitPlayerData();
+	void SavePlayerData();
+
+private:
+	FString SaveSlotName;
+
+	UPROPERTY()
+	bool bInitDefaultData;
+	
+	UPROPERTY()
+	TArray<int32> OpenedZoneIds;
 };
