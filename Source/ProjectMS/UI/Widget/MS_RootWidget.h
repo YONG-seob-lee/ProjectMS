@@ -40,6 +40,7 @@ public:
 	void ShowRotateWidget() const;
 	void ShowModalWidget(const FMS_ModalParameter& aModalParameter) const;
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
+	void SetBGMAnimation(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 	void CloseModalWidget() const;
 

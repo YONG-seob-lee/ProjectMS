@@ -21,6 +21,8 @@ void UMS_GeneralWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	FillDefaultAnimations();
+
 	CPP_LeftButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_LeftButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedLeftButton);
 	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);

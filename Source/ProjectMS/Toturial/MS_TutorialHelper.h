@@ -40,4 +40,5 @@ public:
 	
 private:
 	TMap<EMS_FirstEnterCheckType, bool> FirstEnterCheckContainer;
+
 };

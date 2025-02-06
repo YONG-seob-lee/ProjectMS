@@ -4,6 +4,7 @@
 #include "MS_SceneManager.h"
 
 #include "MS_InputManager.h"
+#include "MS_SoundManager.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_LevelCacheTable.h"
@@ -12,6 +13,11 @@
 #include "Utility/MS_Define.h"
 #include "Utility/Command/SceneCommand/MS_SceneCommand.h"
 #include "Widget/MS_RootWidget.h"
+
+namespace Fade
+{
+	constexpr float ProgressRate = 0.01f;
+}
 
 UMS_SceneManager::UMS_SceneManager()
 {
@@ -71,7 +77,6 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	NewCommand = aCommand;
 
 	// 예외체크용 함수
-	RootWidget->ShowGeneralWidget(false);
 	RootWidget->ActivatePreventionCover(true);
 	gInputMng.SetAllowInteractActor(false);
 	
@@ -91,19 +96,40 @@ void UMS_SceneManager::StartFade()
 		EndFade();
 		return;
 	}
+
+	if(LevelChangeStep < EMS_FadeStep::Loading)
+	{
+		RootWidget->SetContentWidgetRender(NewCommand->GetFadeOutTransitionStyle());
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f - FadeProgressRate);
+	}
+	else
+	{
+		RootWidget->SetContentWidgetRender(NewCommand->GetFadeInTransitionStyle());
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, FadeProgressRate);
+	}
 	
-	RootWidget->SetContentWidgetRender(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle());
 	
-	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &UMS_SceneManager::ProcessFade, 0.01f, true);
+	GetWorld()->GetTimerManager().SetTimer(FadeTimerHandle, this, &UMS_SceneManager::ProcessFade, Fade::ProgressRate, true);
 }
 
 void UMS_SceneManager::ProcessFade()
 {
-	FadeProgressRate += 0.01f;
+	FadeProgressRate += Fade::ProgressRate;
 
 	const EMS_FadeAnimationCurveType FadeAnimationCurveType = NewCommand->GetFadeAnimationCurveType();
 
-	RootWidget->SetContentWidgetTransition(LevelChangeStep < EMS_FadeStep::Loading ? NewCommand->GetFadeOutTransitionStyle() : NewCommand->GetFadeInTransitionStyle(), FadeAnimationCurveType, FadeProgressRate);
+	if(LevelChangeStep < EMS_FadeStep::Loading)
+	{
+		RootWidget->SetContentWidgetTransition(NewCommand->GetFadeOutTransitionStyle() , FadeAnimationCurveType, FadeProgressRate);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f - FadeProgressRate);
+		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::Master));
+	}
+	else
+	{
+		RootWidget->SetContentWidgetTransition(NewCommand->GetFadeInTransitionStyle(), FadeAnimationCurveType, FadeProgressRate);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, FadeProgressRate);
+		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::Master));
+	}
 		
 	if (FadeProgressRate > 1.f)
 	{
@@ -258,6 +284,9 @@ void UMS_SceneManager::HandleLoadingLevel()
 	{
 		gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
 	}
+
+	// Sound Im ( BGM )
+	RootWidget->SetBGMAnimation(NewCommand->GetLevelType());
 	
 	// Fade In
 	LevelChangeStep = EMS_FadeStep::EnterFadeIn;

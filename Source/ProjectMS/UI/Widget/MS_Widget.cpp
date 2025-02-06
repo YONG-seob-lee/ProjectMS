@@ -148,3 +148,13 @@ bool UMS_Widget::IsExistAnim(FName aAnimName) const
 
 	return WidgetAnim != nullptr;
 }
+
+bool UMS_Widget::IsAnimationPlayingByName(const FName& aName) const
+{
+	if(const TObjectPtr<UWidgetAnimation> WidgetAnimation = GetAnimationByName(aName))
+	{
+		return IsAnimationPlaying(WidgetAnimation);
+	}
+
+	return false;
+}

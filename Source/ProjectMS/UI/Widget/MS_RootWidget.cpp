@@ -41,7 +41,8 @@ void UMS_RootWidget::NativeOnInitialized()
 	CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);
 	CPP_RotateWidget->SetVisibility(ESlateVisibility::Collapsed);
 	CPP_ModalWidget->SetVisibility(ESlateVisibility::Collapsed);
-	CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	CPP_GeneralWidget->SetRenderOpacity(0.001f);
 }
 
 void UMS_RootWidget::OnRuntimeInitialize()
@@ -229,28 +230,50 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 {
 	if(aLevelType < EMS_LevelType::LobbyLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
+		// 위젯 애니메이션에 입혀놓은 사운드웨이브가 Collapsed 또는 Hidden 일 때 일시정지하면서 이중창 삼중창으로 오버랩되는 현상 개선 목적으로 일단 주석처리.
+		CPP_GeneralWidget->SetRenderOpacity(0.001f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
 	else if(aLevelType == EMS_LevelType::LobbyLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		CPP_GeneralWidget->SetRenderOpacity(1.f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
 	}
 	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		CPP_GeneralWidget->SetRenderOpacity(1.f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
 	}
 	else if(aLevelType == EMS_LevelType::MarketLevel)
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		CPP_GeneralWidget->SetRenderOpacity(1.f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Market);
 	}
 	else
 	{
-		CPP_GeneralWidget->SetVisibility(ESlateVisibility::Collapsed);
+		CPP_GeneralWidget->SetRenderOpacity(0.001f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
+	}
+}
+
+void UMS_RootWidget::SetBGMAnimation(EMS_LevelType aLevelType) const
+{
+	CPP_GeneralWidget->StopAllAnimations();
+	
+	if(aLevelType == EMS_LevelType::LobbyLevel || aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
+	{
+		if(CPP_GeneralWidget->IsPlayingAnimation() == false)
+		{
+			CPP_GeneralWidget->PlayAnimationByName(BGM::Town, 0.f, 50000);
+		}
+	}
+	else if(aLevelType == EMS_LevelType::MarketLevel)
+	{
+		CPP_GeneralWidget->PlayAnimationByName(BGM::Market, 0.f, 50000);
+	}
+	else
+	{
+		CPP_GeneralWidget->StopAllAnimations();
 	}
 }
 

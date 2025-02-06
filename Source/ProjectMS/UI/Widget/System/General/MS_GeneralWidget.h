@@ -15,6 +15,12 @@ enum class EMS_GeneralWidgetType
 	Town,
 	Market,
 };
+
+namespace BGM
+{
+	const FName Town = TEXT("TownBGM");
+	const FName Market = TEXT("MarketBGM");
+}
 /**
  * 
  */
@@ -24,7 +30,7 @@ class PROJECTMS_API UMS_GeneralWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-
+	
 	void SetType(EMS_GeneralWidgetType aType);
 	
 private:
