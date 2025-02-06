@@ -27,22 +27,24 @@ private:
 	
 	void CreateGrids();
 
-	void RegisterDefalutAttachedFloors();
+	void RegisterDefalutAttachedProps();
 
 
 public:
 	bool IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const;
 	bool IsGridContained(const FIntVector2& aInGridPosition) const;
 
-	void RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AActor> aFloor);
+	void RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class AMS_Floor> aFloor);
 	void RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
 	void UnregisterObjectToGrid(const FIntVector2& aGridPosition);
 
-	// Zone Opend
+	// Zone Open
 	UFUNCTION()
 	void OnClickZoneOpenWidget(class UMS_ZoneOpenWidget* aZoneOpenWidget);
 	
 	void SetZoneOpened(bool aOpened);
+
+	void SetWallVisibilities(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
 	
 	// Setter
 	void SetZoneIndex(int32 aZoneIndex) { ZoneIndex = aZoneIndex; }
@@ -74,20 +76,11 @@ protected:
 	class USceneComponent* FloorAttachedComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* Rot0WallAttachedComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* Rot90WallAttachedComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* Rot180WallAttachedComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* Rot270WallAttachedComponent;
+	class USceneComponent* WallAttachedComponent;
 
 	// Widget Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UWidgetComponent> ZoneOpendWidgetComponent;
+	TObjectPtr<class UWidgetComponent> ZoneOpenWidgetComponent;
 
 
 private:
@@ -113,6 +106,9 @@ private:
 	UPROPERTY()
 	TMap<FIntVector2, FMS_GridData> Grids;
 
+	UPROPERTY()
+	TArray<TObjectPtr<class AMS_Wall>> Walls;
+
 public:
-	FMS_OnZoneOpendDelegate OnZoneOpendDelegate;
+	FMS_OnZoneOpendDelegate OnZoneOpenedDelegate;
 };

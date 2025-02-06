@@ -8,14 +8,12 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Persistent/MS_PersistentWidget.h"
 
-// Sets default values
+
 AMS_PersistentLevelScriptActor::AMS_PersistentLevelScriptActor()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void AMS_PersistentLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,7 +32,6 @@ void AMS_PersistentLevelScriptActor::BeginPlay()
 	gSceneMng.RequestChangeScene(Command);
 }
 
-// Called every frame
 void AMS_PersistentLevelScriptActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

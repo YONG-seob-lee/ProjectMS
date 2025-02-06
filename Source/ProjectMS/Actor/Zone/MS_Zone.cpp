@@ -10,6 +10,7 @@
 #include "Level/MS_LevelDefine.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"
+#include "Prop/Wall/MS_Wall.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
 
@@ -18,42 +19,31 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 {
 	// Component
 	ZoneBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ZoneBoxComponent"));
+	if (ZoneBoxComponent)
+	{
+		ZoneBoxComponent->SetupAttachment(SceneRootComponent);
+	}
 	
 	FloorAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FloorAttachedComponent"));
 	if (FloorAttachedComponent)
 	{
 		FloorAttachedComponent->SetupAttachment(ZoneBoxComponent);
 	}
-
-	Rot0WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot0WallAttachedComponent"));
-	if (Rot0WallAttachedComponent)
+	
+	WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("WallAttachedComponent"));
+	if (WallAttachedComponent)
 	{
-		Rot0WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+		WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
 	}
 
-	Rot90WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot90WallAttachedComponent"));
-	if (Rot90WallAttachedComponent)
+	ZoneOpenWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ZoneOpendWidgetComponent"));
+	if (ZoneOpenWidgetComponent)
 	{
-		Rot90WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
+		ZoneOpenWidgetComponent->SetupAttachment(ZoneBoxComponent);
 	}
 
-	Rot180WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot180WallAttachedComponent"));
-	if (Rot180WallAttachedComponent)
-	{
-		Rot180WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
-	}
-
-	Rot270WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Rot270WallAttachedComponent"));
-	if (Rot270WallAttachedComponent)
-	{
-		Rot270WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
-	}
-
-	ZoneOpendWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ZoneOpendWidgetComponent"));
-	if (ZoneOpendWidgetComponent)
-	{
-		ZoneOpendWidgetComponent->SetupAttachment(ZoneBoxComponent);
-	}
+	// Cache
+	Walls.Empty();
 }
 
 void AMS_Zone::PostInitializeComponents()
@@ -67,9 +57,9 @@ void AMS_Zone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (ZoneOpendWidgetComponent)
+	if (ZoneOpenWidgetComponent)
 	{
-		if (UMS_ZoneOpenWidget* ZoneOpenWidget = Cast<UMS_ZoneOpenWidget>(ZoneOpendWidgetComponent->GetWidget()))
+		if (UMS_ZoneOpenWidget* ZoneOpenWidget = Cast<UMS_ZoneOpenWidget>(ZoneOpenWidgetComponent->GetWidget()))
 		{
 			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
 		}
@@ -87,12 +77,11 @@ void AMS_Zone::InitializeZoneData()
 	ZoneGridNum = FIntVector2(FMath::RoundToInt32(ZoneSize.X / MS_GridSize.X),
 		FMath::RoundToInt32(ZoneSize.Y / MS_GridSize.Y));
 	
-	ZoneWorldGridPosition = FIntVector2(FMath::RoundToInt32(ZoneLocation.X / MS_GridSize.X),
-		FMath::RoundToInt32(ZoneLocation.Y / MS_GridSize.Y));
+	ZoneWorldGridPosition = FMS_GridData::ConvertLocationToGridPosition(ZoneLocation);
 
 	CreateGrids();
 
-	RegisterDefalutAttachedFloors();
+	RegisterDefalutAttachedProps();
 }
 
 void AMS_Zone::CreateGrids()
@@ -110,24 +99,27 @@ void AMS_Zone::CreateGrids()
 	}
 }
 
-void AMS_Zone::RegisterDefalutAttachedFloors()
+void AMS_Zone::RegisterDefalutAttachedProps()
 {
 	TArray<AActor*> AttachedActors;
 	GetAttachedActors(AttachedActors);
 
 	for (AActor* AttachedActor : AttachedActors)
 	{
-		if (AMS_Prop* Prop = Cast<AMS_Floor>(AttachedActor))
+		if (AMS_Floor* Floor = Cast<AMS_Floor>(AttachedActor))
 		{
 			// Prop Center Grid
-			FVector WorldLocation = Prop->GetActorLocation();
-		
-			FIntVector2 GridPosition = FIntVector2(FMath::RoundToInt32(WorldLocation.X) / MS_GridSizeInt.X
-				, FMath::RoundToInt32(WorldLocation.Y) / MS_GridSizeInt.Y);
+			FVector WorldLocation = Floor->GetActorLocation();
+			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(WorldLocation);
 			
-			Prop->SetZoneData(this);
+			Floor->SetZoneData(this);
 
-			RegisterFloorToGrid(GridPosition, Prop);
+			RegisterFloorToGrid(GridPosition, Floor);
+		}
+
+		else if (AMS_Wall* Wall = Cast<AMS_Wall>(AttachedActor))
+		{
+			Walls.Emplace(Wall);
 		}
 	}
 }
@@ -152,7 +144,7 @@ bool AMS_Zone::IsGridContained(const FIntVector2& aInGridPosition) const
 	return Grids.Contains(aInGridPosition);
 }
 
-void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AActor> aFloor)
+void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AMS_Floor> aFloor)
 {
 	if (Grids.Contains(aGridPosition))
 	{
@@ -164,16 +156,16 @@ void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObject
 		}
 		else
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Floor data alreay exists [Zone %d - X : %d, Y : %d]"),
-				ZoneIndex, aGridPosition.X, aGridPosition.Y);
+			MS_LOG_VERBOSITY(Error, TEXT("Floor data alreay exists [%s - X : %d, Y : %d]"),
+				*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
 
 			MS_ENSURE(false);
 		}
 	}
 	else
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("Floor's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aGridPosition.X, aGridPosition.Y);
+		MS_LOG_VERBOSITY(Error, TEXT("Floor's GridPosition is not vaild [%s - X : %d, Y : %d]"),
+			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
 
 		MS_ENSURE(false);
 	}
@@ -191,8 +183,8 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 		}
 		else
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Object data alreay exists [Zone %d - X : %d, Y : %d]"),
-				ZoneIndex, aGridPosition.X, aGridPosition.Y);
+			MS_LOG_VERBOSITY(Error, TEXT("Object data alreay exists [%s - X : %d, Y : %d]"),
+				*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
 
 			MS_ENSURE(false);
 		}
@@ -211,8 +203,8 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 	}
 	else
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aGridPosition.X, aGridPosition.Y);
+		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [%s - X : %d, Y : %d]"),
+			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
 
 		MS_ENSURE(false);
 	}
@@ -229,8 +221,8 @@ void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 	}
 	else
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [Zone %d - X : %d, Y : %d]"),
-			ZoneIndex, aGridPosition.X, aGridPosition.Y);
+		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [%s - X : %d, Y : %d]"),
+			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
 
 		MS_ENSURE(false);
 	}
@@ -246,11 +238,19 @@ void AMS_Zone::SetZoneOpened(bool aOpened)
 	bOpened = aOpened;
 
 	FloorAttachedComponent->SetVisibility(aOpened, true);
-	ZoneOpendWidgetComponent->SetVisibility(!aOpened);
+	ZoneOpenWidgetComponent->SetVisibility(!aOpened);
 
 	if (aOpened)
 	{
-		OnZoneOpendDelegate.Broadcast();
+		OnZoneOpenedDelegate.Broadcast();
+	}
+}
+
+void AMS_Zone::SetWallVisibilities(TWeakObjectPtr<AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
+{
+	for (auto It = Walls.CreateConstIterator(); It; ++It)
+	{
+		It->Get()->SetVisibilityByGridOpened(aOwnerLevelScriptActor);
 	}
 }
 

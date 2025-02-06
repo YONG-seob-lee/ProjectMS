@@ -7,7 +7,7 @@
 
 
 #define MS_GridSize FVector(50.f, 50.f, 50.f)
-#define MS_GridSizeInt FVector(50, 50, 50)
+#define MS_GridSizeInt FIntVector(50, 50, 50)
 
 
 UENUM(BlueprintType)
@@ -76,6 +76,7 @@ public:
 	const FVector GetGridCenterLocation() const;
 
 	static FIntVector2 ConvertLocationToGridPosition(const FVector& aLocation);
+	static FVector2D ConvertGridPositionToLocation(const FIntVector2& aGridPosition, bool aIsXGridCenter = false, bool aIsYGridCenter = false);
 
 	
 private:

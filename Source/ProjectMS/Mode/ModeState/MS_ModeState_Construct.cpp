@@ -399,13 +399,9 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 {
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		FIntVector2 OldCenterGridPosition =  GetGridPosition(PreviewProp->GetActorLocation(),
-	PreviewProp->GetGridNum().X % 2 != 0,
-	PreviewProp->GetGridNum().Y % 2 != 0);
+		FIntVector2 OldCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
 		
-		FIntVector2 NewCenterGridPosition = GetGridPosition(aNewLocation,
-	PreviewProp->GetGridNum().X % 2 != 0,
-	PreviewProp->GetGridNum().Y % 2 != 0);
+		FIntVector2 NewCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(aNewLocation);
 
 		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
 		
@@ -560,18 +556,6 @@ FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
 	PlayerController->GetViewportSize(SizeX, SizeY);
 
 	return FVector2d(SizeX / 2, SizeY / 2);
-}
-
-FIntVector2 UMS_ModeState_Construct::GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter,
-	bool aIsYGridCenter) const
-{
-	FVector2D OffsetByGridCenter = FVector2D(
-	aIsXGridCenter ? 25.f : 0.f,
-	aIsYGridCenter ? 25.f : 0.f);
-	
-	return  FIntVector2(
-		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
-		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y));
 }
 
 FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const

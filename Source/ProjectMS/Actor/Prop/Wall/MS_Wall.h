@@ -18,7 +18,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void GetGridPositionOnBothSides(FIntVector2& OutGridPosition1, FIntVector2& OutGridPosition2) const;
+	void GetGridPositionOnBothSides(FIntVector2& aOutGridPosition1, FIntVector2& aOutGridPosition2) const;
 	
-	void SetVisibilityByGridOpened(class AMS_ConstructibleLevelScriptActorBase* OwnerLevelScriptActor);
+	void SetVisibilityByGridOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
 };

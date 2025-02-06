@@ -83,8 +83,6 @@ private:
 
 	FVector2d GetScreenCenterPosition() const;
 	
-	FIntVector2 GetGridPosition(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const;
-	
 	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const;
 
 	bool CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const;

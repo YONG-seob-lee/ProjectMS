@@ -39,7 +39,7 @@ public:
 	bool IsGridOpened(const FIntVector2& aGridPosition) const;
 
 	UFUNCTION()
-	void SetWallVisibilities();
+	void OnZoneOpened();
 	
 	void ShowUnconstructableGrid(bool bShow);
 	

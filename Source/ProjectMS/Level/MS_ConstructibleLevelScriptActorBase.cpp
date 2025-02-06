@@ -32,7 +32,7 @@ void AMS_ConstructibleLevelScriptActorBase::BeginPlay()
 		
 		ParsingDefaultPropDatas();
 
-		SetWallVisibilities();
+		OnZoneOpened();
 	}
 }
 
@@ -57,13 +57,12 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 			Zone.Value->SetZoneOpened(false);
 		}
 
-		Zone.Value->OnZoneOpendDelegate.AddDynamic(this, &AMS_ConstructibleLevelScriptActorBase::SetWallVisibilities);
+		Zone.Value->OnZoneOpenedDelegate.AddDynamic(this, &AMS_ConstructibleLevelScriptActorBase::OnZoneOpened);
 	}
 	
 	// Prop
 	TArray<AActor*> PropActors;
-
-	// ToDo : 스트리밍 레벨 뿐 아니라 모든 레벨의 액터를 불러오나?
+	
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop::StaticClass(), PropActors);
 	
 	for (AActor* PropActor : PropActors)
@@ -73,8 +72,7 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 		// Prop Center Grid
 		FVector WorldCenterLocation = PropActor->GetActorLocation();
 		
-		FIntVector2 PropCenterGridPosition = FIntVector2(FMath::RoundToInt32(WorldCenterLocation.X) / MS_GridSizeInt.X
-			, FMath::RoundToInt32(WorldCenterLocation.Y) / MS_GridSizeInt.Y);
+		FIntVector2 PropCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(WorldCenterLocation);
 		
 		int32 PropCenterZoneIndex = GetGridZoneIndex(PropCenterGridPosition);
 		if (PropCenterZoneIndex == INDEX_NONE)
@@ -350,22 +348,11 @@ bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGri
 	return false;
 }
 
-void AMS_ConstructibleLevelScriptActorBase::SetWallVisibilities()
+void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened()
 {
-	// Prop
-	TArray<AActor*> WallActors;
-
-	// ToDo : 스트리밍 레벨 뿐 아니라 모든 레벨의 액터를 불러오나?
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Wall::StaticClass(), WallActors);
-	
-	for (AActor* WallActor : WallActors)
+	for (auto& Zone : Zones)
 	{
-		AMS_Wall* Wall = Cast<AMS_Wall>(WallActor);
-		
-		if (IsValid(Wall))
-		{
-			Wall->SetVisibilityByGridOpened(this);
-		}
+		Zone.Value->SetWallVisibilities(this);
 	}
 }
 
