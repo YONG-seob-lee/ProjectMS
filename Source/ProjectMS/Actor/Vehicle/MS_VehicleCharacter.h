@@ -3,16 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
-#include "MS_VehicleActor.generated.h"
+#include "Character/MS_CharacterBase.h"
+#include "MS_VehicleCharacter.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_VehicleActor : public AMS_Actor
+class PROJECTMS_API AMS_VehicleCharacter : public AMS_CharacterBase
 {
 	GENERATED_BODY()
 
 public:
-	AMS_VehicleActor(const FObjectInitializer& ObjectInitializer);
+	AMS_VehicleCharacter();
 
 	virtual void Tick(float DeltaTime) override;
 	
@@ -22,6 +22,15 @@ protected:
 private:
 	TObjectPtr<class AMS_VehicleSplineActor> FindNearestSpline() const;
 
+	TWeakObjectPtr<AMS_VehicleSplineActor> NearestSpline = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	float VehicleVelocity = 5.f;
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UCharacterMovementComponent> MovementComponent = nullptr;
+	
 };

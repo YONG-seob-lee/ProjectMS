@@ -19,6 +19,13 @@ AMS_StageLevelScriptActor::AMS_StageLevelScriptActor()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AMS_StageLevelScriptActor::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	ParsingSplineActors();
+}
+
 // Called when the game starts or when spawned
 void AMS_StageLevelScriptActor::BeginPlay()
 {
@@ -29,8 +36,6 @@ void AMS_StageLevelScriptActor::BeginPlay()
 
 	gCameraMng.LocateAndRotateCamera(FVector(12600.f, -6380.f, 3200.f), FRotator(0.f, -90.f, 0.f), EMS_ViewCameraType::QuarterView);
 	gCameraMng.LocateAndRotateCamera(FVector(13310.f, -8000.f, 390.f), FRotator(45.f, -90.f, 0.f), EMS_ViewCameraType::SideView);
-
-	ParsingSplineActors();
 }
 
 // Called every frame

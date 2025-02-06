@@ -15,7 +15,12 @@ public:
 	AMS_VehicleSplineActor(const FObjectInitializer& ObjectInitializer);
 
 	virtual void Tick(float DeltaTime) override;
-	
+
+	// aWorldLocation 에서 가장 가까운 스플라인의 접선 벡터를 반환해준다.
+	FVector FindTangentClosestToWorldLocation(const FVector& aWorldLocation) const;
+
+	// aWorldLocation 에서 가장 가까운 스플라인의 곡선의 한 점을 반환해준다.
+	FVector FindLocationClosestToWorldLocation(const FVector& aWorldLocation) const;
 protected:
 	virtual void BeginPlay() override;
 

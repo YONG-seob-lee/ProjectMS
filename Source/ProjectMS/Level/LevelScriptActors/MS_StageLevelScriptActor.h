@@ -14,10 +14,12 @@ class PROJECTMS_API AMS_StageLevelScriptActor : public AMS_LevelScriptActorBase
 public:
 	AMS_StageLevelScriptActor();
 
+	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
 private:
+	
 	void ParsingSplineActors() const;
 	
 	UFUNCTION()

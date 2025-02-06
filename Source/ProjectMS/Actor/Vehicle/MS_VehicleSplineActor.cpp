@@ -11,6 +11,12 @@ AMS_VehicleSplineActor::AMS_VehicleSplineActor(const FObjectInitializer& ObjectI
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	SplineComponent = CreateDefaultSubobject<USplineComponent>("SplineComponent");
+	if(SplineComponent)
+	{
+		SplineComponent->SetupAttachment(SceneRootComponent);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -24,5 +30,25 @@ void AMS_VehicleSplineActor::BeginPlay()
 void AMS_VehicleSplineActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+FVector AMS_VehicleSplineActor::FindTangentClosestToWorldLocation(const FVector& aWorldLocation) const
+{
+	if(!SplineComponent)
+	{
+		return FVector::ZeroVector;
+	}
+	
+	return SplineComponent->FindTangentClosestToWorldLocation(aWorldLocation, ESplineCoordinateSpace::World);
+}
+
+FVector AMS_VehicleSplineActor::FindLocationClosestToWorldLocation(const FVector& aWorldLocation) const
+{
+	if(!SplineComponent)
+	{
+		return FVector::ZeroVector;
+	}
+	
+	return SplineComponent->FindLocationClosestToWorldLocation(aWorldLocation, ESplineCoordinateSpace::World);
 }
 
