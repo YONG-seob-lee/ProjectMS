@@ -38,16 +38,20 @@ public:
 	int32 GetGridZoneIndex(const FIntVector2& aGridPosition) const;
 	bool IsGridOpened(const FIntVector2& aGridPosition) const;
 
+	void InitializeOpenedZoneStates();
+	void RequestOpenZone(int32 aZoneIndex);
+	
 	UFUNCTION()
-	void OnZoneOpened();
+	void OnZoneOpened(AMS_Zone* aZone);
 	
 	void ShowUnconstructableGrid(bool bShow);
+
 	
 protected:
 	UPROPERTY()
 	bool HasBegun;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TMap<int32, TObjectPtr<class AMS_Zone>> Zones;
 
 	bool bShowUnconstructableGrid;

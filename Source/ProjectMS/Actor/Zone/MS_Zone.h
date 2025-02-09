@@ -7,7 +7,7 @@
 #include "Level/MS_LevelDefine.h"
 #include "MS_Zone.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMS_OnZoneOpendDelegate);
+DECLARE_DELEGATE_OneParam(FMS_RequestOpenZoneDelegate, int32);
 
 UCLASS()
 class PROJECTMS_API AMS_Zone : public AMS_Actor
@@ -42,15 +42,21 @@ public:
 	UFUNCTION()
 	void OnClickZoneOpenWidget(class UMS_ZoneOpenWidget* aZoneOpenWidget);
 	
-	void SetZoneOpened(bool aOpened);
+	void SetZoneOpened(bool aOpened) { bOpened = aOpened; }
 
-	void SetWallVisibilities(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
+	void OnZoneOpened();
+	void OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
 	
-	// Setter
-	void SetZoneIndex(int32 aZoneIndex) { ZoneIndex = aZoneIndex; }
+	void SetWallVisibilities(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
+
+	bool CanOpenZone();
 	
 	// Getter
 	int32 GetZoneIndex() const { return ZoneIndex; }
+
+	EMS_ZoneType GetZoneType() const { return ZoneType; }
+
+	const TArray<int32>& GetTestConditionZoneIds() const { return TestConditionZoneIds; }
 	
 	const FVector& GetZoneLocation() const { return ZoneLocation; }
 	
@@ -85,8 +91,14 @@ protected:
 
 private:
 	// Zone Data
-	UPROPERTY()
+	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
 	int32 ZoneIndex;
+	
+	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
+	EMS_ZoneType ZoneType;
+
+	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
+	TArray<int32> TestConditionZoneIds;
 	
 	UPROPERTY()
 	FVector ZoneLocation;
@@ -110,5 +122,5 @@ private:
 	TArray<TObjectPtr<class AMS_Wall>> Walls;
 
 public:
-	FMS_OnZoneOpendDelegate OnZoneOpenedDelegate;
+	FMS_RequestOpenZoneDelegate RequestOpenZoneDelegate;
 };

@@ -33,8 +33,6 @@ void AMS_ConstructibleLevelScriptActorBase::BeginPlay()
 		HasBegun = true;
 		
 		ParsingDefaultPropDatas();
-
-		OnZoneOpened();
 	}
 }
 
@@ -45,42 +43,28 @@ void AMS_ConstructibleLevelScriptActorBase::Tick(float DeltaTime)
 
 void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 {
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		return;
-	}
-
-	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return;
-	}
-	
-	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-	if (!IsValid(PlayerState))
-	{
-		return;
-	}
-	
 	// Zone
-	const TArray<int32>& OpenedZoneIds = PlayerState->GetOpenedZoneIds();
+	TArray<AActor*> ZoneActors;
 	
-	for (auto& Zone : Zones)
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Zone::StaticClass(), ZoneActors);
+	
+	for (auto& ZoneActor : ZoneActors)
 	{
-		Zone.Value->SetZoneIndex(Zone.Key);
-
-		if (OpenedZoneIds.Contains(Zone.Key))
+		if (AMS_Zone* Zone = Cast<AMS_Zone>(ZoneActor))
 		{
-			Zone.Value->SetZoneOpened(true);
+			if (Zones.Contains(Zone->GetZoneIndex()))
+			{
+				MS_LOG_VERBOSITY(Error, TEXT("[%s] ZoneId is alreay exist [Id : %d]"), *MS_FUNC_STRING, Zone->GetZoneIndex());
+				MS_CHECK(false);
+			}
+			
+			Zones.Emplace(Zone->GetZoneIndex(), Zone);
+			
+			Zone->RequestOpenZoneDelegate.BindUObject(this, &AMS_ConstructibleLevelScriptActorBase::RequestOpenZone);
 		}
-		else
-		{
-			Zone.Value->SetZoneOpened(false);
-		}
-
-		Zone.Value->OnZoneOpenedDelegate.AddDynamic(this, &AMS_ConstructibleLevelScriptActorBase::OnZoneOpened);
 	}
+	
+	InitializeOpenedZoneStates();
 	
 	// Prop
 	TArray<AActor*> PropActors;
@@ -370,11 +354,112 @@ bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGri
 	return false;
 }
 
-void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened()
+void AMS_ConstructibleLevelScriptActorBase::InitializeOpenedZoneStates()
 {
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+	
+	const TArray<int32>& OpenedZoneIds = PlayerState->GetOpenedZoneIds();
+
+	for (int32 OpenedZoneId : OpenedZoneIds)
+	{
+		if (Zones.Contains(OpenedZoneId))
+		{
+			AMS_Zone* OpenedZone = *Zones.Find(OpenedZoneId);
+
+			if (IsValid(OpenedZone))
+			{
+				OpenedZone->SetZoneOpened(true);
+
+				OpenedZone->OnZoneOpened();
+			}
+		}
+	}
+	
 	for (auto& Zone : Zones)
 	{
-		Zone.Value->SetWallVisibilities(this);
+		Zone.Value->OnAnyZoneOpened(this);
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
+{
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+	
+	if (!Zones.Contains(aZoneIndex))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Requested ZoneIndex is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
+		MS_ENSURE (false);
+	}
+
+	AMS_Zone* Zone = *Zones.Find(aZoneIndex);
+	if (!IsValid(Zone))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Zone is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
+		MS_ENSURE (false);
+	}
+	
+	const TArray<int32>& OpenedZoneIds = PlayerState->GetOpenedZoneIds();
+	if (OpenedZoneIds.Contains(aZoneIndex))
+	{
+		MS_LOG_VERBOSITY(Warning, TEXT("[%s] Zone is alreay opened [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
+		return;
+	}
+
+	if (Zone->CanOpenZone())
+	{
+		Zone->SetZoneOpened(true);
+
+		if (Zone->GetZoneType() != EMS_ZoneType::Passage)
+		{
+			PlayerState->AddOpenedZoneId(aZoneIndex);
+		}
+		
+		OnZoneOpened(Zone);
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)
+{
+	if (IsValid(aZone))
+	{
+		aZone->OnZoneOpened();
+		
+		for (auto& Zone : Zones)
+		{
+			Zone.Value->OnAnyZoneOpened(this);
+		}
 	}
 }
 

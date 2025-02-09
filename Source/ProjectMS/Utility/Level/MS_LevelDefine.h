@@ -9,6 +9,16 @@
 #define MS_GridSize FVector(50.f, 50.f, 50.f)
 #define MS_GridSizeInt FIntVector(50, 50, 50)
 
+UENUM(BlueprintType)
+enum class EMS_ZoneType : uint8
+{
+	None = 0,
+	Display = 1,
+	Shelf = 2,
+	ParkingSpace = 3,
+
+	Passage = 100,
+};
 
 UENUM(BlueprintType)
 enum class EMS_PropType : uint8

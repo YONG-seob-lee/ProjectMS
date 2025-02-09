@@ -28,6 +28,7 @@ void AMS_PlayerState::AddOpenedZoneId(int32 aZoneId)
 void AMS_PlayerState::InitDefaultPlayerData()
 {
 	OpenedZoneIds.AddUnique(1);
+	OpenedZoneIds.AddUnique(10);
 }
 
 void AMS_PlayerState::InitPlayerData()

@@ -20,7 +20,7 @@ class AMS_PlayerState;
 class AMS_PlayerController;
 
 AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
-	: Super(aObjectInitializer)
+	: Super(aObjectInitializer), ZoneIndex(INDEX_NONE), ZoneType(EMS_ZoneType::None)
 {
 	// Component
 	ZoneBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ZoneBoxComponent"));
@@ -235,42 +235,26 @@ void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 
 void AMS_Zone::OnClickZoneOpenWidget(UMS_ZoneOpenWidget* aZoneOpenWidget)
 {
-	SetZoneOpened(true);
+	bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
 }
 
-void AMS_Zone::SetZoneOpened(bool aOpened)
+void AMS_Zone::OnZoneOpened()
 {
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		return;
-	}
+	FloorAttachedComponent->SetVisibility(true, true);
+	ZoneOpenWidgetComponent->SetVisibility(false);
+}
 
-	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
+void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
+{
+	if (ZoneType == EMS_ZoneType::Passage)
 	{
-		return;
+		if (CanOpenZone())
+		{
+			bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
+		}
 	}
 	
-	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-	if (!IsValid(PlayerState))
-	{
-		return;
-	}
-
-	MS_ENSURE (ZoneIndex != 0);
-	
-	bOpened = aOpened;
-
-	FloorAttachedComponent->SetVisibility(aOpened, true);
-	ZoneOpenWidgetComponent->SetVisibility(!aOpened);
-
-	if (aOpened)
-	{
-		PlayerState->AddOpenedZoneId(ZoneIndex);
-		
-		OnZoneOpenedDelegate.Broadcast();
-	}
+	SetWallVisibilities(aOwnerLevelScriptActor);
 }
 
 void AMS_Zone::SetWallVisibilities(TWeakObjectPtr<AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
@@ -278,6 +262,59 @@ void AMS_Zone::SetWallVisibilities(TWeakObjectPtr<AMS_ConstructibleLevelScriptAc
 	for (auto It = Walls.CreateConstIterator(); It; ++It)
 	{
 		It->Get()->SetVisibilityByGridOpened(aOwnerLevelScriptActor);
+	}
+}
+
+bool AMS_Zone::CanOpenZone()
+{
+	if (bOpened)
+	{
+		return false;
+	}
+	
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return false;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return false;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return false;
+	}
+
+	const TArray<int32>& OpenedZoneIds = PlayerState->GetOpenedZoneIds();
+
+	if (ZoneType == EMS_ZoneType::Passage)
+	{
+		for (int32 TestId : TestConditionZoneIds)
+		{
+			if (!OpenedZoneIds.Contains(TestId))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	else
+	{
+		for (int32 TestId : TestConditionZoneIds)
+		{
+			if (OpenedZoneIds.Contains(TestId))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
