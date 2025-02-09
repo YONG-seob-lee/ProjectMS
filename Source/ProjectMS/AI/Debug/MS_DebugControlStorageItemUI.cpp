@@ -12,7 +12,7 @@
 #include "Management/MS_ManagementClient.h"
 #include "Management/Manager_Client/MS_PlayerCameraManager.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
-#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
+//#include "Component/Prop/Furniture/MS_StorageSlotComponent.h"
 #include "Management/Manager_Both/MS_TableManager.h"
 #include "Data/Table/RowBase/MS_ItemData.h"
 
@@ -88,13 +88,13 @@ FReply UMS_DebugControlStorageItemUI::NativeOnMouseButtonDown(const FGeometry& I
             {
                 EditableText->SetText(FText());
             }
-
-            for (int i = 0; i < Storage->SlotComponentArray.Num(); i++)
+            
+            /*for (int i = 0; i < Storage->SlotComponentArray.Num(); i++)
             {
                 ItemNameEditableTextArray[i]->SetText(FText::FromName(Storage->SlotComponentArray[i]->StuffRowName));
                 QuantityEditableTextArray[i]->SetText(FText::AsNumber(Storage->SlotComponentArray[i]->StockQuantity));
                 CapacityEditableTextArray[i]->SetText(FText::AsNumber(Storage->SlotComponentArray[i]->StockCapacity));
-            }
+            }*/
         }
     }
 
@@ -131,6 +131,7 @@ void UMS_DebugControlStorageItemUI::OnAssignStoragePropertiesButtonClicked()
     TObjectPtr<UDataTable> ItemData = gTableMng.GetTableData(EMS_TableDataType::ItemData);
     MS_CHECK(ItemData);
 
+    /*
     for (int i = 0; i < Storage->SlotComponentArray.Num(); i++)
     {
         Storage->SlotComponentArray[i]->StuffRowName = FName(ItemNameEditableTextArray[i]->GetText().ToString());
@@ -158,6 +159,7 @@ void UMS_DebugControlStorageItemUI::OnAssignStoragePropertiesButtonClicked()
 
         Storage->SlotComponentArray[i]->StockCapacity = FCString::Atoi(*CapacityEditableTextArray[i]->GetText().ToString());
     }
+    */
 }
 
 void UMS_DebugControlStorageItemUI::OnChangeBoxStaticMeshButtonClicked()
