@@ -10,9 +10,13 @@
 #include "Controller/MS_PlayerController.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Level/MS_LevelDefine.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"
+#include "Prop/Furniture/MS_Furniture.h"
+#include "Prop/Gate/MS_Gate.h"
 #include "Prop/Wall/MS_Wall.h"
+#include "Units/MS_GateUnit.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
 
@@ -33,8 +37,6 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	if (FloorAttachedComponent)
 	{
 		FloorAttachedComponent->SetupAttachment(ZoneBoxComponent);
-
-		FloorAttachedComponent->SetVisibility(false, true);
 	}
 	
 	WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("WallAttachedComponent"));
@@ -48,7 +50,7 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	{
 		ZoneOpenWidgetComponent->SetupAttachment(ZoneBoxComponent);
 
-		ZoneOpenWidgetComponent->SetVisibility(false);
+		ZoneOpenWidgetComponent->SetVisibility(true);
 	}
 
 	// Cache
@@ -78,6 +80,16 @@ void AMS_Zone::BeginPlay()
 	{
 		bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
 	}
+
+	if (FloorAttachedComponent)
+	{
+		if (!bOpened)
+		{
+			FloorAttachedComponent->SetVisibility(false, true);
+		}
+	}
+	
+	RegisterDefalutAttachedProps();
 }
 
 void AMS_Zone::InitializeZoneData()
@@ -94,8 +106,6 @@ void AMS_Zone::InitializeZoneData()
 	ZoneWorldGridPosition = FMS_GridData::ConvertLocationToGridPosition(ZoneLocation);
 
 	CreateGrids();
-
-	RegisterDefalutAttachedProps();
 }
 
 void AMS_Zone::CreateGrids()
@@ -134,6 +144,58 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 		else if (AMS_Wall* Wall = Cast<AMS_Wall>(AttachedActor))
 		{
 			Walls.Emplace(Wall);
+		}
+
+		else if (AMS_Gate* Gate = Cast<AMS_Gate>(AttachedActor))
+		{
+			Gate->SetZoneData(this);
+
+			// Create Unit
+			TObjectPtr<UMS_GateUnit> Unit = Cast<UMS_GateUnit>(gUnitMng.CreateUnit(EMS_UnitType::Gate, Gate->GetTableIndex(), false));
+			if (IsValid(Unit))
+			{
+				// Set Unit Actor
+				if (!Unit->SetUnitActor(Gate))
+				{
+					MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+					MS_ENSURE(false);
+				}
+			}
+			else
+			{
+				MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+				MS_ENSURE(false);
+			}
+
+			// Prop Space
+			const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = Gate->GetPropSpaceComponents();
+
+			for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+			{
+				FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
+				FIntVector2 GridNum = FIntVector2::ZeroValue;
+			
+				PropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
+			
+				// Set With Grid
+				for (int i = 0; i < GridNum.Y; ++i)
+				{
+					for (int j = 0; j < GridNum.X; ++j)
+					{
+						FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
+						
+						if (IsGridContained(GridPosition))
+						{
+							RegisterObjectToGrid(GridPosition, PropSpaceComponent);
+						}
+						else
+						{
+							MS_LOG_VERBOSITY(Error, TEXT("[%s] All gate prop spaces must be within the attacked zone [Gate Id : %d]"), *MS_FUNC_STRING, Gate->GetGateIndex());
+							MS_ENSURE(false);
+						}
+					}
+				}
+			}
 		}
 	}
 }

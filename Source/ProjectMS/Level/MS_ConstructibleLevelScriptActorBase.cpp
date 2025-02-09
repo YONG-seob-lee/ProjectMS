@@ -32,7 +32,7 @@ void AMS_ConstructibleLevelScriptActorBase::BeginPlay()
 	{
 		HasBegun = true;
 		
-		ParsingDefaultPropDatas();
+		InitializeZones();
 	}
 }
 
@@ -41,7 +41,7 @@ void AMS_ConstructibleLevelScriptActorBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
+void AMS_ConstructibleLevelScriptActorBase::InitializeZones()
 {
 	// Zone
 	TArray<AActor*> ZoneActors;
@@ -65,81 +65,6 @@ void AMS_ConstructibleLevelScriptActorBase::ParsingDefaultPropDatas()
 	}
 	
 	InitializeOpenedZoneStates();
-	
-	// Prop
-	TArray<AActor*> PropActors;
-	
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_Prop::StaticClass(), PropActors);
-	
-	for (AActor* PropActor : PropActors)
-	{
-		AMS_Prop* Prop = Cast<AMS_Prop>(PropActor);
-		
-		// Prop Center Grid
-		FVector WorldCenterLocation = PropActor->GetActorLocation();
-		
-		FIntVector2 PropCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(WorldCenterLocation);
-		
-		int32 PropCenterZoneIndex = GetGridZoneIndex(PropCenterGridPosition);
-		if (PropCenterZoneIndex == INDEX_NONE)
-		{
-			continue;
-		}
-
-		Prop->SetZoneData(*Zones.Find(PropCenterZoneIndex));
-
-		// Check Prop Type
-		if (Prop->GetPropType() != EMS_PropType::Furniture && Prop->GetPropType() != EMS_PropType::Structure)
-		{
-			continue;
-		}
-
-		// Create Unit (임시)
-		TObjectPtr<UMS_FurnitureUnit> Unit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, Prop->GetTableIndex(), false));
-		if (IsValid(Unit))
-		{
-			// Set Unit Actor
-			if (!Unit->SetUnitActor(Prop))
-			{
-				MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
-				MS_ENSURE(false);
-			}
-		}
-		else
-		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
-			MS_ENSURE(false);
-		}
-		
-		// Prop Space
-		const TArray<UMS_PropSpaceComponent*>& PropSpaceComponents = Prop->GetPropSpaceComponents();
-		
-		for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
-		{
-			FIntVector2 StartGridPosition = FIntVector2::ZeroValue;
-			FIntVector2 GridNum = FIntVector2::ZeroValue;
-			
-			PropSpaceComponent->GetGridPositions(StartGridPosition, GridNum);
-			
-			// Set With Grid
-			for (int i = 0; i < GridNum.Y; ++i)
-			{
-				for (int j = 0; j < GridNum.X; ++j)
-				{
-					FIntVector2 GridPosition = FIntVector2(StartGridPosition.X + j, StartGridPosition.Y + i);
-					
-					for (auto& Zone : Zones)
-					{
-						if (Zone.Value->IsGridContained(GridPosition))
-						{
-							Zone.Value->RegisterObjectToGrid(GridPosition, PropSpaceComponent);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
 }
 
 void AMS_ConstructibleLevelScriptActorBase::RegisterGridObjectData(TArray<const FMS_GridData*>& aGridDatas,

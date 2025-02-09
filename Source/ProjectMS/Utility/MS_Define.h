@@ -100,6 +100,7 @@ enum class EMS_UnitType : int32
  Furniture = 3,
  Vehicle = 4,
  Spline = 5,
+ Gate = 6,
 };
 
 // Widget

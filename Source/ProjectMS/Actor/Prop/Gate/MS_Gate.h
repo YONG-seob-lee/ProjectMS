@@ -18,6 +18,12 @@ protected:
 	virtual void BeginPlay() override;
 
 
+public:
+	// Getter
+	int32 GetGateIndex() const { return GateIndex; }
+	int32 GetLinkedGateIndex() const { return LinkedGateIndex; }
+
+	
 private:
 	// Gate Data
 	UPROPERTY(EditInstanceOnly, Category=MS_Gate)

@@ -23,7 +23,7 @@ public:
 
 	
 protected:
-	virtual void ParsingDefaultPropDatas();
+	virtual void InitializeZones();
 
 public:
 	virtual void RegisterGridObjectData(TArray<const FMS_GridData*>& aGridDatas, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
