@@ -15,7 +15,7 @@ enum class EMS_ZoneType : uint8
 	None = 0,
 	Display = 1,
 	Shelf = 2,
-	ParkingSpace = 3,
+	Pallet = 3,
 
 	Passage = 100,
 };
@@ -28,6 +28,7 @@ enum class EMS_PropType : uint8
 	Wall = 2,
 	Furniture = 3,
 	Structure = 4,
+	Gate = 5,
 };
 
 UENUM(BlueprintType)
@@ -39,9 +40,9 @@ enum class EMS_PropSpaceType : uint8
 	FreeSpace = 2,
 	StaffSpace = 3,
 	
-	PurposefulCustomerSpace = 4,
-	PurposefulStaffSpace = 5,
-	PurposefulCustomerAndStaffSpace = 6,
+	PurposefulCustomerOnly = 4,
+	PurposefulStaffOnly = 5,
+	PurposefulCustomerAndStaffOnly = 6,
 };
 
 UENUM(BlueprintType)
@@ -54,6 +55,8 @@ enum class EMS_PurposeType : uint8
 	AfterPayment = 3,
 
 	UseStorage = 4,
+
+	UseGate = 5,
 	
 	Any = 100,	// != None
 };

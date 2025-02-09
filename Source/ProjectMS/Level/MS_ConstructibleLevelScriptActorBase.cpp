@@ -441,7 +441,8 @@ void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
 	{
 		Zone->SetZoneOpened(true);
 
-		if (Zone->GetZoneType() != EMS_ZoneType::Passage)
+		if (Zone->GetZoneType() == EMS_ZoneType::Display
+			|| Zone->GetZoneType() == EMS_ZoneType::Shelf)
 		{
 			PlayerState->AddOpenedZoneId(aZoneIndex);
 		}

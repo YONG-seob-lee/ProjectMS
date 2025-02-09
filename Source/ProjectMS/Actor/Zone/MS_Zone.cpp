@@ -33,6 +33,8 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	if (FloorAttachedComponent)
 	{
 		FloorAttachedComponent->SetupAttachment(ZoneBoxComponent);
+
+		FloorAttachedComponent->SetVisibility(false, true);
 	}
 	
 	WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("WallAttachedComponent"));
@@ -45,6 +47,8 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	if (ZoneOpenWidgetComponent)
 	{
 		ZoneOpenWidgetComponent->SetupAttachment(ZoneBoxComponent);
+
+		ZoneOpenWidgetComponent->SetVisibility(false);
 	}
 
 	// Cache
@@ -68,6 +72,11 @@ void AMS_Zone::BeginPlay()
 		{
 			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
 		}
+	}
+
+	if (ZoneType == EMS_ZoneType::Pallet)
+	{
+		bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
 	}
 }
 
