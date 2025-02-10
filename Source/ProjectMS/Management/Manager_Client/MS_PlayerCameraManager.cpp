@@ -2,9 +2,6 @@
 
 #include "MS_SceneManager.h"
 #include "Camera/CameraModifier_CameraShake.h"
-#include "Kismet/GameplayStatics.h"
-
-#include "CoreClass/Controller/MS_PlayerController.h"
 
 #include "Camera/ViewCamera/QuarterViewCamera/MS_QuarterViewCamera.h"
 #include "Camera/ViewCamera/SideViewCamera/MS_SideViewCamera.h"
@@ -18,6 +15,7 @@
 #include "Camera/CameraEffect/CameraShake/MS_CameraShake.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
+#include "Table/Caches/MS_CommonCacheTable.h"
 
 namespace ViewCamera
 {
@@ -29,9 +27,9 @@ namespace ViewCamera
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
 {
 	CameraManager = this;
-	CameraModeMap.Add(EMS_CameraModeType::FollowingInputCameraMode, CreateDefaultSubobject<UMS_FollowingInputCameraMode>(TEXT("FollowingInputCameraMode")));
-	CameraModeMap.Add(EMS_CameraModeType::FollowingPlayerCameraMode, CreateDefaultSubobject<UMS_FollowingPlayerCameraMode>(TEXT("FollowingPlayerCameraMode")));
-	CameraModeMap.Add(EMS_CameraModeType::ImmobileCameraMode, CreateDefaultSubobject<UMS_ImmobileCameraMode>(TEXT("ImmobileCameraMode")));
+	CameraModeMap.Emplace(EMS_CameraModeType::FollowingInputCameraMode, CreateDefaultSubobject<UMS_FollowingInputCameraMode>(TEXT("FollowingInputCameraMode")));
+	CameraModeMap.Emplace(EMS_CameraModeType::FollowingPlayerCameraMode, CreateDefaultSubobject<UMS_FollowingPlayerCameraMode>(TEXT("FollowingPlayerCameraMode")));
+	CameraModeMap.Emplace(EMS_CameraModeType::ImmobileCameraMode, CreateDefaultSubobject<UMS_ImmobileCameraMode>(TEXT("ImmobileCameraMode")));
 
 	CameraEffect = CreateDefaultSubobject<UMS_CameraEffect>(TEXT("CameraEffect"));
 }
@@ -50,23 +48,137 @@ void AMS_PlayerCameraManager::BeginPlay()
 
 void AMS_PlayerCameraManager::Destroyed()
 {
+	FinalizeViewCamera();
+	
 	Super::Destroyed();
 }
 
-void AMS_PlayerCameraManager::FadeInCamera(float aDuration, EMS_InterpolationType aInterpolationType)
+void AMS_PlayerCameraManager::InitializeViewCamera()
 {
+	FActorSpawnParameters ActorSpawnParameters = {};
+	
+	if(TObjectPtr<AMS_QuarterViewCamera> QuarterViewCamera = GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	{
+		QuarterViewCamera->Deactivate();
+		ActorSpawnParameters.Name = ViewCamera::Quarter;
+		ViewCameraMap.Emplace(EMS_ViewCameraType::QuarterView, QuarterViewCamera);
+	}
+
+	if(TObjectPtr<AMS_SideViewCamera> SideViewCamera = GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	{
+		SideViewCamera->Deactivate();
+		ActorSpawnParameters.Name = ViewCamera::Side;
+		ViewCameraMap.Emplace(EMS_ViewCameraType::SideView, SideViewCamera);
+	}
+
+	if(TObjectPtr<AMS_TopViewCamera> TopViewCamera = GetWorld()->SpawnActor<AMS_TopViewCamera>(AMS_TopViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	{
+		TopViewCamera->Deactivate();
+		ActorSpawnParameters.Name = ViewCamera::Top;
+		ViewCameraMap.Emplace(EMS_ViewCameraType::TopView, TopViewCamera);
+	}
 }
 
-void AMS_PlayerCameraManager::FadeOutCamera(float aDuration, EMS_InterpolationType aInterpolationType)
+void AMS_PlayerCameraManager::FinalizeViewCamera()
 {
+	for(auto& ViewCamera : ViewCameraMap)
+	{
+		ViewCamera.Value->Deactivate();
+		GetWorld()->DestroyActor(ViewCamera.Value);
+	}
+
+	ViewCameraMap.Empty();
+}
+
+void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam /* = FViewTargetTransitionParams() */)
+{
+	if (ViewCameraType == aViewCameraType)
+	{
+		return;
+	}
+
+	const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(aViewCameraType);
+	if(ViewCamera == nullptr)
+	{
+		return;
+	}
+	
+	const TObjectPtr<AMS_ViewCamera> TargetCamera = *ViewCamera;
+
+	if (TargetCamera == nullptr)
+	{
+		MS_CHECK(TargetCamera);
+		return;
+	}
+
+	if (CurrentCamera.IsValid() == true)
+	{
+		CurrentCamera->Deactivate();
+	}
+
+	ViewCameraType = aViewCameraType;
+	CurrentCamera = TargetCamera;
+
+	if(aTransitionParam.BlendTime > 0.f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(CameraTransitionTimerHandle, [this]()
+		{
+			if(OnFinishedCameraTransition.IsBound())
+			{
+				OnFinishedCameraTransition.Execute();
+				OnFinishedCameraTransition.Unbind();
+			}
+		}, aTransitionParam.BlendTime, false);
+		
+	}
+	
+	SetViewTarget(CurrentCamera.Get(), aTransitionParam);
+}
+
+void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeType)
+{
+	const TObjectPtr<class UMS_CameraMode>* pCameraMode = CameraModeMap.Find(aCameraModeType);
+	if(pCameraMode == nullptr)
+	{
+		return;
+	}
+	UMS_CameraMode* TargetCameraMode = *pCameraMode;
+
+	if (TargetCameraMode == nullptr || CurrentCameraMode == TargetCameraMode)
+	{
+		return;
+	}
+
+	if (CurrentCameraMode.IsValid() == true)
+	{
+		CurrentCameraMode->DeactivateMode();
+	}
+
+	CurrentCameraMode = TargetCameraMode;
+	CurrentCameraMode->ActivateMode();
+}
+
+void AMS_PlayerCameraManager::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCameraPostProcessEffect) const
+{
+	MS_ENSURE(CurrentCamera.Get());
+	MS_ENSURE(aCameraPostProcessEffect);
+
+	CurrentCamera->AdjustPostProcessEffect(aCameraPostProcessEffect);
 }
 
 void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 {
-	float TargetCameraDistance = ViewCamera.Get()->CameraDistance + (-aDistance * CAMERA_DISTANCE_STRANGTH);
-	TargetCameraDistance = FMath::Clamp(TargetCameraDistance, MIN_CAMERA_DISTANCE, MAX_CAMERA_DISTANCE);
+	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+	MS_CHECK(CommonTable);
 
-	const float NewInertiaForce = FMath::Clamp((TargetCameraDistance - ViewCamera.Get()->CameraDistance) * 0.9f, -100.0f, 100.0f);
+	const float CameraDistanceStrength = CommonTable->GetParameter02(CommonContents::CAMERA_DISTANCE_STRENGTH);
+	const float CameraDistanceMax = CommonTable->GetParameter02(CommonContents::MAX_CAMERA_DISTANCE);
+	const float CameraDistanceMin = CommonTable->GetParameter02(CommonContents::MIN_CAMERA_DISTANCE);
+	
+	float TargetCameraDistance = CurrentCamera.Get()->CameraDistance + (-aDistance * CameraDistanceStrength);
+	TargetCameraDistance = FMath::Clamp(TargetCameraDistance, CameraDistanceMin, CameraDistanceMax);
+
+	const float NewInertiaForce = FMath::Clamp((TargetCameraDistance - CurrentCamera.Get()->CameraDistance) * 0.9f, -100.0f, 100.0f);
 
 	if (GetWorld()->GetTimerManager().IsTimerActive(CameraInertiaTimerHandle))
 	{
@@ -87,56 +199,23 @@ void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 				return;
 			}
 
-			float NewCameraDistance = ViewCamera.Get()->CameraDistance + CameraInertiaForce;
-			NewCameraDistance = FMath::Clamp(NewCameraDistance, MIN_CAMERA_DISTANCE, MAX_CAMERA_DISTANCE);
+			float NewCameraDistance = CurrentCamera.Get()->CameraDistance + CameraInertiaForce;
 
-			ViewCamera.Get()->AdjustCameraDistance(NewCameraDistance);
+		const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+		MS_CHECK(CommonTable);
+
+		const float CameraDistanceMax = CommonTable->GetParameter02(CommonContents::MAX_CAMERA_DISTANCE);
+		const float CameraDistanceMin = CommonTable->GetParameter02(CommonContents::MIN_CAMERA_DISTANCE);
+		
+			NewCameraDistance = FMath::Clamp(NewCameraDistance, CameraDistanceMin, CameraDistanceMax);
+
+			CurrentCamera.Get()->AdjustCameraDistance(NewCameraDistance);
 
 		}, 0.01f, true);
 }
 
 void AMS_PlayerCameraManager::OrbitCamera(float aFloat)
 {
-}
-
-FRotator AMS_PlayerCameraManager::GenerateInertiaForceForRotation(FRotator aCurrentRotation, FRotator aTargetRotation, float& aVelocity, float aDampingFactor)
-{
-	FRotator Delta = aTargetRotation - aCurrentRotation;
-	aVelocity += Delta.Yaw * aDampingFactor;
-	aVelocity *= aDampingFactor;
-
-	return aCurrentRotation + FRotator(0.0f, aVelocity, 0.0f);
-}
-
-void AMS_PlayerCameraManager::RestrictCameraMovement(const bool& aFlag)
-{
-	RestrictCameraFlag = aFlag;
-}
-
-void AMS_PlayerCameraManager::DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
-{
-	TargetCameraRotation = ViewCamera.Get()->GetActorRotation();
-	TargetCameraRotation.Yaw += aPointerGlidePositionDelta.X * 0.9f;
-
-	if (!GetWorld()->GetTimerManager().IsTimerActive(CameraRotationTimerHandle))
-	{
-		GetWorld()->GetTimerManager().SetTimer(CameraRotationTimerHandle, [this]()
-			{
-				FRotator CurrentRotation = ViewCamera.Get()->GetActorRotation();
-
-				static float VelocityYaw = 0.0f;
-
-				FRotator NewRotation = GenerateInertiaForceForRotation(CurrentRotation, TargetCameraRotation, VelocityYaw, 0.2f);
-				NewRotation.Yaw = FMath::Clamp(NewRotation.Yaw, -45.0f, 45.0f);
-
-				ViewCamera.Get()->SetActorRotation(NewRotation);
-
-				if (FMath::Abs(VelocityYaw) < 0.01f && FMath::IsNearlyEqual(NewRotation.Yaw, TargetCameraRotation.Yaw, 0.01f))
-				{
-					GetWorld()->GetTimerManager().ClearTimer(CameraRotationTimerHandle);
-				}
-			}, 0.005f, true);
-	}
 }
 
 void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
@@ -148,91 +227,6 @@ void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
 	StartCameraShake(UMS_CameraShake::StaticClass(), AddCameraShakeParams);
 }
 
-void AMS_PlayerCameraManager::InitializeViewCamera()
-{
-	FActorSpawnParameters ActorSpawnParameters = {};
-	
-	ActorSpawnParameters.Name = ViewCamera::Quarter;
-	ViewCameraMap.Add(EMS_ViewCameraType::QuarterView, GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
-
-	ActorSpawnParameters.Name = ViewCamera::Side;
-	ViewCameraMap.Add(EMS_ViewCameraType::SideView, GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
-
-	ActorSpawnParameters.Name = ViewCamera::Top;
-	ViewCameraMap.Add(EMS_ViewCameraType::TopView, GetWorld()->SpawnActor<AMS_TopViewCamera>(AMS_TopViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters));
-
-	for (const TPair<EMS_ViewCameraType, TObjectPtr<AMS_ViewCamera>>& PairMap : ViewCameraMap)
-	{
-		PairMap.Value->Bind(this);
-		PairMap.Value->Deactivate();
-	}
-}
-
-void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam /* = FViewTargetTransitionParams() */)
-{
-	TObjectPtr<AMS_ViewCamera> TempViewCamera = ViewCameraMap.Find(aViewCameraType)->Get();
-
-	if (TempViewCamera == nullptr)
-	{
-		MS_CHECK(TempViewCamera);
-		return;
-	}
-
-	if (ViewCameraType == aViewCameraType)
-	{
-		return;
-	}
-
-	if (ViewCamera.IsValid() == true)
-	{
-		ViewCamera->Deactivate();
-	}
-
-	ViewCamera = TempViewCamera;
-	ViewCameraType = aViewCameraType;
-
-	if(aTransitionParam.BlendTime > 0.f)
-	{
-		GetWorld()->GetTimerManager().SetTimer(CameraTransitionTimerHandle, [this]()
-		{
-			if(OnFinishedCameraTransition.IsBound())
-			{
-				OnFinishedCameraTransition.Execute();
-				OnFinishedCameraTransition.Unbind();
-			}
-		}, aTransitionParam.BlendTime, false);
-		
-	}
-	
-	SetViewTarget(ViewCamera.Get(), aTransitionParam);
-}
-
-void AMS_PlayerCameraManager::SwitchCameraMode(EMS_CameraModeType aCameraModeType)
-{
-	UMS_CameraMode* TempCameraMode = CameraModeMap.Find(aCameraModeType)->Get();
-
-	if (TempCameraMode == nullptr || CameraMode == TempCameraMode)
-	{
-		return;
-	}
-
-	if (CameraMode.IsValid() == true)
-	{
-		CameraMode->DeactivateMode();
-	}
-
-	CameraMode = TempCameraMode;
-	CameraMode->Bind(this);
-	CameraMode->ActivateMode();
-}
-
-void AMS_PlayerCameraManager::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCameraPostProcessEffect)
-{
-	MS_CHECK(ViewCamera.Get()); MS_CHECK(aCameraPostProcessEffect);
-
-	ViewCamera->AdjustPostProcessEffect(aCameraPostProcessEffect);
-}
-
 void AMS_PlayerCameraManager::LocateAndRotateCamera(const FVector& aLocation, const FRotator& aRotation, EMS_ViewCameraType aViewCameraType)
 {
 	if(const TObjectPtr<class AMS_ViewCamera>* TargetViewCamera = ViewCameraMap.Find(aViewCameraType))
@@ -241,22 +235,27 @@ void AMS_PlayerCameraManager::LocateAndRotateCamera(const FVector& aLocation, co
 	}
 }
 
-void AMS_PlayerCameraManager::LocateCamera(FVector aLocation)
+void AMS_PlayerCameraManager::LocateCamera(const FVector& aLocation) const
 {
-	
-	ViewCamera->SetActorLocation(aLocation);
+	if(CurrentCamera.IsValid())
+	{
+		CurrentCamera->SetActorLocation(aLocation);
+	}
 }
 
-void AMS_PlayerCameraManager::RotateCamera(FRotator aRotation)
+void AMS_PlayerCameraManager::RotateCamera(const FRotator& aRotation) const
 {
-	ViewCamera->SetActorRotation(aRotation);
+	if(CurrentCamera.IsValid())
+	{
+		CurrentCamera->SetActorRotation(aRotation);
+	}
 }
 
 void AMS_PlayerCameraManager::DollyIn(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -264,7 +263,7 @@ void AMS_PlayerCameraManager::DollyOut(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -272,7 +271,7 @@ void AMS_PlayerCameraManager::TruckLeft(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -280,7 +279,7 @@ void AMS_PlayerCameraManager::TruckRight(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -301,7 +300,7 @@ void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVe
 		MoveDensity = 0.8f;
 	}
 	
-	ViewCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
+	CurrentCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
 	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveDensity);
 }
 
@@ -309,7 +308,7 @@ void AMS_PlayerCameraManager::PedestalUp(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(0.0f, 0.0f, 1.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(0.0f, 0.0f, 1.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -317,7 +316,7 @@ void AMS_PlayerCameraManager::PedestalDown(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldOffset(FVector(0.0f, 0.0f, -1.0f) * aValue.Get<float>() * MoveSensitivity);
+		CurrentCamera->AddActorWorldOffset(FVector(0.0f, 0.0f, -1.0f) * aValue.Get<float>() * MoveSensitivity);
 	}
 }
 
@@ -325,46 +324,72 @@ void AMS_PlayerCameraManager::RollCounterclockwise(const FInputActionValue& aVal
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(0.0f, 0.0f, -1.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(0.0f, 0.0f, -1.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 void AMS_PlayerCameraManager::RollClockwise(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(0.0f, 0.0f, 1.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(0.0f, 0.0f, 1.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 void AMS_PlayerCameraManager::TiltUp(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(1.0f, 0.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 void AMS_PlayerCameraManager::TiltDown(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(-1.0f, 0.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 void AMS_PlayerCameraManager::PanLeft(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(0.0f, -1.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 void AMS_PlayerCameraManager::PanRight(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)
 	{
-		ViewCamera->AddActorWorldRotation(FRotator(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
+		CurrentCamera->AddActorWorldRotation(FRotator(0.0f, 1.0f, 0.0f) * aValue.Get<float>() * TurnSensitivity);
 	}
 }
 
-void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
+void AMS_PlayerCameraManager::DEBUG_INPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
+{
+	TargetCameraRotation = CurrentCamera.Get()->GetActorRotation();
+	TargetCameraRotation.Yaw += aPointerGlidePositionDelta.X * 0.9f;
+
+	if (!GetWorld()->GetTimerManager().IsTimerActive(CameraRotationTimerHandle))
+	{
+		GetWorld()->GetTimerManager().SetTimer(CameraRotationTimerHandle, [this]()
+			{
+				FRotator CurrentRotation = CurrentCamera.Get()->GetActorRotation();
+
+				static float VelocityYaw = 0.0f;
+
+				FRotator NewRotation = GenerateInertiaForceForRotation(CurrentRotation, TargetCameraRotation, VelocityYaw, 0.2f);
+				NewRotation.Yaw = FMath::Clamp(NewRotation.Yaw, -45.0f, 45.0f);
+
+				CurrentCamera.Get()->SetActorRotation(NewRotation);
+
+				if (FMath::Abs(VelocityYaw) < 0.01f && FMath::IsNearlyEqual(NewRotation.Yaw, TargetCameraRotation.Yaw, 0.01f))
+				{
+					GetWorld()->GetTimerManager().ClearTimer(CameraRotationTimerHandle);
+				}
+			}, 0.005f, true);
+	}
+}
+
+void AMS_PlayerCameraManager::GenerateInertiaForce(const FVector& aMagnitude)
 {
 	InertiaForceMagnitude += aMagnitude;
 
@@ -372,11 +397,11 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 	{
 		GetWorld()->GetTimerManager().SetTimer(GenerateInertiaForceTimerHandle, [&]()
 			{
-				FVector AppliedInertiaForceMagnitude = InertiaForceMagnitude * 0.025f;
+				const FVector AppliedInertiaForceMagnitude = InertiaForceMagnitude * 0.025f;
 				InertiaForceMagnitude -= AppliedInertiaForceMagnitude;
 
-				FVector NewCameraLocation = ViewCamera->GetActorLocation() + AppliedInertiaForceMagnitude;
-				ViewCamera->SetActorLocation(NewCameraLocation);
+				const FVector NewCameraLocation = CurrentCamera->GetActorLocation() + AppliedInertiaForceMagnitude;
+				CurrentCamera->SetActorLocation(NewCameraLocation);
 
 				if (InertiaForceMagnitude.Equals(FVector::ZeroVector, 0.001f))
 				{
@@ -385,6 +410,15 @@ void AMS_PlayerCameraManager::GenerateInertiaForce(FVector aMagnitude)
 				}
 			}, 0.005f, true);
 	}
+}
+
+FRotator AMS_PlayerCameraManager::GenerateInertiaForceForRotation(const FRotator& aCurrentRotation, const FRotator& aTargetRotation, float& aVelocity, float aDampingFactor)
+{
+	const FRotator Delta = aTargetRotation - aCurrentRotation;
+	aVelocity += Delta.Yaw * aDampingFactor;
+	aVelocity *= aDampingFactor;
+
+	return aCurrentRotation + FRotator(0.0f, aVelocity, 0.0f);
 }
 
 AMS_PlayerCameraManager* AMS_PlayerCameraManager::GetInstance()

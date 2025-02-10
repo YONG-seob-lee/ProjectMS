@@ -6,10 +6,6 @@
 #include "Utility/MathUtility/MS_MathUtility.h"
 #include "MS_PlayerCameraManager.generated.h"
 
-#define CAMERA_DISTANCE_STRANGTH 20.0f
-#define MAX_CAMERA_DISTANCE 2000.0f
-#define MIN_CAMERA_DISTANCE 300.0f
-
 UENUM() enum class EMS_ViewCameraType
 {
 	Undefined,
@@ -36,28 +32,26 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 
-	// DEBUG
-	UFUNCTION(BlueprintCallable) void DEBUGINPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
-	UFUNCTION() FRotator GenerateInertiaForceForRotation(FRotator aCurrentRotation, FRotator aTargetRotation, float& aVelocity, float aDampingFactor);
+	void InitializeViewCamera();
+	void FinalizeViewCamera();
 
-	UFUNCTION(BlueprintCallable) void RestrictCameraMovement(const bool& aFlag);
+	void SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam = FViewTargetTransitionParams());
+	void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
 
-	UFUNCTION(BlueprintCallable) void FadeInCamera(float aDuration, EMS_InterpolationType aInterpolationType);
-	UFUNCTION(BlueprintCallable) void FadeOutCamera(float aDuration, EMS_InterpolationType aInterpolationType);
+	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect) const;
+	
+	FORCEINLINE void RestrictCameraMovement(bool aFlag) { RestrictCameraFlag = aFlag; }
+	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
+	FORCEINLINE TWeakObjectPtr<class AMS_ViewCamera> GetCurrentCamera() const { return CurrentCamera; }
+
 	UFUNCTION(BlueprintCallable) void ZoomCamera(float aDistance);
 	UFUNCTION(BlueprintCallable) void OrbitCamera(float aFloat);
 	UFUNCTION(BlueprintCallable) void ShakeCamera(float aIntensity, float aDuration);
 
-	UFUNCTION(BlueprintCallable) void InitializeViewCamera();
-	FORCEINLINE void SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam = FViewTargetTransitionParams());
-	FORCEINLINE void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
-
-	UFUNCTION() void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
-
 	void LocateAndRotateCamera(const FVector& aLocation, const FRotator& aRotation, EMS_ViewCameraType aViewCameraType = EMS_ViewCameraType::QuarterView);
 	
-	UFUNCTION(BlueprintCallable) void LocateCamera(FVector aLocation);
-	UFUNCTION(BlueprintCallable) void RotateCamera(FRotator aRotation);
+	void LocateCamera(const FVector& aLocation) const;
+	void RotateCamera(const FRotator& aRotation) const;
 
 	UFUNCTION() void DollyIn(const FInputActionValue& aValue);
 	UFUNCTION() void DollyOut(const FInputActionValue& aValue);
@@ -73,44 +67,41 @@ public:
 	UFUNCTION() void PanLeft(const FInputActionValue& aValue);
 	UFUNCTION() void PanRight(const FInputActionValue& aValue);
 
-	UFUNCTION(BlueprintCallable) void GenerateInertiaForce(FVector aMagnitude);
+	UFUNCTION() void DEBUG_INPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
 	
-	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
-
-	// Property
 private:
+	void GenerateInertiaForce(const FVector& aMagnitude);
+	FRotator GenerateInertiaForceForRotation(const FRotator& aCurrentRotation, const FRotator& aTargetRotation, float& aVelocity, float aDampingFactor);
+	
 	EMS_ViewCameraType ViewCameraType = EMS_ViewCameraType::Undefined;
 	bool RestrictCameraFlag = false;
 
-	float ZoomMagnification = 1.0f;
-	FTimerHandle ZoomTimerHandle = {};
-	float MoveSensitivity = 1.0f;
+	float MoveSensitivity = 1.f;
 	float MoveDensity = 1.f;
-	float TurnSensitivity = 1.0f;
+	float TurnSensitivity = 1.f;
 	FTimerHandle GenerateInertiaForceTimerHandle = {};
 	FVector InertiaForceMagnitude = {};
 
-	float CameraInertiaForce = 0.0f;
+	float CameraInertiaForce = 0.f;
 	FTimerHandle CameraInertiaTimerHandle = {};
 
 	FTimerHandle CameraTransitionTimerHandle = {};
 	FSimpleDelegate OnFinishedCameraTransition = {};
+	
 	// DEBUG
 	FTimerHandle CameraRotationTimerHandle = {};
 	FRotator TargetCameraRotation = {};
-
-	// Instance
-public:
-	TWeakObjectPtr<class AMS_ViewCamera> ViewCamera = nullptr;
-	TWeakObjectPtr<class UMS_CameraMode> CameraMode = nullptr;
+	
+	TWeakObjectPtr<class AMS_ViewCamera> CurrentCamera = nullptr;
+	TWeakObjectPtr<class UMS_CameraMode> CurrentCameraMode = nullptr;
 	TObjectPtr<class UMS_CameraEffect> CameraEffect = nullptr;
 
-	inline static TObjectPtr<AMS_PlayerCameraManager> CameraManager = nullptr;
-	static AMS_PlayerCameraManager* GetInstance();
-
-private:
 	TMap<EMS_CameraModeType, TObjectPtr<class UMS_CameraMode>> CameraModeMap = {};
 	TMap<EMS_ViewCameraType, TObjectPtr<class AMS_ViewCamera>> ViewCameraMap = {};
+
+public:
+	inline static TObjectPtr<AMS_PlayerCameraManager> CameraManager = nullptr;
+	static AMS_PlayerCameraManager* GetInstance();
 	
 #define gCameraMng (*AMS_PlayerCameraManager::GetInstance())
 };

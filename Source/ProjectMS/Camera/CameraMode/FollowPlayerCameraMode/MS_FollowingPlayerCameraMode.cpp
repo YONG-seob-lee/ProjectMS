@@ -13,13 +13,19 @@ UMS_FollowingPlayerCameraMode::UMS_FollowingPlayerCameraMode()
 
 void UMS_FollowingPlayerCameraMode::ActivateMode()
 {
-	CameraManager = Cast<AMS_PlayerCameraManager>(GetOuter());
-	MS_CHECK(CameraManager);
-
-	CameraManager->ViewCamera->AttachToActor(CameraManager->PCOwner->GetPawn(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false));
+	const TObjectPtr<APawn> OwnerPawn = gCameraMng.PCOwner->GetPawn();
+	const TWeakObjectPtr<AMS_ViewCamera> CurrentCamera = gCameraMng.GetCurrentCamera();
+	if(CurrentCamera.IsValid())
+	{
+		CurrentCamera->AttachToActor(OwnerPawn, FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, false));
+	}
 }
 
 void UMS_FollowingPlayerCameraMode::DeactivateMode()
 {
-	CameraManager->ViewCamera->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	const TWeakObjectPtr<AMS_ViewCamera> CurrentCamera = gCameraMng.GetCurrentCamera();
+	if(CurrentCamera.IsValid())
+	{
+		CurrentCamera->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	}
 }

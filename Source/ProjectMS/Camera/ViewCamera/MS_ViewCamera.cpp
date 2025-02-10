@@ -26,11 +26,6 @@ void AMS_ViewCamera::AdjustCameraDistance(float aDistance)
 	CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(-45.0f, 0.0f, 0.0f));
 }
 
-void AMS_ViewCamera::Bind(AMS_PlayerCameraManager* aManager)
-{
-	PlayerCameraManager = aManager;
-}
-
 void AMS_ViewCamera::Activate()
 {
 }
@@ -46,5 +41,5 @@ void AMS_ViewCamera::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCamer
 		return;
 	}
 
-	CameraComponent->PostProcessSettings.AddBlendable(aCameraPostProcessEffect->PostProcessMaterial, 1.0f);
+	CameraComponent->PostProcessSettings.AddBlendable(aCameraPostProcessEffect->PostProcessMaterial, 1.f);
 }

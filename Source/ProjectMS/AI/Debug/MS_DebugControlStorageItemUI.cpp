@@ -57,8 +57,14 @@ FReply UMS_DebugControlStorageItemUI::NativeOnMouseButtonDown(const FGeometry& I
         return FReply::Unhandled();
     }
 
-    AMS_ViewCamera* ViewCamera = Cast<AMS_ViewCamera>(Cast<AMS_PlayerCameraManager>(PlayerController->PlayerCameraManager)->ViewCamera);
 
+    const TWeakObjectPtr<AMS_ViewCamera> ViewCamera = gCameraMng.GetCurrentCamera();
+    if(!ViewCamera.IsValid())
+    {
+        return FReply::Unhandled();
+    }
+
+    
     FVector CameraLocation = ViewCamera->CameraComponent->GetComponentLocation();
     FVector CameraForwardVector = ViewCamera->CameraComponent->GetForwardVector();
 
