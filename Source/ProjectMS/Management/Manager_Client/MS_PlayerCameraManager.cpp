@@ -57,21 +57,21 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 {
 	FActorSpawnParameters ActorSpawnParameters = {};
 	
-	if(TObjectPtr<AMS_QuarterViewCamera> QuarterViewCamera = GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	if(TObjectPtr<AMS_QuarterViewCamera> QuarterViewCamera = GetWorld()->SpawnActor<AMS_QuarterViewCamera>(AMS_QuarterViewCamera::StaticClass(), FTransform(FRotator(0.f, -90.f, 0.f), FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
 	{
 		QuarterViewCamera->Deactivate();
 		ActorSpawnParameters.Name = ViewCamera::Quarter;
 		ViewCameraMap.Emplace(EMS_ViewCameraType::QuarterView, QuarterViewCamera);
 	}
 
-	if(TObjectPtr<AMS_SideViewCamera> SideViewCamera = GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	if(TObjectPtr<AMS_SideViewCamera> SideViewCamera = GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator(0.f, -90.f, 0.f), FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
 	{
 		SideViewCamera->Deactivate();
 		ActorSpawnParameters.Name = ViewCamera::Side;
 		ViewCameraMap.Emplace(EMS_ViewCameraType::SideView, SideViewCamera);
 	}
 
-	if(TObjectPtr<AMS_TopViewCamera> TopViewCamera = GetWorld()->SpawnActor<AMS_TopViewCamera>(AMS_TopViewCamera::StaticClass(), FTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	if(TObjectPtr<AMS_TopViewCamera> TopViewCamera = GetWorld()->SpawnActor<AMS_TopViewCamera>(AMS_TopViewCamera::StaticClass(), FTransform(FRotator(0.f, -90.f, 0.f), FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
 	{
 		TopViewCamera->Deactivate();
 		ActorSpawnParameters.Name = ViewCamera::Top;
@@ -227,11 +227,11 @@ void AMS_PlayerCameraManager::ShakeCamera(float aIntensity, float aDuration)
 	StartCameraShake(UMS_CameraShake::StaticClass(), AddCameraShakeParams);
 }
 
-void AMS_PlayerCameraManager::LocateAndRotateCamera(const FVector& aLocation, const FRotator& aRotation, EMS_ViewCameraType aViewCameraType)
+void AMS_PlayerCameraManager::LocateCamera(const FVector& aLocation, EMS_ViewCameraType aViewCameraType /*  = EMS_ViewCameraType::QuarterView */)
 {
-	if(const TObjectPtr<class AMS_ViewCamera>* TargetViewCamera = ViewCameraMap.Find(aViewCameraType))
+	if(const TObjectPtr<AMS_ViewCamera>* TargetViewCamera = ViewCameraMap.Find(aViewCameraType))
 	{
-		(*TargetViewCamera)->SetActorLocationAndRotation(aLocation, aRotation);
+		(*TargetViewCamera)->SetActorLocation(aLocation);
 	}
 }
 
@@ -290,18 +290,17 @@ void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVe
 		return;
 	}
 
-	if(const TObjectPtr<AMS_StageLevelScriptActor> StageLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	if(Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		aPointerGlidePositionDeltaTrend = FVector2D(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X);
 		MoveDensity = 3.f;
 	}
-	else if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	else if(Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		MoveDensity = 0.8f;
 	}
 	
-	CurrentCamera->AddActorWorldOffset(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveSensitivity);
-	GenerateInertiaForce(FVector(aPointerGlidePositionDeltaTrend.Y, -aPointerGlidePositionDeltaTrend.X, 0.0f) * MoveDensity);
+	CurrentCamera->AddActorWorldOffset(FVector(-aPointerGlidePositionDeltaTrend.X, -aPointerGlidePositionDeltaTrend.Y, 0.0f) * MoveSensitivity);
+	GenerateInertiaForce(FVector(-aPointerGlidePositionDeltaTrend.X, -aPointerGlidePositionDeltaTrend.Y, 0.0f) * MoveDensity);
 }
 
 void AMS_PlayerCameraManager::PedestalUp(const FInputActionValue& aValue)

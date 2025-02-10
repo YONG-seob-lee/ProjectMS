@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
 #include "InputActionValue.h"
-#include "Utility/MathUtility/MS_MathUtility.h"
 #include "MS_PlayerCameraManager.generated.h"
 
 UENUM() enum class EMS_ViewCameraType
@@ -48,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable) void OrbitCamera(float aFloat);
 	UFUNCTION(BlueprintCallable) void ShakeCamera(float aIntensity, float aDuration);
 
-	void LocateAndRotateCamera(const FVector& aLocation, const FRotator& aRotation, EMS_ViewCameraType aViewCameraType = EMS_ViewCameraType::QuarterView);
+	void LocateCamera(const FVector& aLocation, EMS_ViewCameraType aViewCameraType = EMS_ViewCameraType::QuarterView);
 	
 	void LocateCamera(const FVector& aLocation) const;
 	void RotateCamera(const FRotator& aRotation) const;

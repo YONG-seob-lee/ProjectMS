@@ -8,6 +8,8 @@ AMS_QuarterViewCamera::AMS_QuarterViewCamera()
 
 	CameraDistance = 500.0f;
     AdjustCameraDistance(CameraDistance);
+	
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AMS_QuarterViewCamera::BeginPlay()
@@ -18,7 +20,7 @@ void AMS_QuarterViewCamera::BeginPlay()
 void AMS_QuarterViewCamera::AdjustCameraDistance(float aDistance)
 {
     Super::AdjustCameraDistance(aDistance);
-    CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(-45.0f, 0.0f, 0.0f));
+    CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(Tilt, 0.0f, 0.0f));
 }
 
 void AMS_QuarterViewCamera::Activate()
@@ -29,4 +31,11 @@ void AMS_QuarterViewCamera::Activate()
 void AMS_QuarterViewCamera::Deactivate()
 {
 	Super::Deactivate();
+}
+
+void AMS_QuarterViewCamera::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(Tilt, 0.0f, 0.0f));
 }

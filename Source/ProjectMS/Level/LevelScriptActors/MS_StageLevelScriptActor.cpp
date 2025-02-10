@@ -34,8 +34,8 @@ void AMS_StageLevelScriptActor::BeginPlay()
 	gInputMng.OnPointerDownDelegate.AddDynamic(this, &AMS_StageLevelScriptActor::OnPressDownEvent);
 	gInputMng.OnPointerUpDelegate.AddDynamic(this, &AMS_StageLevelScriptActor::OnPressUpEvent);
 
-	gCameraMng.LocateAndRotateCamera(FVector(12600.f, -6380.f, 3200.f), FRotator(0.f, -90.f, 0.f), EMS_ViewCameraType::QuarterView);
-	gCameraMng.LocateAndRotateCamera(FVector(13310.f, -8000.f, 390.f), FRotator(45.f, -90.f, 0.f), EMS_ViewCameraType::SideView);
+	gCameraMng.LocateCamera(FVector(12600.f, -6380.f, 3200.f), EMS_ViewCameraType::QuarterView);
+	gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
 }
 
 // Called every frame

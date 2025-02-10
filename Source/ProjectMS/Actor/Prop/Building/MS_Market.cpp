@@ -43,8 +43,8 @@ void AMS_Market::LaunchEvent()
 {
 	Super::LaunchEvent();
 	
-	gCameraMng.LocateAndRotateCamera(FVector(370.f, 440.f, 0.f), FRotator::ZeroRotator, EMS_ViewCameraType::QuarterView);
-	gCameraMng.LocateAndRotateCamera(FVector::ZeroVector, FRotator::ZeroRotator, EMS_ViewCameraType::SideView);
+	gCameraMng.LocateCamera(FVector(370.f, 440.f, 0.f), EMS_ViewCameraType::QuarterView);
+	gCameraMng.LocateCamera(FVector::ZeroVector, EMS_ViewCameraType::SideView);
 	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::MarketLevel);

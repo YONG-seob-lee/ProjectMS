@@ -161,7 +161,7 @@ void FMS_PointerData::HandlePointerGlide()
 			{
 				CurrentModeState->OnMouseRightButtonGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 			}
-			
+			PointerGlidePositionDeltaTrend = FVector2D(PointerGlidePositionDeltaTrend.Y, PointerGlidePositionDeltaTrend.X);
 			gInputMng.OnMouseRightButtonGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 		}
 	}
@@ -206,6 +206,8 @@ void FMS_PointerData::UpdatePointerMovePosition()
 	PointerMovePositionDeltaTrend /= PointerMovePositionDeltaArray.Num();
 
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+
+	MS_LOG(TEXT("Delta : %s, DeltaTrend : %s"), *PointerMovePositionDelta.ToString(), *PointerMovePositionDeltaTrend.ToString());
 	if (IsValid(CurrentModeState))
 	{
 		CurrentModeState->OnInputPointerMove(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);

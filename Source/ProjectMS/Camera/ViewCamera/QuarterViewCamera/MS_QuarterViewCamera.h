@@ -15,7 +15,10 @@ public:
 	
 	virtual void Activate() override;
 	virtual void Deactivate() override;
-
+	virtual void Tick(float DeltaSeconds) override;
+	
 	virtual void AdjustCameraDistance(float aDistance) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Tilt = -70.f;
 };
