@@ -64,7 +64,7 @@ void AMS_PlayerCameraManager::InitializeViewCamera()
 		ViewCameraMap.Emplace(EMS_ViewCameraType::QuarterView, QuarterViewCamera);
 	}
 
-	if(TObjectPtr<AMS_SideViewCamera> SideViewCamera = GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator(0.f, -90.f, 0.f), FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
+	if(TObjectPtr<AMS_SideViewCamera> SideViewCamera = GetWorld()->SpawnActor<AMS_SideViewCamera>(AMS_SideViewCamera::StaticClass(), FTransform(FRotator(45.f, -90.f, 0.f), FVector::ZeroVector, FVector::OneVector), ActorSpawnParameters))
 	{
 		SideViewCamera->Deactivate();
 		ActorSpawnParameters.Name = ViewCamera::Side;
