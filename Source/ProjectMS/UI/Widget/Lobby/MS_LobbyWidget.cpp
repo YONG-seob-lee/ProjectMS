@@ -17,6 +17,8 @@ void UMS_LobbyWidget::NativeConstruct()
 
 	CPP_StartButton->GetOnClickedDelegate().AddUObject(this, &UMS_LobbyWidget::OnClickedStartButton);
 	gCameraMng.SwitchViewCamera(EMS_ViewCameraType::SideView);
+	
+	PlayAnimationByName(DefaultWidgetAnimation::Idle, 0, 100);
 }
 
 void UMS_LobbyWidget::OnClickedStartButton()

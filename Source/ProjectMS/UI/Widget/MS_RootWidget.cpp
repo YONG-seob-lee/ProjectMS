@@ -236,7 +236,7 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 	}
 	else if(aLevelType == EMS_LevelType::LobbyLevel)
 	{
-		CPP_GeneralWidget->SetRenderOpacity(1.f);
+		CPP_GeneralWidget->SetRenderOpacity(0.001f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
 	}
 	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
