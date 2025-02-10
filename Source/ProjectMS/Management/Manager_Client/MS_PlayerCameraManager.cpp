@@ -285,7 +285,7 @@ void AMS_PlayerCameraManager::TruckRight(const FInputActionValue& aValue)
 
 void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend)
 {
-	if (RestrictCameraFlag == true)
+	if (bRestrictCameraFlag == true)
 	{
 		return;
 	}

@@ -9,11 +9,13 @@
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/MS_Prop.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "MathUtility/MS_MathUtility.h"
+#include "Prop/Furniture/MS_Furniture.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
@@ -34,8 +36,6 @@ void UMS_ModeState_Construct::Initialize(uint8 aIndex, const FName& aName)
 
 void UMS_ModeState_Construct::Finalize()
 {
-	Super::Finalize();
-
 	// Delegate
 	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
 	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
@@ -45,6 +45,8 @@ void UMS_ModeState_Construct::Finalize()
 	{
 		MS_DeleteObject(GridBasedMoveHelper);
 	}
+	
+	Super::Finalize();
 }
 
 void UMS_ModeState_Construct::Tick(float aDeltaTime)
@@ -52,7 +54,7 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 }
 
 void UMS_ModeState_Construct::Begin()
-{
+{	
 	// ShowUnconstructableGrid
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
@@ -91,14 +93,19 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
 
 	AActor* InteractableActor = aInteractableHitResult.GetActor();
+
 	
-	if (IsValid(InteractableActor))
+	if (IsValid(InteractableActor) && Cast<AMS_Prop>(InteractableActor))
 	{
 		SelectProp(InteractableActor);
 	}
 
 	if (IsValid(PreviewProp))
 	{
+		if(PreviewProp == Cast<AMS_Prop>(InteractableActor))
+		{
+			gCameraMng.RestrictCameraMovement(true);
+		}
 		PreviewProp->ShowArrangementWidget(false);
 	}
 }
@@ -116,6 +123,9 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 	{
 		GridBasedMoveHelper->ResetPositionOffset();
 	}
+
+	MS_LOG(TEXT("UMS_ModeState_Construct::OnInputPointerUpEvent"));
+	gCameraMng.RestrictCameraMovement(false);
 }
 
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -159,6 +169,11 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 		}
 		else
 		{
+			if(gCameraMng.GetIsRestrictCameraMovement() == false)
+			{
+				return;
+			}
+				
 			FHitResult SpaceHitResult = {};
 			if (GridBasedMoveHelper->GetCheckedHitResultUnderObjectScreenPosition(PreviewProp, aPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
 			{

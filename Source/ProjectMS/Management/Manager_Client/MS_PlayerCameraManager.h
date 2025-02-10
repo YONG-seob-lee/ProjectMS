@@ -39,7 +39,8 @@ public:
 
 	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect) const;
 	
-	FORCEINLINE void RestrictCameraMovement(bool aFlag) { RestrictCameraFlag = aFlag; }
+	FORCEINLINE void RestrictCameraMovement(bool aFlag) { bRestrictCameraFlag = aFlag; }
+	FORCEINLINE bool GetIsRestrictCameraMovement() const { return bRestrictCameraFlag; }
 	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
 	FORCEINLINE TWeakObjectPtr<class AMS_ViewCamera> GetCurrentCamera() const { return CurrentCamera; }
 
@@ -73,7 +74,7 @@ private:
 	FRotator GenerateInertiaForceForRotation(const FRotator& aCurrentRotation, const FRotator& aTargetRotation, float& aVelocity, float aDampingFactor);
 	
 	EMS_ViewCameraType ViewCameraType = EMS_ViewCameraType::Undefined;
-	bool RestrictCameraFlag = false;
+	bool bRestrictCameraFlag = false;
 
 	float MoveSensitivity = 1.f;
 	float MoveDensity = 1.f;
