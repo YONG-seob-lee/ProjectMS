@@ -80,7 +80,7 @@ private:
 	int32 LatentActionInfoUUIDCounter = 0;
 	
 	FTimerHandle FadeTimerHandle = {};
-	float FadeProgressRate = 0.0f;
+	float FadeProgressRate = 0.f;
 
 	TWeakObjectPtr<class UMS_RootWidget> RootWidget = nullptr;
 

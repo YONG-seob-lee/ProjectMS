@@ -4,6 +4,7 @@
 #include "MS_SoundManager.h"
 
 #include "MS_Define.h"
+#include "PlayerState/MS_GameUserSettings.h"
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
 
@@ -18,21 +19,54 @@ UMS_SoundManager::UMS_SoundManager()
 	}
 
 	SoundMix = SoundMixObjectFinder.Object;
-
+	
 	// if(SoundMix->SoundClassEffects.IsValidIndex(0))
 	// {
+	// 	const float* DefaultMasterVolume = DefaultSoundVolume.Find(EMS_SoundClassType::Master);
+	// 	if(DefaultMasterVolume == nullptr)
+	// 	{
+	// 		return;
+	// 	}
+	// 	
 	// 	const FSoundClassAdjuster SoundClassAdjuster = SoundMix->SoundClassEffects[0];
 	// 	USoundClass* MasterSoundClass = SoundClassAdjuster.SoundClassObject;
-	// 	MasterSoundClass->Properties.Volume = 1.f;
+	// 	MasterSoundClass->Properties.Volume = *DefaultMasterVolume;
 	//
 	// 	for(const auto& ChildSoundClass : MasterSoundClass->ChildClasses)
 	// 	{
-	// 		ChildSoundClass->Properties.Volume = 1.f;
+	// 		ChildSoundClass->Properties.Volume = *DefaultMasterVolume;
 	// 	}
 	// }
 }
 
-void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, float aSoundVolume)
+void UMS_SoundManager::Initialize()
+{
+	Super::Initialize();
+
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return;
+	}
+	
+	TMap<EMS_SoundClassType, float> DefaultSoundVolume;
+	GameUserSettings->GetDefaultSoundVolume(DefaultSoundVolume);
+	for(const auto& DefaultVolume : DefaultSoundVolume)
+	{
+		AdjustSoundVolume(DefaultVolume.Key, DefaultVolume.Value);
+	}
+}
+
+void UMS_SoundManager::Finalize()
+{
+	if(const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings()))
+	{
+		GameUserSettings->ApplySettings(true);
+	}
+	Super::Finalize();
+}
+
+void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, float aSoundVolume /* = -1.f */)
 {
 	if(!SoundMix)
 	{
@@ -45,13 +79,30 @@ void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, flo
 		USoundClass* MasterSoundClass = SoundClassAdjuster.SoundClassObject;
 		if(aSoundClassType == EMS_SoundClassType::Master)
 		{
-			MasterSoundClass->Properties.Volume = aSoundVolume;
+			if(aSoundVolume <= -1.f)
+			{
+				const float TargetSoundVolume = GetSoundVolume(aSoundClassType);
+				
+				MasterSoundClass->Properties.Volume = TargetSoundVolume; 				
+			}
+			else
+			{
+				MasterSoundClass->Properties.Volume = aSoundVolume;
+			}
 		}
 		else
 		{
 			if(MasterSoundClass->ChildClasses.IsValidIndex(static_cast<int32>(aSoundClassType) - 2))
 			{
-				MasterSoundClass->ChildClasses[static_cast<int32>(aSoundClassType) - 2]->Properties.Volume = aSoundVolume;
+				if(aSoundVolume <= -1.f)
+				{
+					const float TargetSoundVolume =GetSoundVolume(aSoundClassType);
+					MasterSoundClass->ChildClasses[static_cast<int32>(aSoundClassType) - 2]->Properties.Volume = TargetSoundVolume; 				
+				}
+				else
+				{
+					MasterSoundClass->ChildClasses[static_cast<int32>(aSoundClassType) - 2]->Properties.Volume = aSoundVolume;
+				}
 			}
 		}
 	}
@@ -80,6 +131,44 @@ float UMS_SoundManager::GetSoundVolume(EMS_SoundClassType aSoundClassType) const
 	}
 
 	return -1.f;
+}
+
+float UMS_SoundManager::GetDefaultVolume(EMS_SoundClassType aSoundClassType)
+{
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return -1.f;
+	}
+	
+	TMap<EMS_SoundClassType, float> DefaultSoundVolume;
+	GameUserSettings->GetDefaultSoundVolume(DefaultSoundVolume);
+	
+	if(const float* Volume = DefaultSoundVolume.Find(aSoundClassType))
+	{
+		return *Volume;
+	}
+
+	return -1.f;
+}
+
+void UMS_SoundManager::GetAllDefaultVolume(TMap<int32, float>& aDefaultSoundVolume)
+{
+	aDefaultSoundVolume.Empty();
+	
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return;
+	}
+	
+	TMap<EMS_SoundClassType, float> DefaultSoundVolume;
+	GameUserSettings->GetDefaultSoundVolume(DefaultSoundVolume);
+	
+	for(const auto& Volume : DefaultSoundVolume)
+	{
+		aDefaultSoundVolume.Emplace(static_cast<int32>(Volume.Key), Volume.Value);
+	}
 }
 
 UMS_SoundManager* UMS_SoundManager::GetInstance()

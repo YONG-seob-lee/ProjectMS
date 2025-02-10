@@ -18,3 +18,4 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 17,FinancialManagement,100,17,FALSE,0
 18,Schedule,100,18,FALSE,0
 19,ScheduleDetail,100,19,FALSE,0
+20,Setting,100,20,FALSE,0

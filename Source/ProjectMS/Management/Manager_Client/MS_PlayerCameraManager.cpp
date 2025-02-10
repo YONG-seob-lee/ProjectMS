@@ -251,6 +251,22 @@ void AMS_PlayerCameraManager::RotateCamera(const FRotator& aRotation) const
 	}
 }
 
+void AMS_PlayerCameraManager::SetQuarterViewTilt(EMS_TiltType aTiltType)
+{
+	const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView);
+	if(!ViewCamera)
+	{
+		return;
+	}
+	const TObjectPtr<AMS_QuarterViewCamera> QuarterViewCamera = Cast<AMS_QuarterViewCamera>(*ViewCamera);
+	if(!QuarterViewCamera)
+	{
+		return;
+	}
+	
+	QuarterViewCamera->SetTilt(aTiltType);
+}
+
 void AMS_PlayerCameraManager::DollyIn(const FInputActionValue& aValue)
 {
 	if (aValue.Get<float>() != 0.0f)

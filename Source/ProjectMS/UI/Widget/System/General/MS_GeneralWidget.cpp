@@ -15,6 +15,7 @@
 #include "Widget/Customer/Modal/MS_CustomerManagementWidget.h"
 #include "Widget/Finance/Modal/MS_FinancialManagementWidget.h"
 #include "Widget/Schedule/Modal/MS_ScheduleModalWidget.h"
+#include "Widget/System/Settings/Modal/MS_SettingModalWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -27,7 +28,8 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_LeftButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedLeftButton);
 	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
-
+	CPP_ExpanderButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedExpanderButton);
+	
 	gScheduleMng.OnUpdateScheduleDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateMinute);
 
@@ -155,7 +157,9 @@ void UMS_GeneralWidget::OnClickedRightButton()
 {
 	if(RightButtonType == EMS_GeneralButtonType::Setting)
 	{
-		gWidgetMng.ShowModalWidget();
+		FMS_ModalParameter Parameter;
+		Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_SettingModalWidget::GetWidgetName());
+		gWidgetMng.ShowModalWidget(Parameter);
 	}
 	else if(RightButtonType == EMS_GeneralButtonType::Menu)
 	{
@@ -177,6 +181,13 @@ void UMS_GeneralWidget::OnClickedRightButton()
 void UMS_GeneralWidget::OnClickedMenuElementButton()
 {
 	CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMS_GeneralWidget::OnClickedExpanderButton()
+{
+	FMS_ModalParameter Parameter;
+	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_SettingModalWidget::GetWidgetName());
+	gWidgetMng.ShowModalWidget(Parameter);
 }
 
 void UMS_GeneralWidget::OnClickedHireStaffButton()

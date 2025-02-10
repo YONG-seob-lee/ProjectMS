@@ -96,16 +96,18 @@ void UMS_SceneManager::StartFade()
 		EndFade();
 		return;
 	}
-
+	
 	if(LevelChangeStep < EMS_FadeStep::Loading)
 	{
 		RootWidget->SetContentWidgetRender(NewCommand->GetFadeOutTransitionStyle());
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f - FadeProgressRate);
+		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::Master);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, DefaultVolume * (1.f - FadeProgressRate));
 	}
 	else
 	{
 		RootWidget->SetContentWidgetRender(NewCommand->GetFadeInTransitionStyle());
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, FadeProgressRate);
+		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::Master);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, DefaultVolume * FadeProgressRate);
 	}
 	
 	
@@ -121,13 +123,16 @@ void UMS_SceneManager::ProcessFade()
 	if(LevelChangeStep < EMS_FadeStep::Loading)
 	{
 		RootWidget->SetContentWidgetTransition(NewCommand->GetFadeOutTransitionStyle() , FadeAnimationCurveType, FadeProgressRate);
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f - FadeProgressRate);
+		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::Master);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, DefaultVolume * (1.f - FadeProgressRate));
 		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::Master));
 	}
 	else
 	{
 		RootWidget->SetContentWidgetTransition(NewCommand->GetFadeInTransitionStyle(), FadeAnimationCurveType, FadeProgressRate);
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, FadeProgressRate);
+
+		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::Master);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, DefaultVolume * FadeProgressRate);
 		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::Master));
 	}
 		

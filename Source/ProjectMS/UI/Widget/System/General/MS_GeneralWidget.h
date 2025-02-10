@@ -41,6 +41,8 @@ private:
 	void OnClickedMenuElementButton();
 
 	// Left Expander Button
+	void OnClickedExpanderButton();
+	
 	void OnClickedHireStaffButton();
 	void OnClickedManageStaffButton();
 	void OnClickedManageCustomerButton();

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
 #include "InputActionValue.h"
+#include "PlayerState/MS_GameUserSettings.h"
 #include "MS_PlayerCameraManager.generated.h"
 
 UENUM() enum class EMS_ViewCameraType
@@ -52,6 +53,8 @@ public:
 	
 	void LocateCamera(const FVector& aLocation) const;
 	void RotateCamera(const FRotator& aRotation) const;
+	
+	void SetQuarterViewTilt(EMS_TiltType aTiltType);
 
 	UFUNCTION() void DollyIn(const FInputActionValue& aValue);
 	UFUNCTION() void DollyOut(const FInputActionValue& aValue);
@@ -68,7 +71,7 @@ public:
 	UFUNCTION() void PanRight(const FInputActionValue& aValue);
 
 	UFUNCTION() void DEBUG_INPUT_OrbitCamera(FVector2D aPointerGlidePosition, FVector2D aPointerGlidePositionDelta, FVector2D aPointerGlidePositionDeltaTrend);
-	
+
 private:
 	void GenerateInertiaForce(const FVector& aMagnitude);
 	FRotator GenerateInertiaForceForRotation(const FRotator& aCurrentRotation, const FRotator& aTargetRotation, float& aVelocity, float aDampingFactor);

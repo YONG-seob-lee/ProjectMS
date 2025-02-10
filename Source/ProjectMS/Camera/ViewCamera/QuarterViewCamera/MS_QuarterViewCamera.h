@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
+#include "PlayerState/MS_GameUserSettings.h"
 #include "MS_QuarterViewCamera.generated.h"
 
 UCLASS() class PROJECTMS_API AMS_QuarterViewCamera : public AMS_ViewCamera
@@ -15,10 +16,10 @@ public:
 	
 	virtual void Activate() override;
 	virtual void Deactivate() override;
-	virtual void Tick(float DeltaSeconds) override;
 	
 	virtual void AdjustCameraDistance(float aDistance) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Tilt = -70.f;
+	void SetTilt(EMS_TiltType aTiltType);
+private:
+	TMap<EMS_TiltType, float> Tilts; 
 };

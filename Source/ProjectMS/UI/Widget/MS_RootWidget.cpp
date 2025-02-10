@@ -8,6 +8,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
+#include "Manager_Client/MS_SoundManager.h"
 #include "System/MS_ToastWidget.h"
 #include "System/Modal/MS_ModalWidget.h"
 #include "System/Rotate/MS_RotateWidget.h"

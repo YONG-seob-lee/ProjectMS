@@ -45,5 +45,9 @@ private:
 	TObjectPtr<class UMS_ScheduleManager> ScheduleManager = nullptr;
 
 	UPROPERTY()
+	TObjectPtr<class UMS_SoundManager> SoundManager = nullptr;
+	
+	UPROPERTY()
 	TObjectPtr<class UMS_TutorialHelper> TutorialHelper = nullptr;
+
 };
