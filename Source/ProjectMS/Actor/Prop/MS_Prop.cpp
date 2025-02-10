@@ -16,20 +16,6 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 	, PropType(EMS_PropType::None), TableIndex(0)
 {
 	// Component
-	// Shape Collision Component
-	ShapeCollisionComponent = CreateDefaultSubobject<UPrimitiveComponent>(TEXT("ShapeCollisionComponent"));
-	if (ShapeCollisionComponent)
-	{
-		ShapeCollisionComponent->SetupAttachment(SceneRootComponent);
-		ShapeCollisionComponent->SetCollisionProfileName(TEXT("ShapeCollision"));
-		
-		if (UBoxComponent* Box = Cast<UBoxComponent>(ShapeCollisionComponent))
-		{
-			ShapeCollisionComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
-			Box->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
-		}
-	}
-
 	// Mesh Components
 	UMeshComponent* FirstMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FirstMeshComponent"));
 	if (FirstMeshComponent)
@@ -61,6 +47,17 @@ void AMS_Prop::PostInitializeComponents()
 	
 	// Widget Component
 	ShowArrangementWidget(false);
+
+	// Component
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+
+	// Physics off
+	for (UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents)
+	{
+		PrimitiveComponent->SetSimulatePhysics(false);
+		PrimitiveComponent->SetEnableGravity(false);
+	}
 }
 
 void AMS_Prop::BeginPlay()
@@ -125,13 +122,6 @@ UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const 
 void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 {
 	OwnerZone = aOwnerZone;
-}
-
-void AMS_Prop::SetLocationByGridPosition(const FIntVector2& aGridPosition)
-{
-	GridPosition = aGridPosition;
-
-	
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)

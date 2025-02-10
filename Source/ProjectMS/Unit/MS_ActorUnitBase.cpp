@@ -105,6 +105,8 @@ TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(const FVector& aVector, con
 		TObjectPtr<AMS_Actor> NewActor = Cast<AMS_Actor>(MS_SpawnActor(BPClass, aVector, aRotator));
 		if(IsValid(NewActor))
 		{
+			FVector Test = NewActor->GetActorLocation();
+			
 			NewActor->Create(BPClass->GetName());
 			return NewActor;
 		}

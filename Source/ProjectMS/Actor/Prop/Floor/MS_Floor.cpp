@@ -15,13 +15,6 @@ AMS_Floor::AMS_Floor(const FObjectInitializer& aObjectInitializer)
 {
 	// Property
 	PropType = EMS_PropType::Floor;
-
-	// Component
-	if (UBoxComponent* Box = Cast<UBoxComponent>(ShapeCollisionComponent))
-	{
-		ShapeCollisionComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-		Box->SetBoxExtent(FVector(25.0f, 25.0f, 0.0f));
-	}
 	
 /*#if WITH_EDITORONLY_DATA
 	if (MeshComponents.IsValidIndex(0))

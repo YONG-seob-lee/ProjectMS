@@ -33,8 +33,6 @@ public:
 
 	
 	// Component :: Getter
-	class UPrimitiveComponent* GetShapeCollisionComponent() const { return ShapeCollisionComponent; }
-	
 	TArray<class UMeshComponent*> GetMeshComponents() const { return MeshComponents; }
 	class UMeshComponent* GetMeshComponent(int32 aArrayIndex = 0) const;
 	
@@ -47,9 +45,7 @@ public:
 	
 	// Zone Data :: Setter
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone);
-
-	virtual void SetLocationByGridPosition(const FIntVector2& aGridPosition);
-
+	
 
 	// For Preview
 	void InitializeWhenPreviewProp(AMS_Prop* aLinkedProp);
@@ -68,9 +64,6 @@ public:
 	
 protected:
 	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UPrimitiveComponent> ShapeCollisionComponent;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMeshComponent*> MeshComponents;
 	
