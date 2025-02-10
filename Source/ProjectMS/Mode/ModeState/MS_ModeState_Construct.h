@@ -82,13 +82,11 @@ private:
 	void CancelPreviewProp();
 
 	FVector2d GetScreenCenterPosition() const;
-	
-	FVector GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const;
 
+	bool CheckPreviewPropGridDatas() const;
+	
 	bool CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const;
 	bool CheckGridDatas(const TArray<FMS_GridDataForPropSpace>& aGridDatasForPropSpaces, class AMS_Prop* aTargetProp) const;
-
-	void ConvertObjectDataProp(const TArray<FMS_GridDataForPropSpace>& aInGridDatas, class AMS_Prop* aInNewProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatas);
 
 	
 private:

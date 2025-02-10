@@ -225,9 +225,12 @@ void UMS_ModeState_Construct::OnClickApplyArrangementWidget(UMS_ArrangementWidge
 		return;
 	}
 
-	ApplyPreviewProp();
-	UnselectProp();
-	CancelPreviewProp();
+	if (CheckPreviewPropGridDatas())
+	{
+		ApplyPreviewProp();
+		UnselectProp();
+		CancelPreviewProp();
+	}
 }
 
 void UMS_ModeState_Construct::OnClickCancelArrangementWidget(UMS_ArrangementWidget* aArrangementWidget)
@@ -356,7 +359,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 		if (GridBasedMoveHelper->GetCheckedHitResultUnderObjectScreenPosition(nullptr, CenterPosition, ECollisionChannel::ECC_GameTraceChannel2, false, SpaceHitResult))
 		{
 			DrawDebugBox(GetWorld(), SpaceHitResult.Location, FVector(10.f), FColor::Green, false, 1.f);
-			FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 10.f);
+			FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 5.f);
 			MS_LOG_VERBOSITY(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
 			FRotator Rotator = FRotator(0.f, 90.f, 0.f);
 		
@@ -399,7 +402,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 	
 	aSelectedProp->SetActorHiddenInGame(true);
 		
-	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 10.f);
+	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 5.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
 	PreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);
 	PreviewProp->InitializeWhenPreviewProp(aSelectedProp);
@@ -414,22 +417,27 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 
 void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 {
+	// ToDo : 다양한 Prop 타입에 대응
+	MS_CHECK(PreviewProp->GetPropType() == EMS_PropType::Furniture);
+
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		FIntVector2 OldCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
+		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, PreviewProp->GetTableIndex());
+		MS_ENSURE(FurnitureData != nullptr);
 		
+		FIntVector2 OldCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
 		FIntVector2 NewCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(aNewLocation);
 
+		FVector2D CenterLocationOffset = FVector2D(FurnitureData->ArrangementOffsetX, FurnitureData->ArrangementOffsetY);
+		FVector2D NewLocationXY = FMS_GridData::ConvertGridPositionToLocation(NewCenterGridPosition) + CenterLocationOffset;
+		FVector NewLocation = FVector(NewLocationXY.X, NewLocationXY.Y, 0.f);
+		
 		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
 		
 		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(PreviewProp, NewLocationGridDatas,
 			NewCenterGridPosition - OldCenterGridPosition))
 		{
-			FVector NewLocationOnGrid = GetLocationOnGrid(aNewLocation,
-					PreviewProp->GetGridNum().X % 2 != 0,
-					PreviewProp->GetGridNum().Y % 2 != 0);
-			
-			PreviewProp->SetActorLocation(NewLocationOnGrid + FVector(0.f, 0.f, 10.f));
+			PreviewProp->SetActorLocation(NewLocation + FVector(0.f, 0.f, 5.f));
 		}
 	}
 }
@@ -544,19 +552,27 @@ FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
 	return FVector2d(SizeX / 2, SizeY / 2);
 }
 
-FVector UMS_ModeState_Construct::GetLocationOnGrid(const FVector& aInLocation, bool aIsXGridCenter, bool aIsYGridCenter) const
+bool UMS_ModeState_Construct::CheckPreviewPropGridDatas() const
 {
-	FVector2D OffsetByGridCenter = FVector2D(
-		aIsXGridCenter ? 25.f : 0.f,
-		aIsYGridCenter ? 25.f : 0.f);
-	
-	FIntVector2 GridPosition = FIntVector2(
-		FMath::RoundToInt32((aInLocation.X - OffsetByGridCenter.X) / MS_GridSize.X),
-		FMath::RoundToInt32((aInLocation.Y - OffsetByGridCenter.Y) / MS_GridSize.Y));
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		TArray<FMS_GridDataForPropSpace> PreviewPropGridDatas;
+			
+		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(PreviewProp, PreviewPropGridDatas))
+		{
+			if (PreviewProp->GetLinkedProp() != nullptr)
+			{
+				AMS_Prop* LinkedProp = PreviewProp->GetLinkedProp().Get();
+				return CheckGridDatas(PreviewPropGridDatas, LinkedProp);
+			}
+			else
+			{
+				return CheckGridDatas(PreviewPropGridDatas, nullptr);
+			}
+		}
+	}
 
-	return FVector(GridPosition.X * MS_GridSize.X + OffsetByGridCenter.X,
-		GridPosition.Y * MS_GridSize.Y + OffsetByGridCenter.Y,
-		aInLocation.Z);
+	return false;
 }
 
 bool UMS_ModeState_Construct::CheckGridDatas(const TArray<const FMS_GridData*>& aGridDatas, class AMS_Prop* aTargetProp) const
@@ -599,32 +615,4 @@ bool UMS_ModeState_Construct::CheckGridDatas(const TArray<FMS_GridDataForPropSpa
 	}
 
 	return true;
-}
-
-void UMS_ModeState_Construct::ConvertObjectDataProp(const TArray<FMS_GridDataForPropSpace>& aInGridDatas,
-	AMS_Prop* aInNewProp, TArray<FMS_GridDataForPropSpace>& aOutGridDatas)
-{
-	if (aInGridDatas.Num() == 0)
-	{
-		return;
-	}
-	
-	if (!IsValid(aInGridDatas[0].PropSpaceComponent) || !IsValid(aInGridDatas[0].PropSpaceComponent->GetOwner()))
-	{
-		return;
-	}
-	
-	if (AMS_Prop* OldProp = Cast<AMS_Prop>(aInGridDatas[0].PropSpaceComponent->GetOwner()))
-	{
-		for (const FMS_GridDataForPropSpace& OldGridData : aInGridDatas)
-		{
-			FMS_GridDataForPropSpace NewGridData;
-			NewGridData.GridDatas = OldGridData.GridDatas;
-			
-			MS_ENSURE(IsValid(OldGridData.PropSpaceComponent));
-			NewGridData.PropSpaceComponent = aInNewProp->GetPropSpaceComponentByRelativeLocation(OldGridData.PropSpaceComponent->GetRelativeLocation());
-
-			aOutGridDatas.Emplace(NewGridData);
-		}
-	}
 }
