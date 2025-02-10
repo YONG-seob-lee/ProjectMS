@@ -75,12 +75,7 @@ void AMS_Zone::BeginPlay()
 			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
 		}
 	}
-
-	if (ZoneType == EMS_ZoneType::Pallet)
-	{
-		bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
-	}
-
+	
 	if (FloorAttachedComponent)
 	{
 		if (!bOpened)
@@ -88,8 +83,13 @@ void AMS_Zone::BeginPlay()
 			FloorAttachedComponent->SetVisibility(false, true);
 		}
 	}
-	
+
 	RegisterDefalutAttachedProps();
+	
+	if (ZoneType == EMS_ZoneType::Pallet)
+	{
+		SetZoneOpened(true);	// LevelScriptActor에서 확인해서 OnZoneOpened 호출
+	}
 }
 
 void AMS_Zone::InitializeZoneData()

@@ -310,14 +310,17 @@ void AMS_ConstructibleLevelScriptActorBase::InitializeOpenedZoneStates()
 			if (IsValid(OpenedZone))
 			{
 				OpenedZone->SetZoneOpened(true);
-
-				OpenedZone->OnZoneOpened();
 			}
 		}
 	}
 	
 	for (auto& Zone : Zones)
 	{
+		if (Zone.Value->IsOpened())	// 이 Function에서 새로 열린 존과 각 존 BeginPlay에서 미리 열려있던 존 모두 적용
+		{
+			Zone.Value->OnZoneOpened();
+		}
+		
 		Zone.Value->OnAnyZoneOpened(this);
 	}
 }
