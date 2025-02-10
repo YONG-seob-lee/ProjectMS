@@ -13,15 +13,11 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"
-#include "Prop/Furniture/MS_Furniture.h"
 #include "Prop/Gate/MS_Gate.h"
 #include "Prop/Wall/MS_Wall.h"
 #include "Units/MS_GateUnit.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
-
-class AMS_PlayerState;
-class AMS_PlayerController;
 
 AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer), ZoneIndex(INDEX_NONE), ZoneType(EMS_ZoneType::None)
