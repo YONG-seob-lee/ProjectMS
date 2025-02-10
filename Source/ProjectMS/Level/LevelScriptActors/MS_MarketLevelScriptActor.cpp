@@ -4,10 +4,12 @@
 #include "MS_MarketLevelScriptActor.h"
 
 #include "MS_Define.h"
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
@@ -169,6 +171,8 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 	{
 		PurchaseCollectComponent->Initialize();
 	}
+
+	InitializePlayerDataFurnitures();
 }
 
 void AMS_MarketLevelScriptActor::Destroyed()
@@ -189,5 +193,36 @@ void AMS_MarketLevelScriptActor::Destroyed()
 		MS_DeleteObject(PurchaseCollectComponent);
 	}
 	Super::Destroyed();
+}
+
+void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerState> PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+
+	TMap<FIntVector2, FMS_LevelFurnitureSaveData> FurnitureDatas;
+	PlayerState->GetAllMarketFurnitureDatas(FurnitureDatas);
+
+	for (const auto& It : FurnitureDatas)
+	{
+		FMS_LevelFurnitureSaveData FurnitureData = It.Value;
+		
+		CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
+	}
 }
 

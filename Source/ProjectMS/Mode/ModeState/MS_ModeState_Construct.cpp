@@ -15,6 +15,7 @@
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "MathUtility/MS_MathUtility.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Prop/Furniture/MS_Furniture.h"
 
 
@@ -458,79 +459,48 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 		return;
 	}
 
+	const TObjectPtr<AMS_PlayerState> PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+
 	if (!IsValid(PreviewProp))
-    {
-    	return;
-    }
+	{
+		return;
+	}
 
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		TArray<FMS_GridDataForPropSpace> PreviewPropGridDatas;
-		
-		if (LevelScriptActor->GetGridDatasForAllPropSpaceLocations(PreviewProp, PreviewPropGridDatas))
+		if (PreviewProp->GetLinkedProp() == nullptr)
 		{
-			if (PreviewProp->GetLinkedProp() == nullptr)
+			EMS_PropType PropType = PreviewProp->GetPropType();
+			int32 TableId = PreviewProp->GetTableIndex();
+			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
+			EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
+
+			if (LevelScriptActor->CreateProp(PropType, TableId, GridPosition, Rotation))
 			{
-				// Move Location
-				// ToDo : Level Script로 이동
-				FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
-				PreviewProp->GetGridNum().X % 2 != 0,
-				PreviewProp->GetGridNum().Y % 2 != 0);
-				
-				int32 TableId = PreviewProp->GetTableIndex();
-				
-				const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, TableId, true, NewLocationOnGrid, PreviewProp->GetActorRotation()));
-				if (!IsValid(NewUnit))
-				{
-					MS_ENSURE(false);
-					return;
-				}
-				
-				AMS_Prop* NewProp = Cast<AMS_Prop>(NewUnit->GetActor());
-				if (!IsValid(NewProp))
-				{
-					MS_ENSURE(false);
-					return;
-				}
-				
-				// Register New Datas
-				TArray<FMS_GridDataForPropSpace> PropGridDatas;
-				ConvertObjectDataProp(PreviewPropGridDatas, NewProp, PropGridDatas);
-				LevelScriptActor->RegisterGridObjectData(PropGridDatas);
+				PlayerState->AddFurnitureData(TableId, GridPosition, Rotation);
+				PlayerState->SavePlayerData();
 			}
+		}
+
+		else
+		{
+			TWeakObjectPtr<AMS_Prop> LinkedProp = PreviewProp->GetLinkedProp();
+			int32 TableId = PreviewProp->GetTableIndex();
 			
-			else
+			FIntVector2 OldGridPosition = LinkedProp->GetGridPosition();
+			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
+			EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
+			
+			if (LevelScriptActor->MoveAndRotateProp(LinkedProp, GridPosition, Rotation))
 			{
-				AMS_Prop* LinkedProp = PreviewProp->GetLinkedProp().Get();
-				if (LinkedProp->GetPropType() == EMS_PropType::Floor || LinkedProp->GetPropType() == EMS_PropType::Wall)
-				{
-					return;
-				}
-				
-				if (CheckGridDatas(PreviewPropGridDatas, LinkedProp))
-				{
-					// Unregister Old Datas
-					TArray<FMS_GridDataForPropSpace> OldLocationGridDatas;
-					LevelScriptActor->GetGridDatasForAllPropSpaceLocations(LinkedProp, OldLocationGridDatas);
-
-					LevelScriptActor->UnregisterGridObjectData(OldLocationGridDatas);
-
-					// Rotate New Rotator
-					LinkedProp->SetActorRotation(PreviewProp->GetActorRotation());
-					
-					// Move New Location
-					// ToDo : Level Script로 이동
-					FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
-					PreviewProp->GetGridNum().X % 2 != 0,
-					PreviewProp->GetGridNum().Y % 2 != 0);
-		
-					LinkedProp->SetActorLocation(NewLocationOnGrid);
-
-					// Register New Datas
-					TArray<FMS_GridDataForPropSpace> PropGridDatas;
-					ConvertObjectDataProp(PreviewPropGridDatas, LinkedProp, PropGridDatas);
-					LevelScriptActor->RegisterGridObjectData(PropGridDatas);
-				}
+				// Save Player Data
+				PlayerState->RemoveFurnitureData(OldGridPosition);
+				PlayerState->AddFurnitureData(TableId, GridPosition, Rotation);
+				PlayerState->SavePlayerData();
 			}
 		}
 	}

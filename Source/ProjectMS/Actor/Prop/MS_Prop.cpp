@@ -127,6 +127,13 @@ void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 	OwnerZone = aOwnerZone;
 }
 
+void AMS_Prop::SetLocationByGridPosition(const FIntVector2& aGridPosition)
+{
+	GridPosition = aGridPosition;
+
+	
+}
+
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 {
 	bIsPreviewProp = true;

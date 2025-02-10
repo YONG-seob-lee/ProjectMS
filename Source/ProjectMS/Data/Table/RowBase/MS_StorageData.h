@@ -31,4 +31,8 @@ public:
 	int32 ImagePath = 0;
 	UPROPERTY(EditAnywhere)
 	FString Desc = FString();
+	UPROPERTY(EditAnywhere)
+	float ArrangementOffsetX = 0;
+	UPROPERTY(EditAnywhere)
+	float ArrangementOffsetY = 0;
 };

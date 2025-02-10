@@ -13,7 +13,9 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
+#include "Prop/Furniture/MS_Furniture.h"
 #include "Prop/Wall/MS_Wall.h"
+#include "Table/RowBase/MS_StorageData.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Zone/MS_Zone.h"
 
@@ -373,6 +375,7 @@ void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
 			|| Zone->GetZoneType() == EMS_ZoneType::Shelf)
 		{
 			PlayerState->AddOpenedZoneId(aZoneIndex);
+			PlayerState->SavePlayerData();
 		}
 		
 		OnZoneOpened(Zone);
@@ -421,4 +424,86 @@ void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
 			}
 		}
 	}
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
+	const EMS_Rotation aRotation)
+{
+	// ToDo : 다양한 Prop 타입에 대응
+	MS_CHECK(aPropType == EMS_PropType::Furniture);
+	
+	FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableIndex);
+	MS_ENSURE(FurnitureData != nullptr);
+
+	FVector2D CenterLocationOffset = FVector2D(FurnitureData->ArrangementOffsetX, FurnitureData->ArrangementOffsetY);
+	FVector2D LocationXY = FMS_GridData::ConvertGridPositionToLocation(aGridPosition) + CenterLocationOffset;
+	FVector Location = FVector(LocationXY.X, LocationXY.Y, 0.f);
+	FRotator Rotator = FRotator(0.f, UMS_MathUtility::ConvertRotation(aRotation), 0.f);
+	
+	const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, aTableIndex, true, Location, Rotator));
+	if (!IsValid(NewUnit))
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+				
+	AMS_Prop* NewProp = Cast<AMS_Prop>(NewUnit->GetActor());
+	if (!IsValid(NewProp))
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+				
+	// Register New Datas
+	TArray<FMS_GridDataForPropSpace> PropGridDatas;
+	GetGridDatasForAllPropSpaceLocations(NewProp, PropGridDatas);
+	RegisterGridObjectData(PropGridDatas);
+
+	return true;
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::DestroyProp(TWeakObjectPtr<AMS_Prop> aProp)
+{
+	// ToDo : Unit을 받도록 수정
+	if (aProp != nullptr)
+	{
+	}
+
+	return false;
+}
+
+bool AMS_ConstructibleLevelScriptActorBase::MoveAndRotateProp(TWeakObjectPtr<AMS_Prop> aProp,
+	const FIntVector2& aGridPosition, const EMS_Rotation aRotation)
+{
+	// ToDo : Unit을 받도록 수정
+	if (aProp != nullptr)
+	{
+		// ToDo : 다양한 Prop 타입에 대응
+		MS_CHECK(aProp->GetPropType() == EMS_PropType::Furniture);
+		
+		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aProp->GetTableIndex());
+		MS_ENSURE(FurnitureData != nullptr);
+	
+		// Unregister Old Datas
+		TArray<FMS_GridDataForPropSpace> OldLocationGridDatas;
+		GetGridDatasForAllPropSpaceLocations(aProp.Get(), OldLocationGridDatas);
+		UnregisterGridObjectData(OldLocationGridDatas);
+
+		// Set Location And Rotation
+		FVector2D CenterLocationOffset = FVector2D(FurnitureData->ArrangementOffsetX, FurnitureData->ArrangementOffsetY);
+		FVector2D LocationXY = FMS_GridData::ConvertGridPositionToLocation(aGridPosition) + CenterLocationOffset;
+		FVector Location = FVector(LocationXY.X, LocationXY.Y, 0.f);
+		FRotator Rotator = FRotator(0.f, UMS_MathUtility::ConvertRotation(aRotation), 0.f);
+
+		aProp->SetActorLocationAndRotation(Location, Rotator);
+
+		// Register New Datas
+		TArray<FMS_GridDataForPropSpace> NewLocationGridDatas;
+		GetGridDatasForAllPropSpaceLocations(aProp.Get(), NewLocationGridDatas);
+		RegisterGridObjectData(NewLocationGridDatas);
+
+		return true;
+	}
+
+	return false;
 }

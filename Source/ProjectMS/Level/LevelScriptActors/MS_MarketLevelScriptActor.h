@@ -43,6 +43,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
+	
+private:
+	void InitializePlayerDataFurnitures();
+	
 
 private:
 	UPROPERTY()

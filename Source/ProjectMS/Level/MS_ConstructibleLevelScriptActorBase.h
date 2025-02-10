@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_LevelScriptActorBase.h"
 #include "Level/MS_LevelDefine.h"
+#include "MathUtility/MS_MathUtility.h"
 #include "MS_ConstructibleLevelScriptActorBase.generated.h"
 
 UCLASS()
@@ -45,6 +46,14 @@ public:
 	void OnZoneOpened(AMS_Zone* aZone);
 	
 	void ShowUnconstructableGrid(bool bShow);
+
+	
+	// Prop
+	bool CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition, const EMS_Rotation aRotation);
+	
+	bool DestroyProp(TWeakObjectPtr<class AMS_Prop> aProp);
+	
+	bool MoveAndRotateProp(TWeakObjectPtr<class AMS_Prop> aProp, const FIntVector2& aGridPosition, const EMS_Rotation aRotation);
 
 	
 protected:

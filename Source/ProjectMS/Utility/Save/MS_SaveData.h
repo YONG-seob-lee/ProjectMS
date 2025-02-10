@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MathUtility/MS_MathUtility.h"
 #include "MS_SaveData.generated.h"
 
 /**
@@ -35,14 +36,21 @@ public:
 	{
 	}
 
+	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, FIntVector2 aGridPosition,
+	EMS_Rotation aRotation)
+		: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation)
+	{
+		StorageData.Empty();
+	}
+	
 	UPROPERTY()
-	int32 LevelId;
+	int32 FurnitureTableId;
 
 	UPROPERTY()
 	FIntVector2 GridPosition;
 	
 	UPROPERTY()
-	int32 FurnitureTableId;
+	EMS_Rotation Rotation;
 
 	UPROPERTY()
 	TArray<FMS_StorageSaveData> StorageData;

@@ -28,6 +28,8 @@ public:
 	int32 GetTableIndex() const { return TableIndex; }
 
 	const FIntVector& GetGridNum() const { return GridNum; }
+	
+	const FIntVector2& GetGridPosition() const { return GridPosition; }
 
 	
 	// Component :: Getter
@@ -45,6 +47,8 @@ public:
 	
 	// Zone Data :: Setter
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone);
+
+	virtual void SetLocationByGridPosition(const FIntVector2& aGridPosition);
 
 
 	// For Preview

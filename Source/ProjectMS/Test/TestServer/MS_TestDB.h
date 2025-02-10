@@ -23,4 +23,7 @@ public:
 	
 	UPROPERTY()
 	TArray<int32> OpenedZoneIds;
+
+	UPROPERTY()
+	TArray<FMS_LevelFurnitureSaveData> MarketFurnitureDatas;
 };

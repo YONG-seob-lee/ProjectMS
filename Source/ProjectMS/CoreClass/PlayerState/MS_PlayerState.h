@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "Save/MS_SaveData.h"
 #include "MS_PlayerState.generated.h"
 
 /**
@@ -20,6 +21,13 @@ public:
 	const TArray<int32>& GetOpenedZoneIds();
 	void AddOpenedZoneId(int32 aZoneId);
 
+	void GetAllMarketFurnitureDatas(TMap<FIntVector2, FMS_LevelFurnitureSaveData>& aOutFurnitureDatas) const;
+	bool GetMarketFurnitureData(FIntVector2 aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const;
+	void AddFurnitureData(int32 aFurnitureTableId, FIntVector2 aGridPosition, EMS_Rotation aRotation);
+	void AddFurnitureData(FMS_LevelFurnitureSaveData aFurnitureData);
+	void RemoveFurnitureData(FIntVector2 aGridPosition);
+
+	
 	void InitDefaultPlayerData();
 	
 	void InitPlayerData();
@@ -33,4 +41,7 @@ private:
 	
 	UPROPERTY()
 	TArray<int32> OpenedZoneIds;
+	
+	UPROPERTY()
+	TMap<FIntVector2, FMS_LevelFurnitureSaveData> GridPositionToMarketFurnitureDatas;
 };
