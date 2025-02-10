@@ -7,9 +7,9 @@
 #include "CoreClass/Controller/MS_PlayerController.h"
 
 
-void UMS_BasePlayerUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
+void UMS_BasePlayerUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aTableId);
 }
 
 void UMS_BasePlayerUnit::Finalize()
@@ -25,28 +25,6 @@ void UMS_BasePlayerUnit::PostInitialize()
 void UMS_BasePlayerUnit::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
-}
-
-bool UMS_BasePlayerUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
-{
-	// 예외적으로 Table을 통하지 않고 Class를 직접 지정하여 사용
-	if (Super::Super::CreateUnitActor(aPosition, aRotator))
-	{
-		if(const TObjectPtr<AMS_CharacterBase> NewCharacter = CreateCharacter(AMS_CharacterBase::StaticClass(), aPosition, aRotator))
-		{
-			NewCharacter->SetOwnerUnitBase(this);
-		
-			return true;
-		}
-	}
-
-	MS_ENSURE(false);
-	return false;
-}
-
-void UMS_BasePlayerUnit::DestroyUnitActor()
-{
-	Super::DestroyUnitActor();
 }
 
 void UMS_BasePlayerUnit::SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const
@@ -65,4 +43,14 @@ void UMS_BasePlayerUnit::ChangeState(EMS_UnitState aActionType) const
 	}
 	
 	Super::ChangeState(aActionType);
+}
+
+int32 UMS_BasePlayerUnit::GetBlueprintPathId() const
+{
+	return INDEX_NONE;
+}
+
+UClass* UMS_BasePlayerUnit::GetBlueprintClass() const
+{
+	return AMS_CharacterBase::StaticClass();
 }

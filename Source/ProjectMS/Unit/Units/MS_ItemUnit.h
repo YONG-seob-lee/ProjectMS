@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "MS_ActorUnitBase.h"
-#include "Table/RowBase/MS_ItemData.h"
 #include "MS_ItemUnit.generated.h"
 
 class AMS_Actor;
@@ -17,7 +16,7 @@ class PROJECTMS_API UMS_ItemUnit : public UMS_ActorUnitBase
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId) override;
+	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId) override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
@@ -28,6 +27,9 @@ public:
 protected:
 	virtual void ChangeState(EMS_UnitState aUnitState) const override;
 
+	virtual int32 GetBlueprintPathId() const override;
+
+	
 private:
-	FMS_ItemData* ItemData = nullptr;
+	struct FMS_ItemData* ItemData = nullptr;
 };

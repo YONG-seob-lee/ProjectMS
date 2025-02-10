@@ -8,7 +8,7 @@
 #include "Manager_Both/MS_UnitManager.h"
 
 
-void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
+void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
 	// Unit Handle
 	UnitHandle = aUnitHandle;
@@ -22,12 +22,7 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int
 	}
 
 	// Table
-	UnitTableId = aUnitTableId;
-	if (UnitTableId == INDEX_NONE && UnitType != EMS_UnitType::Spline)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
-		MS_ENSURE(false);
-	}
+	TableId = aTableId;
 }
 
 void UMS_UnitBase::Finalize()
@@ -58,7 +53,7 @@ void UMS_UnitBase::DestroyUnit()
 
 bool UMS_UnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
-	if (UnitTableId == INDEX_NONE)
+	if (TableId == INDEX_NONE)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
 		MS_ENSURE(false);
@@ -72,8 +67,38 @@ void UMS_UnitBase::DestroyUnitActor()
 {
 }
 
+int32 UMS_UnitBase::GetBlueprintPathId() const
+{
+	MS_LOG_VERBOSITY(Error, TEXT("[%s] Please Override this Function."), *MS_FUNC_STRING);
+	MS_ENSURE(false);
+	
+	return INDEX_NONE;
+}
+
+UClass* UMS_UnitBase::GetBlueprintClass() const
+{
+	int32 BPPathId = GetBlueprintPathId();
+	if (BPPathId == INDEX_NONE)
+	{
+		return nullptr;
+	}
+
+	const FString BPPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, BPPathId, true);
+	
+	UClass* BPClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BPPath);
+	if(!IsValid(BPClass))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] BPClass is invalid [BPPathId : %d] [BPPath : %s]"), *MS_FUNC_STRING, BPPathId, *BPPath);
+		MS_ENSURE(false);
+
+		return nullptr;
+	}
+
+	return BPClass;
+}
+
 TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot,
-	bool bNeedRootComponent, ESpawnActorCollisionHandlingMethod Method) const
+                                               bool bNeedRootComponent, ESpawnActorCollisionHandlingMethod Method) const
 {
 	if (!IsValid(aClass))
 	{

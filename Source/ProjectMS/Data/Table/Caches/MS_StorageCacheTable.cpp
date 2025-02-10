@@ -64,14 +64,3 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 		aCategoryArray.Emplace(Category);
 	}
 }
-
-int32 UMS_StorageCacheTable::GetUnitBaseBPIndex(int32 aId) const
-{
-	if (FMS_StorageData* StorageData = GetStorageData(aId))
-	{
-		return StorageData->PathFile;
-	}
-
-	MS_ENSURE(false);
-	return INDEX_NONE;
-}

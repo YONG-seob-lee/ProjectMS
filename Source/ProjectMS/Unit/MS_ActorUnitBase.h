@@ -30,7 +30,7 @@ public:
 	
 protected:
 	TObjectPtr<class AMS_Actor> CreateActor(const FVector& aVector, const FRotator& aRotator);
-
+	
 public:
 	FORCEINLINE TObjectPtr<AMS_Actor> GetActor() const { return Actor; }
 	

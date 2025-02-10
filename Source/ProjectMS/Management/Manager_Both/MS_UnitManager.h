@@ -31,7 +31,7 @@ public:
 	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
 	void GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
 
-	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aUnitTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);
 
 	FOnUpdateChattingDelegate OnChattingDelegate;

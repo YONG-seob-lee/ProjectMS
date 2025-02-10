@@ -128,14 +128,3 @@ TArray<FName> UMS_ItemCacheTable::GetAllItemNames()
 
 	return ItemNameArray;
 }
-
-int32 UMS_ItemCacheTable::GetUnitBaseBPIndex(int32 aId) const
-{
-	if (FMS_ItemData* ItemData = GetItem(aId))
-	{
-		return ItemData->PathFile;
-	}
-	
-	MS_ENSURE(false);
-	return INDEX_NONE;
-}

@@ -4,11 +4,15 @@
 #include "MS_FurnitureUnit.h"
 
 #include "MS_Actor.h"
+#include "Table/RowBase/MS_StorageData.h"
 
 
-void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
+void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aTableId);
+
+	FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableId);
+	MS_ENSURE(FurnitureData != nullptr);
 }
 
 void UMS_FurnitureUnit::Finalize()
@@ -34,4 +38,9 @@ bool UMS_FurnitureUnit::CreateUnitActor(const FVector& aPosition, const FRotator
 void UMS_FurnitureUnit::DestroyUnitActor()
 {
 	Super::DestroyUnitActor();
+}
+
+int32 UMS_FurnitureUnit::GetBlueprintPathId() const
+{
+	return FurnitureData->PathFile;
 }

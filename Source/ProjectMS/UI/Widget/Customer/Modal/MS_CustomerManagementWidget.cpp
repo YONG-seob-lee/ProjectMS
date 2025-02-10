@@ -99,7 +99,7 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
 		}
-		UnitsName.Emplace(Unit->GetUnitName().ToString(), Unit->GetUnitTableId());
+		UnitsName.Emplace(Unit->GetUnitName().ToString(), Unit->GetTableId());
 	}
 
 	CPP_PersonComboBox->ClearOptions();

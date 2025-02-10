@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Manager_Client/MS_ItemManager.h"
-#include "Table/MS_UnitBaseCacheTable.h"
+#include "Table/MS_CacheTable.h"
 #include "Table/RowBase/MS_StorageData.h"
 #include "MS_StorageCacheTable.generated.h"
 
@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_StorageCacheTable : public UMS_UnitBaseCacheTable
+class PROJECTMS_API UMS_StorageCacheTable : public UMS_CacheTable
 {
 	GENERATED_BODY()
 public:
@@ -24,7 +24,6 @@ public:
 	FMS_StorageData* GetStorageData(int32 aStorageId) const;
 	void GetStorageCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
 
-	virtual int32 GetUnitBaseBPIndex(int32 aId) const override;
 	
 private:
 	TMap<int32, FMS_StorageData*> StorageDatas; 

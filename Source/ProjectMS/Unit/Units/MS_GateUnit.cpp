@@ -3,9 +3,9 @@
 
 #include "MS_GateUnit.h"
 
-void UMS_GateUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
+void UMS_GateUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
-	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
+	Super::Initialize(aUnitHandle, aUnitType, aTableId);
 }
 
 void UMS_GateUnit::Finalize()

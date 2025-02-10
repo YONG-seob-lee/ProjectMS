@@ -51,7 +51,7 @@ void UMS_UnitManager::GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_Unit
 	}
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int32 aUnitTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
+TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
 	const MS_Handle NewUnitHandle = MakeUnitHandle();
@@ -63,7 +63,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int
 	
 	// Create Unit
 	const TObjectPtr<UMS_UnitBase> Unit = MS_NewObject<UMS_UnitBase>(this, GetUnitTypeClass(aUnitType));
-	Unit->Initialize(NewUnitHandle, aUnitType, aUnitTableId);
+	Unit->Initialize(NewUnitHandle, aUnitType, aTableId);
 
 	// Create Actor
 	if (bCreateActor)

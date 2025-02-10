@@ -15,21 +15,20 @@ class PROJECTMS_API UMS_BasePlayerUnit : public UMS_CharacterUnitBase
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId) override;
+	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId) override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 	
-	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
-	virtual void DestroyUnitActor() override;
-	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine) const;
 	
 	FORCEINLINE FName GetUnitName() const { return UnitName; }
-	FORCEINLINE int32 GetUnitTableId() const { return UnitTableId; }
 
 protected:
 	virtual void ChangeState(EMS_UnitState aActionType) const override;
+
+	virtual int32 GetBlueprintPathId() const override;
+	virtual UClass* GetBlueprintClass() const override;
 	
 private:
 	FName UnitName = FName();
@@ -37,6 +36,4 @@ private:
 	float LodScale = 1.f;
 	bool bOutLineModeOn = true;
 	bool bSelfPlayer = false;
-
-private:
 };

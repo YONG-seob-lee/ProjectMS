@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Table/MS_UnitBaseCacheTable.h"
+#include "Table/MS_CacheTable.h"
 #include "Table/RowBase/MS_ItemData.h"
 #include "MS_ItemCacheTable.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_ItemCacheTable : public UMS_UnitBaseCacheTable
+class PROJECTMS_API UMS_ItemCacheTable : public UMS_CacheTable
 {
 	GENERATED_BODY()
 public:
@@ -26,8 +26,7 @@ public:
 	UTexture2D* GetItemImage(int32 aItemId);
 	const FMS_ItemData* GetItemByName(const FName& aItemName);
 	TArray<FName> GetAllItemNames();
-
-	virtual int32 GetUnitBaseBPIndex(int32 aId) const override;
+	
 
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;

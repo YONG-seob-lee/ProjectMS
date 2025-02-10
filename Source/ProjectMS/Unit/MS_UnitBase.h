@@ -24,7 +24,7 @@ class PROJECTMS_API UMS_UnitBase : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId);
+	virtual void Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId);
 	virtual void Finalize();
 	virtual void PostInitialize();
 	virtual void Tick(float aDeltaTime);
@@ -37,8 +37,11 @@ public:
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
 	FORCEINLINE EMS_UnitType GetUnitType() const { return UnitType; }
 	
+	FORCEINLINE int32 GetTableId() const { return TableId; }
+	
 protected:
-	TSubclassOf<UClass> GetBlueprintClass() { return ClassType; }
+	virtual int32 GetBlueprintPathId() const;
+	virtual UClass* GetBlueprintClass() const;
 	
 	TObjectPtr<AActor> MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
 										   ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn) const;
@@ -58,10 +61,9 @@ protected:
 	MS_Handle UnitHandle = InvalidUnitHandle;
 
 	UPROPERTY()
-	int32 UnitTableId = INDEX_NONE;
-	
+	int32 TableId = INDEX_NONE;
+
 	EMS_UnitType UnitType = EMS_UnitType::Default;
-	TSubclassOf<UClass> ClassType = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_StateMachine> UnitStateMachine = nullptr;

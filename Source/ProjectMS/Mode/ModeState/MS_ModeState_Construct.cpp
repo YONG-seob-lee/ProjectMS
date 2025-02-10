@@ -211,6 +211,7 @@ void UMS_ModeState_Construct::OnClickApplyArrangementWidget(UMS_ArrangementWidge
 
 	ApplyPreviewProp();
 	UnselectProp();
+	CancelPreviewProp();
 }
 
 void UMS_ModeState_Construct::OnClickCancelArrangementWidget(UMS_ArrangementWidget* aArrangementWidget)
@@ -460,10 +461,10 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 				FVector NewLocationOnGrid = GetLocationOnGrid(PreviewProp->GetActorLocation()+ FVector(0.f, 0.f, -10.f),
 				PreviewProp->GetGridNum().X % 2 != 0,
 				PreviewProp->GetGridNum().Y % 2 != 0);
-
-				int32 UnitTableId = static_cast<int32>(EMS_UnitType::Furniture);
-
-				const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, UnitTableId, true, NewLocationOnGrid, PreviewProp->GetActorRotation()));
+				
+				int32 TableId = PreviewProp->GetTableIndex();
+				
+				const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, TableId, true, NewLocationOnGrid, PreviewProp->GetActorRotation()));
 				if (!IsValid(NewUnit))
 				{
 					MS_ENSURE(false);
