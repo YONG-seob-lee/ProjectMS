@@ -13,9 +13,9 @@ class PROJECTMS_API UMS_ConstructCategoryElementData : public UObject
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetStorageType(int32 aStorageType) { StorageType = aStorageType; }
-	FORCEINLINE int32 GetStorageType() const { return StorageType; }
+	FORCEINLINE void SetZoneType(int32 aZoneType) { ZoneType = aZoneType; }
+	FORCEINLINE int32 GetZoneType() const { return ZoneType; }
 
 private:
-	int32 StorageType = 0;
+	int32 ZoneType = 0;
 };

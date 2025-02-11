@@ -488,7 +488,7 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
 			EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
 
-			if (LevelScriptActor->CreateProp(PropType, TableId, GridPosition, Rotation))
+			if (LevelScriptActor->CreateProp(PropType, TableId, GridPosition, Rotation) != nullptr)
 			{
 				PlayerState->AddFurnitureData(TableId, GridPosition, Rotation);
 				PlayerState->SavePlayerData();

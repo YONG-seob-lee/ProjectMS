@@ -426,7 +426,7 @@ void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
 	}
 }
 
-bool AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
+TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
 	const EMS_Rotation aRotation)
 {
 	// ToDo : 다양한 Prop 타입에 대응
@@ -444,14 +444,14 @@ bool AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, i
 	if (!IsValid(NewUnit))
 	{
 		MS_ENSURE(false);
-		return false;
+		return nullptr;
 	}
 				
 	AMS_Prop* NewProp = Cast<AMS_Prop>(NewUnit->GetActor());
 	if (!IsValid(NewProp))
 	{
 		MS_ENSURE(false);
-		return false;
+		return nullptr;
 	}
 				
 	// Register New Datas
@@ -459,7 +459,7 @@ bool AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, i
 	GetGridDatasForAllPropSpaceLocations(NewProp, PropGridDatas);
 	RegisterGridObjectData(PropGridDatas);
 
-	return true;
+	return NewUnit;
 }
 
 bool AMS_ConstructibleLevelScriptActorBase::DestroyProp(TWeakObjectPtr<AMS_Prop> aProp)

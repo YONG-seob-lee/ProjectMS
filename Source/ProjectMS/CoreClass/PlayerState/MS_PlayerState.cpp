@@ -84,8 +84,23 @@ void AMS_PlayerState::RemoveFurnitureData(FIntVector2 aGridPosition)
 
 void AMS_PlayerState::InitDefaultPlayerData()
 {
+	// OpenedZoneIds
 	OpenedZoneIds.AddUnique(1);
 	OpenedZoneIds.AddUnique(10);
+
+	// Items
+	Items.Emplace(4, 80);
+	Items.Emplace(5, 20);
+	Items.Emplace(6, 40);
+	Items.Emplace(7, 30);
+	Items.Emplace(8, 70);
+	Items.Emplace(9, 10);
+	Items.Emplace(10, 15);
+	Items.Emplace(11, 10);
+	Items.Emplace(12, 5);
+	Items.Emplace(13, 1);
+	Items.Emplace(14, 3);
+	Items.Emplace(15, 1);
 }
 
 void AMS_PlayerState::InitPlayerData()
@@ -113,6 +128,8 @@ void AMS_PlayerState::InitPlayerData()
 		GridPositionToMarketFurnitureDatas.Emplace(MarketFurniture.GridPosition, MarketFurniture);
 	}
 
+	Items = TestDB->Items;
+
 	if (!bInitDefaultData)
 	{
 		InitDefaultPlayerData();
@@ -131,6 +148,8 @@ void AMS_PlayerState::SavePlayerData()
 	{
 		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurniture.Value);
 	}
+
+	NewTestDBData->Items = Items;
 	
 	if (!UGameplayStatics::SaveGameToSlot(NewTestDBData, SaveSlotName, 0))
 	{

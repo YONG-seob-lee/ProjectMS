@@ -19,13 +19,13 @@ void UMS_StorageCacheTable::Finalize()
 	Super::Finalize();
 }
 
-void UMS_StorageCacheTable::GetStorageData(EMS_StorageType aStorageType, TArray<TObjectPtr<UMS_ConstructItemElement>>& aConstructArray)
+void UMS_StorageCacheTable::GetStorageData(EMS_ZoneType aZoneType, TArray<TObjectPtr<UMS_ConstructItemElement>>& aConstructArray)
 {
 	aConstructArray.Empty();
 
 	for(const auto& StorageData : StorageDatas)
 	{
-		if(StorageData.Value->StorageType != static_cast<int32>(aStorageType))
+		if(StorageData.Value->ZoneType != static_cast<int32>(aZoneType))
 		{
 			continue;
 		}
@@ -60,7 +60,7 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 	for(int32 i = 3 ; i > 0 ; i--)
 	{
 		TObjectPtr<UMS_ConstructCategoryElementData> Category = MS_NewObject<UMS_ConstructCategoryElementData>();
-		Category->SetStorageType(i);
+		Category->SetZoneType(i);
 		aCategoryArray.Emplace(Category);
 	}
 }

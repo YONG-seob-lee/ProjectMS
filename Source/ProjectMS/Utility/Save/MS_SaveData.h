@@ -20,11 +20,18 @@ public:
 	{
 	}
 
-	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, FIntVector2 aGridPosition,
+	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
 	EMS_Rotation aRotation)
 		: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation)
 	{
 		SlotDatas.Empty();
+	}
+
+	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
+	EMS_Rotation aRotation, const TArray<FMS_SlotData>& aSlotDatas)
+	: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation),
+	SlotDatas(aSlotDatas)
+	{
 	}
 	
 	UPROPERTY()

@@ -27,6 +27,8 @@ public:
 	void AddFurnitureData(FMS_LevelFurnitureSaveData aFurnitureData);
 	void RemoveFurnitureData(FIntVector2 aGridPosition);
 
+	void GetAllItems(TMap<int32, int32>& aOutItems) const { aOutItems = Items; }
+
 	
 	void InitDefaultPlayerData();
 	
@@ -44,4 +46,7 @@ private:
 	
 	UPROPERTY()
 	TMap<FIntVector2, FMS_LevelFurnitureSaveData> GridPositionToMarketFurnitureDatas;
+
+	UPROPERTY()
+	TMap<int32, int32> Items;
 };

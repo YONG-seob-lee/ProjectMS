@@ -8,4 +8,5 @@ UMS_TestDB::UMS_TestDB()
 	bInitDefaultData = false;
 	OpenedZoneIds.Empty();
 	MarketFurnitureDatas.Empty();
+	Items.Empty();
 }

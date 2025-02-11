@@ -13,8 +13,6 @@ USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName ItemName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 StorageType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 TemperatureType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	 int32 TakeMinCount;

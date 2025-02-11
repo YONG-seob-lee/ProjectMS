@@ -28,7 +28,7 @@ void UMS_ShelfStatus::SetTileView(int32 aDisplaySlotIndex)
 
 	// 빈 슬롯 하나 추가.
 	const TObjectPtr<UMS_StorageSlotElementData> BlankData = MS_NewObject<UMS_StorageSlotElementData>(this);
-	BlankData->SetSlotType(static_cast<int32>(EMS_StorageType::Shelf));
+	BlankData->SetSlotType(static_cast<int32>(EMS_ZoneType::Shelf));
 	BlankData->SetItemId(INDEX_NONE);
 	BlankData->OnClickShelfSlotDelegate.AddUObject(this, &UMS_ShelfStatus::OnClickedShelfSlotButton);
 	StorageItemElementDatas.Emplace(BlankData);
@@ -36,7 +36,7 @@ void UMS_ShelfStatus::SetTileView(int32 aDisplaySlotIndex)
 	for(const auto ShelfItem : ShelfItems)
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
-		Data->SetSlotType(static_cast<int32>(EMS_StorageType::Shelf));
+		Data->SetSlotType(static_cast<int32>(EMS_ZoneType::Shelf));
 		Data->SetItemId(ShelfItem.Key);
 		Data->SetShelfCount(ShelfItem.Value);
 		Data->OnClickShelfSlotDelegate.AddUObject(this, &UMS_ShelfStatus::OnClickedShelfSlotButton);

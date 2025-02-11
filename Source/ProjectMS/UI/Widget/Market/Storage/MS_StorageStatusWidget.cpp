@@ -31,7 +31,7 @@ void UMS_StorageStatusWidget::NativeConstruct()
 	for(int32 i = 0 ; i < 4 ; i++)
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
-		Data->SetSlotType(static_cast<int32>(EMS_StorageType::Display));
+		Data->SetSlotType(static_cast<int32>(EMS_ZoneType::Display));
 		Data->SetSlotIndex(i);
 		Data->SetItemId(INDEX_NONE);
 		Data->SetMolecular(0);

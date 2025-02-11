@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager_Client/MS_ItemManager.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_ModeSelectWidget.generated.h"
@@ -22,7 +22,7 @@ public:
 	void SwitchWidget(EMS_ModeState aModeState) const;
 private:
 	void InitCategory() const;
-	void RefreshConstructListItems(EMS_StorageType aStorageType);
+	void RefreshConstructListItems(EMS_ZoneType aZoneType);
 	
 	void OnClickModeButton(EMS_ModeState aModeState);
 	void OnClickedCategory(int32 aCategoryType);

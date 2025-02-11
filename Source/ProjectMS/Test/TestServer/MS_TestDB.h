@@ -26,4 +26,7 @@ public:
 
 	UPROPERTY()
 	TArray<FMS_LevelFurnitureSaveData> MarketFurnitureDatas;
+
+	UPROPERTY()
+	TMap<int32, int32> Items;
 };

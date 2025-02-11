@@ -21,7 +21,7 @@ void UMS_ModeSelectWidget::NativeConstruct()
 	CPP_ConstructItemTileView->SetScrollbarVisibility(ESlateVisibility::Collapsed);
 
 	InitCategory();
-	RefreshConstructListItems(EMS_StorageType::Display);
+	RefreshConstructListItems(EMS_ZoneType::Display);
 }
 
 void UMS_ModeSelectWidget::SwitchWidget(EMS_ModeState aModeState) const
@@ -38,13 +38,13 @@ void UMS_ModeSelectWidget::InitCategory() const
 	CPP_ConstructCategoryTileView->SetElements(TArray<TObjectPtr<UObject>>(CategoryArray));
 }
 
-void UMS_ModeSelectWidget::RefreshConstructListItems(EMS_StorageType aStorageType)
+void UMS_ModeSelectWidget::RefreshConstructListItems(EMS_ZoneType aZoneType)
 {
 	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
 	MS_CHECK(StorageTable);
 	
 	TArray<TObjectPtr<UMS_ConstructItemElement>> Items;
-	StorageTable->GetStorageData(aStorageType, Items);
+	StorageTable->GetStorageData(aZoneType, Items);
 	
 	CPP_ConstructItemTileView->SetListItems(Items);
 }
@@ -59,5 +59,5 @@ void UMS_ModeSelectWidget::OnClickModeButton(EMS_ModeState aModeState)
 
 void UMS_ModeSelectWidget::OnClickedCategory(int32 aCategoryType)
 {
-	RefreshConstructListItems(static_cast<EMS_StorageType>(aCategoryType));
+	RefreshConstructListItems(static_cast<EMS_ZoneType>(aCategoryType));
 }

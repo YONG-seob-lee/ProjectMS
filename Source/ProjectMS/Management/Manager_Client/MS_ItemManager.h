@@ -40,12 +40,12 @@ public:
 	void SetStaffProperty(int32 aStaffId, class UMS_StaffPropertyElementData* aStaffProperty);
 	void GetStaffPropertys(TArray<UMS_StaffPropertyElementData*>& aStaffPropertys);
 	
-	FMS_OnClickedItem OnClickedItemDelegate;
-	
-	FMS_OnClickedTileViewItem OnClickedTileViewItem;
+
 private:
 	TMap<int32, int32> Items = {};
+	
 	TMap<int32, int32> ShelfItems = {};
+
 	TMap<int32, struct FMS_StorageData*> Stand = {};
 
 	// 나중에 서버에서 받을지 미리 캐싱해뒀다 쓸지 고려
@@ -59,6 +59,9 @@ public:
 	inline static TObjectPtr<UMS_ItemManager> ItemManager = nullptr;
 	static UMS_ItemManager* GetInstance();
 
+	FMS_OnClickedItem OnClickedItemDelegate;
+	
+	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 	
 #define gItemMng (*UMS_ItemManager::GetInstance())
 };

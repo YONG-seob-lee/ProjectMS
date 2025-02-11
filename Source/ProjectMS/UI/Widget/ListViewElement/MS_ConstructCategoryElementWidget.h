@@ -26,5 +26,5 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_CategoryName = nullptr;
 
-	int32 StorageType = 0;
+	int32 ZoneType = 0;
 };

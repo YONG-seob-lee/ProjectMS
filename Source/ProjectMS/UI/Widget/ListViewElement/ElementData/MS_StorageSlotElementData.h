@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Manager_Client/MS_ItemManager.h"
 
 #include "MS_StorageSlotElementData.generated.h"
@@ -34,7 +35,7 @@ public:
 	FMS_OnClickStorageSlot OnClickShelfSlotDelegate;
 
 private:
-	int32 SlotType = static_cast<int32>(EMS_StorageType::Undefined);
+	int32 SlotType = static_cast<int32>(EMS_ZoneType::None);
 	int32 SlotIndex = INDEX_NONE;
 	int32 ItemId = INDEX_NONE;
 	int32 Molecular = 0;

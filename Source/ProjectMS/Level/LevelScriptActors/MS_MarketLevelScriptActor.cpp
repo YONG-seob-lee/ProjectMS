@@ -13,6 +13,7 @@
 #include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/Modal/MS_MarketStartModal.h"
 
 
@@ -222,7 +223,7 @@ void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
 	{
 		FMS_LevelFurnitureSaveData FurnitureData = It.Value;
 		
-		CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
+		TWeakObjectPtr<UMS_FurnitureUnit> NewUnit = CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
+		NewUnit->SetSlotDatas(FurnitureData.SlotDatas);
 	}
 }
-

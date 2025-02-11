@@ -4,6 +4,7 @@
 #include "MS_StorageSlotElementWidget.h"
 
 #include "Components/TextBlock.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "ElementData/MS_StorageSlotElementData.h"
 #include "Widget/Market/Storage/MS_SlotWidget.h"
 #include "Widget/System/MS_CountWidget.h"
@@ -19,7 +20,7 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 		ItemId = SlotElementData->GetItemId();
 		const int32 ShelfCount = SlotElementData->GetShelfCount();
 		
-		if(static_cast<EMS_StorageType>(SlotElementData->GetSlotType()) == EMS_StorageType::Display)
+		if(static_cast<EMS_ZoneType>(SlotElementData->GetSlotType()) == EMS_ZoneType::Display)
 		{
 			CPP_TextSwitcher->SetActiveWidgetIndex(0);
 			CPP_CountWidget->SetCount(SlotElementData->GetMolecular(), SlotElementData->GetDenominator());
@@ -51,7 +52,7 @@ FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& In
 {
 	if(const TObjectPtr<UMS_StorageSlotElementData> StorageSlotElementData = GetListItem<UMS_StorageSlotElementData>())
 	{
-		if(static_cast<EMS_StorageType>(StorageSlotElementData->GetSlotType()) == EMS_StorageType::Display)
+		if(static_cast<EMS_ZoneType>(StorageSlotElementData->GetSlotType()) == EMS_ZoneType::Display)
 		{
 			StorageSlotElementData->OnClickDisplaySlotDelegate.Broadcast(SlotIndex);
 		}

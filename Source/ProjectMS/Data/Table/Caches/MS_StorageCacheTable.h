@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Table/MS_CacheTable.h"
 #include "Table/RowBase/MS_StorageData.h"
@@ -20,7 +21,7 @@ public:
 	virtual void Finalize() override;
 
 	FORCEINLINE TMap<int32, FMS_StorageData*> GetStorageDatas() { return StorageDatas; }
-	void GetStorageData(EMS_StorageType aStorageType, TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
+	void GetStorageData(EMS_ZoneType aZoneType, TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
 	FMS_StorageData* GetStorageData(int32 aStorageId) const;
 	void GetStorageCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
 

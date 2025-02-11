@@ -52,16 +52,6 @@ enum class EMS_ItemType : uint8
 	Storage
 };
 
-UENUM(BlueprintType)
-enum class EMS_StorageType : uint8
-{
-	Undefined = 0,
-	Display			UMETA(DisplayName = "Display"),
-	Shelf			UMETA(DisplayName = "Shelf"),
-	Pallet			UMETA(DisplayName = "Pallet"),
-	Counter			UMETA(DisplayName = "Counter"),
-};
-
 UENUM()
 enum class EMS_TemperatureType : uint8
 {
