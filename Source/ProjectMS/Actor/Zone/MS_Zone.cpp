@@ -53,11 +53,18 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	Walls.Empty();
 }
 
+void AMS_Zone::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+}
+
 void AMS_Zone::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
 	InitializeZoneData();
+	
+	RegisterDefalutAttachedProps();
 }
 
 void AMS_Zone::BeginPlay()
@@ -79,8 +86,6 @@ void AMS_Zone::BeginPlay()
 			FloorAttachedComponent->SetVisibility(false, true);
 		}
 	}
-
-	RegisterDefalutAttachedProps();
 	
 	if (ZoneType == EMS_ZoneType::Pallet)
 	{

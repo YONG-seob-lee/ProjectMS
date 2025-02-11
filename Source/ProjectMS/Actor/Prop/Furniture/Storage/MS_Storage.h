@@ -17,4 +17,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	virtual void OnSelectNormal();
+	virtual void OnUnselectNormal();
+
+private:
+	virtual void CreateStorageWidget();
+	virtual void DestroyStorageWidget();
 };

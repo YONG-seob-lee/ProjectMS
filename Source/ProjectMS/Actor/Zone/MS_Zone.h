@@ -17,6 +17,7 @@ class PROJECTMS_API AMS_Zone : public AMS_Actor
 public:
 	AMS_Zone(const FObjectInitializer& aObjectInitializer);
 
+	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
 
 protected:

@@ -16,4 +16,16 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	virtual void PreInitializeComponents() override;
+	virtual void PostInitializeComponents() override;
+
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* SlotAttachedComponent;
+
+	UPROPERTY()
+	TMap<int32, TObjectPtr<class UMS_SlotChildActorComponent>> SlotOrderToSlotComponents;
 };

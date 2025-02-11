@@ -15,3 +15,21 @@ void AMS_Storage::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void AMS_Storage::OnSelectNormal()
+{
+	CreateStorageWidget();
+}
+
+void AMS_Storage::OnUnselectNormal()
+{
+	CreateStorageWidget();
+}
+
+void AMS_Storage::CreateStorageWidget()
+{
+}
+
+void AMS_Storage::DestroyStorageWidget()
+{
+}

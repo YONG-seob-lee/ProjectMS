@@ -5,6 +5,7 @@
 
 
 UMS_ItemChildActorComponent::UMS_ItemChildActorComponent()
+	: ItemOrder(INDEX_NONE)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
