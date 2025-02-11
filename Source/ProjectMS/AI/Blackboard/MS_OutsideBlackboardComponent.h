@@ -9,7 +9,8 @@
 namespace OutsideBoardKeyName
 {
 	const FName bFinishedIdleAnimation = TEXT("bFinishedIdleAnimation");
-	const FName RemainTime = TEXT("RemainTime");
+	const FName RemainIdleTime = TEXT("RemainIdleTime");
+	const FName RemainWalkTime = TEXT("RemainWalkTime");
 }
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))

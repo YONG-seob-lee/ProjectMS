@@ -98,9 +98,10 @@ enum class EMS_UnitType : int32
  BasePlayer = 1,
  Furniture = 3,
  Vehicle = 4,
- Spline = 5,
- Gate = 6,
- AI = 7,
+ CarSpline = 5,
+ DuckSpline = 6,
+ Gate = 7,
+ AI = 8,
 };
 
 // Widget

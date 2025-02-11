@@ -5,7 +5,9 @@
 
 #include "MS_Define.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
+#include "AI/AnimInstance/MS_AIAnimInstance.h"
 #include "AI/Blackboard/MS_OutsideBlackboardComponent.h"
+#include "Character/AICharacter/OutsideAICharacter/MS_OutsideAICharacter.h"
 
 UMS_OutsideMoveAITask::UMS_OutsideMoveAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -21,15 +23,19 @@ EBTNodeResult::Type UMS_OutsideMoveAITask::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	const TObjectPtr<UMS_OutsideBlackboardComponent> BlackboardComp = Cast<UMS_OutsideBlackboardComponent>(OwnerComp.GetBlackboardComponent());
+	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
 	if(!BlackboardComp)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainTime, 10.f);
+	const float RandomWalkTime = GetRandomRemainTime(2.f, 6.f);
+	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainWalkTime, RandomWalkTime);
     		
-	MS_LOG(TEXT("Outside Move Task Start"));
+#if WITH_EDITOR
+	MS_LOG(TEXT("Outside \"Move Task\" Start [Total Move Time : %f]"), RandomWalkTime);
+#endif
+	
 	return EBTNodeResult::InProgress;
 }
 
@@ -37,16 +43,34 @@ void UMS_OutsideMoveAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* N
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
-	const TObjectPtr<UMS_OutsideBlackboardComponent> BlackboardComp = Cast<UMS_OutsideBlackboardComponent>(OwnerComp.GetBlackboardComponent());
+	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
 	if(!BlackboardComp)
 	{
 		return;
 	}
-	const float MoveRemainTime = BlackboardComp->GetValueAsFloat(OutsideBoardKeyName::RemainTime);
+	const float MoveRemainTime = BlackboardComp->GetValueAsFloat(OutsideBoardKeyName::RemainWalkTime);
 	if(MoveRemainTime <= 0.f)
 	{
+		const TObjectPtr<AMS_OutsideAIController> OutsideAIController = Cast<AMS_OutsideAIController>(OwnerComp.GetAIOwner());
+		if(!OutsideAIController)
+		{
+			return;
+		}
+		const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(OutsideAIController->GetCharacter());
+		if(!AICharacter)
+		{
+			return;
+		}
+		
+		const TObjectPtr<UMS_AIAnimInstance> AIAnimInstance = AICharacter->GetAIAnimInstance();
+		if(!AIAnimInstance)
+		{
+			return;
+		}
+		
+		AIAnimInstance->SetIsActWalking(false);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 	
-	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainTime, MoveRemainTime - DeltaSeconds);
+	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainWalkTime, MoveRemainTime - DeltaSeconds);
 }

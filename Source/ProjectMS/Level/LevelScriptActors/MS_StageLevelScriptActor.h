@@ -20,7 +20,8 @@ public:
 	virtual void Destroyed() override;
 private:
 	void CollectOutsideDickSpawnPoint();
-	void ParsingSplineActors() const;
+	void ParsingCarSplineActors() const;
+	void ParsingDuckSplineActors() const;
 	
 	UFUNCTION()
 	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);

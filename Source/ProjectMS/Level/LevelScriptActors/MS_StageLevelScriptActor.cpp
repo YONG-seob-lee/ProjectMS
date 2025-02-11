@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "SpawnPoint/MS_OutsideDuckSpawnPoint.h"
 #include "Units/MS_SplineUnit.h"
+#include "Actor/Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
 
@@ -24,7 +25,8 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	ParsingSplineActors();
+	ParsingCarSplineActors();
+	ParsingDuckSplineActors();
 
 	CollectOutsideDickSpawnPoint();
 }
@@ -73,7 +75,7 @@ void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint()
 	}
 }
 
-void AMS_StageLevelScriptActor::ParsingSplineActors() const
+void AMS_StageLevelScriptActor::ParsingCarSplineActors() const
 {
 	TArray<AActor*> SplineActors;
 
@@ -87,7 +89,7 @@ void AMS_StageLevelScriptActor::ParsingSplineActors() const
 			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_VehicleSplineActor"));
 			return;
 		}
-		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::Spline, INDEX_NONE, false));
+		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::CarSpline, INDEX_NONE, false));
 		 if (IsValid(SplineUnit))
 		 {
 		 	// Set Unit Actor
@@ -102,6 +104,38 @@ void AMS_StageLevelScriptActor::ParsingSplineActors() const
 		 	MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
 		 	MS_ENSURE(false);
 		 }
+	}
+}
+
+void AMS_StageLevelScriptActor::ParsingDuckSplineActors() const
+{
+	TArray<AActor*> SplineActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_DuckSplineActor::StaticClass(), SplineActors);
+	
+	for (AActor* Spline : SplineActors)
+	{
+		AMS_DuckSplineActor* SplineActor = Cast<AMS_DuckSplineActor>(Spline);
+		if(!SplineActor)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));
+			return;
+		}
+		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::DuckSpline, INDEX_NONE, false));
+		if (IsValid(SplineUnit))
+		{
+			// Set Unit Actor
+			if (!SplineUnit->SetUnitActor(SplineActor))
+			{
+				MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+				MS_ENSURE(false);
+			}
+		}
+		else
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+			MS_ENSURE(false);
+		}
 	}
 }
 

@@ -121,7 +121,8 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 		{
 			return UMS_VehicleUnit::StaticClass();
 		}
-	case EMS_UnitType::Spline:
+	case EMS_UnitType::CarSpline:
+	case EMS_UnitType::DuckSpline:
 		{
 			return UMS_SplineUnit::StaticClass();
 		}

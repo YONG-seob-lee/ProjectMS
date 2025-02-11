@@ -14,7 +14,6 @@
 // Sets default values
 AMS_VehicleCharacter::AMS_VehicleCharacter()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
@@ -61,7 +60,7 @@ void AMS_VehicleCharacter::BeginPlay()
 TObjectPtr<AMS_VehicleSplineActor> AMS_VehicleCharacter::FindNearestSpline() const
 {
 	TArray<TObjectPtr<UMS_UnitBase>> VehicleSplineUnits; 
-	gUnitMng.GetUnit(EMS_UnitType::Spline, VehicleSplineUnits);
+	gUnitMng.GetUnit(EMS_UnitType::CarSpline, VehicleSplineUnits);
 
 	float DistanceMin = 0.f;
 	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;

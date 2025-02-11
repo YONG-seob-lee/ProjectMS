@@ -11,6 +11,7 @@
 UMS_OutsideIdleAITask::UMS_OutsideIdleAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "Outside Idle";
+	bNotifyTick = true;
 }
 
 EBTNodeResult::Type UMS_OutsideIdleAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -21,41 +22,56 @@ EBTNodeResult::Type UMS_OutsideIdleAITask::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	const TObjectPtr<UMS_OutsideBlackboardComponent> BlackboardComp = Cast<UMS_OutsideBlackboardComponent>(OwnerComp.GetBlackboardComponent());
+	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
 	if(!BlackboardComp)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	BlackboardComp->SetValueAsBool(TEXT("bFinishedIdleAnimation"), false);
+	const float RandomIdleTime = GetRandomRemainTime(5.f, 10.f);
+	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainIdleTime, RandomIdleTime);
 
+#if WITH_EDITOR
+	MS_LOG(TEXT("Outside Duck AI \"Idle Task\" Start [Total Idle Time : %f]"), RandomIdleTime);
+#endif
+	
 	return EBTNodeResult::InProgress; 
 }
 
 void UMS_OutsideIdleAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
-
-	const TObjectPtr<AMS_OutsideAIController> OutsideAIController = Cast<AMS_OutsideAIController>(OwnerComp.GetAIOwner());
-	if(!OutsideAIController)
+	
+	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
+	if(!BlackboardComp)
 	{
 		return;
 	}
 
-	const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(OutsideAIController->GetCharacter());
-	if(!AICharacter)
+	const float IdleRemainTime = BlackboardComp->GetValueAsFloat(OutsideBoardKeyName::RemainIdleTime);
+	if(IdleRemainTime <= 0.f)
 	{
-		return;
-	}
+		const TObjectPtr<AMS_OutsideAIController> OutsideAIController = Cast<AMS_OutsideAIController>(OwnerComp.GetAIOwner());
+		if(!OutsideAIController)
+		{
+			return;
+		}
 
-	const TObjectPtr<UMS_AIAnimInstance> AIAnimInstance = AICharacter->GetAnimInstance();
-	if(!AIAnimInstance)
-	{
-		return;
-	}
+		const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(OutsideAIController->GetCharacter());
+		if(!AICharacter)
+		{
+			return;
+		}
 
-	if(AIAnimInstance->AnimIsFinished())
-	{
+		const TObjectPtr<UMS_AIAnimInstance> AIAnimInstance = AICharacter->GetAIAnimInstance();
+		if(!AIAnimInstance)
+		{
+			return;
+		}
+
+		AIAnimInstance->SetIsActWalking(true);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
+	
+	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainIdleTime, IdleRemainTime - DeltaSeconds);
 }
