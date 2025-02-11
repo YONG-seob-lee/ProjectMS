@@ -2,10 +2,8 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
-#include "Component/Prop/MS_PropSpaceComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "InputProcessor/MS_GridBasedMoveHelper.h"
-#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -16,7 +14,6 @@
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "MathUtility/MS_MathUtility.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Prop/Furniture/MS_Furniture.h"
 #include "Table/RowBase/MS_StorageData.h"
 
 

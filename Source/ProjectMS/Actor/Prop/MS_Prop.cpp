@@ -3,7 +3,7 @@
 
 #include "MS_Prop.h"
 
-#include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"

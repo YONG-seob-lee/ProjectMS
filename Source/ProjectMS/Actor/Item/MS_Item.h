@@ -3,20 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "MS_Actor.h"
 #include "MS_Item.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class PROJECTMS_API UMS_Item : public UObject
+class PROJECTMS_API AMS_Item : public AMS_Actor
 {
 	GENERATED_BODY()
-public:
-	void Initialize(int32 aItemId);
 
-	UTexture2D* GetItemTexture() const;
-private:
-	int32 ItemId = INDEX_NONE;
+public:
+	AMS_Item(const FObjectInitializer& aObjectInitializer);
+
+protected:
+	virtual void BeginPlay() override;
 };

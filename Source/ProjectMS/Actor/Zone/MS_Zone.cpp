@@ -4,7 +4,7 @@
 #include "MS_Zone.h"
 
 #include "MS_Define.h"
-#include "Component/Prop/MS_PropSpaceComponent.h"
+#include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
