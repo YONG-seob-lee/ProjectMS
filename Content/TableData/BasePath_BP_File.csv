@@ -29,6 +29,7 @@ Id,Directory_Table_Id,BP_File_Name
 4008,4001,BP_VeggieStand_2x2_A
 4009,4001,BP_VeggieStand_2x2_B
 4010,4001,BP_VeggieStand_2x4_AB
+4011,4001,BP_Rack_4x2_A
 5001,5001,SM_Freeze_dumpling
 5002,5001,SM_Freeze_Hamburger
 5003,5001,SM_Freeze_IceCream
@@ -42,6 +43,5 @@ Id,Directory_Table_Id,BP_File_Name
 5011,5001,SM_Refrig_SnackB
 5012,5001,SM_Refrig_SnackC
 6001,5001,SM_WH_BOX
-6002,5001,SM_WH_RACK
 7001,7001,BP_SlotActor_4x4
 8001,8001,BP_Item
