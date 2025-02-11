@@ -2,6 +2,7 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
+#include "UtilityFunctions.h"
 #include "Controller/MS_PlayerController.h"
 #include "InputProcessor/MS_GridBasedMoveHelper.h"
 #include "Manager_Client/MS_InputManager.h"
@@ -360,18 +361,10 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorag
 			FVector WorldCenterLocation = SpaceHitResult.Location + FVector(0.f, 0.f, 5.f);
 			MS_LOG_VERBOSITY(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
 			FRotator Rotator = FRotator(0.f, 90.f, 0.f);
-		
-			const FString BlueprintPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aStorageData->PathFile, true);
 
-			UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
-			if(IsValid(BlueprintClass) == false)
-			{
-				MS_CHECK(false);
-				MS_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
-				return;
-			}
+			UClass* Class = UUtilityFunctions::GetClassByTablePathId(aStorageData->PathFile);
 		
-			PreviewProp = World->SpawnActor<AMS_Prop>(BlueprintClass, WorldCenterLocation, Rotator);
+			PreviewProp = World->SpawnActor<AMS_Prop>(Class, WorldCenterLocation, Rotator);
 		
 			PreviewProp->InitializeWhenPreviewProp(nullptr);
 

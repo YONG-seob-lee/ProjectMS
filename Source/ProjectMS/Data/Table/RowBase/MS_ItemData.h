@@ -19,15 +19,11 @@ USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 TakeMaxCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Volume;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PriceMin;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PriceMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PathFile;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ItemMeshPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BoxMeshPath;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

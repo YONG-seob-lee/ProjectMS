@@ -21,6 +21,9 @@ protected:
 public:
 	int32 GetItemOrder() const { return ItemOrder; }
 
+	void SetItemVisibility(bool bVisibility);
+
+	
 protected:
 	UPROPERTY(EditAnywhere)
 	int32 ItemOrder;

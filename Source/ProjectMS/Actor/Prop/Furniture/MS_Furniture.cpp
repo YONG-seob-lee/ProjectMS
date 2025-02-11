@@ -27,7 +27,12 @@ void AMS_Furniture::BeginPlay()
 void AMS_Furniture::PreInitializeComponents()
 {
 	Super::PreInitializeComponents();
-	
+}
+
+void AMS_Furniture::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
 	TArray<UMS_SlotChildActorComponent*> SlotComponents;
 	GetComponents<UMS_SlotChildActorComponent>(SlotComponents);
 
@@ -43,8 +48,33 @@ void AMS_Furniture::PreInitializeComponents()
 	}
 }
 
-void AMS_Furniture::PostInitializeComponents()
+void AMS_Furniture::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	Super::PostInitializeComponents();
+	for (auto& It : SlotOrderToSlotComponents)
+	{
+		if (aSlotDatas.IsValidIndex(It.Key))
+		{
+			It.Value->OnChangeRequestSlotData(aSlotDatas[It.Key]);
+		}
+		else
+		{
+			It.Value->OnChangeRequestSlotData(FMS_SlotData());
+		}
+	}
+}
+
+void AMS_Furniture::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+{
+	for (auto& It : SlotOrderToSlotComponents)
+	{
+		if (aSlotDatas.IsValidIndex(It.Key))
+		{
+			It.Value->OnChangeCurrentSlotData(aSlotDatas[It.Key]);
+		}
+		else
+		{
+			It.Value->OnChangeCurrentSlotData(FMS_SlotData());
+		}
+	}
 }
 

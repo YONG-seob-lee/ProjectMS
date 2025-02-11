@@ -15,6 +15,7 @@ struct FMS_SlotData
 
 public:
 	FMS_SlotData()
+		: RequestItemTableId(INDEX_NONE), CurrentItemTableId(INDEX_NONE), CurrentItemAmount(0)
 	{
 	}
 	

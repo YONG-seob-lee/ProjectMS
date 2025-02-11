@@ -21,7 +21,10 @@ public:
 	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
 
+	void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* SlotAttachedComponent;

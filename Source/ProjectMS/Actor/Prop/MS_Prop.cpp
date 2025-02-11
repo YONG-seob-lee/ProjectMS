@@ -17,7 +17,7 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 {
 	// Component
 	// Mesh Components
-	UMeshComponent* FirstMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FirstMeshComponent"));
+	UMeshComponent* FirstMeshComponent = CreateDefaultSubobject<UMeshComponent>(TEXT("FirstMeshComponent"));
 	if (FirstMeshComponent)
 	{
 		MeshComponents.Add(FirstMeshComponent);

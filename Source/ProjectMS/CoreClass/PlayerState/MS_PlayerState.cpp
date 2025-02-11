@@ -105,9 +105,9 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	GridPositionToMarketFurnitureDatas.Emplace(Rack.GridPosition, Rack);
 	
 	// Items
-	Items.Emplace(5, 10);
-	Items.Emplace(12, 20);
-	Items.Emplace(13, 20);
+	Items.Emplace(1, 30);
+	Items.Emplace(2, 30);
+	Items.Emplace(16, 20);
 }
 
 void AMS_PlayerState::InitPlayerData()

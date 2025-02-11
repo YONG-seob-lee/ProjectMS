@@ -17,8 +17,12 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
 	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
+
+	
+	void OnChangeCurrentSlotData(const struct FMS_SlotData& aSlotDatas, bool bChangeItemTableId);
 
 	
 protected:

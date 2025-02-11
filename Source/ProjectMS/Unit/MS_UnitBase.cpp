@@ -3,6 +3,7 @@
 
 #include "MS_UnitBase.h"
 
+#include "UtilityFunctions.h"
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -83,18 +84,7 @@ UClass* UMS_UnitBase::GetBlueprintClass() const
 		return nullptr;
 	}
 
-	const FString BPPath = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, BPPathId, true);
-	
-	UClass* BPClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BPPath);
-	if(!IsValid(BPClass))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] BPClass is invalid [BPPathId : %d] [BPPath : %s]"), *MS_FUNC_STRING, BPPathId, *BPPath);
-		MS_ENSURE(false);
-
-		return nullptr;
-	}
-
-	return BPClass;
+	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
 TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot,

@@ -28,7 +28,11 @@ public:
 	void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
 	
 	// Property :: Setter
-	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas) { SlotDatas = aSlotDatas; }
+	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas);
+
+private:
+	void OnChangeRequestSlotDatas();
+	void OnChangeCurrentSlotDatas();
 	
 
 private:

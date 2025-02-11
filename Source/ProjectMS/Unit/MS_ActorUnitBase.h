@@ -33,6 +33,12 @@ protected:
 	
 public:
 	FORCEINLINE TObjectPtr<AMS_Actor> GetActor() const { return Actor; }
+
+	template<class T>
+	TObjectPtr<T> GetActor() const
+	{
+		return Cast<T>(Actor);
+	}
 	
 private:
 	UPROPERTY()

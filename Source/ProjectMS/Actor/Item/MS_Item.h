@@ -16,4 +16,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void SetItemVisibility(bool bVisibility);
+
+	
+protected:
+	// Component
+	UPROPERTY(EditAnywhere)
+	UMeshComponent* MeshComponent;
 };
