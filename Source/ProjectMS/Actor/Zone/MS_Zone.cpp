@@ -84,6 +84,7 @@ void AMS_Zone::BeginPlay()
 		if (!bOpened)
 		{
 			FloorAttachedComponent->SetVisibility(false, true);
+			WallAttachedComponent->SetVisibility(false, true);
 		}
 	}
 	
@@ -313,6 +314,7 @@ void AMS_Zone::OnClickZoneOpenWidget(UMS_ZoneOpenWidget* aZoneOpenWidget)
 void AMS_Zone::OnZoneOpened()
 {
 	FloorAttachedComponent->SetVisibility(true, true);
+	WallAttachedComponent->SetVisibility(true, true);
 	ZoneOpenWidgetComponent->SetVisibility(false);
 }
 
@@ -331,9 +333,12 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 
 void AMS_Zone::SetWallVisibilities(TWeakObjectPtr<AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
 {
-	for (auto It = Walls.CreateConstIterator(); It; ++It)
+	if (bOpened)
 	{
-		It->Get()->SetVisibilityByGridOpened(aOwnerLevelScriptActor);
+		for (auto It = Walls.CreateConstIterator(); It; ++It)
+		{
+			It->Get()->SetVisibilityByGridOpened(aOwnerLevelScriptActor);
+		}
 	}
 }
 
