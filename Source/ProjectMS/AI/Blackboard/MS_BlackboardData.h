@@ -4,7 +4,8 @@
 #include "BehaviorTree/BlackboardData.h"
 #include "MS_BlackboardData.generated.h"
 
-UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+//UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+UCLASS()
 class PROJECTMS_API UMS_BlackboardData : public UBlackboardData
 {
 	GENERATED_BODY()

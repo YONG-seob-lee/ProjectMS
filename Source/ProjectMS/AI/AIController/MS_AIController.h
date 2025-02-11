@@ -13,6 +13,7 @@ class PROJECTMS_API AMS_AIController : public AAIController
 public:
 	AMS_AIController();
 
+	virtual void Initialize() {}
 	virtual void PostInitializeComponents() override;
 	virtual void OnPossess(APawn* aInPawn) override;
 	virtual void OnUnPossess() override;

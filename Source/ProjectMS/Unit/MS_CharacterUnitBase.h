@@ -29,7 +29,6 @@ protected:
 	TObjectPtr<class AMS_CharacterBase> CreateCharacter(const FVector& aPosition, const FRotator& aRotator);
 	TObjectPtr<class AMS_CharacterBase> CreateCharacter(UClass* aClass, const FVector& aPosition, const FRotator& aRotator);
 	
-	
 public:
 	FORCEINLINE TObjectPtr<class AMS_CharacterBase> GetCharacter() const { return Character; }
 	

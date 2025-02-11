@@ -8,6 +8,7 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
+#include "SpawnPoint/MS_OutsideDuckSpawnPoint.h"
 #include "Units/MS_SplineUnit.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
@@ -24,6 +25,8 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	ParsingSplineActors();
+
+	CollectOutsideDickSpawnPoint();
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +53,24 @@ void AMS_StageLevelScriptActor::Destroyed()
 	gInputMng.OnPointerUpDelegate.RemoveAll(this);
 	
 	Super::Destroyed();
+}
+
+void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint()
+{
+	TArray<AActor*> DuckSpawnPoints;
+	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_OutsideDuckSpawnPoint::StaticClass(), DuckSpawnPoints);
+
+	for(AActor* SpawnPoint : DuckSpawnPoints)
+	{
+		AMS_OutsideDuckSpawnPoint* DuckSpawnPoint = Cast<AMS_OutsideDuckSpawnPoint>(SpawnPoint);
+		if(!DuckSpawnPoint)
+		{
+			return;
+		}
+
+		gUnitMng.CreateUnit(EMS_UnitType::AI, 0,true, DuckSpawnPoint->GetSpawnLocation(), DuckSpawnPoint->GetSpawnRotation());
+	}
 }
 
 void AMS_StageLevelScriptActor::ParsingSplineActors() const

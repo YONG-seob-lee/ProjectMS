@@ -4,6 +4,7 @@
 #include "MS_UnitManager.h"
 
 #include "Unit/MS_UnitBase.h"
+#include "Units/MS_AIUnit.h"
 #include "Units/MS_BasePlayerUnit.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
@@ -133,6 +134,10 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 	case EMS_UnitType::Gate:
 		{
 			return UMS_GateUnit::StaticClass();
+		}
+	case EMS_UnitType::AI:
+		{
+			return UMS_AIUnit::StaticClass();
 		}
 	default:
 		{

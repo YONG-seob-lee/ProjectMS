@@ -12,7 +12,7 @@ public class ProjectMS : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput"
-			, "Slate", "SlateCore", "GameplayCameras", "AIModule", "NavigationSystem"
+			, "Slate", "SlateCore", "GameplayCameras", "AIModule", "NavigationSystem", "GamePlayTasks"
 			, "ProceduralMeshComponent", "AssetRegistry", "UMG", "CommonInput", "NiagaraUIRenderer"
 		});
 		

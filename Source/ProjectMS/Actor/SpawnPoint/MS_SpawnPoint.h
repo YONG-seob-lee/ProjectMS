@@ -24,7 +24,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	FORCEINLINE FName GetSpawnName() const { return SpawnName; }
-private:
+
+	virtual FVector GetSpawnLocation() { return FVector(); }
+	virtual FRotator GetSpawnRotation() { return FRotator(); }
+	
+protected:
 	UPROPERTY(EditAnywhere, Category = SpawnInfo, meta = (AllowPrivateAccess = "true"))
 	FName SpawnName = FName();
 

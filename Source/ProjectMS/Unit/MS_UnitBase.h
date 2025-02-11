@@ -33,7 +33,7 @@ public:
 	
 	virtual bool CreateUnitActor(const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	virtual void DestroyUnitActor();
-	
+
 	FORCEINLINE MS_Handle GetUnitHandle() const { return UnitHandle; }
 	FORCEINLINE EMS_UnitType GetUnitType() const { return UnitType; }
 	
@@ -43,7 +43,7 @@ protected:
 	virtual int32 GetBlueprintPathId() const;
 	virtual UClass* GetBlueprintClass() const;
 	
-	TObjectPtr<AActor> MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
+	TObjectPtr<AActor> MS_SpawnActor(UClass* aClass, const FVector& Pos = FVector::ZeroVector, const FRotator& Rot = FRotator::ZeroRotator, bool bNeedRootComponent = true,
 										   ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn) const;
 
 	

@@ -26,8 +26,7 @@ void UMS_CharacterUnitBase::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_CharacterUnitBase::CreateUnitActor(const FVector& aPosition,
-	const FRotator& aRotator)
+bool UMS_CharacterUnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
 {
 	if (Character != nullptr)
 	{

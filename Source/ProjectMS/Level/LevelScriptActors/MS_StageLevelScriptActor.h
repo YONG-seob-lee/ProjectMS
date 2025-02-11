@@ -19,7 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
 private:
-	
+	void CollectOutsideDickSpawnPoint();
 	void ParsingSplineActors() const;
 	
 	UFUNCTION()
