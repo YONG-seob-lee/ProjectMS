@@ -101,27 +101,6 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 		{
 			if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 			{
-				// const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
-				// MS_CHECK(StorageTable);
-				//
-				// const FMS_StorageData* StorageData = StorageTable->GetStorageData(PropActor->GetTableIndex());
-				// if(StorageData == nullptr)
-				// {
-				// 	return;
-				// }
-				// if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Display))
-				// {
-				// 	
-				// }
-				// else if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Shelf))
-				// {
-				// 	
-				// }
-				// else if(StorageData->StorageType == static_cast<int32>(EMS_StorageType::Pallet))
-				// {
-				// 	
-				// }
-				
 				PropActor->GetUnitHandleId();
 
 				gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false), aPosition);

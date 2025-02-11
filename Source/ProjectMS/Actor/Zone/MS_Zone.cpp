@@ -9,7 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Level/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Floor/MS_Floor.h"

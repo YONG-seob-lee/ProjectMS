@@ -5,7 +5,7 @@
 
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Level/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Widget/Editor/MS_EditorTextWidget.h"
 #include "Zone/MS_Zone.h"
 

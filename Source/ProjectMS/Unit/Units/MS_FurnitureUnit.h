@@ -20,9 +20,6 @@ public:
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 
-	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
-	virtual void DestroyUnitActor() override;
-
 
 public:
 	virtual int32 GetBlueprintPathId() const override;
@@ -30,4 +27,6 @@ public:
 
 private:
 	struct FMS_StorageData* FurnitureData = nullptr;
+
+	
 };

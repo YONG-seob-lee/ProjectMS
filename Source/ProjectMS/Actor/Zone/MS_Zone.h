@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Actor.h"
-#include "Level/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_Zone.generated.h"
 
 DECLARE_DELEGATE_OneParam(FMS_RequestOpenZoneDelegate, int32);

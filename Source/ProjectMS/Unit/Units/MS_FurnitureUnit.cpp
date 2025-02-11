@@ -30,16 +30,6 @@ void UMS_FurnitureUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-bool UMS_FurnitureUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
-{
-	return Super::CreateUnitActor(aPosition, aRotator);
-}
-
-void UMS_FurnitureUnit::DestroyUnitActor()
-{
-	Super::DestroyUnitActor();
-}
-
 int32 UMS_FurnitureUnit::GetBlueprintPathId() const
 {
 	return FurnitureData->PathFile;

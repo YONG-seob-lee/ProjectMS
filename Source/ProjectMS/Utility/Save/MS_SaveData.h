@@ -4,28 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "MathUtility/MS_MathUtility.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_SaveData.generated.h"
 
 /**
  * 
  */
-USTRUCT()
-struct FMS_StorageSaveData
-{
-	GENERATED_BODY()
-
-public:
-	FMS_StorageSaveData()
-	{
-	}
-
-	UPROPERTY()
-	int32 ItemTableId;
-
-	UPROPERTY()
-	int32 ItemAmount;
-};
-
 USTRUCT()
 struct FMS_LevelFurnitureSaveData
 {
@@ -40,7 +24,7 @@ public:
 	EMS_Rotation aRotation)
 		: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation)
 	{
-		StorageData.Empty();
+		SlotDatas.Empty();
 	}
 	
 	UPROPERTY()
@@ -53,5 +37,5 @@ public:
 	EMS_Rotation Rotation;
 
 	UPROPERTY()
-	TArray<FMS_StorageSaveData> StorageData;
+	TArray<FMS_SlotData> SlotDatas;
 };

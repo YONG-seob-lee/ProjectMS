@@ -4,57 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "Test/TestServer/MS_TestServer.h"
-#include "Table/RowBase/MS_ItemData.h"
-#include "Table/RowBase/MS_Staff.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_ItemManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnClickedItem, int32, int32); /* ItemId, ItemType */
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnClickedTileViewItem, int32)
 
-// 임시
-struct FPacketItemDatas
-{
-public:
-	int32 ItemId = 0;
-	FVector Vector;
-	FRotator Rotator;
-};
-
-UENUM()
-enum class EMS_ItemType : uint8
-{
-	Undefined = 0,
-	Money,
-	Cash,
-	Fruit,
-	Fish,
-	Beverage,
-	Frozen,
-	Snack,
-	FrozenSnack,
-	Storage
-};
-
-UENUM(BlueprintType)
-enum class EMS_StorageType : uint8
-{
-	Undefined = 0,
-	Display			UMETA(DisplayName = "Display"),
-	Shelf			UMETA(DisplayName = "Shelf"),
-	Pallet			UMETA(DisplayName = "Pallet"),
-	Counter			UMETA(DisplayName = "Counter"),
-};
-
-UENUM()
-enum class EMS_TemperatureType : uint8
-{
-	Undefined = 0,
-	Constant,
-	Refrigeration,
-	Freezing
-};
 /**
  * 
  */
@@ -91,7 +46,7 @@ public:
 private:
 	TMap<int32, int32> Items = {};
 	TMap<int32, int32> ShelfItems = {};
-	TMap<int32, FMS_StorageData*> Stand = {};
+	TMap<int32, struct FMS_StorageData*> Stand = {};
 
 	// 나중에 서버에서 받을지 미리 캐싱해뒀다 쓸지 고려
 	UPROPERTY()
@@ -101,7 +56,7 @@ private:
 	TMap<int32, UMS_StaffPropertyElementData*> StaffPropertys;
 	
 public:
-	inline static TObjectPtr<UMS_ItemManager> InventoryManager = nullptr;
+	inline static TObjectPtr<UMS_ItemManager> ItemManager = nullptr;
 	static UMS_ItemManager* GetInstance();
 
 	

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ModeStateBase.h"
-#include "Level/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_ModeState_Construct.generated.h"
 
 /**

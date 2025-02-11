@@ -17,6 +17,7 @@
 #include "MathUtility/MS_MathUtility.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Furniture/MS_Furniture.h"
+#include "Table/RowBase/MS_StorageData.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
