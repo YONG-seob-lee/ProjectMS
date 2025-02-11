@@ -43,3 +43,5 @@ Id,Directory_Table_Id,BP_File_Name
 5012,5001,SM_Refrig_SnackC
 6001,5001,SM_WH_BOX
 6002,5001,SM_WH_RACK
+7001,7001,BP_SlotActor_4x4
+8001,8001,BP_Item

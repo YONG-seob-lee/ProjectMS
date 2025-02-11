@@ -25,13 +25,13 @@ USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PriceMax;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* StuffStaticMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* StuffBundleStaticMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* StuffBoxStaticMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PathFile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ItemMeshPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BoxMeshPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SlotPath100x100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 ImagePath;
 };
