@@ -8,7 +8,6 @@
 #include "Units/MS_BasePlayerUnit.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
-#include "Units/MS_ItemUnit.h"
 #include "Units/MS_SplineUnit.h"
 #include "Units/MS_VehicleUnit.h"
 
@@ -18,7 +17,6 @@ UMS_UnitManager::UMS_UnitManager()
 	UnitManager = this;
 	
 	UnitTypeClasses.Emplace(EMS_UnitType::BasePlayer, UMS_BasePlayerUnit::StaticClass());
-	UnitTypeClasses.Emplace(EMS_UnitType::Item, UMS_ItemUnit::StaticClass());
 	UnitTypeClasses.Emplace(EMS_UnitType::Furniture, UMS_FurnitureUnit::StaticClass());
 }
 
@@ -114,10 +112,6 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 	case EMS_UnitType::BasePlayer:
 		{
 			return UMS_BasePlayerUnit::StaticClass();
-		}
-	case EMS_UnitType::Item:
-		{
-			return UMS_ItemUnit::StaticClass();
 		}
 	case EMS_UnitType::Furniture:
 		{
