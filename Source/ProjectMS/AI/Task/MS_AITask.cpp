@@ -22,3 +22,8 @@ void UMS_AITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, 
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 }
+
+float UMS_AITask::GetRandomRemainTime(float MinTime /* = 2.f */, float MaxTime /* = 10.f */)
+{
+	return FMath::RandRange(MinTime, MaxTime);
+}

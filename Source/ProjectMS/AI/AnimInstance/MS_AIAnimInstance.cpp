@@ -2,3 +2,10 @@
 
 
 #include "MS_AIAnimInstance.h"
+
+void UMS_AIAnimInstance::NativeBeginPlay()
+{
+	Super::NativeBeginPlay();
+
+	bActWalking = true;
+}

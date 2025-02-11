@@ -18,8 +18,12 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
-	FORCEINLINE TObjectPtr<class UMS_AIAnimInstance> GetAnimInstance() { return AnimInstance; }
 
 private:
-	TObjectPtr<class UMS_AIAnimInstance> AnimInstance = nullptr;
+	TObjectPtr<class AMS_DuckSplineActor> FindNearestSpline() const;
+
+	TWeakObjectPtr<class AMS_DuckSplineActor> NearestSpline = nullptr;
+	
+	UPROPERTY(EditAnywhere)
+	float DuckVelocity = 1.3f;
 };

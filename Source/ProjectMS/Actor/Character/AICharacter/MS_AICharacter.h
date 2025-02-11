@@ -16,4 +16,9 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
+	
+	TObjectPtr<class UMS_AIAnimInstance> GetAIAnimInstance() const;
+
+protected:
+	TWeakObjectPtr<class UMS_AIAnimInstance> AIAnimInstance = nullptr;
 };

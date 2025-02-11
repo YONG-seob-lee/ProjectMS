@@ -14,7 +14,12 @@ class PROJECTMS_API UMS_AIAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	bool AnimIsFinished() { return false; }
-
+	virtual void NativeBeginPlay() override;
+	
+	FORCEINLINE void SetIsActWalking(bool _bActWalking) { bActWalking = _bActWalking; }
+	FORCEINLINE bool IsActWalking() const { return bActWalking; }
 private:
+
+	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bActWalking = true;
 };

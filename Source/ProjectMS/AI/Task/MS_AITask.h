@@ -24,4 +24,7 @@ public:
 
 	// Note 용섭 : 테스크 중의 행동 함수.
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds);
+
+protected:
+	float GetRandomRemainTime(float MinTime = 2.f, float MaxTime = 10.f);
 };

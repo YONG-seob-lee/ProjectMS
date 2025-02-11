@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "AI/AIController/MS_AIController.h"
+#include "AI/AnimInstance/MS_AIAnimInstance.h"
 
 AMS_AICharacter::AMS_AICharacter()
 {
@@ -40,6 +41,15 @@ AMS_AICharacter::AMS_AICharacter()
 void AMS_AICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	const USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
+	if(!SkeletalMeshComponent)
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("Please Check [%s] BP Instance and Check AnimInstance."), *MS_FUNC_STRING);
+		return;
+	}
+	
+	AIAnimInstance = Cast<UMS_AIAnimInstance>(SkeletalMeshComponent->GetAnimInstance());
 }
 
 void AMS_AICharacter::BeginPlay()
@@ -50,4 +60,14 @@ void AMS_AICharacter::BeginPlay()
 void AMS_AICharacter::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+}
+
+TObjectPtr<UMS_AIAnimInstance> AMS_AICharacter::GetAIAnimInstance() const
+{
+	if(AIAnimInstance.IsValid())
+	{
+		return AIAnimInstance.Get();
+	}
+	
+	return nullptr;
 }

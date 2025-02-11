@@ -9,18 +9,11 @@
 
 namespace AIBlueprintPath
 {
-	const FString OutsideAI = TEXT("/Game/Unit/BP_AICharacter.BP_AICharacter_C");
+	const FString OutsideAI = TEXT("/Game/Unit/BP_OutsideAICharacter.BP_OutsideAICharacter_C");
 }
 void UMS_AIUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
 	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);
-
-	AIController = Cast<AMS_OutsideAIController>(MS_SpawnActor(AMS_OutsideAIController::StaticClass()));
-	if(AIController)
-	{
-		AIController->Initialize();
-		BlackboardComponent = AIController->GetBlackboardComponent();
-	}
 }
 
 void UMS_AIUnit::Finalize()
@@ -30,11 +23,6 @@ void UMS_AIUnit::Finalize()
 		MS_DeleteObject(AIController);
 		AIController = nullptr;
 	}
-	if(AICharacterBase)
-	{
-		MS_DeleteObject(AICharacterBase);
-		AICharacterBase = nullptr;
-	}
 	
 	Super::Finalize();
 }
@@ -42,6 +30,18 @@ void UMS_AIUnit::Finalize()
 void UMS_AIUnit::PostInitialize()
 {
 	Super::PostInitialize();
+
+	const TObjectPtr<ACharacter> AICharacter = GetCharacter();
+	if(!AICharacter)
+	{
+		return;
+	}
+	AIController = Cast<AMS_AIController>(AICharacter->GetController());
+	if(AIController)
+	{
+		AIController->Initialize();
+		BlackboardComponent = AIController->GetBlackboardComponent();
+	}
 }
 
 UClass* UMS_AIUnit::GetBlueprintClass() const

@@ -26,8 +26,5 @@ private:
 	TObjectPtr<class AMS_AIController> AIController = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<class AMS_AICharacter> AICharacterBase = nullptr;
-
-	UPROPERTY()
 	TObjectPtr<class UBlackboardComponent> BlackboardComponent = nullptr;
 };
