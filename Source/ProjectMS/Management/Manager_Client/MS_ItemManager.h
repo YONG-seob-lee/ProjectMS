@@ -31,8 +31,10 @@ public:
 
 	virtual void Tick(float aDeltaTime) override;
 	
-	FORCEINLINE TMap<int32, int32> GetCurrentItems() { return Items; }
-	FORCEINLINE TMap<int32, int32> GetShelfItems() { return ShelfItems; }
+	FORCEINLINE void GetCurrentItems(TMap<int32, int32>& OutItems) const;
+	FORCEINLINE void GetDisplayItems(TMap<int32, int32>& OutItems) const;
+	FORCEINLINE void GetNoneDisplayItems(TMap<int32, int32>& OutItems) const;
+	
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 
 	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
@@ -44,7 +46,8 @@ public:
 private:
 	TMap<int32, int32> Items = {};
 	
-	TMap<int32, int32> ShelfItems = {};
+	TMap<int32, int32> AddedItems = {};
+	TMap<int32, int32> SoldItems = {};
 
 	TMap<int32, struct FMS_StorageData*> Stand = {};
 

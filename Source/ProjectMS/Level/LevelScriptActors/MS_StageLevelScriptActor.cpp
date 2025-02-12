@@ -149,11 +149,11 @@ void AMS_StageLevelScriptActor::ParsingDuckSplineActors() const
 void AMS_StageLevelScriptActor::DestroySplineActors()
 {
 	TArray<TObjectPtr<UMS_UnitBase>> DestroyUnits;
-	gUnitMng.GetUnit(EMS_UnitType::CarSpline, DestroyUnits);
+	gUnitMng.GetUnits(EMS_UnitType::CarSpline, DestroyUnits);
 	gUnitMng.DestroyUnits(DestroyUnits);
 
 	DestroyUnits.Empty();
-	gUnitMng.GetUnit(EMS_UnitType::DuckSpline, DestroyUnits);
+	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DestroyUnits);
 	gUnitMng.DestroyUnits(DestroyUnits);
 }
 

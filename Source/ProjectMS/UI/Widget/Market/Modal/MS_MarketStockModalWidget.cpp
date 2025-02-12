@@ -14,7 +14,8 @@ void UMS_MarketStockModalWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	const TMap<int32, int32> Items = gItemMng.GetCurrentItems();
+	TMap<int32, int32> Items;
+	gItemMng.GetCurrentItems(Items);
 	TArray<UMS_StockItemElementData*> StockItemElementDatas;
 	CreateStockElement(Items, StockItemElementDatas);
 

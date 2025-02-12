@@ -29,7 +29,7 @@ public:
 	void DestroyAllUnits();
 
 	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
-	void GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
+	void GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aOutUnits);
 
 	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);

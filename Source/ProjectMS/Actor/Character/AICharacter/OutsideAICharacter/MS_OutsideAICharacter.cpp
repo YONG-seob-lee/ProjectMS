@@ -68,7 +68,7 @@ MS_Handle AMS_OutsideAICharacter::GetUnitHandle() const
 TObjectPtr<AMS_DuckSplineActor> AMS_OutsideAICharacter::FindNearestSpline() const
 {
 	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
-	gUnitMng.GetUnit(EMS_UnitType::DuckSpline, DuckSplineUnits);
+	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DuckSplineUnits);
 
 	float DistanceMin = 0.f;
 	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;

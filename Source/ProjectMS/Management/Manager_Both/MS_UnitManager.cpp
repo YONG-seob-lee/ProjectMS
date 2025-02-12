@@ -37,15 +37,15 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
 	return nullptr;
 }
 
-void UMS_UnitManager::GetUnit(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
+void UMS_UnitManager::GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aOutUnits)
 {
-	aUnits.Empty();
+	aOutUnits.Empty();
 
 	for(const auto& Unit : Units)
 	{
 		if(Unit.Value->GetUnitType() == aUnitType)
 		{
-			aUnits.Emplace(Unit.Value);
+			aOutUnits.Emplace(Unit.Value);
 		}
 	}
 }

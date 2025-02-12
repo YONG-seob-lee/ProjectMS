@@ -3,8 +3,11 @@
 
 #include "MS_ItemManager.h"
 
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
 
 
@@ -25,21 +28,7 @@ void UMS_ItemManager::BuiltInInitialize()
 void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
-
-	// 나중에 실제 데이터로 대체
-	ShelfItems.Emplace(4, 8);
-	ShelfItems.Emplace(5, 2);
-	ShelfItems.Emplace(6, 4);
-	ShelfItems.Emplace(7, 3);
-	ShelfItems.Emplace(8, 7);
-	ShelfItems.Emplace(9, 1);
-	ShelfItems.Emplace(10, 15);
-	ShelfItems.Emplace(11, 10);
-	ShelfItems.Emplace(12, 5);
-	ShelfItems.Emplace(13, 1);
-	ShelfItems.Emplace(14, 3);
-	ShelfItems.Emplace(15, 1);
-
+	
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
 
@@ -76,6 +65,93 @@ void UMS_ItemManager::BuiltInFinalize()
 void UMS_ItemManager::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+}
+
+void UMS_ItemManager::GetCurrentItems(TMap<int32, int32>& OutItems) const
+{
+	OutItems.Empty();
+
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+
+	PlayerState->GetAllItems(OutItems);
+
+	for (const auto& AddedItem : AddedItems)
+	{
+		int32& Amount = OutItems.FindOrAdd(AddedItem.Key);
+		Amount += AddedItem.Value;
+	}
+
+	for (const auto& SoldItem : SoldItems)
+	{
+		int32& Amount = OutItems.FindOrAdd(SoldItem.Key);
+		Amount -= SoldItem.Value;
+	}
+}
+
+void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
+{
+	OutItems.Empty();
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Display)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
+					{
+						continue;
+					}
+					
+					int32& Amount = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
+					Amount += SlotData.CurrentItemAmount;
+				}
+			}
+		}
+	}
+}
+
+void UMS_ItemManager::GetNoneDisplayItems(TMap<int32, int32>& OutItems) const
+{
+	GetCurrentItems(OutItems);
+
+	TMap<int32, int32> DisplayItems;
+	GetDisplayItems(DisplayItems);
+
+	for (const auto& DisplayItem : DisplayItems)
+	{
+		int32& Amount = OutItems.FindOrAdd(DisplayItem.Key);
+		Amount -= DisplayItem.Value;
+	}
 }
 
 void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const

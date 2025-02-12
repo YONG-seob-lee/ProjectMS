@@ -23,7 +23,8 @@ void UMS_ShelfStatus::SetTileView(int32 aDisplaySlotIndex)
 {
 	SetDisplaySlotIndex(aDisplaySlotIndex);
 	
-	TMap<int32, int32> ShelfItems = gItemMng.GetShelfItems();
+	TMap<int32, int32> NoneDisplayItems;
+	gItemMng.GetNoneDisplayItems(NoneDisplayItems);
 	TArray<TObjectPtr<UMS_StorageSlotElementData>> StorageItemElementDatas;
 
 	// 빈 슬롯 하나 추가.
@@ -33,12 +34,12 @@ void UMS_ShelfStatus::SetTileView(int32 aDisplaySlotIndex)
 	BlankData->OnClickShelfSlotDelegate.AddUObject(this, &UMS_ShelfStatus::OnClickedShelfSlotButton);
 	StorageItemElementDatas.Emplace(BlankData);
 	
-	for(const auto ShelfItem : ShelfItems)
+	for(const auto NoneDisplayItem : NoneDisplayItems)
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
 		Data->SetSlotType(static_cast<int32>(EMS_ZoneType::Shelf));
-		Data->SetItemId(ShelfItem.Key);
-		Data->SetShelfCount(ShelfItem.Value);
+		Data->SetItemId(NoneDisplayItem.Key);
+		Data->SetShelfCount(NoneDisplayItem.Value);
 		Data->OnClickShelfSlotDelegate.AddUObject(this, &UMS_ShelfStatus::OnClickedShelfSlotButton);
 		StorageItemElementDatas.Emplace(Data);
 	}

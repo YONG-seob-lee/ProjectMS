@@ -25,6 +25,8 @@ public:
 	virtual int32 GetBlueprintPathId() const override;
 
 	// Property :: Getter
+	EMS_ZoneType GetZoneType() const { return ZoneType; }
+	
 	void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
 	
 	// Property :: Setter
