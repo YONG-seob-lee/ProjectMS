@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Prop/MS_Prop.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_Furniture.generated.h"
+
 
 UCLASS()
 class PROJECTMS_API AMS_Furniture : public AMS_Prop
@@ -21,6 +23,13 @@ public:
 	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
 
+	
+	// Select
+	virtual void OnSelectProp(EMS_ModeState aModeState) override;
+	virtual void OnUnselectProp(EMS_ModeState aModeState) override;
+
+	
+	// Slot Datas
 	void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 	void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 

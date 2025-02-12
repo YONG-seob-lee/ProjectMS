@@ -4,6 +4,7 @@
 #include "MS_Furniture.h"
 
 #include "Component/Actor/Item/MS_SlotChildActorComponent.h"
+#include "Manager_Client/MS_ModeManager.h"
 
 
 AMS_Furniture::AMS_Furniture(const FObjectInitializer& aObjectInitializer)
@@ -45,6 +46,38 @@ void AMS_Furniture::PostInitializeComponents()
 		}
 		
 		SlotOrderToSlotComponents.Emplace(SlotComponent->GetSlotOrder(), SlotComponent);
+	}
+}
+
+void AMS_Furniture::OnSelectProp(EMS_ModeState aModeState)
+{
+	Super::OnSelectProp(aModeState);
+	
+	if (aModeState == EMS_ModeState::Normal)
+	{
+		// For PostProcess
+		GetComponents(UMeshComponent::StaticClass(), MeshComponents);
+
+		for (UMeshComponent* MeshComponent : MeshComponents)
+		{
+			MeshComponent->SetRenderCustomDepth(true);
+		}
+	}
+}
+
+void AMS_Furniture::OnUnselectProp(EMS_ModeState aModeState)
+{
+	Super::OnUnselectProp(aModeState);
+
+	if (aModeState == EMS_ModeState::Normal)
+	{
+		// For PostProcess
+		GetComponents(UMeshComponent::StaticClass(), MeshComponents);
+
+		for (UMeshComponent* MeshComponent : MeshComponents)
+		{
+			MeshComponent->SetRenderCustomDepth(false);
+		}
 	}
 }
 

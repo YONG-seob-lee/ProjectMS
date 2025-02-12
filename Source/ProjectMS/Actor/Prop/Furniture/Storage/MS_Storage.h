@@ -5,6 +5,8 @@
 #include "MS_Storage.generated.h"
 
 
+enum class EMS_ModeState : uint8;
+
 UCLASS()
 class PROJECTMS_API AMS_Storage : public AMS_Furniture
 {
@@ -18,11 +20,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:
-	virtual void OnSelectNormal();
-	virtual void OnUnselectNormal();
 
-private:
-	virtual void CreateStorageWidget();
-	virtual void DestroyStorageWidget();
+public:
+	virtual void OpenManagementWidget(const FVector2D& aClickPosition, EMS_ModeState aModeState) override;
+	virtual void CloseManagementWidget(EMS_ModeState aModeState) override;
 };

@@ -6,6 +6,8 @@
 #include "MS_Prop.generated.h"
 
 
+enum class EMS_ModeState : uint8;
+
 UCLASS()
 class PROJECTMS_API AMS_Prop : public AMS_Actor
 {
@@ -47,6 +49,14 @@ public:
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone);
 	
 
+	// Select
+	virtual void OnSelectProp(EMS_ModeState aModeState) {}
+	virtual void OnUnselectProp(EMS_ModeState aModeState) {}
+
+	virtual void OpenManagementWidget(const FVector2D& aClickPosition, EMS_ModeState aModeState) {}
+	virtual void CloseManagementWidget(EMS_ModeState aModeState) {}
+
+	
 	// For Preview
 	void InitializeWhenPreviewProp(AMS_Prop* aLinkedProp);
 	

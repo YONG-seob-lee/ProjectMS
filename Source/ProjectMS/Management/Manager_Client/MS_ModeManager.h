@@ -4,26 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_ModeManager.generated.h"
 
 
 enum class EMS_UnitState : uint8;
-
-UENUM()
-enum class EMS_ControllerModeType : uint8
-{
-	Normal = 0,
-	Rotate = 1,
-};
-
-UENUM()
-enum class EMS_ModeState : uint8
-{
-	Normal = 0,
-	Construct = 1,
-	StaffManagement = 2,
-	CustomerManagement = 3,
-};
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnChangeModeDelegate, EMS_ModeState, EMS_ControllerModeType);
 

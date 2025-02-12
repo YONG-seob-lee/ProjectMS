@@ -6,9 +6,8 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ModeManager.h"
-#include "Manager_Client/MS_WidgetManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Prop/MS_Prop.h"
-#include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
 {
@@ -31,12 +30,31 @@ void UMS_ModeState_Normal::Tick(float aDeltaTime)
 
 void UMS_ModeState_Normal::Begin()
 {
-	Super::Begin();
+	// Delegate
+	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnSelectProp);
+	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnUnselectProp);
+
+	// SelectProp
+	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
+	
+	if (SelectedProp != nullptr)
+	{
+		OnSelectProp(SelectedProp.Get());
+	}
 }
 
 void UMS_ModeState_Normal::Exit()
 {
-	Super::Exit();
+	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
+	
+	if (SelectedProp != nullptr)
+	{
+		OnUnselectProp(SelectedProp.Get());
+	}
+	
+	// Delegate
+	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnUnselectProp);
+	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnSelectProp);
 }
 
 void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
@@ -79,9 +97,12 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 	{
 		if (InteractActor->IsA(AMS_Prop::StaticClass()))
 		{
+			gCameraMng.RestrictCameraMovement(true);
+			
 			gInteractionMng.SelectActor(InteractActor);
 				
 			gModeMng.ChangeState(EMS_ModeState::Construct);
+			
 		}
 	}
 }
@@ -89,6 +110,13 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerClick(aPosition, aInteractableHitResult);
+
+	AActor* InteractableActor = aInteractableHitResult.GetActor();
+	
+	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
+	{
+		SelectProp(InteractableActor);
+	}
 }
 
 void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
@@ -97,14 +125,9 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
-		if (InteractActor->IsA(AMS_Prop::StaticClass()))
+		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
-			if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
-			{
-				PropActor->GetUnitHandleId();
-
-				gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false), aPosition);
-			}
+			PropActor->OpenManagementWidget(aPosition, EMS_ModeState::Normal);
 		}
 	}
 }
@@ -112,4 +135,53 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 void UMS_ModeState_Normal::OnPinchAction(float aPinchValue)
 {
 	Super::OnPinchAction(aPinchValue);
+}
+
+void UMS_ModeState_Normal::SelectProp(AActor* aSelectedActor)
+{
+	if (!IsValid(aSelectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	{
+		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
+		{
+			return;
+		}
+		
+		gInteractionMng.SelectActor(aSelectedActor);
+	}
+}
+
+void UMS_ModeState_Normal::UnselectProp()
+{
+	gInteractionMng.UnselectActor();
+}
+
+void UMS_ModeState_Normal::OnSelectProp(AActor* aSelectedActor)
+{
+	if (!IsValid(aSelectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	{
+		SelectedProp->OnSelectProp(EMS_ModeState::Normal);
+	}
+}
+
+void UMS_ModeState_Normal::OnUnselectProp(AActor* aUnselectedActor)
+{
+	if (!IsValid(aUnselectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
+	{
+		SelectedProp->OnUnselectProp(EMS_ModeState::Normal);
+	}
 }

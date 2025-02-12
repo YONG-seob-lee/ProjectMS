@@ -28,18 +28,10 @@ void UMS_ModeState_Construct::Initialize(uint8 aIndex, const FName& aName)
 
 	// Helper
 	GridBasedMoveHelper = MS_NewObject<UMS_GridBasedMoveHelper>(this);
-	
-	// Delegate
-	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
-	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
 }
 
 void UMS_ModeState_Construct::Finalize()
 {
-	// Delegate
-	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
-	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
-
 	// Helper
 	if (IsValid(GridBasedMoveHelper))
 	{
@@ -54,7 +46,11 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 }
 
 void UMS_ModeState_Construct::Begin()
-{	
+{
+	// Delegate
+	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
+	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
+	
 	// ShowUnconstructableGrid
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
@@ -66,7 +62,7 @@ void UMS_ModeState_Construct::Begin()
 	
 	if (SelectedProp != nullptr)
 	{
-		SelectProp(SelectedProp.Get());
+		OnSelectProp(SelectedProp.Get());
 	}
 
 	// Delegate
@@ -86,6 +82,10 @@ void UMS_ModeState_Construct::Exit()
 	{
 		LevelScriptActor->ShowUnconstructableGrid(false);
 	}
+
+	// Delegate
+	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
+	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 }
 
 void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
@@ -93,9 +93,8 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
 
 	AActor* InteractableActor = aInteractableHitResult.GetActor();
-
 	
-	if (IsValid(InteractableActor) && Cast<AMS_Prop>(InteractableActor))
+	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
 	{
 		SelectProp(InteractableActor);
 	}
@@ -106,6 +105,7 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 		{
 			gCameraMng.RestrictCameraMovement(true);
 		}
+		
 		PreviewProp->ShowArrangementWidget(false);
 	}
 }
@@ -250,18 +250,6 @@ void UMS_ModeState_Construct::OnClickRotateArrangementWidget(UMS_ArrangementWidg
 
 void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 {
-	const TObjectPtr<UWorld> World = GetWorld();
-	if (!IsValid(World))
-	{
-		return;
-	}
-
-	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return;
-	}
-	
 	if (!IsValid(aSelectedActor))
 	{
 		return;

@@ -26,6 +26,7 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 
+	
 public:
 	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult) override;
 	
@@ -46,4 +47,15 @@ public:
 	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
 
 	virtual void OnPinchAction(float aPinchValue) override;
+
+	
+	// Select
+	void SelectProp(AActor* aSelectedActor);
+	void UnselectProp();
+	
+	UFUNCTION()
+	void OnSelectProp(AActor* aSelectedActor);	// 기존의 것과 다른 Prop이 선택되야 호출됨
+
+	UFUNCTION()
+	void OnUnselectProp(AActor* aUnselectedActor);
 };
