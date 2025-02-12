@@ -241,9 +241,9 @@ void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
 	RootWidget->ShowGeneralWidget(bShow);
 }
 
-void UMS_WidgetManager::SetCustomPositionWidget(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition)
+void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition)
 {
-	if (!aWidget)
+	if (IsValid(aWidget))
 	{
 		return;
 	}

@@ -28,21 +28,34 @@ public:
 	EMS_ZoneType GetZoneType() const { return ZoneType; }
 	
 	void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+
+	FIntVector2 GetGridPosition() const;
+
 	
 	// Property :: Setter
-	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas);
+	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bChangePlayerData = false);
+
+	void AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData = false);
+	void SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData = false);
 
 private:
 	void OnChangeRequestSlotDatas();
 	void OnChangeCurrentSlotDatas();
-	
 
+public:
+	UFUNCTION()
+	virtual void TakeItemsImmediately(int32 aSlotId, int32 aItemId, bool bChangePlayerData = true, bool bSavePlayerData = true);
+
+	
 private:
 	struct FMS_StorageData* FurnitureData = nullptr;
 
 	// Property
 	UPROPERTY()
 	EMS_ZoneType ZoneType;
+
+	UPROPERTY()
+	int32 SlotCount;
 	
 	UPROPERTY()
 	TArray<FMS_SlotData> SlotDatas;

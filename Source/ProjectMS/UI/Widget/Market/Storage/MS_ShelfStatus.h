@@ -19,7 +19,7 @@ public:
 
 	FORCEINLINE void SetOnClickedShelfSlotFunc(const TFunction<void(int32, int32)>& aFunc) { OnClickedShelfSlotCallback = aFunc; }
 	FORCEINLINE void SetDisplaySlotIndex(int32 aDisplaySlotIndex) { DisplaySlotIndex = aDisplaySlotIndex; }
-	void SetTileView(int32 aDisplaySlotIndex);
+	void SetTileView();
 
 private:
 	void OnClickedShelfSlotButton(int32 aItemId);

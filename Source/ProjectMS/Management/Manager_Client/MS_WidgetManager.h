@@ -52,7 +52,7 @@ public:
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 
-	void SetCustomPositionWidget(const TObjectPtr<UMS_Widget>& aWidget, const FVector2D& aPosition);
+	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
 	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

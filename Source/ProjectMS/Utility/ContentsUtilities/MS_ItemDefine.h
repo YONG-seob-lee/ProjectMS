@@ -15,8 +15,15 @@ struct FMS_SlotData
 
 public:
 	FMS_SlotData()
-		: RequestItemTableId(INDEX_NONE), CurrentItemTableId(INDEX_NONE), CurrentItemAmount(0)
+		: RequestItemTableId(INDEX_NONE), CurrentItemTableId(INDEX_NONE), CurrentItemCount(0)
 	{
+	}
+
+	void Empty()
+	{
+		RequestItemTableId = INDEX_NONE;
+		CurrentItemTableId = INDEX_NONE;
+		CurrentItemCount = 0;
 	}
 	
 	UPROPERTY()
@@ -26,7 +33,7 @@ public:
 	int32 CurrentItemTableId;
 
 	UPROPERTY()
-	int32 CurrentItemAmount;
+	int32 CurrentItemCount;
 };
 
 // 임시

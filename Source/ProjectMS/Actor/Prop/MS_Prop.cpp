@@ -5,6 +5,7 @@
 
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "Zone/MS_Zone.h"
@@ -63,9 +64,11 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	// Property
-	GridPosition = FMS_GridData::ConvertLocationToGridPosition(GetActorLocation());
+}
+
+FIntVector2 AMS_Prop::GetGridPosition() const
+{
+	return FMS_GridData::ConvertLocationToGridPosition(GetActorLocation());
 }
 
 UMeshComponent* AMS_Prop::GetMeshComponent(int32 aArrayIndex /* = 0 */ ) const
@@ -122,6 +125,27 @@ UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const 
 void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 {
 	OwnerZone = aOwnerZone;
+}
+
+void AMS_Prop::OnSelectProp(EMS_ModeState aModeState)
+{
+}
+
+void AMS_Prop::OnUnselectProp(EMS_ModeState aModeState)
+{
+	CloseStatusWidget();
+}
+
+void AMS_Prop::OpenStatusWidget(const FVector2D& aClickPosition)
+{
+}
+
+void AMS_Prop::CloseStatusWidget()
+{
+	if (StatusWidget != nullptr)
+	{
+		gWidgetMng.DestroyWidget(StatusWidget.Get());
+	}
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)

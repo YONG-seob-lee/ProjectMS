@@ -21,7 +21,7 @@ protected:
 
 public:
 	// Property :: Getter
-	int32 GetSlotOrder() const { return SlotOrder; }
+	int32 GetSlotId() const { return SlotId; }
 
 	void OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas);
 	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas);
@@ -30,7 +30,7 @@ public:
 protected:
 	// Property
 	UPROPERTY(EditAnywhere)
-	int32 SlotOrder;
+	int32 SlotId;
 
 	UPROPERTY(Transient)
 	FMS_SlotData CacheSlotData;

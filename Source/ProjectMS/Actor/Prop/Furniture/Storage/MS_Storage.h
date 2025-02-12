@@ -22,6 +22,8 @@ protected:
 
 
 public:
-	virtual void OpenManagementWidget(const FVector2D& aClickPosition, EMS_ModeState aModeState) override;
-	virtual void CloseManagementWidget(EMS_ModeState aModeState) override;
+	virtual void OpenStatusWidget(const FVector2D& aClickPosition) override;
+	
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
 };

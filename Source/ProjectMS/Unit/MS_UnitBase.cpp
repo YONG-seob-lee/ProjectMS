@@ -4,6 +4,8 @@
 #include "MS_UnitBase.h"
 
 #include "UtilityFunctions.h"
+#include "Controller/MS_PlayerController.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -157,4 +159,21 @@ void UMS_UnitBase::ChangeState(EMS_UnitState aUnitState) const
 	}
 	
 	UnitStateMachine->SetState(static_cast<uint8>(aUnitState));
+}
+
+AMS_PlayerState* UMS_UnitBase::GetPlayerState() const
+{
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return nullptr;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return nullptr;
+	}
+	
+	return PlayerController->GetPlayerState<AMS_PlayerState>();
 }

@@ -4,7 +4,12 @@
 #include "MS_FurnitureUnit.h"
 
 #include "MS_Actor.h"
+#include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ItemManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Prop/Furniture/MS_Furniture.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_StorageData.h"
 
 
@@ -14,8 +19,14 @@ void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType
 
 	FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableId);
 	MS_ENSURE(FurnitureData != nullptr);
-
+	
 	ZoneType = static_cast<EMS_ZoneType>(FurnitureData->ZoneType);
+
+	SlotCount = FurnitureData->SlotCount;
+	for (int32 i = 0; i < SlotCount; ++i)
+	{
+		SlotDatas.Emplace(FMS_SlotData());
+	}
 }
 
 void UMS_FurnitureUnit::Finalize()
@@ -38,12 +49,72 @@ int32 UMS_FurnitureUnit::GetBlueprintPathId() const
 	return FurnitureData->PathFile;
 }
 
-void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+FIntVector2 UMS_FurnitureUnit::GetGridPosition() const
 {
-	SlotDatas = aSlotDatas;
+	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
+	MS_ENSURE(IsValid(Furniture));
 
-	OnChangeRequestSlotDatas();
-	OnChangeCurrentSlotDatas();
+	return Furniture->GetGridPosition();
+}
+
+void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bChangePlayerData /*= false*/)
+{
+	if (AMS_PlayerState* PlayerState = GetPlayerState())
+	{
+		int32 DataCount = aSlotDatas.Num();
+		for (int32 i = 0; i < DataCount; ++i)
+		{
+			if (SlotDatas.IsValidIndex(i))
+			{
+				SlotDatas[i] = aSlotDatas[i];
+				break;
+			}
+		}
+
+		if (bChangePlayerData)
+		{
+			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+		}
+		
+		OnChangeRequestSlotDatas();
+		OnChangeCurrentSlotDatas();
+	}
+}
+
+void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData /*= false*/)
+{
+	if (AMS_PlayerState* PlayerState = GetPlayerState())
+	{
+		MS_ENSURE(SlotDatas.IsValidIndex(aSlotId));
+	
+		SlotDatas[aSlotId].CurrentItemCount += aCount;
+
+		if (bChangePlayerData)
+		{
+			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+		}
+
+		OnChangeRequestSlotDatas();
+		OnChangeCurrentSlotDatas();
+	}
+}
+
+void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData /*= false*/)
+{
+	if (AMS_PlayerState* PlayerState = GetPlayerState())
+	{
+		MS_ENSURE(SlotDatas.IsValidIndex(aSlotId));
+	
+		SlotDatas[aSlotId].CurrentItemCount -= aCount;
+
+		if (bChangePlayerData)
+		{
+			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+		}
+		
+		OnChangeRequestSlotDatas();
+		OnChangeCurrentSlotDatas();
+	}
 }
 
 void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
@@ -60,4 +131,81 @@ void UMS_FurnitureUnit::OnChangeCurrentSlotDatas()
 	MS_ENSURE(IsValid(Furniture));
 
 	Furniture->OnChangeCurrentSlotDatas(SlotDatas);
+}
+
+void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
+	bool bChangePlayerData /*= true*/, bool bSavePlayerData /*= true*/)
+{
+	if (AMS_PlayerState* PlayerState = GetPlayerState())
+	{
+		if (!SlotDatas.IsValidIndex(aSlotId))
+		{
+			MS_ENSURE(false);
+			return;
+		}
+
+		FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
+		MS_ENSURE(ItemData != nullptr);
+	
+		// 기존 아이템 삭제 (빈 개수로 카운트되어 Pallet로 이동)
+		// ToDo : Shelf로 정리되도록 변경
+		SlotDatas[aSlotId].Empty();
+
+		// 채울 개수 구하기
+		int32 NewItemCount = FMath::Min(gItemMng.GetNoneDisplayItemCount(aItemId), ItemData->Slot100x100MaxCount);
+	
+		// 창고에서 빼기
+		int32 TotalSubtractCount = NewItemCount;
+	
+		if (const TObjectPtr UnitManager = gUnitMng)
+		{
+			TArray<TObjectPtr<UMS_UnitBase>> Units;
+			UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+			for (TObjectPtr<UMS_UnitBase> Unit : Units)
+			{
+				if (UMS_FurnitureUnit* SubtractUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+				{
+					if (SubtractUnit->GetZoneType() != EMS_ZoneType::Shelf)
+					{
+						continue;
+					}
+				
+					TArray<FMS_SlotData> SubtractUnitSlotDatas;
+					SubtractUnit->GetSlotDatas(SubtractUnitSlotDatas);
+
+					for (int32 i = 0; i < SubtractUnitSlotDatas.Num(); ++i)
+					{
+						if (SubtractUnitSlotDatas[i].CurrentItemTableId == aItemId)
+						{
+							int32 SubtractCount = FMath::Min(SubtractUnitSlotDatas[i].CurrentItemCount, TotalSubtractCount);
+						
+							SubtractUnit->SubtractCurrentItemCount(i, SubtractCount, bChangePlayerData);
+							TotalSubtractCount -= SubtractCount;
+
+							if (TotalSubtractCount == 0)
+							{
+								break;
+							}
+						}
+					}
+				}
+
+				if (TotalSubtractCount == 0)
+				{
+					break;
+				}
+			}
+		}
+	
+		// 채우기
+		SlotDatas[aSlotId].RequestItemTableId = aItemId;
+		SlotDatas[aSlotId].CurrentItemTableId = aItemId;
+		AddCurrentItemCount(aSlotId, NewItemCount, bChangePlayerData);
+
+		if (bSavePlayerData)
+		{
+			PlayerState->SavePlayerData();
+		}
+	}
 }

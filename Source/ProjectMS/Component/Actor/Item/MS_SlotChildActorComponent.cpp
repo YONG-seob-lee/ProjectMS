@@ -11,6 +11,7 @@
 
 
 UMS_SlotChildActorComponent::UMS_SlotChildActorComponent()
+	: SlotId(INDEX_NONE)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
@@ -33,7 +34,7 @@ void UMS_SlotChildActorComponent::OnChangeRequestSlotData(const FMS_SlotData& aS
 void UMS_SlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas)
 {
 	if (CacheSlotData.CurrentItemTableId == aSlotDatas.CurrentItemTableId
-		&& CacheSlotData.CurrentItemAmount == aSlotDatas.CurrentItemAmount)
+		&& CacheSlotData.CurrentItemCount == aSlotDatas.CurrentItemCount)
 	{
 		return;
 	}

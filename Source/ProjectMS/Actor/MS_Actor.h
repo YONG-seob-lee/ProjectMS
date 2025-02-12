@@ -24,8 +24,8 @@ public:
 	void Initialize();
 	void Finalize();
 	
-	FORCEINLINE void SetOwnerUnitBase(const TObjectPtr<UObject>& aOwner) { UnitOwner = aOwner; }
-	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return UnitOwner; }
+	FORCEINLINE void SetOwnerUnitBase(const TObjectPtr<UObject>& aOwner) { OwnerUnit = aOwner; }
+	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return OwnerUnit; }
 	
 	virtual bool HasInteractionComponent() { return false; }
 	virtual void OnPressDownEvent() {}
@@ -38,8 +38,7 @@ public:
 protected:
 	MS_Handle UnitHandleId = InvalidUnitHandle;
 	
-private:
-	TWeakObjectPtr<UObject> UnitOwner = nullptr;
+	TWeakObjectPtr<UObject> OwnerUnit = nullptr;
 
 protected:
 	// Component

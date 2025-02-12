@@ -55,8 +55,11 @@ public:
 
 protected:
 	virtual void ChangeState(EMS_UnitState aUnitState) const;
+	
+	// 임시 : 편의성을 위해
+	class AMS_PlayerState* GetPlayerState() const;
 
-
+	
 protected:
 	MS_Handle UnitHandle = InvalidUnitHandle;
 

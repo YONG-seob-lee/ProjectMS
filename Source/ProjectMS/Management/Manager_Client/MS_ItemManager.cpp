@@ -93,15 +93,50 @@ void UMS_ItemManager::GetCurrentItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& AddedItem : AddedItems)
 	{
-		int32& Amount = OutItems.FindOrAdd(AddedItem.Key);
-		Amount += AddedItem.Value;
+		int32& Count = OutItems.FindOrAdd(AddedItem.Key);
+		Count += AddedItem.Value;
 	}
 
 	for (const auto& SoldItem : SoldItems)
 	{
-		int32& Amount = OutItems.FindOrAdd(SoldItem.Key);
-		Amount -= SoldItem.Value;
+		int32& Count = OutItems.FindOrAdd(SoldItem.Key);
+		Count -= SoldItem.Value;
 	}
+}
+
+int32 UMS_ItemManager::GetCurrentItemCount(int32 aItemId) const
+{
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return 0;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return 0;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return 0;
+	}
+
+	int32 ItemCount = PlayerState->GetItemCount(aItemId);
+
+	if (AddedItems.Contains(aItemId))
+	{
+		ItemCount += *AddedItems.Find(aItemId);
+	}
+
+	if (SoldItems.Contains(aItemId))
+	{
+		ItemCount -= *SoldItems.Find(aItemId);
+	}
+
+	return ItemCount;
 }
 
 void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
@@ -132,12 +167,47 @@ void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
 						continue;
 					}
 					
-					int32& Amount = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
-					Amount += SlotData.CurrentItemAmount;
+					int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
+					Count += SlotData.CurrentItemCount;
 				}
 			}
 		}
 	}
+}
+
+int32 UMS_ItemManager::GetDisplayItemCount(int32 aItemId) const
+{
+	int32 ItemCount = 0;
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Display)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == aItemId)
+					{
+						ItemCount +=SlotData.CurrentItemCount; 
+					}
+				}
+			}
+		}
+	}
+	
+	return ItemCount;
 }
 
 void UMS_ItemManager::GetNoneDisplayItems(TMap<int32, int32>& OutItems) const
@@ -149,9 +219,14 @@ void UMS_ItemManager::GetNoneDisplayItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& DisplayItem : DisplayItems)
 	{
-		int32& Amount = OutItems.FindOrAdd(DisplayItem.Key);
-		Amount -= DisplayItem.Value;
+		int32& Count = OutItems.FindOrAdd(DisplayItem.Key);
+		Count -= DisplayItem.Value;
 	}
+}
+
+int32 UMS_ItemManager::GetNoneDisplayItemCount(int32 aItemId) const
+{
+	return GetCurrentItemCount(aItemId) - GetDisplayItemCount(aItemId);
 }
 
 void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const

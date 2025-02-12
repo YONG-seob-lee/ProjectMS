@@ -19,10 +19,8 @@ void UMS_ShelfStatus::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_ShelfStatus::SetTileView(int32 aDisplaySlotIndex)
+void UMS_ShelfStatus::SetTileView()
 {
-	SetDisplaySlotIndex(aDisplaySlotIndex);
-	
 	TMap<int32, int32> NoneDisplayItems;
 	gItemMng.GetNoneDisplayItems(NoneDisplayItems);
 	TArray<TObjectPtr<UMS_StorageSlotElementData>> StorageItemElementDatas;

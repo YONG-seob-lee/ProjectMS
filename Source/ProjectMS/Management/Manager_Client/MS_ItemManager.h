@@ -31,9 +31,14 @@ public:
 
 	virtual void Tick(float aDeltaTime) override;
 	
-	FORCEINLINE void GetCurrentItems(TMap<int32, int32>& OutItems) const;
-	FORCEINLINE void GetDisplayItems(TMap<int32, int32>& OutItems) const;
-	FORCEINLINE void GetNoneDisplayItems(TMap<int32, int32>& OutItems) const;
+	void GetCurrentItems(TMap<int32, int32>& OutItems) const;
+	int32 GetCurrentItemCount(int32 aItemId) const;
+	
+	void GetDisplayItems(TMap<int32, int32>& OutItems) const;
+	int32 GetDisplayItemCount(int32 aItemId) const;
+	
+	void GetNoneDisplayItems(TMap<int32, int32>& OutItems) const;
+	int32 GetNoneDisplayItemCount(int32 aItemId) const;
 	
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 

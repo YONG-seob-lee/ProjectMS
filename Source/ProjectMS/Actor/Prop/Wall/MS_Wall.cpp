@@ -26,13 +26,13 @@ void AMS_Wall::GetGridPositionOnBothSides(FIntVector2& aOutGridPosition1, FIntVe
 	
 	if (RotationEnum == EMS_Rotation::Rot0 || RotationEnum == EMS_Rotation::Rot180)
 	{
-		aOutGridPosition1 = GridPosition + FIntVector2(0, -1);
-		aOutGridPosition2 = GridPosition;
+		aOutGridPosition1 = GetGridPosition() + FIntVector2(0, -1);
+		aOutGridPosition2 = GetGridPosition();
 	}
 	else
 	{
-		aOutGridPosition1 = GridPosition + FIntVector2(-1, 0);
-		aOutGridPosition2 = GridPosition;
+		aOutGridPosition1 = GetGridPosition() + FIntVector2(-1, 0);
+		aOutGridPosition2 = GetGridPosition();
 	}
 }
 

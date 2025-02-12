@@ -95,6 +95,6 @@ void AMS_SlotActor::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas, bool
 	{
 		MS_ENSURE(IsValid(It.Value));
 		
-		It.Value->SetItemVisibility(It.Key <= aSlotDatas.CurrentItemAmount);
+		It.Value->SetItemVisibility(It.Key < aSlotDatas.CurrentItemCount);
 	}
 }

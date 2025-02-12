@@ -22,12 +22,15 @@ public:
 	void AddOpenedZoneId(int32 aZoneId);
 
 	void GetAllMarketFurnitureDatas(TMap<FIntVector2, FMS_LevelFurnitureSaveData>& aOutFurnitureDatas) const;
-	bool GetMarketFurnitureData(FIntVector2 aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const;
-	void AddFurnitureData(int32 aFurnitureTableId, FIntVector2 aGridPosition, EMS_Rotation aRotation);
+	bool GetMarketFurnitureData(const FIntVector2& aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const;
+	void AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation);
 	void AddFurnitureData(FMS_LevelFurnitureSaveData aFurnitureData);
 	void RemoveFurnitureData(FIntVector2 aGridPosition);
 
+	void SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData);
+
 	void GetAllItems(TMap<int32, int32>& aOutItems) const { aOutItems = Items; }
+	int32 GetItemCount(int32 aItemId) const;
 
 	
 	void InitDefaultPlayerData();

@@ -9,10 +9,13 @@
 /**
  * 
  */
+DECLARE_DELEGATE_TwoParams(FMS_OnClickShelfSlotDelegate, int32, int32);
+
 UCLASS()
 class PROJECTMS_API UMS_StorageStatusWidget : public UMS_Widget
 {
 	GENERATED_BODY()
+	
 public:
 	static FName GetWidgetName() { return TEXT("StorageStatus"); }
 	virtual void NativeConstruct() override;
@@ -23,6 +26,11 @@ private:
 	void OnClickedStorageSlotButton(int32 aSlotIndex);
 	void OnClickedCloseButton();
 
+public:
+	void OnChangeSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+
+	
+protected:
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;
 
 	UPROPERTY(Meta = (BindWidget))
@@ -36,4 +44,8 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
+
+public:
+	// Delegate
+	FMS_OnClickShelfSlotDelegate OnClickShelfSlotDelegate;
 };

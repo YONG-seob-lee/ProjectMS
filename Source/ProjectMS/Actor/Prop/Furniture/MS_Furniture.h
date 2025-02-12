@@ -30,8 +30,8 @@ public:
 
 	
 	// Slot Datas
-	void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
-	void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
 	
 protected:
@@ -39,5 +39,5 @@ protected:
 	class USceneComponent* SlotAttachedComponent;
 
 	UPROPERTY()
-	TMap<int32, TObjectPtr<class UMS_SlotChildActorComponent>> SlotOrderToSlotComponents;
+	TMap<int32, TObjectPtr<class UMS_SlotChildActorComponent>> SlotIdToSlotComponents;
 };

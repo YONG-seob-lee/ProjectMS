@@ -31,7 +31,7 @@ public:
 
 	const FIntVector& GetGridNum() const { return GridNum; }
 	
-	const FIntVector2& GetGridPosition() const { return GridPosition; }
+	FIntVector2 GetGridPosition() const;
 
 	
 	// Component :: Getter
@@ -50,11 +50,11 @@ public:
 	
 
 	// Select
-	virtual void OnSelectProp(EMS_ModeState aModeState) {}
-	virtual void OnUnselectProp(EMS_ModeState aModeState) {}
+	virtual void OnSelectProp(EMS_ModeState aModeState);
+	virtual void OnUnselectProp(EMS_ModeState aModeState);
 
-	virtual void OpenManagementWidget(const FVector2D& aClickPosition, EMS_ModeState aModeState) {}
-	virtual void CloseManagementWidget(EMS_ModeState aModeState) {}
+	virtual void OpenStatusWidget(const FVector2D& aClickPosition);
+	virtual void CloseStatusWidget();
 
 	
 	// For Preview
@@ -95,8 +95,9 @@ protected:
 	UPROPERTY()
 	TWeakObjectPtr<class AMS_Zone> OwnerZone;
 
+	// Management Widget
 	UPROPERTY()
-	FIntVector2 GridPosition;
+	TWeakObjectPtr<class UMS_Widget> StatusWidget;
 	
 	// Arrangement Widget
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -39,13 +39,13 @@ void AMS_Furniture::PostInitializeComponents()
 
 	for (UMS_SlotChildActorComponent* SlotComponent : SlotComponents)
 	{
-		if (SlotComponent->GetSlotOrder() == INDEX_NONE)
+		if (SlotComponent->GetSlotId() == INDEX_NONE)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] Please set slot components order"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 		}
 		
-		SlotOrderToSlotComponents.Emplace(SlotComponent->GetSlotOrder(), SlotComponent);
+		SlotIdToSlotComponents.Emplace(SlotComponent->GetSlotId(), SlotComponent);
 	}
 }
 
@@ -83,7 +83,7 @@ void AMS_Furniture::OnUnselectProp(EMS_ModeState aModeState)
 
 void AMS_Furniture::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	for (auto& It : SlotOrderToSlotComponents)
+	for (auto& It : SlotIdToSlotComponents)
 	{
 		if (aSlotDatas.IsValidIndex(It.Key))
 		{
@@ -98,7 +98,7 @@ void AMS_Furniture::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDa
 
 void AMS_Furniture::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	for (auto& It : SlotOrderToSlotComponents)
+	for (auto& It : SlotIdToSlotComponents)
 	{
 		if (aSlotDatas.IsValidIndex(It.Key))
 		{

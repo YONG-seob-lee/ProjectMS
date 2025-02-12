@@ -7,15 +7,20 @@
 #include "MS_ShelfStatus.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Prop/Furniture/Storage/MS_Storage.h"
 #include "Widget/ListViewElement/ElementData/MS_StorageSlotElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_StorageStatusWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	// Click Shelf Slot
 	CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Hidden);
 	CPP_ShelfStatusWidget->SetOnClickedShelfSlotFunc([this](int32 aDisplayIndex, int32 aItemId)
 	{
+		bool IsBound = OnClickShelfSlotDelegate.ExecuteIfBound(aDisplayIndex, aItemId);
+		
 		if(StorageItemElementDatas.IsValidIndex(aDisplayIndex))
 		{
 			StorageItemElementDatas[aDisplayIndex]->SetItemId(aItemId);
@@ -63,18 +68,24 @@ void UMS_StorageStatusWidget::OnClickedConfirmButton()
 
 void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 {
-	if(CPP_ShelfStatusWidget->IsVisible())
-	{
-		CPP_ShelfStatusWidget->SetDisplaySlotIndex(aSlotIndex);
-	}
-	else
+	CPP_ShelfStatusWidget->SetDisplaySlotIndex(aSlotIndex);
+	
+	if (!CPP_ShelfStatusWidget->IsVisible())
 	{
 		CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Visible);
-		CPP_ShelfStatusWidget->SetTileView(aSlotIndex);	
+		CPP_ShelfStatusWidget->SetTileView();	
 	}
 }
 
 void UMS_StorageStatusWidget::OnClickedCloseButton()
 {
 	gWidgetMng.DestroyWidget(this);
+}
+
+void UMS_StorageStatusWidget::OnChangeSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+{
+	if (CPP_ShelfStatusWidget->IsVisible())
+	{
+		CPP_ShelfStatusWidget->SetTileView();
+	}
 }

@@ -127,7 +127,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 	{
 		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
-			PropActor->OpenManagementWidget(aPosition, EMS_ModeState::Normal);
+			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
 }

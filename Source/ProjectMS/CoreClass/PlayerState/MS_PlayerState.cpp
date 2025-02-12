@@ -30,7 +30,7 @@ void AMS_PlayerState::GetAllMarketFurnitureDatas(
 	aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
 }
 
-bool AMS_PlayerState::GetMarketFurnitureData(FIntVector2 aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const
+bool AMS_PlayerState::GetMarketFurnitureData(const FIntVector2& aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const
 {
 	if (!GridPositionToMarketFurnitureDatas.Contains(aInGridPosition))
 	{
@@ -45,7 +45,7 @@ bool AMS_PlayerState::GetMarketFurnitureData(FIntVector2 aInGridPosition, FMS_Le
 	return true;
 }
 
-void AMS_PlayerState::AddFurnitureData(int32 aFurnitureTableId, FIntVector2 aGridPosition,
+void AMS_PlayerState::AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
                                    EMS_Rotation aRotation)
 {
 	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
@@ -82,6 +82,30 @@ void AMS_PlayerState::RemoveFurnitureData(FIntVector2 aGridPosition)
 	GridPositionToMarketFurnitureDatas.Remove(aGridPosition);
 }
 
+void AMS_PlayerState::SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData)
+{
+	// ToDo: 슬롯정보가 무결한지 체크
+	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
+			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
+		MS_ENSURE(false);
+	}
+	
+	FMS_LevelFurnitureSaveData& FurnitureData = *GridPositionToMarketFurnitureDatas.Find(aGridPosition);
+	FurnitureData.SlotDatas = aSlotData;
+}
+
+int32 AMS_PlayerState::GetItemCount(int32 aItemId) const
+{
+	if (!Items.Contains(aItemId))
+	{
+		return 0;
+	}
+
+	return *Items.Find(aItemId);
+}
+
 void AMS_PlayerState::InitDefaultPlayerData()
 {
 	// OpenedZoneIds
@@ -105,9 +129,10 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	GridPositionToMarketFurnitureDatas.Emplace(Rack.GridPosition, Rack);
 	
 	// Items
-	Items.Emplace(1, 30);
-	Items.Emplace(2, 30);
+	Items.Emplace(4, 30);
+	Items.Emplace(5, 30);
 	Items.Emplace(16, 20);
+	Items.Emplace(17, 10);
 }
 
 void AMS_PlayerState::InitPlayerData()
