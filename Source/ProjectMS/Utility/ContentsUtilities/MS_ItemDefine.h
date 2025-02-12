@@ -18,7 +18,12 @@ public:
 		: RequestItemTableId(INDEX_NONE), CurrentItemTableId(INDEX_NONE), CurrentItemCount(0)
 	{
 	}
-
+	
+	FMS_SlotData(int32 aRequestItemTableId, int32 aCurrentItemTableId, int32 aCurrentItemCount)
+		: RequestItemTableId(aRequestItemTableId), CurrentItemTableId(aCurrentItemTableId), CurrentItemCount(aCurrentItemCount)
+	{
+	}
+	
 	void Empty()
 	{
 		RequestItemTableId = INDEX_NONE;

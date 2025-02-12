@@ -18,6 +18,8 @@ class PROJECTMS_API AMS_PlayerState : public APlayerState
 public:
 	AMS_PlayerState();
 
+	virtual void PreInitializeComponents() override;
+
 	const TArray<int32>& GetOpenedZoneIds();
 	void AddOpenedZoneId(int32 aZoneId);
 

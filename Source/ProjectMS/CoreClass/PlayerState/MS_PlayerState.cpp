@@ -7,11 +7,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Test/TestServer/MS_TestDB.h"
 
+
 AMS_PlayerState::AMS_PlayerState()
 {
 	SaveSlotName = FString("TestDB");
-	
+}
+
+void AMS_PlayerState::PreInitializeComponents()
+{
 	InitPlayerData();
+	
+	Super::PreInitializeComponents();
 }
 
 const TArray<int32>& AMS_PlayerState::GetOpenedZoneIds()
@@ -159,21 +165,23 @@ void AMS_PlayerState::InitPlayerData()
 		
 		GridPositionToMarketFurnitureDatas.Emplace(MarketFurnitureData.GridPosition, MarketFurnitureData);
 	}
-
+	
 	Items = TestDB->Items;
 
 	if (!bInitDefaultData)
 	{
+		bInitDefaultData = true;
 		InitDefaultPlayerData();
+		SavePlayerData();
 	}
-	
-	SavePlayerData();
 }
 
 void AMS_PlayerState::SavePlayerData()
 {
 	UMS_TestDB* NewTestDBData = NewObject<UMS_TestDB>();
 	
+	NewTestDBData->bInitDefaultData = bInitDefaultData;
+
 	NewTestDBData->OpenedZoneIds = OpenedZoneIds;
 	
 	for (auto MarketFurnitureData : GridPositionToMarketFurnitureDatas)
