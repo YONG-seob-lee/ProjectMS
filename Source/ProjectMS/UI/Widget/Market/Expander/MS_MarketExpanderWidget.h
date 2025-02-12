@@ -32,4 +32,5 @@ private:
 	TObjectPtr<class UMS_Button> CPP_ArrowButton = nullptr;
 
 	bool bOpen = false;
+	bool bOpenExpander = false;
 };
