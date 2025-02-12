@@ -35,6 +35,7 @@ Id,Directory_Table_Id,Img_File_Name,Img_File_Local
 1008,1003,Thum_FUR_VS_A,FALSE
 1009,1003,Thum_FUR_VS_B,FALSE
 1010,1003,Thum_WH_RACK,FALSE
+1011,1003,Thum_Palette,FALSE
 3001,1005,DuckPortrait_White,FALSE
 3002,1005,DuckPortrait_Red,FALSE
 3003,1005,DuckPortrait_Yellow,FALSE
