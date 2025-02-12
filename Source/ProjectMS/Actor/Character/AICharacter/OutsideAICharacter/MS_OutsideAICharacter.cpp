@@ -43,7 +43,7 @@ void AMS_OutsideAICharacter::Tick(float DeltaTime)
 		return;
 	}
 	
-	if(TObjectPtr<UCharacterMovementComponent> AICharacterMovementComponent = GetCharacterMovement())
+	if(NearestSpline.IsValid() && GetCharacterMovement())
 	{
 		const FVector CurrentVehicleLocation = GetActorLocation();
 		const FVector TangentLocation = NearestSpline->FindTangentClosestToWorldLocation(CurrentVehicleLocation);

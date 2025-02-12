@@ -43,6 +43,16 @@ void AMS_StageLevelScriptActor::BeginPlay()
 	gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
 }
 
+void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	gInputMng.OnPointerDownDelegate.RemoveAll(this);
+	gInputMng.OnPointerUpDelegate.RemoveAll(this);
+
+	DestroySplineActors();
+	
+	Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void AMS_StageLevelScriptActor::Tick(float DeltaTime)
 {
@@ -50,10 +60,7 @@ void AMS_StageLevelScriptActor::Tick(float DeltaTime)
 }
 
 void AMS_StageLevelScriptActor::Destroyed()
-{
-	gInputMng.OnPointerDownDelegate.RemoveAll(this);
-	gInputMng.OnPointerUpDelegate.RemoveAll(this);
-	
+{	
 	Super::Destroyed();
 }
 
@@ -137,6 +144,17 @@ void AMS_StageLevelScriptActor::ParsingDuckSplineActors() const
 			MS_ENSURE(false);
 		}
 	}
+}
+
+void AMS_StageLevelScriptActor::DestroySplineActors()
+{
+	TArray<TObjectPtr<UMS_UnitBase>> DestroyUnits;
+	gUnitMng.GetUnit(EMS_UnitType::CarSpline, DestroyUnits);
+	gUnitMng.DestroyUnits(DestroyUnits);
+
+	DestroyUnits.Empty();
+	gUnitMng.GetUnit(EMS_UnitType::DuckSpline, DestroyUnits);
+	gUnitMng.DestroyUnits(DestroyUnits);
 }
 
 void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)

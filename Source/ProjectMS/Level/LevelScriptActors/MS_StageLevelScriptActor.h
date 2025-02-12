@@ -16,12 +16,15 @@ public:
 
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
 private:
 	void CollectOutsideDickSpawnPoint();
 	void ParsingCarSplineActors() const;
 	void ParsingDuckSplineActors() const;
+	
+	void DestroySplineActors();
 	
 	UFUNCTION()
 	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);

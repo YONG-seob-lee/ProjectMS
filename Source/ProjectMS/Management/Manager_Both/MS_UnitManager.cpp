@@ -84,7 +84,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int
 
 void UMS_UnitManager::DestroyUnit(MS_Handle aHandle)
 {
-	if (TObjectPtr<UMS_UnitBase> UnitBase = GetUnit(aHandle))
+	if (const TObjectPtr<UMS_UnitBase> UnitBase = GetUnit(aHandle))
 	{
 		DestroyUnit_Internal(UnitBase);
 	}
@@ -92,6 +92,19 @@ void UMS_UnitManager::DestroyUnit(MS_Handle aHandle)
 	if (Units.Contains(aHandle))
 	{
 		Units.Remove(aHandle);
+	}
+}
+
+void UMS_UnitManager::DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
+{
+	for(const auto& Unit : aUnits)
+	{
+		DestroyUnit_Internal(Unit);
+
+		if(const uint32* Key = Units.FindKey(Unit))
+		{
+			Units.Remove(*Key);
+		}
 	}
 }
 
