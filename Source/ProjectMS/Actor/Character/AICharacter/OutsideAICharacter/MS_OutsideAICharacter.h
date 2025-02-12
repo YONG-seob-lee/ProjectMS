@@ -19,6 +19,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
+	MS_Handle GetUnitHandle() const;
 private:
 	TObjectPtr<class AMS_DuckSplineActor> FindNearestSpline() const;
 

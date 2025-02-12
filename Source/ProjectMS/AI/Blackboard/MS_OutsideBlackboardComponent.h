@@ -6,13 +6,6 @@
 #include "MS_BlackboardComponent.h"
 #include "MS_OutsideBlackboardComponent.generated.h"
 
-namespace OutsideBoardKeyName
-{
-	const FName bFinishedIdleAnimation = TEXT("bFinishedIdleAnimation");
-	const FName RemainIdleTime = TEXT("RemainIdleTime");
-	const FName RemainWalkTime = TEXT("RemainWalkTime");
-}
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PROJECTMS_API UMS_OutsideBlackboardComponent : public UMS_BlackboardComponent
 {

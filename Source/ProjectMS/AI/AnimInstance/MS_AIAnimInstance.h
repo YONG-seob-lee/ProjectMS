@@ -18,8 +18,14 @@ public:
 	
 	FORCEINLINE void SetIsActWalking(bool _bActWalking) { bActWalking = _bActWalking; }
 	FORCEINLINE bool IsActWalking() const { return bActWalking; }
+
+	FORCEINLINE void SetIsActFinished(bool _bActFinished) { bActFinished = _bActFinished; }
+	FORCEINLINE bool IsActFinished() const { return bActFinished; }
 private:
 
 	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bActWalking = true;
+
+	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bActFinished = false;
 };

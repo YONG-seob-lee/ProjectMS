@@ -6,6 +6,15 @@
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "MS_AITask.generated.h"
 
+namespace OutsideBoardKeyName
+{
+	const FName bFinishedIdleAnimation = TEXT("bFinishedIdleAnimation");
+	const FName RemainIdleTime = TEXT("RemainIdleTime");
+	const FName RemainWalkTime = TEXT("RemainWalkTime");
+	const FName RemainWalkToMarketTime = TEXT("RemainWalkToMarketTime");
+}
+
+
 /**
  * 
  */

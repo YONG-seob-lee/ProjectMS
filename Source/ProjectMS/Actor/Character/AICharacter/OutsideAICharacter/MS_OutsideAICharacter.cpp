@@ -9,6 +9,7 @@
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
 #include "AI/AnimInstance/MS_AIAnimInstance.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Units/MS_AIUnit.h"
 
 
 // Sets default values
@@ -51,6 +52,17 @@ void AMS_OutsideAICharacter::Tick(float DeltaTime)
 		SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * DuckVelocity);
 		SetActorRotation(MoveNextRotation);
 	}
+}
+
+MS_Handle AMS_OutsideAICharacter::GetUnitHandle() const
+{
+	const TObjectPtr<UMS_AIUnit> AIUnit = Cast<UMS_AIUnit>(GetOuter());
+	if(!AIUnit)
+	{
+		return INDEX_NONE;
+	}
+
+	return AIUnit->GetUnitHandle();
 }
 
 TObjectPtr<AMS_DuckSplineActor> AMS_OutsideAICharacter::FindNearestSpline() const
