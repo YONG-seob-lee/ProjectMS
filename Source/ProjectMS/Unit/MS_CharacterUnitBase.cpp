@@ -55,6 +55,7 @@ void UMS_CharacterUnitBase::DestroyUnitActor()
 	if(IsValid(Character))
 	{
 		Character->Destroy();
+		GetWorld()->DestroyActor(Character);
 		Character = nullptr;
 	}
 	

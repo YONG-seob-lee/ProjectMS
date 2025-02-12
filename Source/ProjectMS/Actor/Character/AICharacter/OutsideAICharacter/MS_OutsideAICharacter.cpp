@@ -5,9 +5,11 @@
 
 #include "MS_ActorUnitBase.h"
 #include "MS_DuckSplineActor.h"
+#include "MS_MarketFrontActor.h"
 #include "MS_UnitBase.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
 #include "AI/AnimInstance/MS_AIAnimInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_AIUnit.h"
 
@@ -23,13 +25,28 @@ AMS_OutsideAICharacter::AMS_OutsideAICharacter()
 void AMS_OutsideAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+	
+	TArray<AActor*> FrontDoorActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_MarketFrontActor::StaticClass(), FrontDoorActors);
+
+	if(FrontDoorActors.Num() != 1)
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("MarkeFrontActor has more than one. [ Confirmed number of actors : %d"), FrontDoorActors.Num());
+		MS_ENSURE(false);
+	}
+
+	constexpr int32 FrontDoorIndex = 0;
+	if(FrontDoorActors.IsValidIndex(FrontDoorIndex))
+	{
+		MarketFrontActor = Cast<AMS_MarketFrontActor>(FrontDoorActors[FrontDoorIndex]);
+	}
 }
 
 // Called when the game starts or when spawned
 void AMS_OutsideAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	NearestSpline = FindNearestSpline();
 }
 
@@ -38,8 +55,9 @@ void AMS_OutsideAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if(AIAnimInstance.IsValid() && AIAnimInstance->IsActWalking() == false)
+	if(AIAnimInstance.IsValid())
 	{
+		if(AIAnimInstance->IsActWalking() == false || AIAnimInstance->IsActFinished() == true)
 		return;
 	}
 	
@@ -56,7 +74,7 @@ void AMS_OutsideAICharacter::Tick(float DeltaTime)
 
 MS_Handle AMS_OutsideAICharacter::GetUnitHandle() const
 {
-	const TObjectPtr<UMS_AIUnit> AIUnit = Cast<UMS_AIUnit>(GetOuter());
+	const TObjectPtr<UMS_AIUnit> AIUnit = Cast<UMS_AIUnit>(GetOwnerUnitBase());
 	if(!AIUnit)
 	{
 		return INDEX_NONE;

@@ -20,9 +20,12 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 
 	MS_Handle GetUnitHandle() const;
+	TWeakObjectPtr<class AMS_MarketFrontActor> GetMarketFrontActor() const { return MarketFrontActor; }
+	
 private:
 	TObjectPtr<class AMS_DuckSplineActor> FindNearestSpline() const;
 
+	TWeakObjectPtr<class AMS_MarketFrontActor> MarketFrontActor = nullptr;
 	TWeakObjectPtr<class AMS_DuckSplineActor> NearestSpline = nullptr;
 	
 	UPROPERTY(EditAnywhere)

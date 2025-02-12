@@ -5,7 +5,6 @@
 
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
 #include "Character/MS_CharacterBase.h"
-#include "Character/AICharacter/MS_AICharacter.h"
 
 namespace AIBlueprintPath
 {
@@ -18,8 +17,11 @@ void UMS_AIUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32
 
 void UMS_AIUnit::Finalize()
 {
+	DestroyUnitActor();
+	
 	if(AIController)
 	{
+		GetWorld()->DestroyActor(AIController);
 		MS_DeleteObject(AIController);
 		AIController = nullptr;
 	}

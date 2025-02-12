@@ -29,7 +29,7 @@ EBTNodeResult::Type UMS_OutsideMoveAITask::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	const float RandomWalkTime = GetRandomRemainTime(2.f, 6.f);
+	const float RandomWalkTime = GetRandomRemainTime(5.f, 6.f);
 	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainWalkTime, RandomWalkTime);
     		
 #if WITH_EDITOR

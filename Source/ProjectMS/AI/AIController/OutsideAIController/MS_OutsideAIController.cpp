@@ -7,6 +7,9 @@
 #include "AI/BehaviorTree/MS_BehaviorTree.h"
 #include "AI/Blackboard/MS_BlackboardComponent.h"
 #include "AI/Blackboard/MS_OutsideBlackboardComponent.h"
+#include "AI/Task/MS_AITask.h"
+#include "Character/AICharacter/OutsideAICharacter/MS_MarketFrontActor.h"
+#include "Character/AICharacter/OutsideAICharacter/MS_OutsideAICharacter.h"
 
 
 AMS_OutsideAIController::AMS_OutsideAIController()
@@ -33,7 +36,6 @@ void AMS_OutsideAIController::Initialize()
 		Blackboard = MS_NewObject<UMS_OutsideBlackboardComponent>(this);
 		if(UBlackboardComponent* BlackboardComponent = Blackboard.Get())
 		{
-			
 			UseBlackboard(OutsideBlackboardData, BlackboardComponent);
 		}
 	}
@@ -66,6 +68,21 @@ void AMS_OutsideAIController::BeginPlay()
 	if(!RunBehaviorTree(OutsideBehaviorTree))
 	{
 		MS_ERROR(TEXT("Warning!!! Please Check OutsideBehaviorTree Instance."));
+	}
+
+	if(Blackboard)
+	{
+		const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(GetCharacter());
+		if(!AICharacter)
+		{
+			return;
+		}
+
+		const TWeakObjectPtr<AMS_MarketFrontActor> FrontActor = AICharacter->GetMarketFrontActor();
+		if(FrontActor.IsValid())
+		{
+			Blackboard->SetValueAsObject(OutsideBoardKeyName::MarketFront, FrontActor.Get());
+		}
 	}
 }
 

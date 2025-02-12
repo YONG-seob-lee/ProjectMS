@@ -28,7 +28,7 @@ EBTNodeResult::Type UMS_OutsideIdleAITask::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Failed;
 	}
 
-	const float RandomIdleTime = GetRandomRemainTime(5.f, 10.f);
+	const float RandomIdleTime = GetRandomRemainTime(2.f, 8.f);
 	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainIdleTime, RandomIdleTime);
 
 #if WITH_EDITOR

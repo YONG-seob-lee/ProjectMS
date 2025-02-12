@@ -11,7 +11,7 @@
 
 namespace MoveToMarket
 {
-	const FVector Location = FVector(0.f, 1.f, 0.f);
+	const FVector Location = FVector(0.f, -1.f, 0.f);
 }
 
 UMS_OutsideMoveToMarketAITask::UMS_OutsideMoveToMarketAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -46,6 +46,7 @@ EBTNodeResult::Type UMS_OutsideMoveToMarketAITask::ExecuteTask(UBehaviorTreeComp
 	}
 
 	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainWalkToMarketTime, 3.f);
+	AICharacter->SetActorRotation(MoveToMarket::Location.Rotation());
 	AIAnimInstance->SetIsActFinished(true);
 	return EBTNodeResult::InProgress;
 }
@@ -75,8 +76,9 @@ void UMS_OutsideMoveToMarketAITask::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	if(WalkToMarketRemainTime <= 0.f)
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-
+		OutsideAIController->UnPossess();
 		gUnitMng.DestroyUnit(AICharacter->GetUnitHandle());
+		return;
 	}
 
 	BlackboardComp->SetValueAsFloat(OutsideBoardKeyName::RemainWalkToMarketTime, WalkToMarketRemainTime - DeltaSeconds);

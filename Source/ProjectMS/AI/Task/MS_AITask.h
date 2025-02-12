@@ -12,6 +12,7 @@ namespace OutsideBoardKeyName
 	const FName RemainIdleTime = TEXT("RemainIdleTime");
 	const FName RemainWalkTime = TEXT("RemainWalkTime");
 	const FName RemainWalkToMarketTime = TEXT("RemainWalkToMarketTime");
+	const FName MarketFront = TEXT("MarketFront");
 }
 
 
