@@ -6,6 +6,7 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
+#include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 
 void UMS_StorageCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
@@ -62,5 +63,27 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 		TObjectPtr<UMS_ConstructCategoryElementData> Category = MS_NewObject<UMS_ConstructCategoryElementData>();
 		Category->SetZoneType(i);
 		aCategoryArray.Emplace(Category);
+	}
+}
+
+void UMS_StorageCacheTable::GetOrderFurnitureElementDatas(TArray<TObjectPtr<UMS_OrderItemElementData>>& aOrderFurnitureElementDatas)
+{
+	aOrderFurnitureElementDatas.Empty();
+	
+	for(const auto& StorageData : StorageDatas)
+	{
+		TObjectPtr<UMS_OrderItemElementData> OrderItemElementData = MS_NewObject<UMS_OrderItemElementData>();
+		MS_CHECK(OrderItemElementData);
+
+		OrderItemElementData->SetItemId(StorageData.Key);
+		OrderItemElementData->SetItemName(StorageData.Value->StandName.ToString());
+		const FString ItemImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, StorageData.Value->ImagePath);
+		if(UTexture2D* ItemTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ItemImagePath)))
+		{
+			OrderItemElementData->SetImage(ItemTexture);	
+		}
+		OrderItemElementData->SetItemPrice(StorageData.Value->Price);
+		OrderItemElementData->SetItemCount(0);
+		aOrderFurnitureElementDatas.Emplace(OrderItemElementData);
 	}
 }

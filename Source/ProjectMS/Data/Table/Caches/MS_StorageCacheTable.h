@@ -24,8 +24,8 @@ public:
 	void GetStorageData(EMS_ZoneType aZoneType, TArray<TObjectPtr<class UMS_ConstructItemElement>>& aConstructArray);
 	FMS_StorageData* GetStorageData(int32 aStorageId) const;
 	void GetStorageCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
+	void GetOrderFurnitureElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderFurnitureElementDatas);
 
-	
 private:
 	TMap<int32, FMS_StorageData*> StorageDatas; 
 };

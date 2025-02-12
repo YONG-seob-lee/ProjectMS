@@ -14,6 +14,8 @@ enum class EMS_GeneralButtonType
 	Menu,
 	Schedule,
 	Manage,
+	BuyItem,
+	BuyFurniture,
 	HireStaff,
 	StaffManage,
 	CustomerManage,

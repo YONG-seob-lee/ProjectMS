@@ -19,3 +19,5 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 18,Schedule,100,18,FALSE,0
 19,ScheduleDetail,100,19,FALSE,0
 20,Setting,100,20,FALSE,0
+21,BuyItem,100,21,FALSE,0
+22,BuyFurniture,100,22,FALSE,0

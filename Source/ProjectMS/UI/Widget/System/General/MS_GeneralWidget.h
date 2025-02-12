@@ -42,7 +42,9 @@ private:
 
 	// Left Expander Button
 	void OnClickedExpanderButton();
-	
+
+	void OnClickedBuyItemButton();
+	void OnClickedBuyFurnitureButton();
 	void OnClickedHireStaffButton();
 	void OnClickedManageStaffButton();
 	void OnClickedManageCustomerButton();
@@ -74,6 +76,12 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton04 = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton05 = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton06 = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_RightPanel = nullptr;
 
