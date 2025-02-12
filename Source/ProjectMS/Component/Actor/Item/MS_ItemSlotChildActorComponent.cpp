@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SlotChildActorComponent.h"
+#include "MS_ItemSlotChildActorComponent.h"
 
 #include "MS_Define.h"
 #include "UtilityFunctions.h"
@@ -10,36 +10,39 @@
 #include "Table/RowBase/MS_ItemData.h"
 
 
-UMS_SlotChildActorComponent::UMS_SlotChildActorComponent()
+UMS_ItemSlotChildActorComponent::UMS_ItemSlotChildActorComponent()
 	: SlotId(INDEX_NONE)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UMS_SlotChildActorComponent::BeginPlay()
+void UMS_ItemSlotChildActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void UMS_SlotChildActorComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_ItemSlotChildActorComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas)
 {
 	if (CacheSlotData.RequestItemTableId == aSlotDatas.RequestItemTableId)
 	{
 		return;
 	}
 
-	CacheSlotData = aSlotDatas;
+	CacheSlotData.RequestItemTableId = aSlotDatas.RequestItemTableId;
 }
 
-void UMS_SlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas)
 {
-	if (CacheSlotData.CurrentItemTableId == aSlotDatas.CurrentItemTableId
-		&& CacheSlotData.CurrentItemCount == aSlotDatas.CurrentItemCount)
+	bool bChangeItemTableId = CacheSlotData.CurrentItemTableId != aSlotDatas.CurrentItemTableId;
+	bool bChangeItemCount = CacheSlotData.CurrentItemCount != aSlotDatas.CurrentItemCount;
+	
+	if (!bChangeItemTableId && !bChangeItemCount)
 	{
 		return;
 	}
-
-	CacheSlotData = aSlotDatas;
+	
+	CacheSlotData.CurrentItemTableId = aSlotDatas.CurrentItemTableId;
+	CacheSlotData.CurrentItemCount = aSlotDatas.CurrentItemCount;
 
 	if (CacheSlotData.CurrentItemTableId == INDEX_NONE)
 	{
@@ -58,9 +61,7 @@ void UMS_SlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aS
 		MS_ENSURE(false);
 		return;
 	}
-
-	bool bChangeItemTableId = CacheSlotData.CurrentItemTableId != aSlotDatas.CurrentItemTableId;
-
+	
 	// Slot Kind
 	if (bChangeItemTableId)
 	{

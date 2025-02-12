@@ -36,8 +36,8 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* SlotAttachedComponent;
+	class USceneComponent* ItemSlotAttachedComponent;
 
 	UPROPERTY()
-	TMap<int32, TObjectPtr<class UMS_SlotChildActorComponent>> SlotIdToSlotComponents;
+	TMap<int32, TObjectPtr<class UMS_ItemSlotChildActorComponent>> ItemSlotIdToSlotComponents;
 };

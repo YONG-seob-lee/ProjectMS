@@ -148,16 +148,16 @@ void AMS_PlayerState::InitPlayerData()
 	OpenedZoneIds = TestDB->OpenedZoneIds;
 
 	GridPositionToMarketFurnitureDatas.Empty();
-	for (const FMS_LevelFurnitureSaveData MarketFurniture : TestDB->MarketFurnitureDatas)
+	for (const FMS_LevelFurnitureSaveData MarketFurnitureData : TestDB->MarketFurnitureDatas)
 	{
-		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurniture.GridPosition))
+		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurnitureData.GridPosition))
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
-				, *MS_FUNC_STRING, MarketFurniture.GridPosition.X, MarketFurniture.GridPosition.Y);
+				, *MS_FUNC_STRING, MarketFurnitureData.GridPosition.X, MarketFurnitureData.GridPosition.Y);
 			MS_CHECK(false);
 		}
 		
-		GridPositionToMarketFurnitureDatas.Emplace(MarketFurniture.GridPosition, MarketFurniture);
+		GridPositionToMarketFurnitureDatas.Emplace(MarketFurnitureData.GridPosition, MarketFurnitureData);
 	}
 
 	Items = TestDB->Items;
@@ -176,9 +176,9 @@ void AMS_PlayerState::SavePlayerData()
 	
 	NewTestDBData->OpenedZoneIds = OpenedZoneIds;
 	
-	for (auto MarketFurniture : GridPositionToMarketFurnitureDatas)
+	for (auto MarketFurnitureData : GridPositionToMarketFurnitureDatas)
 	{
-		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurniture.Value);
+		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
 	}
 
 	NewTestDBData->Items = Items;

@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "Components/ChildActorComponent.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
-#include "MS_SlotChildActorComponent.generated.h"
+#include "MS_ItemSlotChildActorComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PROJECTMS_API UMS_SlotChildActorComponent : public UChildActorComponent
+class PROJECTMS_API UMS_ItemSlotChildActorComponent : public UChildActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	UMS_SlotChildActorComponent();
+	UMS_ItemSlotChildActorComponent();
 
 protected:
 	virtual void BeginPlay() override;

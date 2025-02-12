@@ -3,7 +3,7 @@
 
 #include "MS_Furniture.h"
 
-#include "Component/Actor/Item/MS_SlotChildActorComponent.h"
+#include "Component/Actor/Item/MS_ItemSlotChildActorComponent.h"
 #include "Manager_Client/MS_ModeManager.h"
 
 
@@ -13,10 +13,10 @@ AMS_Furniture::AMS_Furniture(const FObjectInitializer& aObjectInitializer)
 	// Property
 	PropType = EMS_PropType::Furniture;
 
-	SlotAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SlotAttachedComponent"));
-	if (SlotAttachedComponent)
+	ItemSlotAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SlotAttachedComponent"));
+	if (ItemSlotAttachedComponent)
 	{
-		SlotAttachedComponent->SetupAttachment(SceneRootComponent);
+		ItemSlotAttachedComponent->SetupAttachment(SceneRootComponent);
 	}
 }
 
@@ -34,10 +34,10 @@ void AMS_Furniture::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	TArray<UMS_SlotChildActorComponent*> SlotComponents;
-	GetComponents<UMS_SlotChildActorComponent>(SlotComponents);
+	TArray<UMS_ItemSlotChildActorComponent*> SlotComponents;
+	GetComponents<UMS_ItemSlotChildActorComponent>(SlotComponents);
 
-	for (UMS_SlotChildActorComponent* SlotComponent : SlotComponents)
+	for (UMS_ItemSlotChildActorComponent* SlotComponent : SlotComponents)
 	{
 		if (SlotComponent->GetSlotId() == INDEX_NONE)
 		{
@@ -45,7 +45,7 @@ void AMS_Furniture::PostInitializeComponents()
 			MS_ENSURE(false);
 		}
 		
-		SlotIdToSlotComponents.Emplace(SlotComponent->GetSlotId(), SlotComponent);
+		ItemSlotIdToSlotComponents.Emplace(SlotComponent->GetSlotId(), SlotComponent);
 	}
 }
 
@@ -83,7 +83,7 @@ void AMS_Furniture::OnUnselectProp(EMS_ModeState aModeState)
 
 void AMS_Furniture::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	for (auto& It : SlotIdToSlotComponents)
+	for (auto& It : ItemSlotIdToSlotComponents)
 	{
 		if (aSlotDatas.IsValidIndex(It.Key))
 		{
@@ -98,7 +98,7 @@ void AMS_Furniture::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDa
 
 void AMS_Furniture::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	for (auto& It : SlotIdToSlotComponents)
+	for (auto& It : ItemSlotIdToSlotComponents)
 	{
 		if (aSlotDatas.IsValidIndex(It.Key))
 		{
