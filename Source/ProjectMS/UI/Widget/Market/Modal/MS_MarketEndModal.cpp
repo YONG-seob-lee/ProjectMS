@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "Button/MS_Button.h"
+#include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
@@ -34,8 +35,9 @@ void UMS_MarketEndModal::OnClickedClosingPlayButton()
 	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
 	{
 		FViewTargetTransitionParams Param;
-		Param.BlendTime = 1.f;
+		Param.BlendTime = 0.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
+		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
 		gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 	});
 	gSceneMng.RequestChangeScene(Command);

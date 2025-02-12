@@ -35,9 +35,11 @@ public:
 	void TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule);
 	void TakeItems(const TMap<int32, int32>* aTakeItems);
 
-	void TransferServer();
+	void TransferServer() const;
 	void TransferItemsToServer(const TMap<int32, int32>& aTransferItems);
 
+	bool IsNight() const;
+	
 	//test
 	void SetTest();
 

@@ -16,6 +16,17 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 	const int32 SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
 	switch(aType)
 	{
+	case EMS_ScheduleType::Morning:
+		{
+			if(ScheduleType != EMS_ScheduleType::Night)
+			{
+				MS_LOG(TEXT("Miss Schedule! "));
+				return;
+			}
+			PassTheDay();
+			Minute = 6 * SecondPerOneMinute;
+			break;
+		}
 	case EMS_ScheduleType::Prepare:
 		{
 			if(ScheduleType != EMS_ScheduleType::Deadline)
@@ -24,7 +35,6 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 				return;
 			}
 			
-			PassTheDay();
 			Minute = 7 * SecondPerOneMinute;
 			break;
 		}
@@ -58,6 +68,16 @@ void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
 			Minute = 20 * SecondPerOneMinute;
 			break;
 		}
+	case EMS_ScheduleType::Night:
+		{
+			if(ScheduleType != static_cast<EMS_ScheduleType>(static_cast<int32>(aType) - 1))
+			{
+				MS_LOG(TEXT("Miss Schedule! "));
+				return;
+			}
+			Minute = 22 * SecondPerOneMinute;
+			break;
+		}
 	default:
 		{
 			break;
@@ -71,9 +91,9 @@ EMS_ScheduleType FMS_TimeSchedule::GetNextScheduleType()
 {
 	switch(ScheduleType)
 	{
-	case EMS_ScheduleType::Deadline:
+	case EMS_ScheduleType::Night:
 		{
-			return EMS_ScheduleType::Prepare;
+			return EMS_ScheduleType::Morning;
 		}
 	default:
 		{

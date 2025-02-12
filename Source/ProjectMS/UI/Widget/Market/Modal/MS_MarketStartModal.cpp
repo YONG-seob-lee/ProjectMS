@@ -15,11 +15,8 @@ void UMS_MarketStartModal::NativeConstruct()
 
 	CPP_FastButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 	{
-		if(Test)
-		{
-			gScheduleMng.SetTest();
-			Test();
-		}
+		gScheduleMng.SetTest();
+		gWidgetMng.CloseModalWidget();
 	});
 }
 

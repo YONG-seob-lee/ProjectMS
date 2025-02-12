@@ -9,11 +9,13 @@
 UENUM()
 enum class EMS_ScheduleType
 {
-	Prepare = 0,
-	UpAndDown = 1,
-	OpenMarket = 2,
-	Deadline = 3,
-	//BlackMarket = 4,
+	Morning = 0,
+	Prepare = 1,
+	UpAndDown = 2,
+	OpenMarket = 3,
+	Deadline = 4,
+	Night = 5,
+	//BlackMarket
 };
 
 struct FMS_TimeSchedule
@@ -26,7 +28,8 @@ public:
 	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() const { return ScheduleType; }
 	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
 	FORCEINLINE int32 GetMinute() const { return Minute; }
-	
+
+	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() { return ScheduleType; }
 	EMS_ScheduleType GetNextScheduleType();
 
 private:

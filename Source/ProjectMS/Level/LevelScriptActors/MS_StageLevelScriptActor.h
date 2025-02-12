@@ -30,7 +30,7 @@ public:
 	void SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly = false);
 	
 private:
-	void SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight);
+	void SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight, bool bDirectly);
 	
 	void SetLightColor(EMS_DayAndNight aDayAndNight) const;
 	void SetLightProp(EMS_DayAndNight aDayAndNight);
@@ -51,6 +51,10 @@ private:
 	UFUNCTION()
 	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
 
+	void ProcessNightToDay(float DeltaTime);
+	float DirectionalLightColorVolume = 0.f;
+	bool bStartNightToDayTrigger = false;
+	
 	UPROPERTY()
 	TObjectPtr<class ADirectionalLight> DirectionalLight = nullptr;
 	

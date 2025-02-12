@@ -32,7 +32,8 @@ public:
 	virtual void NativeConstruct() override;
 	
 	void SetType(EMS_GeneralWidgetType aType);
-	
+
+	void RequestPassTimer() const;
 private:
 	void InitLeftExpander();
 	

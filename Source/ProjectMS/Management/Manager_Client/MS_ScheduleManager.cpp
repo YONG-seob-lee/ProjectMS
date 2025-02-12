@@ -149,6 +149,11 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
 			break;
 		}
+	case EMS_ScheduleType::Morning:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("Zzz  Zzz  Zzzzz"));
+			gWidgetMng.RequestPassTimerWidget();
+		}
 	case EMS_ScheduleType::Prepare:
 		{
 			OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
@@ -162,6 +167,11 @@ void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());
 			gWidgetMng.ShowModalWidget(ModalParameter);
+			break;
+		}
+	case EMS_ScheduleType::Night:
+		{
+			OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
 			break;
 		}
 	default:
@@ -178,7 +188,7 @@ void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
 	gItemMng.SetItems(aTakeItems);
 }
 
-void UMS_ScheduleManager::TransferServer()
+void UMS_ScheduleManager::TransferServer() const
 {
 	gTestServer.RenewSchedule(TimeSchedule->GetNextScheduleType());
 }
@@ -188,9 +198,26 @@ void UMS_ScheduleManager::TransferItemsToServer(const TMap<int32, int32>& aTrans
 	gTestServer.RenewItems(aTransferItems);
 }
 
+bool UMS_ScheduleManager::IsNight() const
+{
+	if(!TimeSchedule)
+	{
+		return false;
+	}
+	
+	if(TimeSchedule->GetCurrentScheduleType() < EMS_ScheduleType::Deadline)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 void UMS_ScheduleManager::SetTest()
 {
-	IntervalSecondReal = 30;
+	IntervalSecondReal = 180;
 }
 
 void UMS_ScheduleManager::GetScheduleData(TArray<UMS_ScheduleDayElementData*>& aScheduleDayElementData)

@@ -47,6 +47,6 @@ public:
 		
 #if WITH_EDITOR
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
-	void DayNight(bool bTurnNight);
+	void DayNight(bool bTurnNight, bool bDirectly = true);
 #endif
 };

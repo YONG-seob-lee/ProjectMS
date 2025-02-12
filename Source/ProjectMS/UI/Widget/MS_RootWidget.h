@@ -44,6 +44,8 @@ public:
 	void ShowGeneralWidget(bool bShow) const;
 	void CloseModalWidget() const;
 
+	void RequestPassTimer() const;
+
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))

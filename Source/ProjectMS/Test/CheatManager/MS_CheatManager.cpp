@@ -126,11 +126,16 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 #endif
 
 #if WITH_EDITOR
-void UMS_CheatManager::DayNight(bool bTurnNight)
+void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 {
+	if(bTurnNight == true && bDirectly == false)
+	{
+		return;
+	}
+	
 	if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day);
+		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day, bDirectly);
 	}
 }
 #endif

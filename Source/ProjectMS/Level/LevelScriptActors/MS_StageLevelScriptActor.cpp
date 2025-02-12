@@ -13,6 +13,7 @@
 #include "Actor/Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "Components/LightComponent.h"
 #include "Engine/DirectionalLight.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Prop/NightProp/MS_NightProp.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
@@ -47,6 +48,15 @@ void AMS_StageLevelScriptActor::BeginPlay()
 
 	gCameraMng.LocateCamera(FVector(12600.f, -6380.f, 3200.f), EMS_ViewCameraType::QuarterView);
 	gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
+
+	if(gScheduleMng.IsNight())
+	{
+		SetDayAndNight(EMS_DayAndNight::Night, true);
+	}
+	else
+	{
+		SetDayAndNight(EMS_DayAndNight::Day, true);
+	}
 }
 
 void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -63,21 +73,34 @@ void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason
 void AMS_StageLevelScriptActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(bStartNightToDayTrigger)
+	{
+		ProcessNightToDay(DeltaTime);
+	}
 }
 
 void AMS_StageLevelScriptActor::Destroyed()
 {	
 	Super::Destroyed();
 }
-void AMS_StageLevelScriptActor::SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly)
+void AMS_StageLevelScriptActor::SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly /* = false */)
 {
-	SetDayAndNight_Internal(aDayAndNight);
+	SetDayAndNight_Internal(aDayAndNight, bDirectly);
 }
 
-void AMS_StageLevelScriptActor::SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight)
+void AMS_StageLevelScriptActor::SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight, bool bDirectly)
 {
-	SetLightColor(aDayAndNight);
-	SetLightProp(aDayAndNight);
+	if(bDirectly)
+	{
+		SetLightColor(aDayAndNight);
+		SetLightProp(aDayAndNight);		
+	}
+	else
+	{
+		DirectionalLightColorVolume = 0.f;
+		bStartNightToDayTrigger = true;
+	}
 }
 
 void AMS_StageLevelScriptActor::SetLightColor(EMS_DayAndNight aDayAndNight) const
@@ -283,3 +306,22 @@ void AMS_StageLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, con
 	}
 }
 
+void AMS_StageLevelScriptActor::ProcessNightToDay(float DeltaTime)
+{
+	MS_LOG(TEXT("DirectionalLightColorVolume = %f"), DirectionalLightColorVolume);
+	DirectionalLightColorVolume += DeltaTime * 50.f;
+	if(DirectionalLightColorVolume >= 255.f)
+	{
+		bStartNightToDayTrigger = false;
+	}
+	else if(DirectionalLightColorVolume >= 200.f)
+	{
+		SetLightColor(EMS_DayAndNight::Day);
+		SetLightProp(EMS_DayAndNight::Day);
+	}
+
+	if(DirectionalLight)
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(DirectionalLightColorVolume, DirectionalLightColorVolume, DirectionalLightColorVolume));
+	}
+}
