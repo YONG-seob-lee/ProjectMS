@@ -3,7 +3,6 @@
 
 #include "MS_StorageCacheTable.h"
 
-#include "Manager_Client/MS_ItemManager.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
@@ -58,7 +57,7 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 {
 	aCategoryArray.Empty();
 
-	for(int32 i = 3 ; i > 0 ; i--)
+	for(int32 i = 1 ; i <= 3 ; i++)
 	{
 		TObjectPtr<UMS_ConstructCategoryElementData> Category = MS_NewObject<UMS_ConstructCategoryElementData>();
 		Category->SetZoneType(i);

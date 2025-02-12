@@ -19,25 +19,18 @@ public:
 	virtual void NativeConstruct() override;
 	FORCEINLINE void GetOnClickedModeButtonFunc(const TFunction<void(EMS_ModeState)>& aFunc) { OnClickedModeButtonCallback = aFunc; }
 
-	void SwitchWidget(EMS_ModeState aModeState) const;
 private:
 	void InitCategory() const;
 	void RefreshConstructListItems(EMS_ZoneType aZoneType);
 	
-	void OnClickModeButton(EMS_ModeState aModeState);
+	void OnClickedModeButton(UObject* Object);
 	void OnClickedCategory(int32 aCategoryType);
-
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_ModeButton01 = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_WidgetSwitcher> CPP_WidgetSwitcher = nullptr;
 
 	TFunction<void(EMS_ModeState)> OnClickedModeButtonCallback = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_TileView> CPP_ConstructCategoryTileView = nullptr;
+	TObjectPtr<class UMS_ListView> CPP_ConstructCategoryListView = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_TileView> CPP_ConstructItemTileView = nullptr;
+	TObjectPtr<class UMS_ListView> CPP_ConstructItemListView = nullptr;
 };

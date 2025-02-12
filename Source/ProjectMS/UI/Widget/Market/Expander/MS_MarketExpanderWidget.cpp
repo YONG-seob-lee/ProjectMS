@@ -50,9 +50,13 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 void UMS_MarketExpanderWidget::OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
 	// TODO 용섭 : 나중에 모드 완성되면 추가 작업
+	if(bOpen && bOpenExpander)
+	{
+		return;
+	}
+	
 	PlayAnimationByName(ArrowAnimation::OpenMode);
 	bOpenExpander = true;
-	//CPP_ModeSelectWidget->SwitchWidget(aModeState);
 }
 
 void UMS_MarketExpanderWidget::OnClickedArrowButton()

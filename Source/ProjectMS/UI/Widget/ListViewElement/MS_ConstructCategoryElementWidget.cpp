@@ -22,7 +22,6 @@ void UMS_ConstructCategoryElementWidget::NativeOnListItemObjectSet(UObject* aLis
 	{
 	case EMS_ZoneType::Display:
 		{
-			CPP_CategoryImage->SetColorAndOpacity(FLinearColor::White);
 			CPP_CategoryName->SetText(FText::FromString(TEXT("Display")));
 			break;
 		}
