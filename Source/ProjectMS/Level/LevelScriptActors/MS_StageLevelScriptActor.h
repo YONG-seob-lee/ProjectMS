@@ -6,6 +6,13 @@
 #include "MS_LevelScriptActorBase.h"
 #include "MS_StageLevelScriptActor.generated.h"
 
+UENUM()
+enum class EMS_DayAndNight
+{
+	Day,
+	Night,
+};
+
 UCLASS()
 class PROJECTMS_API AMS_StageLevelScriptActor : public AMS_LevelScriptActorBase
 {
@@ -19,8 +26,20 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void Destroyed() override;
+
+	void SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly = false);
+	
 private:
-	void CollectOutsideDickSpawnPoint();
+	void SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight);
+	
+	void SetLightColor(EMS_DayAndNight aDayAndNight) const;
+	void SetLightProp(EMS_DayAndNight aDayAndNight);
+	
+	void CollectOutsideDickSpawnPoint() const;
+	
+	void CashingDirectionalLight();
+	void CashingNightPropActors();
+	
 	void ParsingCarSplineActors() const;
 	void ParsingDuckSplineActors() const;
 	
@@ -31,4 +50,10 @@ private:
 	
 	UFUNCTION()
 	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
+
+	UPROPERTY()
+	TObjectPtr<class ADirectionalLight> DirectionalLight = nullptr;
+	
+	UPROPERTY()
+	TArray<class AMS_NightProp*> NightProps = {};
 };

@@ -43,4 +43,10 @@ public:
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount);
 #endif
+
+		
+#if WITH_EDITOR
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void DayNight(bool bTurnNight);
+#endif
 };

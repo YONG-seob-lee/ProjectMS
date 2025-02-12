@@ -4,6 +4,7 @@
 #include "MS_CheatManager.h"
 
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
+#include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
@@ -121,5 +122,15 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 		}
 	}
 	gUnitMng.OnPurchaseDelegate.Broadcast(FMS_PurchaseParameter(UnitId, ItemId, ItemCount));
+}
+#endif
+
+#if WITH_EDITOR
+void UMS_CheatManager::DayNight(bool bTurnNight)
+{
+	if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day);
+	}
 }
 #endif

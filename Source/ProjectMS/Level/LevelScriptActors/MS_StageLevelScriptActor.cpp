@@ -11,6 +11,9 @@
 #include "SpawnPoint/MS_OutsideDuckSpawnPoint.h"
 #include "Units/MS_SplineUnit.h"
 #include "Actor/Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
+#include "Components/LightComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Prop/NightProp/MS_NightProp.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
 
@@ -25,6 +28,9 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	CashingDirectionalLight();
+	CashingNightPropActors();
+	
 	ParsingCarSplineActors();
 	ParsingDuckSplineActors();
 
@@ -63,8 +69,67 @@ void AMS_StageLevelScriptActor::Destroyed()
 {	
 	Super::Destroyed();
 }
+void AMS_StageLevelScriptActor::SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly)
+{
+	SetDayAndNight_Internal(aDayAndNight);
+}
 
-void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint()
+void AMS_StageLevelScriptActor::SetDayAndNight_Internal(EMS_DayAndNight aDayAndNight)
+{
+	SetLightColor(aDayAndNight);
+	SetLightProp(aDayAndNight);
+}
+
+void AMS_StageLevelScriptActor::SetLightColor(EMS_DayAndNight aDayAndNight) const
+{
+	if(DirectionalLight == nullptr)
+	{
+		return;
+	}
+	
+	if(aDayAndNight == EMS_DayAndNight::Day)
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(255.f, 255.f, 255.f));
+	}
+	else
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(45.f, 45.f, 45.f));
+	}
+}
+
+void AMS_StageLevelScriptActor::SetLightProp(EMS_DayAndNight aDayAndNight)
+{
+	if(aDayAndNight == EMS_DayAndNight::Day)
+	{
+		for(const auto& NightProp : NightProps)
+		{
+			if(NightProp->IsContainMesh())
+			{
+				NightProp->TurnOffLight();
+			}
+			else
+			{
+				NightProp->SetActorHiddenInGame(true);
+			}
+		}
+	}
+	else
+	{
+		for(const auto& NightProp : NightProps)
+		{
+			if(NightProp->IsContainMesh())
+			{
+				NightProp->TurnOnLight();
+			}
+			else
+			{
+				NightProp->SetActorHiddenInGame(false);
+			}
+		}
+	}
+}
+
+void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint() const
 {
 	TArray<AActor*> DuckSpawnPoints;
 	
@@ -79,6 +144,37 @@ void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint()
 		}
 
 		gUnitMng.CreateUnit(EMS_UnitType::AI, 0,true, DuckSpawnPoint->GetSpawnLocation(), DuckSpawnPoint->GetSpawnRotation());
+	}
+}
+
+void AMS_StageLevelScriptActor::CashingDirectionalLight()
+{
+	TArray<AActor*> DirectionalLightActors;
+	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), DirectionalLightActors);
+	
+	if(DirectionalLightActors.Num() > 1)
+	{
+		MS_ENSURE(false);
+	}
+
+	if(DirectionalLightActors.IsValidIndex(0))
+	{
+		DirectionalLight = Cast<ADirectionalLight>(DirectionalLightActors[0]);
+	}
+}
+
+void AMS_StageLevelScriptActor::CashingNightPropActors()
+{
+	TArray<AActor*> Props;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_NightProp::StaticClass(), Props);
+
+	for(const auto& Prop : Props)
+	{
+		if(AMS_NightProp* NightProp = Cast<AMS_NightProp>(Prop))
+		{
+			NightProps.Emplace(NightProp);
+		}
 	}
 }
 
