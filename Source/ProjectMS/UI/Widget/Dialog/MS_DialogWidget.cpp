@@ -46,6 +46,8 @@ void UMS_DialogWidget::NativeConstruct()
 	}
 
 	FillDefaultAnimations();
+
+	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMS_DialogWidget::OnAnimFinished(const FName& aAnimName)
@@ -59,12 +61,14 @@ void UMS_DialogWidget::OnAnimFinished(const FName& aAnimName)
 	}
 	else if(aAnimName == DialogAnimation::Close)
 	{
+		SetVisibility(ESlateVisibility::Collapsed);
 		DialogParameter.FinishDialogEvent();
 	}
 }
 
 void UMS_DialogWidget::RequestDialog(const FMS_DialogParameter& aDialogParameter)
 {
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	DialogParameter = aDialogParameter;
 	CPP_DialogText->SetText(FText::FromString(DialogParameter.ShowType()));
 	PlayAnimationByName(DialogAnimation::Start);
