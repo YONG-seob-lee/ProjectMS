@@ -22,6 +22,7 @@ Id,Directory
 417,UI/Widget/Schedule/Modal
 418,UI/Widget/Market/BuyThings
 420,UI/Widget/SystemWidgets/Setting/Modal
+421,UI/Widget/Dialog
 1001,UI/Image/Icon
 1002,UI/Image/Icon/Dummy
 1003,UI/Image/Storage

@@ -45,6 +45,7 @@ public:
 	void CloseModalWidget() const;
 
 	void RequestPassTimer() const;
+	void RequestDialog(const FString& aDialogType, float aTypeSpeed) const;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;
@@ -59,6 +60,9 @@ private:
 	TObjectPtr<UMS_CanvasPanel> CPP_MessagePanel = nullptr;
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_WidgetSwitcher> CPP_MessageWidgetSwitcher = nullptr;
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_DialogWidget> CPP_DialogWidget = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ToastWidget> CPP_ToastWidget = nullptr;
 

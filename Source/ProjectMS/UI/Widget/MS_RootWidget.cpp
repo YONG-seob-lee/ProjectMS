@@ -7,6 +7,7 @@
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
+#include "Dialog/MS_DialogWidget.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
 #include "Manager_Client/MS_SoundManager.h"
 #include "System/MS_ToastWidget.h"
@@ -230,6 +231,13 @@ void UMS_RootWidget::CloseModalWidget() const
 void UMS_RootWidget::RequestPassTimer() const
 {
 	CPP_GeneralWidget->RequestPassTimer();
+}
+
+void UMS_RootWidget::RequestDialog(const FString& aDialogType, float aTypeSpeed) const
+{
+	CPP_MessagePanel->SetVisibility(ESlateVisibility::HitTestInvisible);
+		
+	CPP_DialogWidget->RequestDialog(FMS_DialogParameter(aDialogType, aTypeSpeed, [this](){CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);}));
 }
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const

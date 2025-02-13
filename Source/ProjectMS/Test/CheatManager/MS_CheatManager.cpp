@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
+#include "Widget/Dialog/MS_DialogWidget.h"
 
 #if WITH_EDITOR
 void UMS_CheatManager::TestCheatManager(const FString aTestString)
@@ -137,5 +138,10 @@ void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 	{
 		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day, bDirectly);
 	}
+}
+
+void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
+{
+	gWidgetMng.RequestDialog(DialogType, TypeSpeed);
 }
 #endif

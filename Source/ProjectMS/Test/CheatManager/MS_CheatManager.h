@@ -49,4 +49,9 @@ public:
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void DayNight(bool bTurnNight, bool bDirectly = true);
 #endif
+
+#if WITH_EDITOR
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void RequestDialog(FString DialogType, float TypeSpeed = 0.1f);
+#endif
 };

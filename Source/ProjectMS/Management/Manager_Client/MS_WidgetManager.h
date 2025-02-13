@@ -54,6 +54,8 @@ public:
 	void RequestPassTimerWidget() const;
 
 	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
+
+	void RequestDialog(const FString& aDialogType, float aTypeSpeed);
 	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

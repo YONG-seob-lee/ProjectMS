@@ -21,6 +21,7 @@ Id,Directory_Table_Id,BP_File_Name
 20,420,SettingModalWidget
 21,418,BuyItemWidget
 22,418,BuyFurnitureWidget
+23,421,DialogWidget
 4001,4001,BP_Counter_6x2_A
 4002,4001,BP_Counter_6x2_B
 4003,4001,BP_Discount_2x2_A

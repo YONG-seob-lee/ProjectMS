@@ -256,6 +256,11 @@ void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVect
 	RequestCustomPosition(aWidget, aPosition);
 }
 
+void UMS_WidgetManager::RequestDialog(const FString& aDialogType, float aTypeSpeed)
+{
+	RootWidget->RequestDialog(aDialogType, aTypeSpeed);
+}
+
 void UMS_WidgetManager::CreateRoot()
 {
 	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
