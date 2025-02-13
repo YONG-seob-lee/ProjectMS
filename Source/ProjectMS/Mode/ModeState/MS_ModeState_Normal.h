@@ -58,4 +58,8 @@ public:
 
 	UFUNCTION()
 	void OnUnselectProp(AActor* aUnselectedActor);
+
+
+private:
+	TWeakObjectPtr<AActor> CachePressDownActor;
 };

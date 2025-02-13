@@ -61,6 +61,11 @@ void UMS_ModeState_Normal::Exit()
 void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
+	
+	if (AActor* InteractActor = aInteractableHitResult.GetActor())
+	{
+		CachePressDownActor = InteractActor;
+	}
 }
 
 void UMS_ModeState_Normal::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
@@ -96,14 +101,19 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 
 	if (AActor* InteractActor = aInteractableHitResult.GetActor())
 	{
-		if (InteractActor->IsA(AMS_Prop::StaticClass()))
+		if (CachePressDownActor != nullptr && CachePressDownActor == InteractActor)
 		{
-			gCameraMng.RestrictCameraMovement(true);
+			if (AMS_Prop* PropActor = Cast<AMS_Prop>(InteractActor))
+			{
+				if (PropActor->GetPropType() == EMS_PropType::Furniture)
+				{
+					gCameraMng.RestrictCameraMovement(true);
 			
-			gInteractionMng.SelectActor(InteractActor);
+					gInteractionMng.SelectActor(InteractActor);
 				
-			gModeMng.ChangeState(EMS_ModeState::Construct);
-			
+					gModeMng.ChangeState(EMS_ModeState::Construct);
+				}
+			}
 		}
 	}
 }
@@ -128,6 +138,8 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 	{
 		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
+			SelectProp(InteractActor);
+			
 			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
