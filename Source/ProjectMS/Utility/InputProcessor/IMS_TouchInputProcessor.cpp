@@ -49,10 +49,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
 
-	if(NewPointerData->IsGliding())
-	{
-		ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
-	}
+	ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
 
 	NewPointerData->PlayParticle();
 	
