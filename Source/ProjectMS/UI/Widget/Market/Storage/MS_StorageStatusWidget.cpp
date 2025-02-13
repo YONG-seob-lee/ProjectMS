@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "MS_ShelfStatus.h"
+#include "MS_UnitBase.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/Furniture/Storage/MS_Storage.h"
@@ -87,5 +88,15 @@ void UMS_StorageStatusWidget::OnChangeSlotDatas(const TArray<FMS_SlotData>& aSlo
 	if (CPP_ShelfStatusWidget->IsVisible())
 	{
 		CPP_ShelfStatusWidget->SetTileView();
+	}
+}
+
+void UMS_StorageStatusWidget::SetOwnerUnit(TWeakObjectPtr<UMS_UnitBase> aOwnerUnit)
+{
+	OwnerUnit = aOwnerUnit;
+
+	if (CPP_ShelfStatusWidget)
+	{
+		CPP_ShelfStatusWidget->SetOwnerUnit(aOwnerUnit);
 	}
 }

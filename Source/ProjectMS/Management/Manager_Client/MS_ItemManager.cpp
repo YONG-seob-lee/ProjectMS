@@ -200,7 +200,7 @@ int32 UMS_ItemManager::GetDisplayItemCount(int32 aItemId) const
 				{
 					if (SlotData.CurrentItemTableId == aItemId)
 					{
-						ItemCount +=SlotData.CurrentItemCount; 
+						ItemCount += SlotData.CurrentItemCount; 
 					}
 				}
 			}
@@ -227,6 +227,96 @@ void UMS_ItemManager::GetNoneDisplayItems(TMap<int32, int32>& OutItems) const
 int32 UMS_ItemManager::GetNoneDisplayItemCount(int32 aItemId) const
 {
 	return GetCurrentItemCount(aItemId) - GetDisplayItemCount(aItemId);
+}
+
+void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems) const
+{
+	OutItems.Empty();
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
+					{
+						continue;
+					}
+					
+					int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
+					Count += SlotData.CurrentItemCount;
+				}
+			}
+		}
+	}
+}
+
+int32 UMS_ItemManager::GetShelfItemCount(int32 aItemId) const
+{
+	int32 ItemCount = 0;
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == aItemId)
+					{
+						ItemCount += SlotData.CurrentItemCount; 
+					}
+				}
+			}
+		}
+	}
+	
+	return ItemCount;
+}
+
+void UMS_ItemManager::GetPalletItems(TMap<int32, int32>& OutItems) const
+{
+	GetNoneDisplayItems(OutItems);
+	
+	TMap<int32, int32> ShelfItems;
+	GetShelfItems(ShelfItems);
+
+	for (const auto& ShelfItem : ShelfItems)
+	{
+		int32& Count = OutItems.FindOrAdd(ShelfItem.Key);
+		Count -= ShelfItem.Value;
+	}
+}
+
+int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
+{
+	return GetNoneDisplayItemCount(aItemId) - GetShelfItemCount(aItemId);
 }
 
 void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const

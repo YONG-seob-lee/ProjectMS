@@ -144,60 +144,79 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 			return;
 		}
 
-		FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
-		MS_ENSURE(ItemData != nullptr);
-	
+		if (ZoneType != EMS_ZoneType::Display && ZoneType != EMS_ZoneType::Shelf)
+		{
+			return;
+		}
+		
 		// 기존 아이템 삭제 (빈 개수로 카운트되어 Pallet로 이동)
 		// ToDo : Shelf로 정리되도록 변경
 		SlotDatas[aSlotId].Empty();
 
-		// 채울 개수 구하기
-		int32 NewItemCount = FMath::Min(gItemMng.GetNoneDisplayItemCount(aItemId), ItemData->Slot100x100MaxCount);
-	
-		// 창고에서 빼기
-		int32 TotalSubtractCount = NewItemCount;
-	
-		if (const TObjectPtr UnitManager = gUnitMng)
+		FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
+		if (ItemData == nullptr)
 		{
-			TArray<TObjectPtr<UMS_UnitBase>> Units;
-			UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+			return;
+		}
 
-			for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		// 채울 개수 구하기
+		int32 NewItemCount = 0;
+		if (ZoneType == EMS_ZoneType::Display)
+		{
+			NewItemCount = FMath::Min(gItemMng.GetNoneDisplayItemCount(aItemId), ItemData->Slot100x100MaxCount);
+		}
+		else
+		{
+			NewItemCount = FMath::Min(gItemMng.GetPalletItemCount(aItemId), ItemData->BoxMaxCount);
+		}
+		
+		// 창고에서 빼기
+		if (ZoneType == EMS_ZoneType::Display)
+		{
+			int32 TotalSubtractCount = NewItemCount;
+	
+			if (const TObjectPtr UnitManager = gUnitMng)
 			{
-				if (UMS_FurnitureUnit* SubtractUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+				TArray<TObjectPtr<UMS_UnitBase>> Units;
+				UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+				for (TObjectPtr<UMS_UnitBase> Unit : Units)
 				{
-					if (SubtractUnit->GetZoneType() != EMS_ZoneType::Shelf)
+					if (UMS_FurnitureUnit* SubtractUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
 					{
-						continue;
-					}
-				
-					TArray<FMS_SlotData> SubtractUnitSlotDatas;
-					SubtractUnit->GetSlotDatas(SubtractUnitSlotDatas);
-
-					for (int32 i = 0; i < SubtractUnitSlotDatas.Num(); ++i)
-					{
-						if (SubtractUnitSlotDatas[i].CurrentItemTableId == aItemId)
+						if (SubtractUnit->GetZoneType() != EMS_ZoneType::Shelf)
 						{
-							int32 SubtractCount = FMath::Min(SubtractUnitSlotDatas[i].CurrentItemCount, TotalSubtractCount);
-						
-							SubtractUnit->SubtractCurrentItemCount(i, SubtractCount, bChangePlayerData);
-							TotalSubtractCount -= SubtractCount;
+							continue;
+						}
+				
+						TArray<FMS_SlotData> SubtractUnitSlotDatas;
+						SubtractUnit->GetSlotDatas(SubtractUnitSlotDatas);
 
-							if (TotalSubtractCount == 0)
+						for (int32 i = 0; i < SubtractUnitSlotDatas.Num(); ++i)
+						{
+							if (SubtractUnitSlotDatas[i].CurrentItemTableId == aItemId)
 							{
-								break;
+								int32 SubtractCount = FMath::Min(SubtractUnitSlotDatas[i].CurrentItemCount, TotalSubtractCount);
+						
+								SubtractUnit->SubtractCurrentItemCount(i, SubtractCount, bChangePlayerData);
+								TotalSubtractCount -= SubtractCount;
+
+								if (TotalSubtractCount == 0)
+								{
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				if (TotalSubtractCount == 0)
-				{
-					break;
+					if (TotalSubtractCount == 0)
+					{
+						break;
+					}
 				}
 			}
 		}
-	
+		
 		// 채우기
 		SlotDatas[aSlotId].RequestItemTableId = aItemId;
 		SlotDatas[aSlotId].CurrentItemTableId = aItemId;

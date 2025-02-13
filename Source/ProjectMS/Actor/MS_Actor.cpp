@@ -3,6 +3,8 @@
 
 #include "MS_Actor.h"
 
+#include "MS_UnitBase.h"
+
 
 AMS_Actor::AMS_Actor(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
@@ -33,5 +35,10 @@ void AMS_Actor::Initialize()
 
 void AMS_Actor::Finalize()
 {
+}
+
+void AMS_Actor::SetOwnerUnitBase(UMS_UnitBase* aOwnerUnit)
+{
+	OwnerUnit = aOwnerUnit;
 }
 

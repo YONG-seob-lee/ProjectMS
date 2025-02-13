@@ -39,6 +39,12 @@ public:
 	
 	void GetNoneDisplayItems(TMap<int32, int32>& OutItems) const;
 	int32 GetNoneDisplayItemCount(int32 aItemId) const;
+
+	void GetShelfItems(TMap<int32, int32>& OutItems) const;
+	int32 GetShelfItemCount(int32 aItemId) const;
+
+	void GetPalletItems(TMap<int32, int32>& OutItems) const;
+	int32 GetPalletItemCount(int32 aItemId) const;
 	
 	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
 

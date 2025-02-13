@@ -33,6 +33,10 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 
 			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
 			{
+				MS_ENSURE(OwnerUnit != nullptr);
+				
+				StorageStatusWidget->SetOwnerUnit(OwnerUnit.Get());
+				
 				// Widget에 Unit함수 Bind
 				StorageStatusWidget->OnClickShelfSlotDelegate.BindWeakLambda(this, [this](int32 aSlotId, int32 aItemId)
 				{

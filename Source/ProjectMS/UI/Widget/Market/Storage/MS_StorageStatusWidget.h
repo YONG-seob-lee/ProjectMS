@@ -29,8 +29,12 @@ private:
 public:
 	void OnChangeSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
+	FORCEINLINE void SetOwnerUnit(TWeakObjectPtr<class UMS_UnitBase> aOwnerUnit);
+
 	
 protected:
+	TWeakObjectPtr<class UMS_UnitBase> OwnerUnit;
+	
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;
 
 	UPROPERTY(Meta = (BindWidget))
