@@ -79,3 +79,8 @@ DerivedDataCache/*
 
 # Rider IDE
 .idea/*
+/Plugins/NiagaraUIRenderer/Binaries/Win64/UnrealEditor-NiagaraUIRenderer-Win64-DebugGame.dll
+/Plugins/NiagaraUIRenderer/Binaries/Win64/UnrealEditor-NiagaraUIRenderer-Win64-DebugGame.pdb
+/Plugins/NiagaraUIRenderer/Binaries/Win64/UnrealEditor-NiagaraUIRendererEditor-Win64-DebugGame.dll
+/Plugins/NiagaraUIRenderer/Binaries/Win64/UnrealEditor-NiagaraUIRendererEditor-Win64-DebugGame.pdb
+/Plugins/NiagaraUIRenderer/Binaries/Win64/UnrealEditor-Win64-DebugGame.modules

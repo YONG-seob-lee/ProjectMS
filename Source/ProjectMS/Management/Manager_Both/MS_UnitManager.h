@@ -34,6 +34,7 @@ public:
 	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);
 	void DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
+	void DestroyAllUnits(EMS_UnitType aUnitType);
 
 	FOnUpdateChattingDelegate OnChattingDelegate;
 	FOnUpdateBehaviorDelegate OnBehaviorDelegate;

@@ -108,6 +108,22 @@ void UMS_UnitManager::DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
 	}
 }
 
+void UMS_UnitManager::DestroyAllUnits(EMS_UnitType aUnitType)
+{
+	TArray<TObjectPtr<UMS_UnitBase>> TargetUnits;
+	GetUnits(aUnitType, TargetUnits);
+	
+	for(const auto& TargetUnit : TargetUnits)
+	{
+		DestroyUnit_Internal(TargetUnit);
+
+		if(const uint32* Key = Units.FindKey(TargetUnit))
+		{
+			Units.Remove(*Key);
+		}
+	}
+}
+
 void UMS_UnitManager::DestroyUnit_Internal(TObjectPtr<UMS_UnitBase> aUnitBase)
 {
 	if (IsValid(aUnitBase))
