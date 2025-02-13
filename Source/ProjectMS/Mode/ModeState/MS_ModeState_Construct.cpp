@@ -109,21 +109,23 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
 	{
 		SelectProp(InteractableActor);
+
+		gCameraMng.RestrictCameraMovement(true);
 	}
 
 	if (IsValid(PreviewProp))
 	{
+		if(PreviewProp == InteractableActor)
+		{
+			gCameraMng.RestrictCameraMovement(true);
+		}
+		
 		PreviewProp->ShowArrangementWidget(false);
 		
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(false);
 		}
-	}
-
-	if(PreviewProp == InteractableActor)
-	{
-		gCameraMng.RestrictCameraMovement(true);
 	}
 }
 
