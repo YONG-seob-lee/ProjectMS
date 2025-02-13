@@ -48,7 +48,7 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 void UMS_ModeState_Construct::Begin()
 {
 	// Pressed Actor만 선택된 상태로 시작할 수 있도록
-	if (gInputMng.IsPointerPressed())
+	if (!gInputMng.IsPointerPressed())
 	{
 		UnselectProp();
 	}
