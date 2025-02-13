@@ -285,5 +285,5 @@ void UMS_RootWidget::SetBGMAnimation(EMS_LevelType aLevelType) const
 
 void UMS_RootWidget::ShowGeneralWidget(bool bShow) const
 {
-	CPP_GeneralWidget->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	CPP_GeneralWidget->SetRenderOpacity(bShow ? 1.f : 0.001f);
 }
