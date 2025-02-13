@@ -10,6 +10,7 @@
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
@@ -390,6 +391,29 @@ void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)
 		{
 			Zone.Value->OnAnyZoneOpened(this);
 		}
+		
+		SetZoneOpenableView();
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenableView()
+{
+	bool bZoneOpenableMode = gModeMng.GetCurrentModeStateId() == EMS_ModeState::Construct;
+
+	for (auto& Zone : Zones)
+	{
+		Zone.Value->SetZoneOpenMeshVisibility(bZoneOpenableMode);
+		Zone.Value->SetZoneOpenWidgetVisibility(bZoneOpenableMode);
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced)
+{
+	bool bZoneOpenableMode = gModeMng.GetCurrentModeStateId() == EMS_ModeState::Construct;
+
+	for (auto& Zone : Zones)
+	{
+		Zone.Value->SetZoneOpenWidgetVisibility(bZoneOpenableMode, bHiddenWidgetForced);
 	}
 }
 

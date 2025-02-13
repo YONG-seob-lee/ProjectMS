@@ -34,6 +34,10 @@ public:
 
 	// Hold, LongTouch, Click, Glide, Pinch 등의 액션은 Data 구조체 내에서 관리.
 	void HandleRotate();
+
+	bool IsPointerPressed() const;
+
+	
 private:
 	FMS_PointerData* CreatePointer(const FPointerEvent& aMouseEvent);
 	void DestroyPointer(FMS_PointerData* aPointerData);

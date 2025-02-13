@@ -4,6 +4,7 @@
 #include "MS_ModeState_Normal.h"
 
 #include "Components/CanvasPanelSlot.h"
+#include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"

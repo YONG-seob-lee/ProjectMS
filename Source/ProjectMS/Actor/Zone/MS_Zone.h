@@ -51,6 +51,10 @@ public:
 	void SetWallVisibilities(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
 
 	bool CanOpenZone();
+
+	void SetZoneOpenMeshVisibility(bool bIsZoneOpenableMode);
+	void SetZoneOpenWidgetVisibility(bool bIsZoneOpenableMode, bool bHiddenForced = false);
+
 	
 	// Getter
 	int32 GetZoneIndex() const { return ZoneIndex; }
@@ -85,7 +89,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* WallAttachedComponent;
 
-	// Widget Component
+	// Zone Open
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UStaticMeshComponent> ZoneOpenMeshComponent;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UWidgetComponent> ZoneOpenWidgetComponent;
 

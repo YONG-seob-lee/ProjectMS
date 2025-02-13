@@ -50,6 +50,8 @@ public:
 	FORCEINLINE	bool IsAllowInteractActor() const { return bAllowInteractActor;}
 	FORCEINLINE bool IsAllowGlide() const { return bAllowGlide; }
 
+	bool IsPointerPressed() const;
+
 private:
 	TSharedPtr<class IMS_TouchInputProcessor> TouchInputProcessor = nullptr;
 	

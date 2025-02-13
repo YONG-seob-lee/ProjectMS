@@ -137,6 +137,19 @@ void IMS_TouchInputProcessor::HandleRotate()
 	//FVector2D Pivot = FirstFinger->GetPointerDownPosition() - SecondFinger->GetPointerDownPosition();
 }
 
+bool IMS_TouchInputProcessor::IsPointerPressed() const
+{
+	for(const auto& PointerData : PointerDatas)
+	{
+		if(PointerData.Value->IsPointerPressed())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMouseEvent)
 {
 	FMS_PointerData* PointerData = new FMS_PointerData();

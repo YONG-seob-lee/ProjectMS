@@ -160,6 +160,11 @@ bool UMS_InputManager::GetHitResultUnderPointerPosition(ECollisionChannel TraceC
 #endif
 }
 
+bool UMS_InputManager::IsPointerPressed() const
+{
+	return TouchInputProcessor->IsPointerPressed();
+}
+
 UMS_InputManager* UMS_InputManager::GetInstance()
 {
 	return InputManager;

@@ -44,6 +44,9 @@ public:
 	
 	UFUNCTION()
 	void OnZoneOpened(AMS_Zone* aZone);
+
+	void SetZoneOpenableView();
+	void SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced = false);
 	
 	void ShowUnconstructableGrid(bool bShow);
 

@@ -41,12 +41,20 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 		WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
 	}
 
+	ZoneOpenMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ZoneOpenMeshComponent"));
+	if (ZoneOpenMeshComponent)
+	{
+		ZoneOpenMeshComponent->SetupAttachment(ZoneBoxComponent);
+
+		ZoneOpenMeshComponent->SetVisibility(false);
+	}
+
 	ZoneOpenWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ZoneOpendWidgetComponent"));
 	if (ZoneOpenWidgetComponent)
 	{
 		ZoneOpenWidgetComponent->SetupAttachment(ZoneBoxComponent);
 
-		ZoneOpenWidgetComponent->SetVisibility(true);
+		ZoneOpenWidgetComponent->SetVisibility(false);
 	}
 
 	// Cache
@@ -315,7 +323,8 @@ void AMS_Zone::OnZoneOpened()
 {
 	FloorAttachedComponent->SetVisibility(true, true);
 	WallAttachedComponent->SetVisibility(true, true);
-	ZoneOpenWidgetComponent->SetVisibility(false);
+
+	SetZoneOpenMeshVisibility(false);
 }
 
 void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
@@ -392,6 +401,22 @@ bool AMS_Zone::CanOpenZone()
 		}
 
 		return false;
+	}
+}
+
+void AMS_Zone::SetZoneOpenMeshVisibility(bool bIsZoneOpenableMode)
+{
+	if (ZoneOpenMeshComponent)
+	{
+		ZoneOpenMeshComponent->SetVisibility(bIsZoneOpenableMode && CanOpenZone());
+	}
+}
+
+void AMS_Zone::SetZoneOpenWidgetVisibility(bool bIsZoneOpenableMode, bool bHiddenForced /*= false*/)
+{
+	if (ZoneOpenWidgetComponent)
+	{
+		ZoneOpenWidgetComponent->SetVisibility(!bHiddenForced && bIsZoneOpenableMode && CanOpenZone());
 	}
 }
 

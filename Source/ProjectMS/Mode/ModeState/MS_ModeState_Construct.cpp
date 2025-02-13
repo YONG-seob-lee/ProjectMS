@@ -47,14 +47,23 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 
 void UMS_ModeState_Construct::Begin()
 {
+	// Pressed Actor만 선택된 상태로 시작할 수 있도록
+	if (gInputMng.IsPointerPressed())
+	{
+		UnselectProp();
+	}
+	
 	// Delegate
 	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
 	
-	// ShowUnconstructableGrid
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
+		// ShowUnconstructableGrid
 		LevelScriptActor->ShowUnconstructableGrid(true);
+
+		// Zone Openable
+		LevelScriptActor->SetZoneOpenableView();
 	}
 
 	// SelectProp
@@ -76,10 +85,13 @@ void UMS_ModeState_Construct::Exit()
 	
 	// SelectProp
 	UnselectProp();
-
-	// ShowUnconstructableGrid
+	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
+		// Zone Openable
+		LevelScriptActor->SetZoneOpenableView();
+		
+		// ShowUnconstructableGrid
 		LevelScriptActor->ShowUnconstructableGrid(false);
 	}
 
@@ -107,6 +119,11 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 		}
 		
 		PreviewProp->ShowArrangementWidget(false);
+		
+		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+		{
+			LevelScriptActor->SetZoneOpenWidgetVisibility(false);
+		}
 	}
 }
 
@@ -117,6 +134,11 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 	if (IsValid(PreviewProp))
 	{
 		PreviewProp->ShowArrangementWidget(true);
+		
+		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+		{
+			LevelScriptActor->SetZoneOpenWidgetVisibility(true);
+		}
 	}
 
 	if (IsValid(GridBasedMoveHelper))
@@ -501,6 +523,11 @@ void UMS_ModeState_Construct::CancelPreviewProp()
 	}
 
 	PreviewProp->ShowArrangementWidget(false);
+	
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		LevelScriptActor->SetZoneOpenWidgetVisibility(false);
+	}
 	
 	if (PreviewProp->GetLinkedProp() != nullptr)
 	{
