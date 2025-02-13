@@ -49,7 +49,11 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
 
-	ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
+	CachedSlate = aSlateApp.GetUserFocusedWidget(0);
+	if(CachedSlate)
+	{
+		ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
+	}
 
 	NewPointerData->PlayParticle();
 	
@@ -88,7 +92,8 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	TargetPointerData->SetPointerUpTimestamp(FDateTime::UtcNow().GetTicks());
 	TargetPointerData->SetPointerUpPosition(gInputMng.AcquirePointerPositionOnViewport());
 
-	if(TargetPointerData->IsGliding() == false)
+	const TSharedPtr<SWidget> UpCachedSlate = aSlateApp.GetUserFocusedWidget(0);
+	if(TargetPointerData->IsGliding() == false && CachedSlate == UpCachedSlate)
 	{
 		ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up);
 	}

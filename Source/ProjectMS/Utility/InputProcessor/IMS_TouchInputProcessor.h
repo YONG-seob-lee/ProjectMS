@@ -50,4 +50,6 @@ private:
 	TMap<int32, FMS_PointerData*> PointerDatas;
 	
 	TQueue<int32> TouchEffectQueue;
+	
+	TSharedPtr<SWidget> CachedSlate;
 };
