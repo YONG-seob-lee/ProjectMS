@@ -39,12 +39,15 @@ void AMS_VehicleCharacter::Tick(float DeltaTime)
 
 	if(MovementComponent)
 	{
-		const FVector CurrentVehicleLocation = GetActorLocation();
-		const FVector TangentLocation = NearestSpline->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
-		const FRotator MoveNextRotation = TangentLocation.Rotation();
-		const FVector ClosetLocation = NearestSpline->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
-		SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * VehicleVelocity);
-		SetActorRotation(MoveNextRotation);
+		if (NearestSpline != nullptr)
+		{
+			const FVector CurrentVehicleLocation = GetActorLocation();
+			const FVector TangentLocation = NearestSpline->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
+			const FRotator MoveNextRotation = TangentLocation.Rotation();
+			const FVector ClosetLocation = NearestSpline->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
+			SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * VehicleVelocity);
+			SetActorRotation(MoveNextRotation);
+		}
 	}
 }
 
