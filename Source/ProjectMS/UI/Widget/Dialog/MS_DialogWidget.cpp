@@ -74,6 +74,8 @@ void UMS_DialogWidget::ProcessTyping()
 {
 	if(DialogParameter.IsFinishType())
 	{
+		FinishedTyping();
+		GetWorld()->GetTimerManager().ClearTimer(DialogTextTimerHandler);
 		return;
 	}
 	

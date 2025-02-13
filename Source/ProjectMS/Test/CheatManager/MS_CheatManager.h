@@ -52,6 +52,6 @@ public:
 
 #if WITH_EDITOR
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
-	void RequestDialog(FString DialogType, float TypeSpeed = 0.1f);
+	void RequestDialog(FString DialogType = TEXT("흰오리 : 안녕하세요 디디마켓 홍보대사 \'흰오리\' 인사드립니다. 오늘 다양한 상품을 판매 하고 있사오니 많이들 찾아와주세요. 갑사합니다~!"), float TypeSpeed = 0.1f);
 #endif
 };
