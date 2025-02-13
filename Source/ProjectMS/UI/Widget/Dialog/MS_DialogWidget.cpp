@@ -7,6 +7,7 @@
 #include "Button/MS_Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
+#include "Widget/System/Toturial/MS_DescriptionWidget.h"
 
 FMS_DialogParameter::FMS_DialogParameter(const FString& aTypeText, float aTypeSpeed, TFunction<void()> aFunc)
 {
@@ -64,10 +65,14 @@ void UMS_DialogWidget::OnAnimFinished(const FName& aAnimName)
 
 	if(aAnimName == DialogAnimation::Start)
 	{
-		MS_LOG(TEXT("Start Dialog Typing."));
-		DialogParameter.SetDialogType(EMS_DialogType::Process);
-		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
-		ProcessTyping();
+		CPP_Test->Start(TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
+		CPP_Test->SetOnFinishedTutorialFunc([this]()
+		{
+			MS_LOG(TEXT("Start Dialog Typing."));
+			DialogParameter.SetDialogType(EMS_DialogType::Process);
+			CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
+			ProcessTyping();		
+		});
 	}
 	else if(aAnimName == DialogAnimation::Close)
 	{
