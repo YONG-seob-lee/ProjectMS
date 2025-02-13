@@ -235,7 +235,7 @@ void UMS_RootWidget::RequestPassTimer() const
 
 void UMS_RootWidget::RequestDialog(const FString& aDialogType, float aTypeSpeed) const
 {
-	CPP_MessagePanel->SetVisibility(ESlateVisibility::HitTestInvisible);
+	CPP_MessagePanel->SetVisibility(ESlateVisibility::Visible);
 		
 	CPP_DialogWidget->RequestDialog(FMS_DialogParameter(aDialogType, aTypeSpeed, [this](){CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);}));
 }
