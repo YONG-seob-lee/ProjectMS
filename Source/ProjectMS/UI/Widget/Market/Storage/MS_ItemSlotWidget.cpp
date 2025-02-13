@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SlotWidget.h"
+#include "MS_ItemSlotWidget.h"
 
 #include "MS_Define.h"
 #include "Blueprint/DragDropOperation.h"
@@ -9,12 +9,12 @@
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/MS_ItemElementWidget.h"
 
-void UMS_SlotWidget::NativeConstruct()
+void UMS_ItemSlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
 
-bool UMS_SlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+bool UMS_ItemSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	if(const TObjectPtr<UMS_ItemElementWidget> ItemElementWidget = Cast<UMS_ItemElementWidget>(InOperation->DefaultDragVisual))
 	{
@@ -28,7 +28,7 @@ bool UMS_SlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEv
 	return false;
 }
 
-void UMS_SlotWidget::SetSlot(int32 aItemId) const
+void UMS_ItemSlotWidget::SetSlot(int32 aItemId) const
 {
 	if(aItemId == INDEX_NONE)
 	{

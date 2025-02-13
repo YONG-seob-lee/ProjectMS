@@ -6,7 +6,7 @@
 #include "Components/TextBlock.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "ElementData/MS_StorageSlotElementData.h"
-#include "Widget/Market/Storage/MS_SlotWidget.h"
+#include "Widget/Market/Storage/MS_ItemSlotWidget.h"
 #include "Widget/System/MS_CountWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -17,18 +17,20 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 	if(const UMS_StorageSlotElementData* SlotElementData = Cast<UMS_StorageSlotElementData>(aListItemObject))
 	{
 		SlotIndex = SlotElementData->GetSlotIndex();
-		ItemId = SlotElementData->GetItemId();
+		SlotData = SlotElementData->GetSlotData();
 		const int32 ShelfCount = SlotElementData->GetShelfCount();
 		
 		if(static_cast<EMS_ZoneType>(SlotElementData->GetSlotType()) == EMS_ZoneType::Display)
 		{
 			CPP_TextSwitcher->SetActiveWidgetIndex(0);
 			CPP_CountWidget->SetCount(SlotElementData->GetMolecular(), SlotElementData->GetDenominator());
+
+			CPP_ItemSlotWidget->SetSlot(SlotData.RequestItemTableId);
 		}
 		else
 		{
 			CPP_TextSwitcher->SetActiveWidgetIndex(1);
-			if(ItemId == INDEX_NONE)
+			if(SlotData.CurrentItemTableId == INDEX_NONE)
 			{
 				CPP_RemainCount->SetVisibility(ESlateVisibility::Collapsed);
 			}
@@ -37,9 +39,9 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 				CPP_RemainCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 				CPP_RemainCount->SetText(FText::FromString(FString::Format(TEXT("{0} 개"), {ShelfCount})));
 			}
+
+			CPP_ItemSlotWidget->SetSlot(SlotData.CurrentItemTableId);
 		}
-		
-		CPP_SlotWidget->SetSlot(ItemId);
 	}
 }
 
@@ -58,7 +60,7 @@ FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& In
 		}
 		else
 		{
-			StorageSlotElementData->OnClickShelfSlotDelegate.Broadcast(ItemId);
+			StorageSlotElementData->OnClickShelfSlotDelegate.Broadcast(SlotData.CurrentItemTableId);
 		}
 	}
 	

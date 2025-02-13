@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_ShelfStatus.generated.h"
+#include "MS_SelectRequestedItemWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_ShelfStatus : public UMS_Widget
+class PROJECTMS_API UMS_SelectRequestedItemWidget : public UMS_Widget
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;

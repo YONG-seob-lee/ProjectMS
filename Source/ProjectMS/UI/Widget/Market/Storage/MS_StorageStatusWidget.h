@@ -9,7 +9,7 @@
 /**
  * 
  */
-DECLARE_DELEGATE_TwoParams(FMS_OnClickShelfSlotDelegate, int32, int32);
+DECLARE_DELEGATE_TwoParams(FMS_OnClickRequestSlotDelegate, int32, int32);
 
 UCLASS()
 class PROJECTMS_API UMS_StorageStatusWidget : public UMS_Widget
@@ -27,7 +27,7 @@ private:
 	void OnClickedCloseButton();
 
 public:
-	void OnChangeSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
 	FORCEINLINE void SetOwnerUnit(TWeakObjectPtr<class UMS_UnitBase> aOwnerUnit);
 
@@ -44,12 +44,12 @@ protected:
 	TObjectPtr<class UMS_TileView> CPP_TileView = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ShelfStatus> CPP_ShelfStatusWidget = nullptr;
+	TObjectPtr<class UMS_SelectRequestedItemWidget> CPP_SelectRequestedItemWidget = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
 
 public:
 	// Delegate
-	FMS_OnClickShelfSlotDelegate OnClickShelfSlotDelegate;
+	FMS_OnClickRequestSlotDelegate OnClickRequestSlotDelegate;
 };

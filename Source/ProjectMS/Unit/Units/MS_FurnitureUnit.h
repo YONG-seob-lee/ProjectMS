@@ -38,14 +38,15 @@ public:
 	void AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData = false);
 	void SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData = false);
 
+	UFUNCTION()
+	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bChangePlayerData = true, bool bSavePlayerData = false);
+
+	UFUNCTION()
+	virtual void TakeItemsImmediately(int32 aSlotId, int32 aItemId, bool bChangePlayerData = true, bool bSavePlayerData = true);
+	
 private:
 	void OnChangeRequestSlotDatas();
 	void OnChangeCurrentSlotDatas();
-
-public:
-	UFUNCTION()
-	virtual void TakeItemsImmediately(int32 aSlotId, int32 aItemId, bool bChangePlayerData = true, bool bSavePlayerData = true);
-
 	
 private:
 	struct FMS_StorageData* FurnitureData = nullptr;

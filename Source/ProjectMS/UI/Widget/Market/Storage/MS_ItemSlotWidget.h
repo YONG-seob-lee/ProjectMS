@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_SlotWidget.generated.h"
+#include "MS_ItemSlotWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_SlotWidget : public UMS_Widget
+class PROJECTMS_API UMS_ItemSlotWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:

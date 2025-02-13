@@ -117,24 +117,33 @@ void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bo
 	}
 }
 
-void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
+void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChangePlayerData, bool bSavePlayerData /*= false*/)
 {
-	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
-	MS_ENSURE(IsValid(Furniture));
+	if (AMS_PlayerState* PlayerState = GetPlayerState())
+	{
+		if (!SlotDatas.IsValidIndex(aSlotId))
+		{
+			MS_ENSURE(false);
+			return;
+		}
 
-	Furniture->OnChangeRequestSlotDatas(SlotDatas);
-}
+		if (ZoneType != EMS_ZoneType::Display && ZoneType != EMS_ZoneType::Shelf)
+		{
+			return;
+		}
+		
+		SlotDatas[aSlotId].RequestItemTableId = aItemId;
+		OnChangeRequestSlotDatas();
 
-void UMS_FurnitureUnit::OnChangeCurrentSlotDatas()
-{
-	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
-	MS_ENSURE(IsValid(Furniture));
-
-	Furniture->OnChangeCurrentSlotDatas(SlotDatas);
+		if (bChangePlayerData)
+		{
+			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+		}
+	}
 }
 
 void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
-	bool bChangePlayerData /*= true*/, bool bSavePlayerData /*= true*/)
+                                             bool bChangePlayerData /*= true*/, bool bSavePlayerData /*= true*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -227,4 +236,20 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 			PlayerState->SavePlayerData();
 		}
 	}
+}
+
+void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
+{
+	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
+	MS_ENSURE(IsValid(Furniture));
+
+	Furniture->OnChangeRequestSlotDatas(SlotDatas);
+}
+
+void UMS_FurnitureUnit::OnChangeCurrentSlotDatas()
+{
+	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
+	MS_ENSURE(IsValid(Furniture));
+
+	Furniture->OnChangeCurrentSlotDatas(SlotDatas);
 }

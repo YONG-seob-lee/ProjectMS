@@ -12,6 +12,17 @@ AMS_StaffAICharacter::AMS_StaffAICharacter()
 void AMS_StaffAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	// Component
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+
+	// Physics off
+	for (UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents)
+	{
+		PrimitiveComponent->SetSimulatePhysics(false);
+		PrimitiveComponent->SetEnableGravity(false);
+	}
 }
 
 void AMS_StaffAICharacter::BeginPlay()

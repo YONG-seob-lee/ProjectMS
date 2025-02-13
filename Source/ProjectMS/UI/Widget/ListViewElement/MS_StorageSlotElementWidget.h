@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/IUserObjectListEntry.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "Widget/MS_Widget.h"
 #include "MS_StorageSlotElementWidget.generated.h"
 
@@ -20,11 +21,13 @@ public:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override; 
 	
 private:
+	bool bIsSlotEnabled = true;
+	
 	int32 SlotIndex = 0;
-	int32 ItemId = INDEX_NONE;
+	FMS_SlotData SlotData;
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_SlotWidget> CPP_SlotWidget = nullptr;
+	TObjectPtr<class UMS_ItemSlotWidget> CPP_ItemSlotWidget = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_WidgetSwitcher> CPP_TextSwitcher = nullptr;

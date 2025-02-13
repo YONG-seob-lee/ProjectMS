@@ -4,11 +4,10 @@
 #include "MS_StorageStatusWidget.h"
 
 #include "MS_Define.h"
-#include "MS_ShelfStatus.h"
+#include "MS_SelectRequestedItemWidget.h"
 #include "MS_UnitBase.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Prop/Furniture/Storage/MS_Storage.h"
 #include "Widget/ListViewElement/ElementData/MS_StorageSlotElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
@@ -17,11 +16,12 @@ void UMS_StorageStatusWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	// Click Shelf Slot
-	CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Hidden);
-	CPP_ShelfStatusWidget->SetOnClickedShelfSlotFunc([this](int32 aDisplayIndex, int32 aItemId)
+	CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Hidden);
+	CPP_SelectRequestedItemWidget->SetOnClickedShelfSlotFunc([this](int32 aDisplayIndex, int32 aItemId)
 	{
-		bool IsBound = OnClickShelfSlotDelegate.ExecuteIfBound(aDisplayIndex, aItemId);
-		
+		bool IsBound = OnClickRequestSlotDelegate.ExecuteIfBound(aDisplayIndex, aItemId);
+
+		/*
 		if(StorageItemElementDatas.IsValidIndex(aDisplayIndex))
 		{
 			StorageItemElementDatas[aDisplayIndex]->SetItemId(aItemId);
@@ -30,6 +30,7 @@ void UMS_StorageStatusWidget::NativeConstruct()
 			CPP_TileView->RegenerateAllEntries();
 			CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
+		*/
 	});
 	
 	CPP_ConfirmButton->GetOnClickedDelegate().AddUObject(this, &UMS_StorageStatusWidget::OnClickedConfirmButton);
@@ -39,7 +40,7 @@ void UMS_StorageStatusWidget::NativeConstruct()
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
 		Data->SetSlotType(static_cast<int32>(EMS_ZoneType::Display));
 		Data->SetSlotIndex(i);
-		Data->SetItemId(INDEX_NONE);
+		Data->SetSlotData(FMS_SlotData());
 		Data->SetMolecular(0);
 		Data->SetDenominator(0);
 		Data->OnClickDisplaySlotDelegate.AddUObject(this, &UMS_StorageStatusWidget::OnClickedStorageSlotButton);
@@ -69,12 +70,12 @@ void UMS_StorageStatusWidget::OnClickedConfirmButton()
 
 void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 {
-	CPP_ShelfStatusWidget->SetDisplaySlotIndex(aSlotIndex);
+	CPP_SelectRequestedItemWidget->SetDisplaySlotIndex(aSlotIndex);
 	
-	if (!CPP_ShelfStatusWidget->IsVisible())
+	if (!CPP_SelectRequestedItemWidget->IsVisible())
 	{
-		CPP_ShelfStatusWidget->SetVisibility(ESlateVisibility::Visible);
-		CPP_ShelfStatusWidget->SetTileView();	
+		CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Visible);
+		CPP_SelectRequestedItemWidget->SetTileView();	
 	}
 }
 
@@ -83,20 +84,35 @@ void UMS_StorageStatusWidget::OnClickedCloseButton()
 	gWidgetMng.DestroyWidget(this);
 }
 
-void UMS_StorageStatusWidget::OnChangeSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void UMS_StorageStatusWidget::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	if (CPP_ShelfStatusWidget->IsVisible())
+	for (int32 i = 0; i < StorageItemElementDatas.Num(); ++i)
 	{
-		CPP_ShelfStatusWidget->SetTileView();
+		MS_ENSURE(IsValid(StorageItemElementDatas[i]));
+
+		if (aSlotDatas.IsValidIndex(i))
+		{
+			StorageItemElementDatas[i]->SetIsSlotEnable(true);
+			StorageItemElementDatas[i]->SetSlotData(aSlotDatas[i]);
+		}
+		else
+		{
+			StorageItemElementDatas[i]->SetIsSlotEnable(false);
+			StorageItemElementDatas[i]->SetSlotData(FMS_SlotData());
+		}
 	}
+
+	CPP_TileView->SetListItems(StorageItemElementDatas);
+	CPP_TileView->RegenerateAllEntries();
+	CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMS_StorageStatusWidget::SetOwnerUnit(TWeakObjectPtr<UMS_UnitBase> aOwnerUnit)
 {
 	OwnerUnit = aOwnerUnit;
 
-	if (CPP_ShelfStatusWidget)
+	if (CPP_SelectRequestedItemWidget)
 	{
-		CPP_ShelfStatusWidget->SetOwnerUnit(aOwnerUnit);
+		CPP_SelectRequestedItemWidget->SetOwnerUnit(aOwnerUnit);
 	}
 }
