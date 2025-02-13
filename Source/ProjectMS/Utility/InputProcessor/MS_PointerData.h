@@ -28,6 +28,8 @@ public:
 	
 	FORCEINLINE void SetPointerPressFlag(bool bIsPressed) { IsPointerPressFlag = bIsPressed; }
 	FORCEINLINE bool IsPointerPressed() const { return IsPointerPressFlag; }
+
+	FORCEINLINE bool IsGliding() const { return PointerGlidePosition != PointerParameter::DefaultVector; }
 	
 	FORCEINLINE void SetMouseRightButtonPressFlag(bool bIsRightPressed) { IsMouseRightButtonPressFlag = bIsRightPressed; }
 	

@@ -48,8 +48,11 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 {
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
-	
-	ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
+
+	if(NewPointerData->IsGliding())
+	{
+		ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down);
+	}
 
 	NewPointerData->PlayParticle();
 	
@@ -88,7 +91,10 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	TargetPointerData->SetPointerUpTimestamp(FDateTime::UtcNow().GetTicks());
 	TargetPointerData->SetPointerUpPosition(gInputMng.AcquirePointerPositionOnViewport());
 
-	ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up);
+	if(TargetPointerData->IsGliding() == false)
+	{
+		ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up);
+	}
 
 	TargetPointerData->ResetElapsedHoldTime();
 	TargetPointerData->CalculateIntervalTime();
