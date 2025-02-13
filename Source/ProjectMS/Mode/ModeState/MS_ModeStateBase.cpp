@@ -36,6 +36,11 @@ void UMS_ModeStateBase::OnInputPointerUpEvent(FVector2D aPointerUpPosition, cons
 {
 }
 
+void UMS_ModeStateBase::OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition,
+	const FHitResult& aInteractableHitResult)
+{
+}
+
 void UMS_ModeStateBase::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
 	const FVector2D& aPositionDeltaTrend)
 {

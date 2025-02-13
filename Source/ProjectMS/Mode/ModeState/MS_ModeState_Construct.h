@@ -34,6 +34,8 @@ public:
 	
 	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
 	
+	virtual void OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
+	
 	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 	
 	virtual void OnInputPointerGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;

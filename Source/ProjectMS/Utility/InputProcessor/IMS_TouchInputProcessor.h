@@ -43,7 +43,7 @@ private:
 	void DestroyPointer(FMS_PointerData* aPointerData);
 	FMS_PointerData* GetPointerData(uint32 aPointerIndex);
 	
-	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType);
+	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType, bool bIsGliding);
 
 	int32 FingerCount = 0;
 

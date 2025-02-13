@@ -150,6 +150,15 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 	gCameraMng.RestrictCameraMovement(false);
 }
 
+void UMS_ModeState_Construct::OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition,
+	const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerGlidingUpEvent(aPointerUpPosition, aInteractableHitResult);
+
+	// Construct Mode에서는 Gliding 중 Up 했을 때도 Up이벤트가 일어나도록
+	OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+}
+
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
 	const FVector2D& aPositionDeltaTrend)
 {
