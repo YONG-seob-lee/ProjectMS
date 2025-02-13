@@ -109,8 +109,6 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
 	{
 		SelectProp(InteractableActor);
-		
-		gCameraMng.RestrictCameraMovement(true);
 	}
 
 	if (IsValid(PreviewProp))
@@ -121,6 +119,11 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(false);
 		}
+	}
+
+	if(PreviewProp == InteractableActor)
+	{
+		gCameraMng.RestrictCameraMovement(true);
 	}
 }
 
@@ -193,11 +196,14 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 		// Position Offset
 		if (GridBasedMoveHelper->GetTargetActor() == nullptr)
 		{
-			GridBasedMoveHelper->SetPositionOffset(PreviewProp);
+			if(gCameraMng.IsRestrictCameraMovement())
+			{
+				GridBasedMoveHelper->SetPositionOffset(PreviewProp);
+			}
 		}
 		else
 		{
-			if(gCameraMng.GetIsRestrictCameraMovement() == false)
+			if(gCameraMng.IsRestrictCameraMovement() == false)
 			{
 				return;
 			}

@@ -41,7 +41,7 @@ public:
 	void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect) const;
 	
 	FORCEINLINE void RestrictCameraMovement(bool aFlag) { bRestrictCameraFlag = aFlag; }
-	FORCEINLINE bool GetIsRestrictCameraMovement() const { return bRestrictCameraFlag; }
+	FORCEINLINE bool IsRestrictCameraMovement() const { return bRestrictCameraFlag; }
 	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
 	FORCEINLINE TWeakObjectPtr<class AMS_ViewCamera> GetCurrentCamera() const { return CurrentCamera; }
 
