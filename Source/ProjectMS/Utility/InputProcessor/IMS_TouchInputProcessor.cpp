@@ -227,7 +227,7 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	}
 	else if(aType == EMS_TouchActionType::Up)
 	{
-		if (bIsGliding)
+		if (!bIsGliding)
 		{
 			if (IsValid(CurrentModeState))
 			{
