@@ -50,15 +50,6 @@ enum class EMS_ItemSlotUIType : uint8
 	Requestable
 };
 
-// 임시
-struct FPacketItemDatas
-{
-public:
-	int32 ItemId = 0;
-	FVector Vector;
-	FRotator Rotator;
-};
-
 UENUM()
 enum class EMS_ItemType : uint8
 {

@@ -33,16 +33,6 @@ void UMS_ModeNameWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerMo
 			ModeStateName = FString("Construct");
 			break;
 		}
-	case EMS_ModeState::StaffManagement:
-		{
-			ModeStateName = FString("Staff");
-			break;
-		}
-	case(EMS_ModeState::CustomerManagement):
-		{
-			ModeStateName = FString("Customer");
-			break;		
-		}
 	default:
 		{
 			ModeStateName = FString("Error");

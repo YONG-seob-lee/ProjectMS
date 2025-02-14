@@ -144,8 +144,6 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 
 	// 패킷으로 데이터를 받음
 	
-	TMap<int32, FPacketItemDatas*> Items;
-
 	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
 	{
 		FMS_ModalParameter ModalParameter;
