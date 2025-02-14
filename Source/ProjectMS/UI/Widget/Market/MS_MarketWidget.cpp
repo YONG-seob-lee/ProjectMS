@@ -20,6 +20,15 @@ void UMS_MarketWidget::NativeConstruct()
 	SetActiveModeSwitcherIndex(EMS_ModeState::Normal);
 
 	CPP_ExpanderWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	if(gModeMng.GetCurrentModeStateId() == EMS_ModeState::RunMarket)
+	{
+		SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else
+	{
+		SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UMS_MarketWidget::NativeDestruct()
@@ -29,6 +38,14 @@ void UMS_MarketWidget::NativeDestruct()
 
 void UMS_MarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
+	if(aModeState == EMS_ModeState::RunMarket)
+	{
+		SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else if(aModeState == EMS_ModeState::Construct)
+	{
+		SetVisibility(ESlateVisibility::Visible);
+	}
 	SetActiveModeSwitcherIndex(aModeState);
 }
 

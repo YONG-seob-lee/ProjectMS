@@ -20,6 +20,7 @@ enum class EMS_ModeState : uint8
 {
 	Normal = 0,
 	Construct = 1,
-	StaffManagement = 2,
-	CustomerManagement = 3,
+	RunMarket = 2,
+	StaffManagement = 3,
+	CustomerManagement = 4,
 };
