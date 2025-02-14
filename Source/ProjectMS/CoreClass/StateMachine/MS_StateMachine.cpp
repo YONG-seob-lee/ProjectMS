@@ -17,9 +17,11 @@ void UMS_StateMachine::Destroy()
 
 void UMS_StateMachine::Tick(float aDeltaTime)
 {
-	for(const auto& State : EntireState)
+	TObjectPtr<UMS_StateBase> CurrentState = GetCurrentState();
+	
+	if (IsValid(CurrentState))
 	{
-		State.Value->Tick(aDeltaTime);
+		CurrentState->Tick(aDeltaTime);
 	}
 }
 
