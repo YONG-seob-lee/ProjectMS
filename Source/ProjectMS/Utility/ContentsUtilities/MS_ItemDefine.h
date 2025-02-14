@@ -41,6 +41,15 @@ public:
 	int32 CurrentItemCount;
 };
 
+UENUM()
+enum class EMS_ItemSlotUIType : uint8
+{
+	None,
+	StorageRequestStatus,
+	StorageCurrentStatus,
+	Requestable
+};
+
 // 임시
 struct FPacketItemDatas
 {

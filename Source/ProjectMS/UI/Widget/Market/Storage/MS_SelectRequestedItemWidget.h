@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_SelectRequestedItemWidget.generated.h"
 
 /**
@@ -19,16 +21,16 @@ public:
 	virtual void NativeDestruct() override;
 
 	FORCEINLINE void SetOnClickedShelfSlotFunc(const TFunction<void(int32, int32)>& aFunc) { OnClickedShelfSlotCallback = aFunc; }
-	FORCEINLINE void SetOwnerUnit(TWeakObjectPtr<class UMS_UnitBase> aOwnerUnit);
+	FORCEINLINE void SetOwnerZoneType(EMS_ZoneType aOwnerZoneType) { OwnerZoneType = aOwnerZoneType; }
 	FORCEINLINE void SetDisplaySlotIndex(int32 aDisplaySlotIndex) { DisplaySlotIndex = aDisplaySlotIndex; }
 	void SetTileView();
 
 private:
 	void OnClickedShelfSlotButton(int32 aItemId);
 
-
-	TWeakObjectPtr<class UMS_UnitBase> OwnerUnit;
 	
+	EMS_ZoneType OwnerZoneType = EMS_ZoneType::None;
+
 	int32 DisplaySlotIndex = INDEX_NONE;
 	
 	UPROPERTY(Meta = (BindWidget))

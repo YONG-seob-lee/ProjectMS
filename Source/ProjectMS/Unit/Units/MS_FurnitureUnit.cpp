@@ -20,9 +20,7 @@ void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType
 	FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableId);
 	MS_ENSURE(FurnitureData != nullptr);
 	
-	ZoneType = static_cast<EMS_ZoneType>(FurnitureData->ZoneType);
-
-	SlotCount = FurnitureData->SlotCount;
+	int32 SlotCount = FurnitureData->SlotCount;
 	for (int32 i = 0; i < SlotCount; ++i)
 	{
 		SlotDatas.Emplace(FMS_SlotData());
@@ -47,6 +45,16 @@ void UMS_FurnitureUnit::Tick(float aDeltaTime)
 int32 UMS_FurnitureUnit::GetBlueprintPathId() const
 {
 	return FurnitureData->PathFile;
+}
+
+EMS_ZoneType UMS_FurnitureUnit::GetZoneType() const
+{
+	return static_cast<EMS_ZoneType>(FurnitureData->ZoneType);
+}
+
+int32 UMS_FurnitureUnit::GetSlotCount() const
+{
+	return FurnitureData->SlotCount;
 }
 
 FIntVector2 UMS_FurnitureUnit::GetGridPosition() const
@@ -127,7 +135,7 @@ void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChang
 			return;
 		}
 
-		if (ZoneType != EMS_ZoneType::Display && ZoneType != EMS_ZoneType::Shelf)
+		if (GetZoneType() != EMS_ZoneType::Display && GetZoneType() != EMS_ZoneType::Shelf)
 		{
 			return;
 		}
@@ -153,7 +161,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 			return;
 		}
 
-		if (ZoneType != EMS_ZoneType::Display && ZoneType != EMS_ZoneType::Shelf)
+		if (GetZoneType() != EMS_ZoneType::Display && GetZoneType() != EMS_ZoneType::Shelf)
 		{
 			return;
 		}
@@ -170,7 +178,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 
 		// 채울 개수 구하기
 		int32 NewItemCount = 0;
-		if (ZoneType == EMS_ZoneType::Display)
+		if (GetZoneType() == EMS_ZoneType::Display)
 		{
 			NewItemCount = FMath::Min(gItemMng.GetNoneDisplayItemCount(aItemId), ItemData->Slot100x100MaxCount);
 		}
@@ -180,7 +188,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 		}
 		
 		// 창고에서 빼기
-		if (ZoneType == EMS_ZoneType::Display)
+		if (GetZoneType() == EMS_ZoneType::Display)
 		{
 			int32 TotalSubtractCount = NewItemCount;
 	

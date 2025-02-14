@@ -22,12 +22,13 @@ public:
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 	
-	virtual int32 GetBlueprintPathId() const override;
+	FORCEINLINE virtual int32 GetBlueprintPathId() const override;
 
 	// Property :: Getter
-	EMS_ZoneType GetZoneType() const { return ZoneType; }
-	
-	void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+	FORCEINLINE EMS_ZoneType GetZoneType() const;
+
+	FORCEINLINE int32 GetSlotCount() const;
+	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
 
 	FIntVector2 GetGridPosition() const;
 
@@ -52,12 +53,6 @@ private:
 	struct FMS_StorageData* FurnitureData = nullptr;
 
 	// Property
-	UPROPERTY()
-	EMS_ZoneType ZoneType;
-
-	UPROPERTY()
-	int32 SlotCount;
-	
 	UPROPERTY()
 	TArray<FMS_SlotData> SlotDatas;
 };

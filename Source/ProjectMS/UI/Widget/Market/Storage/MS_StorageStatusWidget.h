@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_StorageStatusWidget.generated.h"
 
+enum class EMS_ZoneType : uint8;
 /**
  * 
  */
@@ -27,13 +30,15 @@ private:
 	void OnClickedCloseButton();
 
 public:
-	void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
-
-	FORCEINLINE void SetOwnerUnit(TWeakObjectPtr<class UMS_UnitBase> aOwnerUnit);
+	void InitializeStorageDatas(EMS_ZoneType aOwnerZoneType, int32 aSlotCount);
+	
+	void UpdateSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
 	
 protected:
-	TWeakObjectPtr<class UMS_UnitBase> OwnerUnit;
+	EMS_ZoneType OwnerZoneType = EMS_ZoneType::None;
+
+	int32 SlotCount = 0;
 	
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;
 

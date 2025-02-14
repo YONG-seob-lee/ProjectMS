@@ -4,11 +4,13 @@
 #include "MS_StorageSlotElementWidget.h"
 
 #include "Components/TextBlock.h"
-#include "ContentsUtilities/MS_LevelDefine.h"
 #include "ElementData/MS_StorageSlotElementData.h"
+#include "Manager_Both/MS_TableManager.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Widget/Market/Storage/MS_ItemSlotWidget.h"
 #include "Widget/System/MS_CountWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
+
 
 void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {
@@ -16,31 +18,22 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 
 	if(const UMS_StorageSlotElementData* SlotElementData = Cast<UMS_StorageSlotElementData>(aListItemObject))
 	{
+		OwnerZoneType = SlotElementData->GetOwnerZoneType();
+		SlotUIType = SlotElementData->GetSlotUIType();
 		SlotIndex = SlotElementData->GetSlotIndex();
 		SlotData = SlotElementData->GetSlotData();
-		const int32 ShelfCount = SlotElementData->GetShelfCount();
 		
-		if(static_cast<EMS_ZoneType>(SlotElementData->GetSlotType()) == EMS_ZoneType::Display)
+		if (SlotElementData->GetSlotUIType() == EMS_ItemSlotUIType::StorageRequestStatus)
 		{
-			CPP_TextSwitcher->SetActiveWidgetIndex(0);
-			CPP_CountWidget->SetCount(SlotElementData->GetMolecular(), SlotElementData->GetDenominator());
-
-			CPP_ItemSlotWidget->SetSlot(SlotData.RequestItemTableId);
+			UpdateWhenStorageRequestStatus();
+		}
+		else if (SlotElementData->GetSlotUIType() == EMS_ItemSlotUIType::StorageCurrentStatus)
+		{
+			UpdateWhenStorageCurrentStatus();
 		}
 		else
 		{
-			CPP_TextSwitcher->SetActiveWidgetIndex(1);
-			if(SlotData.CurrentItemTableId == INDEX_NONE)
-			{
-				CPP_RemainCount->SetVisibility(ESlateVisibility::Collapsed);
-			}
-			else
-			{
-				CPP_RemainCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-				CPP_RemainCount->SetText(FText::FromString(FString::Format(TEXT("{0} 개"), {ShelfCount})));
-			}
-
-			CPP_ItemSlotWidget->SetSlot(SlotData.CurrentItemTableId);
+			UpdateWhenRequestable();
 		}
 	}
 }
@@ -54,7 +47,7 @@ FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& In
 {
 	if(const TObjectPtr<UMS_StorageSlotElementData> StorageSlotElementData = GetListItem<UMS_StorageSlotElementData>())
 	{
-		if(static_cast<EMS_ZoneType>(StorageSlotElementData->GetSlotType()) == EMS_ZoneType::Display)
+		if(static_cast<EMS_ZoneType>(StorageSlotElementData->GetSlotUIType()) == EMS_ZoneType::Display)
 		{
 			StorageSlotElementData->OnClickDisplaySlotDelegate.Broadcast(SlotIndex);
 		}
@@ -65,4 +58,76 @@ FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& In
 	}
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UMS_StorageSlotElementWidget::UpdateWhenStorageRequestStatus()
+{
+	CPP_TextSwitcher->SetActiveWidgetIndex(0);
+
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotData.RequestItemTableId);
+	if (ItemData == nullptr)
+	{
+		CPP_CountWidget->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	if (OwnerZoneType == EMS_ZoneType::Display)
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemTableId == SlotData.RequestItemTableId ? SlotData.CurrentItemCount : -1, ItemData->Slot100x100MaxCount);
+	}
+	else if (OwnerZoneType == EMS_ZoneType::Shelf)
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemTableId == SlotData.RequestItemTableId ? SlotData.CurrentItemCount : -1, ItemData->BoxMaxCount);
+	}
+	else
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemTableId == SlotData.RequestItemTableId ? SlotData.CurrentItemCount : -1, -1);
+	}
+	
+	CPP_ItemSlotWidget->SetSlot(SlotData.RequestItemTableId);
+}
+
+void UMS_StorageSlotElementWidget::UpdateWhenStorageCurrentStatus()
+{
+	CPP_TextSwitcher->SetActiveWidgetIndex(0);
+
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotData.CurrentItemTableId);
+	if (ItemData == nullptr)
+	{
+		CPP_CountWidget->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	if (OwnerZoneType == EMS_ZoneType::Display)
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->SlotPath100x100);
+	}
+	else if (OwnerZoneType == EMS_ZoneType::Shelf)
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->BoxMaxCount);
+	}
+	else
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, -1);
+	}
+			
+	CPP_ItemSlotWidget->SetSlot(SlotData.CurrentItemTableId);
+}
+
+void UMS_StorageSlotElementWidget::UpdateWhenRequestable()
+{
+	CPP_TextSwitcher->SetActiveWidgetIndex(1);
+	if(SlotData.CurrentItemTableId == INDEX_NONE)
+	{
+		CPP_RemainCount->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else
+	{
+		CPP_RemainCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		CPP_RemainCount->SetText(FText::FromString(FString::Format(TEXT("{0} 개"), {SlotData.CurrentItemCount})));
+	}
+
+	CPP_ItemSlotWidget->SetSlot(SlotData.CurrentItemTableId);
 }

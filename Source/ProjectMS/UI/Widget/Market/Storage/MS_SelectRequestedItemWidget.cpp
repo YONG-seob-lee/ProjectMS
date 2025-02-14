@@ -6,8 +6,6 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Widget/ListViewElement/ElementData/MS_StorageSlotElementData.h"
 #include "MS_Define.h"
-#include "MS_UnitBase.h"
-#include "Units/MS_FurnitureUnit.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 
@@ -22,53 +20,38 @@ void UMS_SelectRequestedItemWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_SelectRequestedItemWidget::SetOwnerUnit(TWeakObjectPtr<UMS_UnitBase> aOwnerUnit)
-{
-	OwnerUnit = aOwnerUnit;
-}
-
 void UMS_SelectRequestedItemWidget::SetTileView()
 {
-	TMap<int32, int32> TakableItems;
+	TMap<int32, int32> RequestableItems;
 	
-	if (OwnerUnit == nullptr)
+	if (OwnerZoneType == EMS_ZoneType::Display)
+	{
+		gItemMng.GetNoneDisplayItems(RequestableItems);
+	}
+	else if (OwnerZoneType == EMS_ZoneType::Shelf)
+	{
+		gItemMng.GetPalletItems(RequestableItems);
+	}
+	else
 	{
 		MS_ENSURE(false);
 		return;
-	}
-
-	if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit.Get()))
-	{
-		if (FurnitureUnit->GetZoneType() == EMS_ZoneType::Display)
-		{
-			gItemMng.GetNoneDisplayItems(TakableItems);
-		}
-		else if (FurnitureUnit->GetZoneType() == EMS_ZoneType::Shelf)
-		{
-			gItemMng.GetPalletItems(TakableItems);
-		}
-		else
-		{
-			MS_ENSURE(false);
-			return;
-		}
 	}
 	
 	TArray<TObjectPtr<UMS_StorageSlotElementData>> StorageItemElementDatas;
 		
 	// 빈 슬롯 하나 추가.
 	const TObjectPtr<UMS_StorageSlotElementData> BlankData = MS_NewObject<UMS_StorageSlotElementData>(this);
-	BlankData->SetSlotType(static_cast<int32>(EMS_ZoneType::Shelf));
+	BlankData->SetSlotType(EMS_ItemSlotUIType::Requestable);
 	BlankData->SetSlotData(FMS_SlotData());
 	BlankData->OnClickShelfSlotDelegate.AddUObject(this, &UMS_SelectRequestedItemWidget::OnClickedShelfSlotButton);
 	StorageItemElementDatas.Emplace(BlankData);
 	
-	for(const auto TakableItem : TakableItems)
+	for(const auto RequestableItem : RequestableItems)
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
-		Data->SetSlotType(static_cast<int32>(EMS_ZoneType::Shelf));
-		Data->SetSlotData(FMS_SlotData(TakableItem.Key, TakableItem.Key, TakableItem.Value));
-		Data->SetShelfCount(TakableItem.Value);
+		Data->SetSlotType(EMS_ItemSlotUIType::Requestable);
+		Data->SetSlotData(FMS_SlotData(RequestableItem.Key, RequestableItem.Key, RequestableItem.Value));
 		Data->OnClickShelfSlotDelegate.AddUObject(this, &UMS_SelectRequestedItemWidget::OnClickedShelfSlotButton);
 		StorageItemElementDatas.Emplace(Data);
 	}

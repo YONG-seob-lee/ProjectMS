@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
-#include "Manager_Client/MS_ItemManager.h"
-
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_StorageSlotElementData.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnClickStorageSlot, int32)
@@ -17,31 +16,22 @@ class PROJECTMS_API UMS_StorageSlotElementData : public UObject
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetIsSlotEnable(bool bIsEnable) { bIsSlotEnable = bIsEnable; }
-	FORCEINLINE void SetSlotType(int32 aSlotType) { SlotType = aSlotType; }
+	FORCEINLINE void SetOwnerZoneType(EMS_ZoneType aOwnerZoneType) { OwnerZoneType = aOwnerZoneType; }
+	FORCEINLINE void SetSlotType(EMS_ItemSlotUIType aSlotUIType) { SlotUIType = aSlotUIType; }
 	FORCEINLINE void SetSlotIndex(int32 aSlotIndex) { SlotIndex = aSlotIndex; }
 	FORCEINLINE void SetSlotData(const FMS_SlotData& aSlotData) { SlotData = aSlotData; }
-	FORCEINLINE void SetMolecular(int32 aMolecular) { Molecular = aMolecular; }
-	FORCEINLINE void SetDenominator(int32 aDenominator) { Denominator = aDenominator; }
-	FORCEINLINE void SetShelfCount(int32 aShelfCount) { ShelfCount = aShelfCount; }
 
-	FORCEINLINE int32 IsSlotEnable() const { return bIsSlotEnable; }
-	FORCEINLINE int32 GetSlotType() const { return SlotType; }
+	FORCEINLINE EMS_ZoneType GetOwnerZoneType() const { return OwnerZoneType; }
+	FORCEINLINE EMS_ItemSlotUIType GetSlotUIType() const { return SlotUIType; }
 	FORCEINLINE int32 GetSlotIndex() const { return SlotIndex; }
 	FORCEINLINE const FMS_SlotData& GetSlotData() const { return SlotData; }
-	FORCEINLINE int32 GetMolecular() const { return Molecular; }
-	FORCEINLINE int32 GetDenominator() const { return Denominator; }
-	FORCEINLINE int32 GetShelfCount() const { return ShelfCount; }
 
 	FMS_OnClickStorageSlot OnClickDisplaySlotDelegate;
 	FMS_OnClickStorageSlot OnClickShelfSlotDelegate;
 
 private:
-	bool bIsSlotEnable = false;
-	int32 SlotType = static_cast<int32>(EMS_ZoneType::None);
+	EMS_ZoneType OwnerZoneType = EMS_ZoneType::None;
+	EMS_ItemSlotUIType SlotUIType = EMS_ItemSlotUIType::None;
 	int32 SlotIndex = INDEX_NONE;
 	struct FMS_SlotData SlotData;
-	int32 Molecular = 0;
-	int32 Denominator = 0;
-	int32 ShelfCount = 0;
 };

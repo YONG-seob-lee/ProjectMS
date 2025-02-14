@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/IUserObjectListEntry.h"
-#include "ContentsUtilities/MS_ItemDefine.h"
 #include "Widget/MS_Widget.h"
+#include "Blueprint/IUserObjectListEntry.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_StorageSlotElementWidget.generated.h"
 
 /**
@@ -19,10 +20,15 @@ public:
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
 	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override; 
+
+private:
+	void UpdateWhenStorageRequestStatus();
+	void UpdateWhenStorageCurrentStatus();
+	void UpdateWhenRequestable();
 	
 private:
-	bool bIsSlotEnabled = true;
-	
+	EMS_ZoneType OwnerZoneType = EMS_ZoneType::None;
+	EMS_ItemSlotUIType SlotUIType = EMS_ItemSlotUIType::None;
 	int32 SlotIndex = 0;
 	FMS_SlotData SlotData;
 	

@@ -35,18 +35,25 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 			{
 				MS_ENSURE(OwnerUnit != nullptr);
 				
-				StorageStatusWidget->SetOwnerUnit(OwnerUnit.Get());
-				
-				// Widget에 Unit함수 Bind
-				StorageStatusWidget->OnClickRequestSlotDelegate.BindWeakLambda(this, [this](int32 aSlotId, int32 aItemId)
+				if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
 				{
-					MS_ENSURE(OwnerUnit != nullptr);
-
-					if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
+					StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetSlotCount());
+					
+					TArray<FMS_SlotData> SlotDatas;
+					FurnitureUnit->GetSlotDatas(SlotDatas);
+					StorageStatusWidget->UpdateSlotDatas(SlotDatas);
+				
+					// Widget에 Unit함수 Bind
+					StorageStatusWidget->OnClickRequestSlotDelegate.BindWeakLambda(this, [this, FurnitureUnit](int32 aSlotId, int32 aItemId)
 					{
+						if (!IsValid(FurnitureUnit))
+						{
+							return;
+						}
+
 						FurnitureUnit->SetRequestItem(aSlotId, aItemId, true);
-					}
-				});
+					});
+				}
 			}
 		}
 	}
@@ -60,7 +67,7 @@ void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotData
 	{
 		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
 		{
-			StorageStatusWidget->OnChangeRequestSlotDatas(aSlotDatas);
+			StorageStatusWidget->UpdateSlotDatas(aSlotDatas);
 		}
 	}
 }
@@ -73,7 +80,7 @@ void AMS_Storage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotData
 	{
 		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
 		{
-			StorageStatusWidget->OnChangeRequestSlotDatas(aSlotDatas);
+			StorageStatusWidget->UpdateSlotDatas(aSlotDatas);
 		}
 	}
 }
