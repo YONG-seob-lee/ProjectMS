@@ -51,12 +51,12 @@ void UMS_TimeLineWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 {
-	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.GetDailyTimeZone());
+	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
 	FlickerDot(bIsRunning);
 
 	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
 
-	bool bCanSleep = aGameDate.GetDailyTimeZone() == EMS_DailyTimeZone::Evening || aGameDate.GetDailyTimeZone() == EMS_DailyTimeZone::Night;
+	bool bCanSleep = aGameDate.DailyTimeZone == EMS_DailyTimeZone::Evening || aGameDate.DailyTimeZone == EMS_DailyTimeZone::Night;
 	if (bCanSleep)
 	{
 		StartSleepButtonAnim();
@@ -70,7 +70,7 @@ void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
 {
 	FMS_GameDate GameDate = gScheduleMng.GetGameDate();
-	int32 StartMinute = FMS_GameDate::ConvertTimeZoneToMinute(GameDate.GetDailyTimeZone());
+	int32 StartMinute = FMS_GameDate::ConvertTimeZoneToMinute(GameDate.DailyTimeZone);
 	int32 CurrentMinute = StartMinute + aMinute;
 	
 	const int32 Hour = CurrentMinute / SecondPerOneMinute;

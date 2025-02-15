@@ -19,21 +19,17 @@ public:
 	FMS_TimeSchedule(FMS_GameDate aGameDate, int32 aMinute, EMS_MarketNormalScheduleEvent aType)
 	: GameDate(aGameDate), Minute(aMinute)
 	{}
-
-	//void SetScheduleType(EMS_MarketNormalScheduleEvent aType);
-
+	
 	FORCEINLINE void SetGameDate(FMS_GameDate aGameDate) { GameDate = aGameDate; }
 	FORCEINLINE const FMS_GameDate& GetGameDate() const { return GameDate; }
 	
-	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.SetDailyTimeZone(aDailyTimeZone); }
-	FORCEINLINE EMS_DailyTimeZone GetDailyTimeZone() const { return GameDate.GetDailyTimeZone(); }
+	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.DailyTimeZone = aDailyTimeZone; }
+	FORCEINLINE EMS_DailyTimeZone GetDailyTimeZone() const { return GameDate.DailyTimeZone; }
 	
 	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
 	FORCEINLINE void ResetMinute() { Minute = 0; }
 	FORCEINLINE int32 GetMinute() const { return Minute; }
 	void PassTheDay();
-	
-	//EMS_MarketNormalScheduleEvent GetNextScheduleType();
 
 private:
 	int32 GamePlayTimeSecond = 0;

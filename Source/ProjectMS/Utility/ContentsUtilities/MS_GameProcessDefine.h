@@ -45,18 +45,18 @@ enum class EMS_MarketNormalScheduleEvent
 	CloseMarket = 5,
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FMS_GameDate
 {
 	GENERATED_BODY()
 
 	FMS_GameDate()
-		: Year(0), Month(0), Day(0), DailyTimeZone(static_cast<int32>(EMS_DailyTimeZone::Morning))
+		: Year(0), Month(0), Day(0), DailyTimeZone(EMS_DailyTimeZone::Morning)
 	{
 	}
 
 	FMS_GameDate(int32 aYear, int32 aMonth, int32 aDay, EMS_DailyTimeZone aDailyTimeZone)
-	: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(static_cast<int32>(aDailyTimeZone))
+	: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(aDailyTimeZone)
 	{
 	}
 
@@ -68,13 +68,25 @@ struct FMS_GameDate
 	static int32 ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone);
 	static bool IsRunningTimeZone(EMS_DailyTimeZone aTimeZone);
 
-	EMS_DailyTimeZone GetDailyTimeZone() const { return static_cast<EMS_DailyTimeZone>(DailyTimeZone); }
-	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { DailyTimeZone = static_cast<int32>(aDailyTimeZone); }
-
+	friend FArchive& operator<<(FArchive& Ar, FMS_GameDate& Data)
+	{
+		Ar << Data.Year;
+		Ar << Data.Month;
+		Ar << Data.Day;
+		Ar << Data.DailyTimeZone;
+		return Ar;
+	}
+	
 public:
+	UPROPERTY()
 	int32 Year;
-	int32 Month;
-	int32 Day;
 
-	int32 DailyTimeZone;
+	UPROPERTY()
+	int32 Month;
+
+	UPROPERTY()
+	int32 Day;
+	
+	UPROPERTY()
+	EMS_DailyTimeZone DailyTimeZone;
 };
