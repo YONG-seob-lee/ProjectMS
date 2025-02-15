@@ -3,6 +3,8 @@
 
 #include "MS_DescriptionWidget.h"
 
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
 
 void UMS_DescriptionWidget::NativeConstruct()

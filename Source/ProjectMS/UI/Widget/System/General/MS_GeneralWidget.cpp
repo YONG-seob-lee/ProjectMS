@@ -123,9 +123,16 @@ void UMS_GeneralWidget::RequestPassTimer() const
 	CPP_TimeLineWidget->RequestPassTimer();
 }
 
-void UMS_GeneralWidget::Test() const
+void UMS_GeneralWidget::Test(int32 t) const
 {
-	CPP_LeftButton->PlayTutorial(TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
+	if(t == 1)
+	{
+		CPP_LeftButton->PlayTutorial(TEXT("해당 버튼은 스케줄 관리 버튼 입니다.."), TEXT("글루따띠온~"));
+	}
+	else if(t == 2)
+	{
+		CPP_RightButton->PlayTutorial(TEXT("해당 버튼은 통합 시스템 버튼 입니다."), TEXT("글루따띠온~"));
+	}
 }
 
 

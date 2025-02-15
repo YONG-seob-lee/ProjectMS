@@ -261,9 +261,9 @@ void UMS_WidgetManager::RequestDialog(const TArray<FMS_DialogParameter>& aDialog
 	RootWidget->RequestDialog(aDialogParameters);
 }
 
-void UMS_WidgetManager::Test() const
+void UMS_WidgetManager::Test(int32 t) const
 {
-	RootWidget->Test();
+	RootWidget->Test(t);
 }
 
 void UMS_WidgetManager::CreateRoot()

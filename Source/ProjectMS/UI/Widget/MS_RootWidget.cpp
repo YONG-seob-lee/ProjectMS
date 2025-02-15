@@ -242,9 +242,9 @@ void UMS_RootWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogPar
 	CPP_DialogWidget->RequestDialog(aDialogParameters);
 }
 
-void UMS_RootWidget::Test() const
+void UMS_RootWidget::Test(int32 t) const
 {
-	CPP_GeneralWidget->Test();
+	CPP_GeneralWidget->Test(t);
 }
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const

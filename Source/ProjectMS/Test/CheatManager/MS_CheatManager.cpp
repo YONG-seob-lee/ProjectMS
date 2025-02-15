@@ -150,8 +150,8 @@ void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 	gWidgetMng.RequestDialog(DialogParameters);
 }
 
-void UMS_CheatManager::RequestTutorial()
+void UMS_CheatManager::RequestTutorial(int32 t)
 {
-	gWidgetMng.Test();
+	gWidgetMng.Test(t);
 }
 #endif

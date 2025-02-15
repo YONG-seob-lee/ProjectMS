@@ -54,4 +54,7 @@ private:
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_SubDesc = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_TutorialContentPanel = nullptr;
 };

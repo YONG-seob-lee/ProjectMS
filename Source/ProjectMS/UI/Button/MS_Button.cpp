@@ -56,6 +56,9 @@ void UMS_Button::PlayTutorial(const FString& Desc, const FString& SubDesc)
 	{
 		return; 
 	}
+
+	//UWidget* TutorialContent = this;
+	//DescWidget->SetTutorialContent(*TutorialContent);
 	
 	NamedSlot->SetContent(DescWidget);
 	RePositionNamedSlot(NamedSlot->Slot);

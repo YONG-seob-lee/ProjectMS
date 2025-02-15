@@ -35,7 +35,7 @@ public:
 
 	void RequestPassTimer() const;
 
-	void Test() const;
+	void Test(int32 t) const;
 private:
 	void InitLeftExpander();
 	
