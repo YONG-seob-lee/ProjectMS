@@ -56,7 +56,7 @@ void UMS_ModeSelectWidget::OnClickedModeButton(UObject* Object)
 	
 	if(OnClickedModeButtonCallback)
 	{
-		OnClickedModeButtonCallback(static_cast<EMS_ModeState>(Data->GetZoneType()));
+		OnClickedModeButtonCallback(EMS_ModeState::Construct);
 	}	
 }
 
