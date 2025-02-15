@@ -17,19 +17,27 @@ void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)
 {
 	Super::OnAnimFinished(aAnimName);
 
-	if(aAnimName == DescAnim::DotAnimation_UpToRight || aAnimName == DescAnim::DotAnimation_DownToRight)
+	if(aAnimName == DescAnim::DotAnimationUpToRight || aAnimName == DescAnim::DotAnimationDownToRight || aAnimName == DescAnim::DotAnimationUpToLeft || aAnimName == DescAnim::DotAnimationDownToLeft)
 	{
 		Stop();
 	}
 	else if(aAnimName == DescAnim::StartUpToRight)
 	{
-		PlayAnimationByName(DescAnim::DotAnimation_UpToRight, 0.f, 5);
+		PlayAnimationByName(DescAnim::DotAnimationUpToRight, 0.f, 5);
 	}
 	else if(aAnimName == DescAnim::StartDownToRight)
 	{
-		PlayAnimationByName(DescAnim::DotAnimation_DownToRight, 0.f, 5);
+		PlayAnimationByName(DescAnim::DotAnimationDownToRight, 0.f, 5);
 	}
-	else if(aAnimName == DescAnim::StopUpToRight || aAnimName == DescAnim::StopDownToRight)
+	else if(aAnimName == DescAnim::StartUpToLeft)
+	{
+		PlayAnimationByName(DescAnim::DotAnimationUpToLeft, 0.f, 5);
+	}
+	else if(aAnimName == DescAnim::StartDownToLeft)
+	{
+		PlayAnimationByName(DescAnim::DotAnimationDownToLeft, 0.f, 5);
+	}
+	else if(aAnimName == DescAnim::StopUpToRight || aAnimName == DescAnim::StopDownToRight || aAnimName == DescAnim::StopUpToLeft || aAnimName == DescAnim::StopDownToLeft)
 	{
 		if(OnFinishedTutorialCallback)
 		{
@@ -59,6 +67,14 @@ void UMS_DescriptionWidget::Stop()
 	{
 		PlayAnimationByName(DescAnim::StopDownToRight);
 	}
+	else if(TargetDirection == EMS_TutorialDirection::UpToLeft)
+	{
+		PlayAnimationByName(DescAnim::StopUpToLeft);
+	}
+	else if(TargetDirection == EMS_TutorialDirection::DownToLeft)
+	{
+		PlayAnimationByName(DescAnim::StopDownToLeft);
+	}
 }
 
 void UMS_DescriptionWidget::PlayDescription(EMS_TutorialDirection aDirection)
@@ -70,5 +86,13 @@ void UMS_DescriptionWidget::PlayDescription(EMS_TutorialDirection aDirection)
 	else if (aDirection == EMS_TutorialDirection::DownToRight)
 	{
 		PlayAnimationByName(DescAnim::StartDownToRight);
+	}
+	else if(aDirection == EMS_TutorialDirection::UpToLeft)
+	{
+		PlayAnimationByName(DescAnim::StartUpToLeft);
+	}
+	else if(aDirection == EMS_TutorialDirection::DownToLeft)
+	{
+		PlayAnimationByName(DescAnim::StartDownToLeft);
 	}
 }

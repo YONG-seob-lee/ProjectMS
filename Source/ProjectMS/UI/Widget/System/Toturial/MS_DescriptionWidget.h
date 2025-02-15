@@ -10,11 +10,19 @@ namespace DescAnim
 {
 	const FName StartUpToRight = TEXT("Start_UpToRight");
 	const FName StopUpToRight = TEXT("Stop_UpToRight");
-	const FName DotAnimation_UpToRight = TEXT("DotAnimation_UpToRight");
+	const FName DotAnimationUpToRight = TEXT("DotAnimation_UpToRight");
 
 	const FName StartDownToRight = TEXT("Start_DownToRight");
 	const FName StopDownToRight = TEXT("Stop_DownToRight");
-	const FName DotAnimation_DownToRight = TEXT("DotAnimation_DownToRight");
+	const FName DotAnimationDownToRight = TEXT("DotAnimation_DownToRight");
+	
+	const FName StartUpToLeft = TEXT("Start_UpToLeft");
+	const FName StopUpToLeft = TEXT("Stop_UpToLeft");
+	const FName DotAnimationUpToLeft = TEXT("DotAnimation_UpToLeft");
+
+	const FName StartDownToLeft = TEXT("Start_DownToLeft");
+	const FName StopDownToLeft = TEXT("Stop_DownToLeft");
+	const FName DotAnimationDownToLeft = TEXT("DotAnimation_DownToLeft");
 }
 
 UENUM()
