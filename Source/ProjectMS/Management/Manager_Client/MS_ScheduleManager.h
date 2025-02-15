@@ -77,8 +77,7 @@ public:
 	
 	bool IsNight() const;
 	
-	//test
-	void SetTest();
+	void SetMultiplyIntervalSecondReal(int32 aMultiply);
 	
 	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
@@ -97,6 +96,7 @@ private:
 
 	// 현실시간 1초에 게임시간이 몇분 지나가야하는지에 대한 멤버변수
 	int32 IntervalSecondReal = 0;
+	int32 MultiplyIntervalSecondReal = 1;
 
 	UPROPERTY()
 	TArray<class UMS_ScheduleDayElementData*> ScheduleDayElementData;

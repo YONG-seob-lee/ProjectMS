@@ -141,20 +141,7 @@ bool AMS_MarketLevelScriptActor::IsUnitInMarket(int32 aUnitHandle) const
 void AMS_MarketLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// 패킷으로 데이터를 받음
 	
-	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
-	{
-		FMS_ModalParameter ModalParameter;
-		ModalParameter.OnCloseWidgetCallback = []()
-		{
-			//gScheduleMng.TransferServer();
-		};
-		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
-		gWidgetMng.ShowModalWidget(ModalParameter);
-	});
-
 	ChattingCollectComponent = MS_NewObject<UMS_UnitChattingCollectComponent>(this);
 	if(ChattingCollectComponent)
 	{

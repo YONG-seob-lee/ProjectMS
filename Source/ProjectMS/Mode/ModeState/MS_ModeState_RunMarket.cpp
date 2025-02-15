@@ -109,8 +109,10 @@ void UMS_ModeState_RunMarket::RunSchedule()
 
 void UMS_ModeState_RunMarket::EndSchedule()
 {
+	// ToDo : Save Daily Data
+	
 	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
-	gModeMng.ChangeState(EMS_ModeState::Deactive);
+	gModeMng.ChangeState(EMS_ModeState::Normal);
 }
 
 void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)

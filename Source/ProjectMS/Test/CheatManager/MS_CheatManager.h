@@ -64,4 +64,9 @@ public:
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void ResetProcessTutorial();
 #endif
+
+#if WITH_EDITOR
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void FastRun(int32 aMultiply);
+#endif
 };
