@@ -18,7 +18,7 @@ struct FMS_DialogParameter
 {
 public:
 	FMS_DialogParameter() {}
-	FMS_DialogParameter(const FString& aTypeText, float aTypeSpeed, TFunction<void()> aFunc);
+	FMS_DialogParameter(const FString& aTypeText, float aTypeSpeed);
 
 	FString ShowType() const;
 	FORCEINLINE FString ShowFullType() { return TypeText; }
@@ -31,6 +31,8 @@ public:
 	FORCEINLINE EMS_DialogType GetDialogType() const { return DialogType; }
 	
 	FORCEINLINE bool IsTypingEnd() const { return ProcessNumber >= TotalTypeNumber; }
+	
+	FORCEINLINE void SetDialogEndCallback(const TFunction<void()>& _Func) { DialogEndCallback = _Func; } 
 
 private:
 	EMS_DialogType DialogType = EMS_DialogType::Undefined;
@@ -62,15 +64,17 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 
-	void RequestDialog(const FMS_DialogParameter& aDialogParameter);
+	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters);
 
 private:
+	void PlayTyping();
 	void ProcessTyping();
 	void FinishedTyping();
 
 	void OnClickedSkipButton();
 
-	FMS_DialogParameter DialogParameter;
+	int32 ProcessingDialogNumber = INDEX_NONE;
+	TArray<FMS_DialogParameter> DialogParameters;
 	FTimerHandle DialogTextTimerHandler;
 	
 	UPROPERTY(Meta = (BindWidget))

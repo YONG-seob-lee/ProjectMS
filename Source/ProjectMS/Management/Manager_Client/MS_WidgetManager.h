@@ -55,7 +55,7 @@ public:
 
 	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
 
-	void RequestDialog(const FString& aDialogType, float aTypeSpeed);
+	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

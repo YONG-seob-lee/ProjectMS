@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_Widget.h"
 #include "Command/SceneCommand/MS_SceneCommand.h"
+#include "Dialog/MS_DialogWidget.h"
 #include "System/General/MS_GeneralWidget.h"
 #include "System/Modal/MS_ModalWidget.h"
 #include "MS_RootWidget.generated.h"
@@ -45,7 +46,7 @@ public:
 	void CloseModalWidget() const;
 
 	void RequestPassTimer() const;
-	void RequestDialog(const FString& aDialogType, float aTypeSpeed) const;
+	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;

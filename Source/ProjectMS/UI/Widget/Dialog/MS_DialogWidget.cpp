@@ -9,7 +9,12 @@
 #include "Components/TextBlock.h"
 #include "Widget/System/Toturial/MS_DescriptionWidget.h"
 
-FMS_DialogParameter::FMS_DialogParameter(const FString& aTypeText, float aTypeSpeed, TFunction<void()> aFunc)
+namespace DialogNumber
+{
+	constexpr int32 First = 0;
+}
+
+FMS_DialogParameter::FMS_DialogParameter(const FString& aTypeText, float aTypeSpeed)
 {
 	TypeText = aTypeText;
 	TypeSpeed = aTypeSpeed;
@@ -26,8 +31,6 @@ FMS_DialogParameter::FMS_DialogParameter(const FString& aTypeText, float aTypeSp
 			break;
 		}
 	}
-
-	DialogEndCallback = aFunc;
 }
 
 FString FMS_DialogParameter::ShowType() const
@@ -65,48 +68,72 @@ void UMS_DialogWidget::OnAnimFinished(const FName& aAnimName)
 
 	if(aAnimName == DialogAnimation::Start)
 	{
-		CPP_Test->Start(TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
-		CPP_Test->SetOnFinishedTutorialFunc([this]()
-		{
-			MS_LOG(TEXT("Start Dialog Typing."));
-			DialogParameter.SetDialogType(EMS_DialogType::Process);
-			CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
-			ProcessTyping();		
-		});
+		// CPP_Test->Start(TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
+		// CPP_Test->SetOnFinishedTutorialFunc([this]()
+		// {
+		// 	MS_LOG(TEXT("Start Dialog Typing."));
+		// 	DialogParameter.SetDialogType(EMS_DialogType::Process);
+		// 	CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
+		// 	ProcessTyping();
+		// });
+
+		PlayTyping();
 	}
 	else if(aAnimName == DialogAnimation::Close)
 	{
 		SetVisibility(ESlateVisibility::Collapsed);
-		DialogParameter.FinishDialogEvent();
+		DialogParameters[ProcessingDialogNumber].FinishDialogEvent();
+		ProcessingDialogNumber = INDEX_NONE;
 	}
 }
 
-void UMS_DialogWidget::RequestDialog(const FMS_DialogParameter& aDialogParameter)
+void UMS_DialogWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters)
 {
 	SetVisibility(ESlateVisibility::Visible);
-	DialogParameter = aDialogParameter;
-	CPP_DialogText->SetText(FText::FromString(DialogParameter.ShowType()));
-	PlayAnimationByName(DialogAnimation::Start);
+	DialogParameters = aDialogParameters;
+	ProcessingDialogNumber = 0;
+	
+	if(DialogParameters.IsValidIndex(ProcessingDialogNumber))
+	{
+		CPP_DialogText->SetText(FText::FromString(DialogParameters[ProcessingDialogNumber].ShowType()));
+		PlayAnimationByName(DialogAnimation::Start);
+	}
+}
+
+void UMS_DialogWidget::PlayTyping()
+{
+	if(DialogParameters.IsValidIndex(ProcessingDialogNumber))
+	{
+		MS_LOG(TEXT("Start Dialog Typing."));
+		DialogParameters[ProcessingDialogNumber].SetDialogType(EMS_DialogType::Process);
+		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
+		ProcessTyping();
+	}
 }
 
 void UMS_DialogWidget::ProcessTyping()
 {
-	if(DialogParameter.IsTypingEnd())
+	if(DialogParameters.IsValidIndex(ProcessingDialogNumber) == false)
+	{
+		return;
+	}
+	
+	if(DialogParameters[ProcessingDialogNumber].IsTypingEnd())
 	{
 		FinishedTyping();
 		GetWorld()->GetTimerManager().ClearTimer(DialogTextTimerHandler);
 		return;
 	}
 	
-	const FString ShowType = DialogParameter.ShowType();
+	const FString ShowType = DialogParameters[ProcessingDialogNumber].ShowType();
 	CPP_DialogText->SetText(FText::FromString(ShowType));
-	DialogParameter.AddProcess();
-	GetWorld()->GetTimerManager().SetTimer(DialogTextTimerHandler, this, &UMS_DialogWidget::ProcessTyping, DialogParameter.GetTypeSpeed(), false);
+	DialogParameters[ProcessingDialogNumber].AddProcess();
+	GetWorld()->GetTimerManager().SetTimer(DialogTextTimerHandler, this, &UMS_DialogWidget::ProcessTyping, DialogParameters[ProcessingDialogNumber].GetTypeSpeed(), false);
 }
 
 void UMS_DialogWidget::FinishedTyping()
 {
-	DialogParameter.SetDialogType(EMS_DialogType::Finished);
+	DialogParameters[ProcessingDialogNumber].SetDialogType(EMS_DialogType::Finished);
 	GetWorld()->GetTimerManager().ClearTimer(DialogTextTimerHandler);
 	CPP_SkipPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	PlayAnimationByName(DialogAnimation::SkipAnimation, 0.f, 999999);
@@ -114,17 +141,30 @@ void UMS_DialogWidget::FinishedTyping()
 
 void UMS_DialogWidget::OnClickedSkipButton()
 {
-	if(DialogParameter.GetDialogType() == EMS_DialogType::Process)
+	if(DialogParameters.IsValidIndex(ProcessingDialogNumber) == false)
+	{
+		return;
+	}
+	
+	if(DialogParameters[ProcessingDialogNumber].GetDialogType() == EMS_DialogType::Process)
 	{
 		FinishedTyping();
-		CPP_DialogText->SetText(FText::FromString(DialogParameter.ShowFullType()));
+		CPP_DialogText->SetText(FText::FromString(DialogParameters[ProcessingDialogNumber].ShowFullType()));
 	}
-	else if(DialogParameter.GetDialogType() == EMS_DialogType::Finished)
+	else if(DialogParameters[ProcessingDialogNumber].GetDialogType() == EMS_DialogType::Finished)
 	{
-		StopAllAnimations();
-		PlayAnimationByName(DialogAnimation::Close);
-		CPP_SkipPanel->SetVisibility(ESlateVisibility::Collapsed);
-		CPP_SkipButton->SetVisibility(ESlateVisibility::Collapsed);
-		MS_LOG(TEXT("Finished Dialog Typing."));
+		if(DialogParameters.IsValidIndex(ProcessingDialogNumber + 1))
+		{
+			ProcessingDialogNumber += 1;
+			PlayTyping();
+		}
+		else
+		{
+			StopAllAnimations();
+			PlayAnimationByName(DialogAnimation::Close);
+			CPP_SkipPanel->SetVisibility(ESlateVisibility::Collapsed);
+			CPP_SkipButton->SetVisibility(ESlateVisibility::Collapsed);
+			MS_LOG(TEXT("Finished Dialog Typing."));	
+		}
 	}
 }

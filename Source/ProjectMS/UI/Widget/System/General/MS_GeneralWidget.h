@@ -55,6 +55,9 @@ private:
 	void OnUpdateMinute(int32 aMinute);
 
 	void OpenLeftExpander() const;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UNamedSlot> CPP_NamedSlot = nullptr;
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;

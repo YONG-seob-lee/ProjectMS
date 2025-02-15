@@ -6,6 +6,7 @@
 #include "MS_TimeLineWidget.h"
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
+#include "Components/NamedSlot.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
@@ -36,6 +37,8 @@ void UMS_GeneralWidget::NativeConstruct()
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateMinute);
 
 	InitLeftExpander();
+
+	//CPP_NamedSlot->
 }
 
 void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)

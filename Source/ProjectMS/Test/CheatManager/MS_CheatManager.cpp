@@ -142,6 +142,11 @@ void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 
 void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 {
-	gWidgetMng.RequestDialog(DialogType, TypeSpeed);
+	TArray<FMS_DialogParameter> DialogParameters;
+	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
+	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
+	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
+	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
+	gWidgetMng.RequestDialog(DialogParameters);
 }
 #endif

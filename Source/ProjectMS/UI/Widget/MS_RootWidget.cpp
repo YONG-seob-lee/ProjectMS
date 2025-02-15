@@ -233,11 +233,13 @@ void UMS_RootWidget::RequestPassTimer() const
 	CPP_GeneralWidget->RequestPassTimer();
 }
 
-void UMS_RootWidget::RequestDialog(const FString& aDialogType, float aTypeSpeed) const
+void UMS_RootWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const
 {
 	CPP_MessagePanel->SetVisibility(ESlateVisibility::Visible);
-		
-	CPP_DialogWidget->RequestDialog(FMS_DialogParameter(aDialogType, aTypeSpeed, [this](){CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);}));
+
+	FMS_DialogParameter LastParameter = aDialogParameters.Last();
+	LastParameter.SetDialogEndCallback([this](){CPP_MessagePanel->SetVisibility(ESlateVisibility::Collapsed);});
+	CPP_DialogWidget->RequestDialog(aDialogParameters);
 }
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
