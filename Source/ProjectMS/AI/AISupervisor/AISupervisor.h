@@ -4,19 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "MS_ManagementBase.generated.h"
+#include "AISupervisor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_ManagementBase : public UObject
+class PROJECTMS_API UAISupervisor : public UObject
 {
 	GENERATED_BODY()
+
 public:
 	virtual void Initialize();
 	virtual void Finalize();
-	virtual void PostInitialize();
+
 	virtual void Tick(float aDeltaTime);
-	virtual void BeginPlay();
+	
+	virtual void Begin();
+	virtual void Exit();
 };

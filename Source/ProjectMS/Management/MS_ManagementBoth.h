@@ -16,6 +16,7 @@ class PROJECTMS_API UMS_ManagementBoth : public UMS_ManagementBase
 public:
 	virtual void Initialize() override;
 	virtual void Finalize() override;
+	virtual void BeginPlay() override;
 	
 private:
 	UPROPERTY()

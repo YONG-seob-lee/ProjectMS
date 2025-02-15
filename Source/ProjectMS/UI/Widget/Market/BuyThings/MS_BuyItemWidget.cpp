@@ -62,7 +62,7 @@ void UMS_BuyItemWidget::OnClickedConfirmButton()
 		TransferItems.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
 	
-	gScheduleMng.TransferItemsToServer(TransferItems);
+	// gScheduleMng.TransferItemsToServer(TransferItems);
 	gWidgetMng.CloseModalWidget();
 	gWidgetMng.ShowToastMessage(TEXT("물품 구매를 완료했습니다!!"));
 }

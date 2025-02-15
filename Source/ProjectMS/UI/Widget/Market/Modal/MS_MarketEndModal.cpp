@@ -22,7 +22,7 @@ void UMS_MarketEndModal::OnClickedClosingPlayButton()
 {
 	gWidgetMng.CloseModalWidget();
 
-	gScheduleMng.TransferServer();
+	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
 	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::LobbyLevel);

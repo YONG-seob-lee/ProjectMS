@@ -159,3 +159,13 @@ void UMS_ManagementClient::Tick(float aDeltaTime)
 		WidgetManager->Tick(aDeltaTime);
 	}
 }
+
+void UMS_ManagementClient::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(ScheduleManager)
+	{
+		ScheduleManager->BeginPlay();
+	}
+}

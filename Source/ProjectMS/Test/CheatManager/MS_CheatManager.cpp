@@ -34,7 +34,7 @@ void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 		MarketLevelScriptActor->AddTestAIActorComeInMarket(UnitId);
 	}
 	
-	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
+	const int32 CurrentMinute = gScheduleMng.GetMinute();
 	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, CurrentMinute, FText::FromString(Behavior)));
 
 	const FString Chatting = TEXT("(마켓 문을 열며)아 오늘은 어떤걸 구매해볼까나아");
@@ -53,7 +53,7 @@ void UMS_CheatManager::AIExitMarket(int32 UnitId)
 	FName StaffName = FName();
 	StaffTable->GetStaffName(UnitId, StaffName);
 
-	const int32 CurrentMinute = gScheduleMng.GetCurrentMinute();
+	const int32 CurrentMinute = gScheduleMng.GetMinute();
 	const FString Behavior = TEXT("\"") + StaffName.ToString() + TEXT("\" 이(가) 마켓에 퇴장했습니다.");
 
 	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, CurrentMinute, FText::FromString(Behavior)));
@@ -81,7 +81,7 @@ void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 			return;
 		}
 	}
-	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, gScheduleMng.GetCurrentMinute(), FText::FromString(Chatting)));
+	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, gScheduleMng.GetMinute(), FText::FromString(Chatting)));
 }
 #endif
 
@@ -102,7 +102,7 @@ void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
 			return;
 		}
 	}
-	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, gScheduleMng.GetCurrentMinute(), FText::FromString(Behavior)));
+	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, gScheduleMng.GetMinute(), FText::FromString(Behavior)));
 }
 #endif
 

@@ -9,7 +9,4 @@ UCLASS(BlueprintType)
 class UMS_BehaviorTree : public UBehaviorTree
 {
 	GENERATED_BODY()
-public:
-	
-private:
 };

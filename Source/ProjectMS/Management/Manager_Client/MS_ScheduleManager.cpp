@@ -5,11 +5,30 @@
 
 #include "MS_Define.h"
 #include "MS_ItemManager.h"
-#include "MS_WidgetManager.h"
+#include "Controller/MS_PlayerController.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MonthFinancialElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ScheduleDayElementData.h"
-#include "Widget/Market/Modal/MS_MarketEndModal.h"
+
+
+void FMS_TimeSchedule::PassTheDay()
+{
+	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+	MS_CHECK(CommonTable);
+	
+	GameDate.Day += 1;
+	if(GameDate.Day > CommonTable->GetParameter01(CommonContents::DAYS_PER_ONEMONTH))
+	{
+		GameDate.Month +=1;
+		GameDate.Day = 1;
+		if(GameDate.Month > CommonTable->GetParameter01(CommonContents::MONTH_PER_ONEYEAR))
+		{
+			GameDate.Year +=1;
+			GameDate.Month = 1;
+		}
+	}
+}
 
 UMS_ScheduleManager::UMS_ScheduleManager()
 {
@@ -26,8 +45,6 @@ void UMS_ScheduleManager::Initialize()
 	Super::Initialize();
 
 	// "TEST" Step.1 : 최초로 서버에서 스케쥴 데이터를 받음.
-	TakeTimeSchedule(nullptr);
-
 	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
 	MS_CHECK(CommonTable);
 
@@ -106,81 +123,47 @@ void UMS_ScheduleManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-int32 UMS_ScheduleManager::GetCurrentMinute() const
+void UMS_ScheduleManager::BeginPlay()
 {
-	if(TimeSchedule)
-	{
-		return TimeSchedule->GetMinute();
-	}
+	Super::BeginPlay();
 
-	return 0;
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	TimeSchedule.SetGameDate(PlayerState->GetGameDate());
+	TimeSchedule.ResetMinute();
 }
 
-void UMS_ScheduleManager::TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule)
+const FMS_GameDate& UMS_ScheduleManager::GetGameDate() const
 {
-	// 나중에는 서버에서 전달받음.
-	//TimeSchedule = aTimeSchedule;
+	return TimeSchedule.GetGameDate();
+}
 
-	// 테스트용 데이터 생성.
-	if(TimeSchedule == nullptr)
-	{
-		const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-		MS_CHECK(CommonTable);
-		
-		TimeSchedule = new FMS_TimeSchedule(CommonTable->GetParameter01(CommonContents::DEFAULT_YEAR), CommonTable->GetParameter01(CommonContents::DEFAULT_MONTH), CommonTable->GetParameter01(CommonContents::DEFAULT_DAY) , CommonTable->GetParameter01(CommonContents::DEFAULT_MINUTE), EMS_ScheduleType::Prepare);
-	}
-	else
-	{
-		TimeSchedule = aTimeSchedule;
-	}
-	
-	switch(TimeSchedule->GetCurrentScheduleType())
-	{
-	case EMS_ScheduleType::UpAndDown:
-		{
-			// 타이머를 매니저에서 돌려 (게임시간 1분당 현실시간 0.5초)
-			PlayTimer(120);
-			gWidgetMng.ShowToastMessage(TEXT("상하차가 시작되었습니다!"));
-			break;
-		}
-	case EMS_ScheduleType::OpenMarket:
-		{
-			PlayTimer(660);
-			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
-			break;
-		}
-	case EMS_ScheduleType::Morning:
-		{
-			gWidgetMng.ShowToastMessage(TEXT("Zzz  Zzz  Zzzzz"));
-			gWidgetMng.RequestPassTimerWidget();
-		}
-	case EMS_ScheduleType::Prepare:
-		{
-			OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
-			gWidgetMng.ShowToastMessage(TEXT("준비 단계!"));
-			break;
-		}
-	case EMS_ScheduleType::Deadline:
-		{
-			// 타이머 없어도 돼
-			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
-			FMS_ModalParameter ModalParameter;
-			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());
-			gWidgetMng.ShowModalWidget(ModalParameter);
-			break;
-		}
-	case EMS_ScheduleType::Night:
-		{
-			OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
-			break;
-		}
-	default:
-		{
-			break;
-		}
-	}
+void UMS_ScheduleManager::SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone)
+{
+	TimeSchedule.SetDailyTimeZone(aDailyTimeZone);
+	TimeSchedule.ResetMinute();
 
-	OnUpdateScheduleDelegate.Broadcast(static_cast<int32>(TimeSchedule->GetCurrentScheduleType()));
+	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
+	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
+}
+
+void UMS_ScheduleManager::PassTheDay()
+{
+	TimeSchedule.PassTheDay();
+
+	SetDailyTimeZone(EMS_DailyTimeZone::Morning);
+}
+
+int32 UMS_ScheduleManager::GetMinute() const
+{
+	return TimeSchedule.GetMinute();
 }
 
 void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
@@ -188,31 +171,26 @@ void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
 	gItemMng.SetItems(aTakeItems);
 }
 
-void UMS_ScheduleManager::TransferServer() const
+void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent)
 {
-	gTestServer.RenewSchedule(TimeSchedule->GetNextScheduleType());
-}
+	MinuteToScheduleEvent = aMinuteToScheduleEvent;
 
-void UMS_ScheduleManager::TransferItemsToServer(const TMap<int32, int32>& aTransferItems)
-{
-	gTestServer.RenewItems(aTransferItems);
+	TimeSchedule.ResetMinute();
+	if (MinuteToScheduleEvent.Contains(0))
+	{
+		OnUpdateScheduleEventDelegate.Broadcast(*MinuteToScheduleEvent.Find(0));
+	}
+	
+	PlayTimer(aGamePlayMinute);
 }
 
 bool UMS_ScheduleManager::IsNight() const
 {
-	if(!TimeSchedule)
-	{
-		return false;
-	}
+	EMS_DailyTimeZone DailyTimeZone = TimeSchedule.GetGameDate().DailyTimeZone;
 	
-	if(TimeSchedule->GetCurrentScheduleType() < EMS_ScheduleType::Deadline)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+	return DailyTimeZone == EMS_DailyTimeZone::Evening
+		|| DailyTimeZone == EMS_DailyTimeZone::EveningWork
+		|| DailyTimeZone == EMS_DailyTimeZone::Night;
 }
 
 void UMS_ScheduleManager::SetTest()
@@ -246,10 +224,22 @@ void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)
 
 void UMS_ScheduleManager::DuringTimer()
 {
+	int32 PreMinitue = TimeSchedule.GetMinute();
+	
 	CostTimeSecondReal -= IntervalSecondReal;
 	
-	TimeSchedule->UpdateMinute(IntervalSecondReal);
-	OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
+	TimeSchedule.UpdateMinute(IntervalSecondReal);
+	int32 NewMinitue = TimeSchedule.GetMinute();
+	
+	OnUpdateMinuteDelegate.Broadcast(NewMinitue);
+
+	for (int32 i = PreMinitue + 1; i <= NewMinitue; ++i)
+	{
+		if (MinuteToScheduleEvent.Contains(i))
+		{
+			OnUpdateScheduleEventDelegate.Broadcast(*MinuteToScheduleEvent.Find(i));
+		}
+	}
 	
 	if(CostTimeSecondReal <= 0)
 	{
@@ -262,8 +252,6 @@ void UMS_ScheduleManager::DuringTimer()
 
 void UMS_ScheduleManager::EndTimer()
 {
-	// "TEST" Step.3 게임플레이가 끝나면 서버로 보냄. 
-	TransferServer();
 }
 
 UMS_ScheduleManager* UMS_ScheduleManager::GetInstance()

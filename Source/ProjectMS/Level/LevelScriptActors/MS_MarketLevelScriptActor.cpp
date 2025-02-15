@@ -149,7 +149,7 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 		FMS_ModalParameter ModalParameter;
 		ModalParameter.OnCloseWidgetCallback = []()
 		{
-			gScheduleMng.TransferServer();
+			//gScheduleMng.TransferServer();
 		};
 		ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
 		gWidgetMng.ShowModalWidget(ModalParameter);

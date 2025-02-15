@@ -24,7 +24,7 @@ void UMS_ExtensionWidget::NativeConstruct()
 
 	CPP_VerticalBox->ClearChildren();
 
-	for(int32 i = 0 ; i <= static_cast<int32>(EMS_ModeState::RunMarket); i++)
+	for(int32 i = 0 ; i <= static_cast<int32>(EMS_ModeState::RunMarketNormal); i++)
 	{
 		if(const TObjectPtr<UMS_ExtensionButtonWidget> ExtensionButton = Cast<UMS_ExtensionButtonWidget>(gWidgetMng.Create_Widget_NotManaging(UMS_ExtensionButtonWidget::GetWidgetPath())))
 		{

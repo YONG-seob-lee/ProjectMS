@@ -4,11 +4,45 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "Test/TestServer/MS_TestServer.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_ScheduleManager.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleDelegate, int32);
+USTRUCT()
+struct FMS_TimeSchedule
+{
+	GENERATED_BODY()
+	
+public:
+	FMS_TimeSchedule()
+	{}
+	
+	FMS_TimeSchedule(FMS_GameDate aGameDate, int32 aMinute, EMS_MarketNormalScheduleEvent aType)
+	: GameDate(aGameDate), Minute(aMinute)
+	{}
+
+	//void SetScheduleType(EMS_MarketNormalScheduleEvent aType);
+
+	FORCEINLINE void SetGameDate(FMS_GameDate aGameDate) { GameDate = aGameDate; }
+	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.DailyTimeZone = aDailyTimeZone; }
+	FORCEINLINE const FMS_GameDate& GetGameDate() const { return GameDate; }
+	
+	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
+	FORCEINLINE void ResetMinute() { Minute = 0; }
+	FORCEINLINE int32 GetMinute() const { return Minute; }
+	void PassTheDay();
+	
+	//EMS_MarketNormalScheduleEvent GetNextScheduleType();
+
+private:
+	int32 GamePlayTimeSecond = 0;
+
+	FMS_GameDate GameDate;
+	int32 Minute = 0;
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateGameDateDelegate, FMS_GameDate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMinuteDelegate, int32);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleEventDelegate, int32);
 
 /**
  * 현실시간 1분당 게임시간 2시간이 경과되는걸로 확인
@@ -28,23 +62,22 @@ public:
 	virtual void Finalize() override;
 	virtual void BuiltInFinalize() override;
 
-	virtual void Tick(float aDeltaTime);
-
-	int32 GetCurrentMinute() const;
+	virtual void Tick(float aDeltaTime) override;
+	virtual void BeginPlay() override;
 	
-	void TakeTimeSchedule(FMS_TimeSchedule* aTimeSchedule);
+	const FMS_GameDate& GetGameDate() const;
+	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone);
+	void PassTheDay();
+	int32 GetMinute() const;
+	
 	void TakeItems(const TMap<int32, int32>* aTakeItems);
-
-	void TransferServer() const;
-	void TransferItemsToServer(const TMap<int32, int32>& aTransferItems);
-
+	
+	void RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent);
+	
 	bool IsNight() const;
 	
 	//test
 	void SetTest();
-
-	FMS_OnUpdateScheduleDelegate OnUpdateScheduleDelegate;
-	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
 	
 	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
@@ -53,9 +86,11 @@ private:
 	void PlayTimer(int32 aGamePlayMinute);
 	void DuringTimer();
 	void EndTimer();
-	
+
+
+private:
 	FTimerHandle MarketPlayTimerHandle;
-	FMS_TimeSchedule* TimeSchedule = nullptr;
+	FMS_TimeSchedule TimeSchedule;
 
 	int32 CostTimeSecondReal = 0;
 
@@ -68,7 +103,14 @@ private:
 	UPROPERTY()
 	TArray<class UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
 
+	UPROPERTY()
+	TMap<int32, int32> MinuteToScheduleEvent;
+
 public:
+	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
+	FMS_OnUpdateScheduleEventDelegate OnUpdateScheduleEventDelegate;
+	FMS_OnUpdateGameDateDelegate OnUpdateGameDateDelegate;
+	
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;
 	static UMS_ScheduleManager* GetInstance();
 	

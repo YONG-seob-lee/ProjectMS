@@ -4,6 +4,7 @@
 #include "MS_MarketStartModal.h"
 
 #include "Button/MS_Button.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
@@ -15,7 +16,7 @@ void UMS_MarketStartModal::NativeConstruct()
 
 	CPP_FastButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 	{
-		gScheduleMng.SetTest();
+		gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
 		gWidgetMng.CloseModalWidget();
 	});
 }
@@ -24,5 +25,6 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 {
 	CPP_OpeningPlayButton->GetOnClickedDelegate().RemoveAll(this);
 
+	gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
 	gWidgetMng.CloseModalWidget();
 }

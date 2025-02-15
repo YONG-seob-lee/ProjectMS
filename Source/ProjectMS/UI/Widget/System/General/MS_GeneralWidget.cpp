@@ -34,8 +34,7 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
 	CPP_ExpanderButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedExpanderButton);
 	
-	gScheduleMng.OnUpdateScheduleDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
-	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateMinute);
+	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
 
 	InitLeftExpander();
 
@@ -277,17 +276,17 @@ void UMS_GeneralWidget::OnClickedFinancialIndicatorButton()
 
 void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
 {
-	switch(static_cast<EMS_ScheduleType>(ScheduleType))
+	switch(static_cast<EMS_MarketNormalScheduleEvent>(ScheduleType))
 	{
-	case EMS_ScheduleType::Prepare:
-	case EMS_ScheduleType::Deadline:
-	case EMS_ScheduleType::Night:
+	case EMS_MarketNormalScheduleEvent::Prepare:
+	case EMS_MarketNormalScheduleEvent::Deadline:
+	/*case EMS_MarketNormalScheduleEvent::Night:
 		{
 			CPP_TimeLineWidget->IsStartTimer(false);
 			break;
-		}
-	case EMS_ScheduleType::UpAndDown:
-	case EMS_ScheduleType::OpenMarket:
+		}*/
+	case EMS_MarketNormalScheduleEvent::LoadingUnloading:
+	case EMS_MarketNormalScheduleEvent::OpenMarket:
 		{
 			CPP_TimeLineWidget->IsStartTimer(true);
 			break;
@@ -296,14 +295,6 @@ void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
 		{
 			break;
 		}
-	}
-}
-
-void UMS_GeneralWidget::OnUpdateMinute(int32 aMinute)
-{
-	if(CPP_TimeLineWidget)
-	{
-		CPP_TimeLineWidget->UpdateTimer(aMinute);
 	}
 }
 

@@ -20,3 +20,7 @@ void UMS_ManagementBase::PostInitialize()
 void UMS_ManagementBase::Tick(float aDeltaTime)
 {
 }
+
+void UMS_ManagementBase::BeginPlay()
+{
+}

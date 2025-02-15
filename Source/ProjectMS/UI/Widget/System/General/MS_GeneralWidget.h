@@ -54,7 +54,6 @@ private:
 	void OnClickedFinancialIndicatorButton();
 
 	void OnUpdateTimer(int32 ScheduleType);
-	void OnUpdateMinute(int32 aMinute);
 
 	void OpenLeftExpander() const;
 

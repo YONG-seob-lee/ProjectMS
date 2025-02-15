@@ -79,49 +79,49 @@ protected:
 		case EMS_ChattingType::ComeInMarket:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::ComeInMarket), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::ExitOutMarket:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::ComeInMarket), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::PriceTooExpensive:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::PriceTooExpansive), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::PriceResonable:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::PriceResonable), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::PriceCheap:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::PriceCheap), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::Hungry:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::Hungry), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::Thirsty:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::Thirsty), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		case EMS_ChattingType::NuclearMissile:
 			{
 				const FText Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::NuclearMissile), {aParameter01});
-				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetCurrentMinute(), Chatting));
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}
 		default:

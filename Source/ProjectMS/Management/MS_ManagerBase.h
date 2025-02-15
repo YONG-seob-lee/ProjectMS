@@ -25,4 +25,6 @@ public:
 	virtual void BuiltInFinalize() {}
 
 	virtual void Tick(float aDeltaTime) {}
+
+	virtual void BeginPlay() {}
 };

@@ -51,7 +51,10 @@ void AMS_PlayerController::BeginPlay()
 
 	SetupInputComponent();
 
-	//FText::FromStringTable()
+	if(ManagementClient)
+	{
+		ManagementClient->BeginPlay();
+	}
 }
 
 void AMS_PlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)

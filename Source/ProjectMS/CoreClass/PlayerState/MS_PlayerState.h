@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "Save/MS_SaveData.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_PlayerState.generated.h"
 
 /**
@@ -20,6 +21,9 @@ public:
 
 	virtual void PreInitializeComponents() override;
 
+	const FMS_GameDate& GetGameDate() const { return GameDate; }
+	void SetGameDate(FMS_GameDate aGameDate) { GameDate = aGameDate; }
+	
 	const TArray<int32>& GetOpenedZoneIds();
 	void AddOpenedZoneId(int32 aZoneId);
 
@@ -45,6 +49,9 @@ private:
 
 	UPROPERTY()
 	bool bInitDefaultData;
+
+	UPROPERTY()
+	FMS_GameDate GameDate;
 	
 	UPROPERTY()
 	TArray<int32> OpenedZoneIds;

@@ -35,3 +35,8 @@ void UMS_ManagementBoth::Finalize()
 	
 	Super::Finalize();
 }
+
+void UMS_ManagementBoth::BeginPlay()
+{
+	Super::BeginPlay();
+}

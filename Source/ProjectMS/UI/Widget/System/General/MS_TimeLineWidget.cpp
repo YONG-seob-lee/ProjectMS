@@ -16,6 +16,14 @@ namespace DotFlicker
 {
 	constexpr float IntervalTime = 0.5f;
 }
+
+void UMS_TimeLineWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateTimer);
+}
+
 void UMS_TimeLineWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -27,6 +35,8 @@ void UMS_TimeLineWidget::NativeConstruct()
 
 	SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
 	CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
+	
+	UpdateTimer(gScheduleMng.GetMinute());
 }
 
 void UMS_TimeLineWidget::NativeDestruct()
@@ -54,8 +64,12 @@ void UMS_TimeLineWidget::IsStartTimer(bool bStart)
 
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
 {
-	const int32 Hour = aMinute / SecondPerOneMinute;
-	const int32 Minute = aMinute % SecondPerOneMinute;
+	FMS_GameDate GameDate = gScheduleMng.GetGameDate();
+	int32 StartMinute = FMS_GameDate::ConvertTimeZoneToMinute(GameDate.DailyTimeZone);
+	int32 CurrentMinute = StartMinute + aMinute;
+	
+	const int32 Hour = CurrentMinute / SecondPerOneMinute;
+	const int32 Minute = CurrentMinute % SecondPerOneMinute;
 	FString HourString = FString::FromInt(Hour);
 	if(Hour < 10)
 	{
@@ -113,7 +127,8 @@ void UMS_TimeLineWidget::InVisibilityDot() const
 
 void UMS_TimeLineWidget::OnClickedSleepButton()
 {
-	gScheduleMng.TransferServer();
+	gScheduleMng.PassTheDay();
+	
 	if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);

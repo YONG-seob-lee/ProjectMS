@@ -33,43 +33,43 @@ void UMS_AIParameterComponent::BehaviorTrigger(EMS_BehaviorType aBehaviorType)
 	case EMS_BehaviorType::ComeInMarket:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeInMarket);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::ComeOutMarket:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeOutMarket);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::FindItem:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::FindItem);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::TalkToStaff:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::TalkToStaff);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::LostWay:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::LostWay);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::PickUpItem:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::PickUpItem);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::BuyItem:
 		{
 			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::BuyItem);
-			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetCurrentMinute(), Behavior));
+			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	default:

@@ -18,6 +18,7 @@ public:
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
+	virtual void BeginPlay() override;
 	
 private:
 	UPROPERTY()

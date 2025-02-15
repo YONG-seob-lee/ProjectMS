@@ -28,6 +28,11 @@ void AMS_GameState::PostInitializeComponents()
 void AMS_GameState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if(ManagementBoth)
+	{
+		ManagementBoth->BeginPlay();
+	}
 }
 
 void AMS_GameState::EndPlay(const EEndPlayReason::Type EndPlayReason)

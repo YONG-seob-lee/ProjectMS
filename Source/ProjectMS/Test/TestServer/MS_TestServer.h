@@ -4,46 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_TestServer.generated.h"
 
-UENUM()
-enum class EMS_ScheduleType
-{
-	Morning = 0,
-	Prepare = 1,
-	UpAndDown = 2,
-	OpenMarket = 3,
-	Deadline = 4,
-	Night = 5,
-	//BlackMarket
-};
-
-struct FMS_TimeSchedule
-{
-public:
-	FMS_TimeSchedule() {}
-	FMS_TimeSchedule(int32 aYear, int32 aMonth, int32 aDay, int32 aMinute, EMS_ScheduleType aType) : ScheduleType(aType), Year(aYear), Month(aMonth), Day(aDay), Minute(aMinute) {}
-
-	void SetScheduleType(EMS_ScheduleType aType);
-	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() const { return ScheduleType; }
-	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
-	FORCEINLINE int32 GetMinute() const { return Minute; }
-
-	FORCEINLINE EMS_ScheduleType GetCurrentScheduleType() { return ScheduleType; }
-	EMS_ScheduleType GetNextScheduleType();
-
-private:
-	void PassTheDay();
-	
-	EMS_ScheduleType ScheduleType = EMS_ScheduleType::Prepare;
-	
-	int32 GamePlayTimeSecond = 0;
-
-	int32 Year = 0;
-	int32 Month = 0;
-	int32 Day = 0;
-	int32 Minute = 0;
-};
 
 /**
  * 
@@ -56,10 +19,6 @@ public:
 	void Initialize();
 	void Destroy();
 
-	// Schedule
-	void RenewSchedule(EMS_ScheduleType aType);
-	FORCEINLINE FMS_TimeSchedule TransferSchedule() const { return CurrentTime; }
-
 	// Order Item
 	void RenewItems(TMap<int32, int32> aTransferItems);
 
@@ -68,9 +27,6 @@ public:
 	void RenewStaff(int32 aStaffId);
 	
 private:
-	// Schedule
-	FMS_TimeSchedule CurrentTime;
-	
 	// Order Item
 	TMap<int32, int32> Items;
 

@@ -8,117 +8,6 @@
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
-void FMS_TimeSchedule::SetScheduleType(EMS_ScheduleType aType)
-{
-	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-	MS_CHECK(CommonTable);
-
-	const int32 SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
-	switch(aType)
-	{
-	case EMS_ScheduleType::Morning:
-		{
-			if(ScheduleType != EMS_ScheduleType::Night)
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			PassTheDay();
-			Minute = 6 * SecondPerOneMinute;
-			break;
-		}
-	case EMS_ScheduleType::Prepare:
-		{
-			if(ScheduleType != EMS_ScheduleType::Deadline)
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			
-			Minute = 7 * SecondPerOneMinute;
-			break;
-		}
-	case EMS_ScheduleType::UpAndDown:
-		{
-			if(ScheduleType != static_cast<EMS_ScheduleType>(static_cast<int32>(aType) - 1))
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			Minute = 7 * SecondPerOneMinute;
-			break;
-		}
-	case EMS_ScheduleType::OpenMarket:
-		{
-			if(ScheduleType != static_cast<EMS_ScheduleType>(static_cast<int32>(aType) - 1))
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			Minute = 9 * SecondPerOneMinute;
-			break;
-		}
-	case EMS_ScheduleType::Deadline:
-		{
-			if(ScheduleType != static_cast<EMS_ScheduleType>(static_cast<int32>(aType) - 1))
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			Minute = 20 * SecondPerOneMinute;
-			break;
-		}
-	case EMS_ScheduleType::Night:
-		{
-			if(ScheduleType != static_cast<EMS_ScheduleType>(static_cast<int32>(aType) - 1))
-			{
-				MS_LOG(TEXT("Miss Schedule! "));
-				return;
-			}
-			Minute = 22 * SecondPerOneMinute;
-			break;
-		}
-	default:
-		{
-			break;
-		}
-	}
-	
-	ScheduleType = aType;
-}
-
-EMS_ScheduleType FMS_TimeSchedule::GetNextScheduleType()
-{
-	switch(ScheduleType)
-	{
-	case EMS_ScheduleType::Night:
-		{
-			return EMS_ScheduleType::Morning;
-		}
-	default:
-		{
-			return static_cast<EMS_ScheduleType>(static_cast<int32>(ScheduleType) + 1);
-		}
-	}
-}
-
-void FMS_TimeSchedule::PassTheDay()
-{
-	const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-	MS_CHECK(CommonTable);
-	
-	Day += 1;
-	if(Day > CommonTable->GetParameter01(CommonContents::DAYS_PER_ONEMONTH))
-	{
-		Month +=1;
-		Day = 1;
-		if(Month > CommonTable->GetParameter01(CommonContents::MONTH_PER_ONEYEAR))
-		{
-			Year +=1;
-			Month = 1;
-		}
-	}
-}
 
 void UMS_TestServer::Initialize()
 {
@@ -127,14 +16,6 @@ void UMS_TestServer::Initialize()
 
 void UMS_TestServer::Destroy()
 {
-}
-
-void UMS_TestServer::RenewSchedule(EMS_ScheduleType aType)
-{
-	CurrentTime.SetScheduleType(aType);
-
-	// "TEST" Step.4 : 서버에서 클라로 전송.
-	gScheduleMng.TakeTimeSchedule(&CurrentTime);
 }
 
 void UMS_TestServer::RenewItems(TMap<int32, int32> aTransferItems)

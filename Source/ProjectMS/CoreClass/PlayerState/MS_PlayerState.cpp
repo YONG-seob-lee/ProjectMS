@@ -114,6 +114,9 @@ int32 AMS_PlayerState::GetItemCount(int32 aItemId) const
 
 void AMS_PlayerState::InitDefaultPlayerData()
 {
+	// GameData
+	GameDate = FMS_GameDate(1, 1, 1, EMS_DailyTimeZone::Morning);
+	
 	// OpenedZoneIds
 	OpenedZoneIds.AddUnique(1);
 	OpenedZoneIds.AddUnique(10);
@@ -150,6 +153,8 @@ void AMS_PlayerState::InitPlayerData()
 	}
 
 	bInitDefaultData = TestDB->bInitDefaultData;
+
+	GameDate = TestDB->GameDate;
 	
 	OpenedZoneIds = TestDB->OpenedZoneIds;
 
@@ -181,6 +186,8 @@ void AMS_PlayerState::SavePlayerData()
 	UMS_TestDB* NewTestDBData = NewObject<UMS_TestDB>();
 	
 	NewTestDBData->bInitDefaultData = bInitDefaultData;
+
+	NewTestDBData->GameDate = GameDate;
 
 	NewTestDBData->OpenedZoneIds = OpenedZoneIds;
 	

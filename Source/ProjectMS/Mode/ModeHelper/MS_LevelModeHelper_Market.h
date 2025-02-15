@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "MS_LevelModeHelper.h"
-#include "MS_LevelModeHelper_InMarket.generated.h"
+#include "MS_LevelModeHelper_Market.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_LevelModeHelper_InMarket : public UMS_LevelModeHelper
+class PROJECTMS_API UMS_LevelModeHelper_Market : public UMS_LevelModeHelper
 {
 	GENERATED_BODY()
 
 public:
-	UMS_LevelModeHelper_InMarket();
+	UMS_LevelModeHelper_Market();
 	
 	virtual void RegisterMode() override;
 	virtual void UnregisterMode() override;
