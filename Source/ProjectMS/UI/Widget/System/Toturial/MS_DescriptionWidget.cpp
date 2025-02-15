@@ -43,6 +43,7 @@ void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)
 			OnFinishedTutorialCallback();
 		}
 		SetVisibility(ESlateVisibility::Collapsed);
+		RemoveFromParent();
 	}
 }
 

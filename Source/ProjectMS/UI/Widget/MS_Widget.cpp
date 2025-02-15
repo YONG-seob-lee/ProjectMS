@@ -199,25 +199,25 @@ void UMS_Widget::RePositionNamedSlot(const TObjectPtr<UPanelSlot>& NamedSlot) co
 		return;
 	}
 	NamedPanelSlot->SetSize(Tutorial::DefaultSize);
-
+	
 	if(TutorialDirection == EMS_TutorialDirection::UpToRight)
 	{
-		NamedPanelSlot->SetAnchors(FAnchors(1.f, 0.f));
-		NamedPanelSlot->SetPosition(FVector2D(1000.f, -400.f));
+		NamedPanelSlot->SetAnchors(FAnchors(1.f, 0.f, 1.f, 0.f));
+		NamedPanelSlot->SetAlignment(FVector2D(0.f, 1.f));
 	}
 	else if(TutorialDirection == EMS_TutorialDirection::DownToRight)
 	{
-		NamedPanelSlot->SetAnchors(FAnchors(1.f, 1.f));
-		NamedPanelSlot->SetPosition(FVector2D(1000.f, 400.f));
+		NamedPanelSlot->SetAnchors(FAnchors(1.f, 1.f, 1.f, 1.f));
+		NamedPanelSlot->SetAlignment(FVector2D(0.f, 0.f));
 	}
 	else if(TutorialDirection == EMS_TutorialDirection::UpToLeft)
 	{
-		NamedPanelSlot->SetAnchors(FAnchors(0.f, 0.f));
-		NamedPanelSlot->SetPosition(FVector2D(-1000.f, 400.f));
+		NamedPanelSlot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+		NamedPanelSlot->SetAlignment(FVector2D(1.f, 1.f));
 	}
 	else if(TutorialDirection == EMS_TutorialDirection::DownToLeft)
 	{
-		NamedPanelSlot->SetAnchors(FAnchors(0.f, 1.f));
-		NamedPanelSlot->SetPosition(FVector2D(-1000.f, -400.f));
+		NamedPanelSlot->SetAnchors(FAnchors(0.f, 1.f, 0.f, 1.f));
+		NamedPanelSlot->SetAlignment(FVector2D(1.f,0.f));
 	}
 }
