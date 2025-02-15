@@ -21,6 +21,7 @@ void UMS_TimeLineWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	gScheduleMng.OnUpdateGameDateDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateGameDate);
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateTimer);
 }
 
@@ -57,9 +58,10 @@ void UMS_TimeLineWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	}
 }
 
-void UMS_TimeLineWidget::IsStartTimer(bool bStart)
+void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 {
-	FlickerDot(bStart);
+	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
+	FlickerDot(bIsRunning);
 }
 
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const

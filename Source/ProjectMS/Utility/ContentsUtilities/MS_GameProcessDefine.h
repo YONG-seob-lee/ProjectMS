@@ -18,9 +18,10 @@ enum class EMS_ControllerModeType : uint8
 UENUM()
 enum class EMS_ModeState : uint8
 {
-	Normal = 0,
-	Construct = 1,
-	RunMarketNormal = 2,
+	Deactive = 0,
+	Normal = 1,
+	Construct = 2,
+	RunMarketNormal = 3,
 };
 
 UENUM()
@@ -36,6 +37,7 @@ enum class EMS_DailyTimeZone
 UENUM()
 enum class EMS_MarketNormalScheduleEvent
 {
+	None = 0,
 	Prepare = 1,
 	LoadingUnloading = 2,
 	OpenMarket = 3,
@@ -59,6 +61,7 @@ struct FMS_GameDate
 	}
 
 	static int32 ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone);
+	static bool IsRunningTimeZone(EMS_DailyTimeZone aTimeZone);
 
 public:
 	int32 Year;

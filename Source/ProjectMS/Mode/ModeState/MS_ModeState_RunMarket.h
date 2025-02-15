@@ -25,11 +25,12 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 
-	virtual void RunSchedule();
+private:
+	void RunSchedule();
+	void EndSchedule();
 
 public:
 	virtual void UpdateMinute(int32 aCurrentMinute);
-
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent);
 
 	

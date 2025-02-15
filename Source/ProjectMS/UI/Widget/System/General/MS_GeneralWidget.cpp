@@ -34,8 +34,6 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
 	CPP_ExpanderButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedExpanderButton);
-	
-	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_GeneralWidget::OnUpdateTimer);
 
 	InitLeftExpander();
 
@@ -273,30 +271,6 @@ void UMS_GeneralWidget::OnClickedFinancialIndicatorButton()
 	gWidgetMng.ShowModalWidget(Parameter);
 
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UMS_GeneralWidget::OnUpdateTimer(int32 ScheduleType)
-{
-	switch(static_cast<EMS_MarketNormalScheduleEvent>(ScheduleType))
-	{
-	case EMS_MarketNormalScheduleEvent::Prepare:
-	case EMS_MarketNormalScheduleEvent::Deadline:
-	/*case EMS_MarketNormalScheduleEvent::Night:
-		{
-			CPP_TimeLineWidget->IsStartTimer(false);
-			break;
-		}*/
-	case EMS_MarketNormalScheduleEvent::LoadingUnloading:
-	case EMS_MarketNormalScheduleEvent::OpenMarket:
-		{
-			CPP_TimeLineWidget->IsStartTimer(true);
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
 }
 
 void UMS_GeneralWidget::OpenLeftExpander() const

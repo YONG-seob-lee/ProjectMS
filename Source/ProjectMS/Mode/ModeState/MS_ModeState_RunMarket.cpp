@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "AI/AISupervisor/Customer/CustomerSupervisor.h"
 #include "AI/AISupervisor/Staff/StaffSupervisor.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 
 
@@ -17,6 +18,8 @@ void UMS_ModeState_RunMarket::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
 
+	ScheduleEvent.Empty();
+	
 	StaffSupervisor = MS_NewObject<UStaffSupervisor>(this);
 	if (IsValid(StaffSupervisor))
 	{
@@ -69,7 +72,8 @@ void UMS_ModeState_RunMarket::Begin()
 	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::DayTimeWork);
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_ModeState_RunMarket::UpdateMinute);
 	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_ModeState_RunMarket::UpdateScheduleEvent);
-
+	gScheduleMng.OnEndSchedule.AddUObject(this, &UMS_ModeState_RunMarket::EndSchedule);
+	
 	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UMS_ModeState_RunMarket::RunSchedule, 3, false);
 	
 	if (IsValid(StaffSupervisor))
@@ -85,8 +89,6 @@ void UMS_ModeState_RunMarket::Begin()
 
 void UMS_ModeState_RunMarket::Exit()
 {
-	Super::Exit();
-
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->Finalize();
@@ -96,11 +98,19 @@ void UMS_ModeState_RunMarket::Exit()
 	{
 		StaffSupervisor->Finalize();
 	}
+
+	Super::Exit();
 }
 
 void UMS_ModeState_RunMarket::RunSchedule()
 {
-	gScheduleMng.RunSchedule(800, TMap<int32, int32>());
+	gScheduleMng.RunSchedule(800, ScheduleEvent);
+}
+
+void UMS_ModeState_RunMarket::EndSchedule()
+{
+	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
+	gModeMng.ChangeState(EMS_ModeState::Deactive);
 }
 
 void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)

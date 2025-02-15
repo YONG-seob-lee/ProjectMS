@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "Button/MS_Button.h"
 #include "Manager_Client/MS_InputManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"

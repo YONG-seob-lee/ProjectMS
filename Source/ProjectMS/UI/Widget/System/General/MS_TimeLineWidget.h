@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_TimeLineWidget.generated.h"
 
 namespace Sleep
@@ -22,8 +23,9 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	
-	void IsStartTimer(bool bStart);
+
+	void UpdateGameDate(const FMS_GameDate& aGameDate);
+
 	void UpdateTimer(int32 aMinute) const;
 
 	void StartSleepButtonAnim();

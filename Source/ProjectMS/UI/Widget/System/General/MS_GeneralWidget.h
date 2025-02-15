@@ -53,8 +53,6 @@ private:
 	void OnClickedManageCustomerButton();
 	void OnClickedFinancialIndicatorButton();
 
-	void OnUpdateTimer(int32 ScheduleType);
-
 	void OpenLeftExpander() const;
 
 	UPROPERTY(meta = (BindWidget))

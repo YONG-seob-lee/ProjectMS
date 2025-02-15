@@ -31,3 +31,23 @@ int32 FMS_GameDate::ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone)
 
 	return 0;
 }
+
+bool FMS_GameDate::IsRunningTimeZone(EMS_DailyTimeZone aTimeZone)
+{
+	switch (aTimeZone)
+	{
+	case EMS_DailyTimeZone::Morning :
+	case EMS_DailyTimeZone::Evening :
+	case EMS_DailyTimeZone::Night :
+		{
+			return false;
+		}
+	case EMS_DailyTimeZone::DayTimeWork :
+	case EMS_DailyTimeZone::EveningWork :
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

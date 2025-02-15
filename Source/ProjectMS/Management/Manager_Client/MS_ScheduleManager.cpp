@@ -252,6 +252,7 @@ void UMS_ScheduleManager::DuringTimer()
 
 void UMS_ScheduleManager::EndTimer()
 {
+	OnEndSchedule.Broadcast();
 }
 
 UMS_ScheduleManager* UMS_ScheduleManager::GetInstance()

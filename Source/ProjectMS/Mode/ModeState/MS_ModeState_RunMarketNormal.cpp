@@ -17,11 +17,11 @@ void UMS_ModeState_RunMarketNormal::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
 
-	ScheduleEvent.Emplace(static_cast<int32>(EMS_MarketNormalScheduleEvent::Prepare, 0));
-	ScheduleEvent.Emplace(static_cast<int32>(EMS_MarketNormalScheduleEvent::LoadingUnloading, 20));
-	ScheduleEvent.Emplace(static_cast<int32>(EMS_MarketNormalScheduleEvent::OpenMarket, 140));
-	ScheduleEvent.Emplace(static_cast<int32>(EMS_MarketNormalScheduleEvent::Deadline, 770));
-	ScheduleEvent.Emplace(static_cast<int32>(EMS_MarketNormalScheduleEvent::CloseMarket, 800));
+	ScheduleEvent.Emplace(0, static_cast<int32>(EMS_MarketNormalScheduleEvent::Prepare));
+	ScheduleEvent.Emplace(20, static_cast<int32>(EMS_MarketNormalScheduleEvent::LoadingUnloading));
+	ScheduleEvent.Emplace(140, static_cast<int32>(EMS_MarketNormalScheduleEvent::OpenMarket));
+	ScheduleEvent.Emplace(770, static_cast<int32>(EMS_MarketNormalScheduleEvent::Deadline));
+	ScheduleEvent.Emplace(800, static_cast<int32>(EMS_MarketNormalScheduleEvent::CloseMarket));
 }
 
 void UMS_ModeState_RunMarketNormal::Finalize()
@@ -44,11 +44,6 @@ void UMS_ModeState_RunMarketNormal::Exit()
 	Super::Exit();
 }
 
-void UMS_ModeState_RunMarketNormal::RunSchedule()
-{
-	gScheduleMng.RunSchedule(800, TMap<int32, int32>());
-}
-
 void UMS_ModeState_RunMarketNormal::UpdateMinute(int32 aCurrentMinute)
 {
 	Super::UpdateMinute(aCurrentMinute);
@@ -64,7 +59,7 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 	{
 	case EMS_MarketNormalScheduleEvent::Prepare:
 		{
-			gWidgetMng.ShowToastMessage(TEXT("준비 단계!"));
+			gWidgetMng.ShowToastMessage(TEXT("준비 단계! 출근 시간은 7:00입니다."));
 			break;
 		}
 	case EMS_MarketNormalScheduleEvent::LoadingUnloading:
@@ -88,6 +83,11 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 			break;
 		}*/
 	case EMS_MarketNormalScheduleEvent::Deadline:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("곧 마켓 영업이 끝납니다. 계산하고 나가주세요~!"));
+			break;
+		}
+	case EMS_MarketNormalScheduleEvent::CloseMarket:
 		{
 			// 타이머 없어도 돼
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));

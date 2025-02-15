@@ -40,9 +40,10 @@ private:
 	int32 Minute = 0;
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateGameDateDelegate, FMS_GameDate);
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateGameDateDelegate, const FMS_GameDate&);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMinuteDelegate, int32);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateScheduleEventDelegate, int32);
+DECLARE_MULTICAST_DELEGATE(FMS_OnEndSchedule);
 
 /**
  * 현실시간 1분당 게임시간 2시간이 경과되는걸로 확인
@@ -110,6 +111,7 @@ public:
 	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
 	FMS_OnUpdateScheduleEventDelegate OnUpdateScheduleEventDelegate;
 	FMS_OnUpdateGameDateDelegate OnUpdateGameDateDelegate;
+	FMS_OnEndSchedule OnEndSchedule;
 	
 	inline static TObjectPtr<UMS_ScheduleManager> ScheduleManager = nullptr;
 	static UMS_ScheduleManager* GetInstance();
