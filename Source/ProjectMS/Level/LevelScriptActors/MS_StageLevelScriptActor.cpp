@@ -14,6 +14,7 @@
 #include "Components/LightComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/NightProp/MS_NightProp.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
@@ -319,6 +320,7 @@ void AMS_StageLevelScriptActor::ProcessNightToDay(float DeltaTime)
 	if(DirectionalLightColorVolume >= 255.f)
 	{
 		bStartNightToDayTrigger = false;
+		gWidgetMng.ShowToastMessage(TEXT("아침이 밝았습니다~~"));
 	}
 	else if(DirectionalLightColorVolume >= 200.f)
 	{

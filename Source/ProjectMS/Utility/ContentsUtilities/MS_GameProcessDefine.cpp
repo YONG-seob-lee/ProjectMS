@@ -3,6 +3,70 @@
 
 #include "MS_GameProcessDefine.h"
 
+bool FMS_GameDate::operator==(const FMS_GameDate& aOther) const
+{
+	return Year == aOther.Year && Month == aOther.Month && Day == aOther.Day && DailyTimeZone == aOther.DailyTimeZone;
+}
+
+bool FMS_GameDate::operator!=(const FMS_GameDate& aOther) const
+{
+	return !(*this == aOther);
+}
+
+bool FMS_GameDate::operator<(const FMS_GameDate& aOther) const
+{
+	if (Year < aOther.Year)
+	{
+		return true;
+	}
+	else if (Year > aOther.Year)
+	{
+		return false;
+	}
+	else
+	{
+		if (Month < aOther.Month)
+		{
+			return true;
+		}
+		else if (Month > aOther.Month)
+		{
+			return false;
+		}
+		else
+		{
+			if (Day < aOther.Day)
+			{
+				return true;
+			}
+			else if (Day > aOther.Day)
+			{
+				return false;
+			}
+			else
+			{
+				if (DailyTimeZone < aOther.DailyTimeZone)
+				{
+					return true;
+				}
+				else if (DailyTimeZone > aOther.DailyTimeZone)
+				{
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+	}
+}
+
+bool FMS_GameDate::operator>(const FMS_GameDate& aOther) const
+{
+	return (*this != aOther) && !(*this < aOther);
+}
+
 int32 FMS_GameDate::ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone)
 {
 	switch (aTimeZone)

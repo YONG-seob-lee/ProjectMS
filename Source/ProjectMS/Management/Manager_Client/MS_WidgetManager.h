@@ -51,7 +51,6 @@ public:
 	
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
-	void RequestPassTimerWidget() const;
 
 	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
 

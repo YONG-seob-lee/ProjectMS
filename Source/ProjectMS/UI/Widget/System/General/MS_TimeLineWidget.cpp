@@ -17,14 +17,6 @@ namespace DotFlicker
 	constexpr float IntervalTime = 0.5f;
 }
 
-void UMS_TimeLineWidget::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-
-	gScheduleMng.OnUpdateGameDateDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateGameDate);
-	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateTimer);
-}
-
 void UMS_TimeLineWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -36,8 +28,12 @@ void UMS_TimeLineWidget::NativeConstruct()
 
 	SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
 	CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
-	
+
+	UpdateGameDate(gScheduleMng.GetGameDate());
 	UpdateTimer(gScheduleMng.GetMinute());
+
+	gScheduleMng.OnUpdateGameDateDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateGameDate);
+	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_TimeLineWidget::UpdateTimer);
 }
 
 void UMS_TimeLineWidget::NativeDestruct()
@@ -51,23 +47,30 @@ void UMS_TimeLineWidget::NativeDestruct()
 void UMS_TimeLineWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if(bStartPassDayTimer)
-	{
-		ProcessPassDayTimer(InDeltaTime);
-	}
 }
 
 void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 {
-	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
+	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.GetDailyTimeZone());
 	FlickerDot(bIsRunning);
+
+	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
+
+	bool bCanSleep = aGameDate.GetDailyTimeZone() == EMS_DailyTimeZone::Evening || aGameDate.GetDailyTimeZone() == EMS_DailyTimeZone::Night;
+	if (bCanSleep)
+	{
+		StartSleepButtonAnim();
+	}
+	else
+	{
+		CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
 {
 	FMS_GameDate GameDate = gScheduleMng.GetGameDate();
-	int32 StartMinute = FMS_GameDate::ConvertTimeZoneToMinute(GameDate.DailyTimeZone);
+	int32 StartMinute = FMS_GameDate::ConvertTimeZoneToMinute(GameDate.GetDailyTimeZone());
 	int32 CurrentMinute = StartMinute + aMinute;
 	
 	const int32 Hour = CurrentMinute / SecondPerOneMinute;
@@ -96,12 +99,6 @@ void UMS_TimeLineWidget::StartSleepButtonAnim()
 	PlayAnimationByName(Sleep::Animation, 0.f, 999999);
 }
 
-void UMS_TimeLineWidget::RequestPassTimer()
-{
-	bStartPassDayTimer = true;
-	PassDayTimerMinute = 22 * 60;
-}
-
 void UMS_TimeLineWidget::FlickerDot(bool bFlicker)
 {
 	if(bFlicker)
@@ -119,7 +116,7 @@ void UMS_TimeLineWidget::InVisibilityDot() const
 {
 	if(CPP_Dot->IsVisible())
 	{
-		CPP_Dot->SetVisibility(ESlateVisibility::Collapsed);
+		CPP_Dot->SetVisibility(ESlateVisibility::Hidden);
 	}
 	else
 	{
@@ -139,21 +136,4 @@ void UMS_TimeLineWidget::OnClickedSleepButton()
 	CPP_SleepButton->GetOnClickedDelegate().RemoveAll(this);
 	StopAllAnimations();
 	CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UMS_TimeLineWidget::ProcessPassDayTimer(float InDeltaTime)
-{
-	PassDayTimerMinute += InDeltaTime * 170.f;
-	if(PassDayTimerMinute >= 24 * 60)
-	{
-		PassDayTimerMinute = 0;
-	}
-	if(PassDayTimerMinute >= 6 * 60 && PassDayTimerMinute < 6 * 61)
-	{
-		UpdateTimer(6 * 60);
-		gWidgetMng.ShowToastMessage(TEXT("아침이 밝았습니다~~"));
-		bStartPassDayTimer = false;
-		return;
-	}
-	UpdateTimer(PassDayTimerMinute);
 }

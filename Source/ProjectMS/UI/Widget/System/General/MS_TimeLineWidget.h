@@ -19,7 +19,6 @@ class PROJECTMS_API UMS_TimeLineWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
@@ -30,21 +29,18 @@ public:
 
 	void StartSleepButtonAnim();
 
-	void RequestPassTimer();
 	
 private:
 	void FlickerDot(bool bFlicker);
 	void InVisibilityDot() const;
 	
 	void OnClickedSleepButton();
-
-	void ProcessPassDayTimer(float InDeltaTime);
 	
 	FTimerHandle DotFlickerHandle;
 	int32 SecondPerOneMinute = 0;
-	
-	bool bStartPassDayTimer = false;
-	int32 PassDayTimerMinute = 0;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_Day = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_Hour = nullptr;

@@ -44,8 +44,7 @@ public:
 	void SetBGMAnimation(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 	void CloseModalWidget() const;
-
-	void RequestPassTimer() const;
+	
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
 	void Test(int32 t) const;

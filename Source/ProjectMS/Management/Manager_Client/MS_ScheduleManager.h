@@ -23,8 +23,10 @@ public:
 	//void SetScheduleType(EMS_MarketNormalScheduleEvent aType);
 
 	FORCEINLINE void SetGameDate(FMS_GameDate aGameDate) { GameDate = aGameDate; }
-	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.DailyTimeZone = aDailyTimeZone; }
 	FORCEINLINE const FMS_GameDate& GetGameDate() const { return GameDate; }
+	
+	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.SetDailyTimeZone(aDailyTimeZone); }
+	FORCEINLINE EMS_DailyTimeZone GetDailyTimeZone() const { return GameDate.GetDailyTimeZone(); }
 	
 	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
 	FORCEINLINE void ResetMinute() { Minute = 0; }
@@ -70,6 +72,8 @@ public:
 	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone);
 	void PassTheDay();
 	int32 GetMinute() const;
+
+	void SaveGameDate() const;
 	
 	void TakeItems(const TMap<int32, int32>* aTakeItems);
 	

@@ -33,8 +33,6 @@ public:
 	
 	void SetType(EMS_GeneralWidgetType aType);
 
-	void RequestPassTimer() const;
-
 	void Test(int32 t) const;
 private:
 	void InitLeftExpander();

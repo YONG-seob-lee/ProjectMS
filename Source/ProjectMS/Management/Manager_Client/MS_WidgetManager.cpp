@@ -241,11 +241,6 @@ void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
 	RootWidget->ShowGeneralWidget(bShow);
 }
 
-void UMS_WidgetManager::RequestPassTimerWidget() const
-{
-	RootWidget->RequestPassTimer();
-}
-
 void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition)
 {
 	if (IsValid(aWidget))

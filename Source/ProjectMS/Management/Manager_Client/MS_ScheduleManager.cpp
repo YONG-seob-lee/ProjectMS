@@ -138,6 +138,9 @@ void UMS_ScheduleManager::BeginPlay()
 
 	TimeSchedule.SetGameDate(PlayerState->GetGameDate());
 	TimeSchedule.ResetMinute();
+
+	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
+	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
 }
 
 const FMS_GameDate& UMS_ScheduleManager::GetGameDate() const
@@ -150,6 +153,8 @@ void UMS_ScheduleManager::SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone)
 	TimeSchedule.SetDailyTimeZone(aDailyTimeZone);
 	TimeSchedule.ResetMinute();
 
+	SaveGameDate();
+	
 	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
 	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
 }
@@ -157,13 +162,40 @@ void UMS_ScheduleManager::SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone)
 void UMS_ScheduleManager::PassTheDay()
 {
 	TimeSchedule.PassTheDay();
-
-	SetDailyTimeZone(EMS_DailyTimeZone::Morning);
+	TimeSchedule.SetDailyTimeZone(EMS_DailyTimeZone::Morning);
+	TimeSchedule.ResetMinute();
+	
+	SaveGameDate();
+	
+	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
+	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
 }
 
 int32 UMS_ScheduleManager::GetMinute() const
 {
 	return TimeSchedule.GetMinute();
+}
+
+void UMS_ScheduleManager::SaveGameDate() const
+{
+	const FMS_GameDate& GameDate = TimeSchedule.GetGameDate();
+
+	if (GameDate == FMS_GameDate())
+	{
+		return;
+	}
+	
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	PlayerState->SetGameDate(GameDate);
+	PlayerState->SavePlayerData();
 }
 
 void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
@@ -186,7 +218,7 @@ void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, i
 
 bool UMS_ScheduleManager::IsNight() const
 {
-	EMS_DailyTimeZone DailyTimeZone = TimeSchedule.GetGameDate().DailyTimeZone;
+	EMS_DailyTimeZone DailyTimeZone = TimeSchedule.GetDailyTimeZone();
 	
 	return DailyTimeZone == EMS_DailyTimeZone::Evening
 		|| DailyTimeZone == EMS_DailyTimeZone::EveningWork

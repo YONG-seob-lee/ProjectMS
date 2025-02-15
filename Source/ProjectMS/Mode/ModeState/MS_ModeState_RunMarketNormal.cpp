@@ -72,16 +72,6 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
 			break;
 		}
-	/*case EMS_MarketNormalScheduleEvent::Morning:
-		{
-			gWidgetMng.ShowToastMessage(TEXT("Zzz  Zzz  Zzzzz"));
-			gWidgetMng.RequestPassTimerWidget();
-		}
-	case EMS_MarketNormalScheduleEvent::Night:
-		{
-			//OnUpdateMinuteDelegate.Broadcast(TimeSchedule->GetMinute());
-			break;
-		}*/
 	case EMS_MarketNormalScheduleEvent::Deadline:
 		{
 			gWidgetMng.ShowToastMessage(TEXT("곧 마켓 영업이 끝납니다. 계산하고 나가주세요~!"));

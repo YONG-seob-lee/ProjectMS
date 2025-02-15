@@ -25,7 +25,7 @@ enum class EMS_ModeState : uint8
 };
 
 UENUM()
-enum class EMS_DailyTimeZone
+enum class EMS_DailyTimeZone : int32
 {
 	Morning = 0,
 	DayTimeWork = 1,	// Market
@@ -51,22 +51,30 @@ struct FMS_GameDate
 	GENERATED_BODY()
 
 	FMS_GameDate()
-		: Year(0), Month(0), Day(0), DailyTimeZone(EMS_DailyTimeZone::Morning)
+		: Year(0), Month(0), Day(0), DailyTimeZone(static_cast<int32>(EMS_DailyTimeZone::Morning))
 	{
 	}
 
 	FMS_GameDate(int32 aYear, int32 aMonth, int32 aDay, EMS_DailyTimeZone aDailyTimeZone)
-	: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(aDailyTimeZone)
+	: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(static_cast<int32>(aDailyTimeZone))
 	{
 	}
 
+	bool operator==(const FMS_GameDate& aOther) const;
+	bool operator!=(const FMS_GameDate& aOther) const;
+	bool operator<(const FMS_GameDate& aOther) const;
+	bool operator>(const FMS_GameDate& aOther) const;
+
 	static int32 ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone);
 	static bool IsRunningTimeZone(EMS_DailyTimeZone aTimeZone);
+
+	EMS_DailyTimeZone GetDailyTimeZone() const { return static_cast<EMS_DailyTimeZone>(DailyTimeZone); }
+	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { DailyTimeZone = static_cast<int32>(aDailyTimeZone); }
 
 public:
 	int32 Year;
 	int32 Month;
 	int32 Day;
 
-	EMS_DailyTimeZone DailyTimeZone;
+	int32 DailyTimeZone;
 };

@@ -111,16 +111,6 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 			break;
 		}
 	}
-
-	if(gScheduleMng.IsNight())
-	{
-		CPP_TimeLineWidget->StartSleepButtonAnim();
-	}
-}
-
-void UMS_GeneralWidget::RequestPassTimer() const
-{
-	CPP_TimeLineWidget->RequestPassTimer();
 }
 
 void UMS_GeneralWidget::Test(int32 t) const

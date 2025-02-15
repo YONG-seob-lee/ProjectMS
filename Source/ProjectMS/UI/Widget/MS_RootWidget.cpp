@@ -228,11 +228,6 @@ void UMS_RootWidget::CloseModalWidget() const
 	CPP_ModalWidget->CloseModal();
 }
 
-void UMS_RootWidget::RequestPassTimer() const
-{
-	CPP_GeneralWidget->RequestPassTimer();
-}
-
 void UMS_RootWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const
 {
 	CPP_MessagePanel->SetVisibility(ESlateVisibility::Visible);
