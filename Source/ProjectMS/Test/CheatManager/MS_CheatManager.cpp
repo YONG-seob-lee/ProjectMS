@@ -3,6 +3,7 @@
 
 #include "MS_CheatManager.h"
 
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -140,6 +141,7 @@ void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 	}
 }
 
+#if WITH_EDITOR
 void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 {
 	TArray<FMS_DialogParameter> DialogParameters;
@@ -149,9 +151,23 @@ void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
 	gWidgetMng.RequestDialog(DialogParameters);
 }
+#endif
 
+#if WITH_EDITOR
 void UMS_CheatManager::RequestTutorial(int32 t)
 {
 	gWidgetMng.Test(t);
+}
+#endif
+
+void UMS_CheatManager::ResetProcessTutorial()
+{
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return;
+	}
+
+	GameUserSettings->ResetProcessTutorial();
 }
 #endif

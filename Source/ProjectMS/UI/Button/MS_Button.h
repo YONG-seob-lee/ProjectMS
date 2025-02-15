@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
+#include "Table/Caches/MS_TutorialCacheTable.h"
 #include "Widget/MS_Widget.h"
 #include "MS_Button.generated.h"
 
@@ -50,8 +51,9 @@ public:
 
 	void OnHoverJoyStick();
 	void UnHoverJoyStick();
-	
-	virtual void PlayTutorial(const FString& Desc, const FString& SubDesc);
+
+	virtual bool CheckIsTutorialFinished(EMS_TutorialType aTutorialKey);
+	virtual void PlayTutorial(const FText& Desc, const FText& SubDesc);
 	
 private:
 	void SetDelegates();

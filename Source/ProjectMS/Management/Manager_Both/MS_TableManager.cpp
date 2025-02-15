@@ -15,6 +15,7 @@
 #include "Table/Caches/MS_StaffAbilityCacheTable.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Table/Caches/MS_StorageCacheTable.h"
+#include "Table/Caches/MS_TutorialCacheTable.h"
 #include "Table/RowBase/MS_BasePathImgFile.h"
 
 void FMS_CacheTableData::Finalize()
@@ -272,6 +273,7 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::Staff, TEXT("/Game/TableData/Staff.Staff"), UMS_StaffCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::StaffAbility, TEXT("/Game/TableData/StaffAbility.StaffAbility"), UMS_StaffAbilityCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::MenuElement, TEXT("/Game/TableData/MenuElement.MenuElement"), UMS_MenuElementCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::Tutorial, TEXT("/Game/TableData/Tutorial.Tutorial"), UMS_TutorialCacheTable::StaticClass());
 }
 
 void UMS_TableManager::LoadComplete(const FString& aTableName, TObjectPtr<UObject> aTableData)

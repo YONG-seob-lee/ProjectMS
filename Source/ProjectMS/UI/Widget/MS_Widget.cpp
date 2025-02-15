@@ -54,7 +54,7 @@ void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
 	Super::NativeTick(aMyGeometry, aInDeltaTime);
 }
 
-void UMS_Widget::PlayTutorial(const FString& Desc, const FString& SubDesc)
+void UMS_Widget::PlayTutorial(const FText& Desc, const FText& SubDesc)
 {
 	const TObjectPtr<UNamedSlot> NamedSlot = GetNamedSlot();
 	if(!NamedSlot)

@@ -8,9 +8,11 @@
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
 #include "Components/NamedSlot.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
+#include "Table/Caches/MS_TutorialCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MenuElementData.h"
 #include "Widget/Staff/Modal/MS_HireStaffWidget.h"
 #include "Widget/Staff/Modal/MS_StaffManagementWidget.h"
@@ -36,8 +38,6 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_ExpanderButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedExpanderButton);
 
 	InitLeftExpander();
-
-	//CPP_NamedSlot->
 }
 
 void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
@@ -117,11 +117,11 @@ void UMS_GeneralWidget::Test(int32 t) const
 {
 	if(t == 1)
 	{
-		CPP_LeftButton->PlayTutorial(TEXT("해당 버튼은 스케줄 관리 버튼 입니다.."), TEXT("글루따띠온~"));
+		CPP_LeftButton->PlayTutorial(FText::FromString(TEXT("해당 버튼은 스케줄 관리 버튼 입니다..")), FText::FromString(TEXT("글루따띠온~")));
 	}
 	else if(t == 2)
 	{
-		CPP_RightButton->PlayTutorial(TEXT("해당 버튼은 통합 시스템 버튼 입니다."), TEXT("글루따띠온~"));
+		CPP_RightButton->PlayTutorial(FText::FromString(TEXT("해당 버튼은 통합 시스템 버튼 입니다.")), FText::FromString(TEXT("글루따띠온~")));
 	}
 }
 
@@ -165,12 +165,21 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 {
 	if(LeftButtonType == EMS_GeneralButtonType::Schedule)
 	{
+		if(CPP_LeftButton->CheckIsTutorialFinished(EMS_TutorialType::Schedule) == false)
+		{
+			return;
+		}
+		
 		FMS_ModalParameter Parameter;
 		Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_ScheduleModalWidget::GetWidgetName());
 		gWidgetMng.ShowModalWidget(Parameter);
 	}
 	else if(LeftButtonType ==EMS_GeneralButtonType::Manage)
 	{
+		if(CPP_LeftButton->CheckIsTutorialFinished(EMS_TutorialType::Manage) == false)
+		{
+			return;
+		}
 		OpenLeftExpander();
 	}
 	else

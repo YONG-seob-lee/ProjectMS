@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
-#include "PlayerState/MS_GameUserSettings.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "MS_QuarterViewCamera.generated.h"
 
 UCLASS() class PROJECTMS_API AMS_QuarterViewCamera : public AMS_ViewCamera

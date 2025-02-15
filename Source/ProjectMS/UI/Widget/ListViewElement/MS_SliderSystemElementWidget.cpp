@@ -7,7 +7,7 @@
 #include "Components/TextBlock.h"
 #include "ElementData/MS_SliderSystemElementData.h"
 #include "Manager_Client/MS_SoundManager.h"
-#include "PlayerState/MS_GameUserSettings.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 
 void UMS_SliderSystemElementWidget::NativeConstruct()
 {

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerState/MS_GameUserSettings.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "Widget/MS_Widget.h"
 #include "MS_TiltSettingWidget.generated.h"
 

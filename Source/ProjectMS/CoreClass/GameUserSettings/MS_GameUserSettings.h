@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Manager_Client/MS_SoundManager.h"
+#include "Table/Caches/MS_TutorialCacheTable.h"
 #include "MS_GameUserSettings.generated.h"
 
 UENUM()
@@ -33,11 +34,16 @@ public:
 
 	void UpdateTiltType(EMS_TiltType aTilt);
 	FORCEINLINE EMS_TiltType GetQuarterViewCameraTiltType() const { return QuarterViewCameraTilt; }
-	
+
+	void ResetProcessTutorial();
+	bool IsProcessTutorial(EMS_TutorialType aTutorialKey);
 private:
 	UPROPERTY(config)
 	TMap<EMS_SoundClassType, float> DefaultSoundVolume;
 
 	UPROPERTY(config)
 	EMS_TiltType QuarterViewCameraTilt = EMS_TiltType::Default;
+
+	UPROPERTY(config)
+	TArray<EMS_TutorialType> ProcessTutorial;
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Button.h"
+#include "Table/Caches/MS_TutorialCacheTable.h"
 #include "MS_GeneralButton.generated.h"
 
 UENUM()
@@ -32,7 +33,7 @@ public:
 	void SetButtonType(EMS_GeneralButtonType aType);
 	
 	virtual void SynchronizeProperties() override;
-	
+
 private:
 	
 	UPROPERTY(Meta = (BindWidget))

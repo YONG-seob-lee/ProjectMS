@@ -4,7 +4,7 @@
 #include "MS_SoundManager.h"
 
 #include "MS_Define.h"
-#include "PlayerState/MS_GameUserSettings.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
 

@@ -40,7 +40,7 @@ public:
 
 	FORCEINLINE void SetOnFinishedTutorialFunc(const TFunction<void()>& aFunc) { OnFinishedTutorialCallback = aFunc; }
 
-	void Start(EMS_TutorialDirection aDirection, const FString& Desc, const FString& SubDesc);
+	void Start(EMS_TutorialDirection aDirection, const FText& Desc, const FText& SubDesc);
 	void Stop();
 
 private:

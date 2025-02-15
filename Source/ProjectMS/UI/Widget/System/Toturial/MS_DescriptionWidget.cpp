@@ -49,12 +49,12 @@ void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)
 	}
 }
 
-void UMS_DescriptionWidget::Start(EMS_TutorialDirection aDirection, const FString& Desc, const FString& SubDesc)
+void UMS_DescriptionWidget::Start(EMS_TutorialDirection aDirection, const FText& Desc, const FText& SubDesc)
 {
 	TargetDirection = aDirection;
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	CPP_Desc->SetText(FText::FromString(Desc));
-	CPP_SubDesc->SetText(FText::FromString(SubDesc));
+	CPP_Desc->SetText(Desc);
+	CPP_SubDesc->SetText(SubDesc);
 
 	PlayDescription(aDirection);
 }

@@ -6,11 +6,39 @@
 #include "MS_Define.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/NamedSlot.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/System/Toturial/MS_DescriptionWidget.h"
 
 UMS_Button::UMS_Button()
 {
+}
+
+bool UMS_Button::CheckIsTutorialFinished(EMS_TutorialType aTutorialKey)
+{
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return true;
+	}
+
+	if(GameUserSettings->IsProcessTutorial(aTutorialKey) == false)
+	{
+		const TObjectPtr<UMS_TutorialCacheTable> TutorialTable = Cast<UMS_TutorialCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Tutorial));
+		if(TutorialTable == nullptr)
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+
+		FText Desc = FText();
+		FText SubDesc = FText();
+		TutorialTable->GetTutorialDesc(static_cast<int32>(aTutorialKey), Desc, SubDesc);
+		PlayTutorial(Desc, SubDesc);
+		return false;
+	}
+	
+	return true;
 }
 
 UMS_Button::~UMS_Button()
@@ -44,7 +72,7 @@ void UMS_Button::UnHoverJoyStick()
 	NativeOnUnhovered();
 }
 
-void UMS_Button::PlayTutorial(const FString& Desc, const FString& SubDesc)
+void UMS_Button::PlayTutorial(const FText& Desc, const FText& SubDesc)
 {
 	const TObjectPtr<UNamedSlot> NamedSlot = GetNamedSlot();
 	if(!NamedSlot)
@@ -56,9 +84,6 @@ void UMS_Button::PlayTutorial(const FString& Desc, const FString& SubDesc)
 	{
 		return; 
 	}
-
-	//UWidget* TutorialContent = this;
-	//DescWidget->SetTutorialContent(*TutorialContent);
 	
 	NamedSlot->SetContent(DescWidget);
 	RePositionNamedSlot(NamedSlot->Slot);

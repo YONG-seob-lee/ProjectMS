@@ -29,6 +29,22 @@ void UMS_GameUserSettings::GetDefaultSoundVolume(TMap<EMS_SoundClassType, float>
 void UMS_GameUserSettings::UpdateTiltType(EMS_TiltType aTilt)
 {
 	QuarterViewCameraTilt = aTilt;
-	FString CameraTiltType = ConvertEnumToString(TEXT("EMS_TiltType"), QuarterViewCameraTilt);
+	const FString CameraTiltType = ConvertEnumToString(TEXT("EMS_TiltType"), QuarterViewCameraTilt);
 	MS_LOG(TEXT("UpdateTileType : %s"), *CameraTiltType);
+}
+
+void UMS_GameUserSettings::ResetProcessTutorial()
+{
+	ProcessTutorial.Empty();
+}
+
+bool UMS_GameUserSettings::IsProcessTutorial(EMS_TutorialType aTutorialKey)
+{
+	if(ProcessTutorial.Contains(aTutorialKey))
+	{
+		return true;
+	}
+	
+	ProcessTutorial.Emplace(aTutorialKey);
+	return false;
 }

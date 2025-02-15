@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
 #include "InputActionValue.h"
-#include "PlayerState/MS_GameUserSettings.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "MS_PlayerCameraManager.generated.h"
 
 UENUM() enum class EMS_ViewCameraType
