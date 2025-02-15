@@ -98,6 +98,7 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 		if(!Unit)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
+			continue;
 		}
 		UnitsName.Emplace(Unit->GetUnitName().ToString(), Unit->GetTableId());
 	}
