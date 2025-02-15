@@ -67,9 +67,13 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageRequestStatus()
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotData.RequestItemTableId);
 	if (ItemData == nullptr)
 	{
+		CPP_ItemSlotWidget->SetSlot(INDEX_NONE);
+		CPP_CountWidget->SetCount(-1, 0);
 		CPP_CountWidget->SetVisibility(ESlateVisibility::Hidden);
+
 		return;
 	}
+	
 	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
@@ -95,11 +99,14 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageCurrentStatus()
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotData.CurrentItemTableId);
 	if (ItemData == nullptr)
 	{
+		CPP_ItemSlotWidget->SetSlot(INDEX_NONE);
+		CPP_CountWidget->SetCount(-1, 0);
 		CPP_CountWidget->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
+
 	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	
+
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
 		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->SlotPath100x100);

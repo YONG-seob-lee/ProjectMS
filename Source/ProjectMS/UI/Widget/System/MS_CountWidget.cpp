@@ -18,7 +18,14 @@ void UMS_CountWidget::SetCount(int32 aMolecular, int32 aDenominator) const
 	{
 		if (aDenominator == -1)
 		{
-			CPP_CountText->SetText(FText::FromString(FString::Format(TEXT("{0} / 000"), {aMolecular})));
+			if (aMolecular == -1)
+			{
+				CPP_CountText->SetText(FText::FromString(TEXT("(교체중) / 000")));
+			}
+			else
+			{
+				CPP_CountText->SetText(FText::FromString(FString::Format(TEXT("{0} / 000"), {aMolecular})));
+			}
 		}
 		else
 		{

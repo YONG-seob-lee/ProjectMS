@@ -82,6 +82,7 @@ void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, boo
 		if (bChangePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+			PlayerState->SavePlayerData();
 		}
 		
 		OnChangeRequestSlotDatas();
@@ -100,6 +101,7 @@ void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bC
 		if (bChangePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+			PlayerState->SavePlayerData();
 		}
 
 		OnChangeRequestSlotDatas();
@@ -118,6 +120,7 @@ void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bo
 		if (bChangePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+			PlayerState->SavePlayerData();
 		}
 		
 		OnChangeRequestSlotDatas();
@@ -146,6 +149,7 @@ void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChang
 		if (bChangePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
+			PlayerState->SavePlayerData();
 		}
 	}
 }
