@@ -28,6 +28,21 @@ struct FMS_ResourceWidgetInfo
 	FORCEINLINE const FName& GetWidgetName() const { return TypeName; }
 };
 
+UENUM()
+enum class EMS_TutorialDirection
+{
+	UpToRight = 1,
+	DownToRight = 2,
+	UpToLeft = 3,
+	DownToLeft = 4
+};
+
+namespace Tutorial
+{
+	const FName SlotName = TEXT("TutorialSlot");
+	const FVector2D DefaultSize = FVector2D(1000.f, 400.f);
+}
+
 /**
  * 
  */
@@ -46,6 +61,8 @@ public:
 	virtual void FinishWidget();
 	
 	virtual void NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime) override;
+
+	virtual void PlayTutorial(const FString& Desc, const FString& SubDesc);
 	
 	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 	
@@ -67,6 +84,12 @@ public:
 	
 private:
 	bool IsManaged = false;
+	
+	TObjectPtr<class UNamedSlot> GetNamedSlot() const;
+	void RePositionNamedSlot(const TObjectPtr<UPanelSlot>& NamedSlot) const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "True"))
+	EMS_TutorialDirection TutorialDirection = EMS_TutorialDirection::UpToRight;
 	
 	FMS_ResourceWidgetInfo ResourceWidgetInfo;
 	

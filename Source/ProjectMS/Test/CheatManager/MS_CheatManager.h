@@ -58,6 +58,6 @@ public:
 	
 #if WITH_EDITOR
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
-	void RequestTutorial(int32 Test);
+	void RequestTutorial();
 #endif
 };

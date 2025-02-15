@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
+#include "Widget/MS_Widget.h"
 #include "MS_Button.generated.h"
 
 /**
@@ -49,6 +50,9 @@ public:
 
 	void OnHoverJoyStick();
 	void UnHoverJoyStick();
+	
+	virtual void PlayTutorial(const FString& Desc, const FString& SubDesc);
+	
 private:
 	void SetDelegates();
 	
@@ -60,6 +64,13 @@ private:
 
 	FORCEINLINE bool IsUseClockedDelay() const { return bUseClickedDelay && 0.f < ClickedDelayTime; }
 	FORCEINLINE bool IsUseLongPressedEvent() const { return bUseLongPressedEvent && 0.f < LongPressedTime && GetWorld() != nullptr; }
+	
+	
+	TObjectPtr<class UNamedSlot> GetNamedSlot() const;
+	void RePositionNamedSlot(const TObjectPtr<UPanelSlot>& NamedSlot) const;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "True"))
+	EMS_TutorialDirection TutorialDirection = EMS_TutorialDirection::UpToRight;
 	
 protected:	
 	UPROPERTY(Category = UMS_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

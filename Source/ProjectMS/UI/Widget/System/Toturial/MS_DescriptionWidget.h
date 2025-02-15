@@ -25,15 +25,6 @@ namespace DescAnim
 	const FName DotAnimationDownToLeft = TEXT("DotAnimation_DownToLeft");
 }
 
-UENUM()
-enum class EMS_TutorialDirection
-{
-	UpToRight = 1,
-	DownToRight = 2,
-	UpToLeft = 3,
-	DownToLeft = 4
-};
-
 
 /**
  * 
@@ -43,6 +34,7 @@ class PROJECTMS_API UMS_DescriptionWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
+	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/SystemWidgets/Tutorial/DescriptionWidget.DescriptionWidget"));}
 	virtual void NativeConstruct() override;
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 

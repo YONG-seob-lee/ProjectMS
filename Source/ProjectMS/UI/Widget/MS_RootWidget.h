@@ -48,7 +48,7 @@ public:
 	void RequestPassTimer() const;
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
-	void Test(int32 test);
+	void Test() const;
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;

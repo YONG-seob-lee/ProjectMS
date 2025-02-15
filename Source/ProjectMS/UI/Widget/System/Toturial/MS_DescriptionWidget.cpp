@@ -10,7 +10,6 @@ void UMS_DescriptionWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	FillDefaultAnimations();
-	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)

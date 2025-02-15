@@ -57,7 +57,7 @@ public:
 
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
-	void Test(int32 test);
+	void Test() const;
 	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;

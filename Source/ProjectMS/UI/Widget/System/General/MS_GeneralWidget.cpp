@@ -4,6 +4,7 @@
 #include "MS_GeneralWidget.h"
 
 #include "MS_TimeLineWidget.h"
+#include "Button/MS_DefaultButton.h"
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
 #include "Components/NamedSlot.h"
@@ -124,9 +125,9 @@ void UMS_GeneralWidget::RequestPassTimer() const
 	CPP_TimeLineWidget->RequestPassTimer();
 }
 
-void UMS_GeneralWidget::Test(int32 test)
+void UMS_GeneralWidget::Test() const
 {
-	CPP_DescriptionWidget->Start(static_cast<EMS_TutorialDirection>(test), TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
+	CPP_LeftButton->PlayTutorial(TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
 }
 
 

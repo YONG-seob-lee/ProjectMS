@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/NamedSlot.h"
-#include "Widget/System/Toturial/MS_DescriptionWidget.h"
 #include "MS_NamedSlot.generated.h"
 
 /**
@@ -17,6 +16,4 @@ class PROJECTMS_API UMS_NamedSlot : public UNamedSlot
 public:
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
-	EMS_TutorialDirection Direction = EMS_TutorialDirection::DownToRight; 
 };
