@@ -8,18 +8,11 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Market/Expander/MS_MarketExpanderWidget.h"
-#include "Widget/Market/Modal/MS_MarketStartModal.h"
-#include "Widget/System/Modal/MS_ModalWidget.h"
 
 
 void UMS_NormalAndConstructModeWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	if(CPP_RunButton)
-	{
-		CPP_RunButton->GetOnClickedDelegate().AddUObject(this, &UMS_NormalAndConstructModeWidget::OnClickedRunButton);
-	}
 
 	if(CPP_ExitButton)
 	{
@@ -35,19 +28,6 @@ void UMS_NormalAndConstructModeWidget::NativeConstruct()
 void UMS_NormalAndConstructModeWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-}
-
-void UMS_NormalAndConstructModeWidget::OnClickedRunButton()
-{
-	EMS_ModeState ModeState = gModeMng.GetCurrentModeStateId();
-	if (ModeState != EMS_ModeState::Normal)
-	{
-		return;
-	}
-
-	FMS_ModalParameter ModalParameter;
-	ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
-	gWidgetMng.ShowModalWidget(ModalParameter);
 }
 
 void UMS_NormalAndConstructModeWidget::OnClickedExitButton()
@@ -82,13 +62,4 @@ void UMS_NormalAndConstructModeWidget::OnClickedExitButton()
 void UMS_NormalAndConstructModeWidget::OnChangeMode(EMS_ModeState aModeState)
 {
 	Super::OnChangeMode(aModeState);
-	
-	if (aModeState == EMS_ModeState::Normal)
-	{
-		CPP_RunButton->SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		CPP_RunButton->SetVisibility(ESlateVisibility::Collapsed);
-	}
 }

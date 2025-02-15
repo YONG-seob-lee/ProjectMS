@@ -67,15 +67,8 @@ struct FMS_GameDate
 
 	static int32 ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone);
 	static bool IsRunningTimeZone(EMS_DailyTimeZone aTimeZone);
-
-	friend FArchive& operator<<(FArchive& Ar, FMS_GameDate& Data)
-	{
-		Ar << Data.Year;
-		Ar << Data.Month;
-		Ar << Data.Day;
-		Ar << Data.DailyTimeZone;
-		return Ar;
-	}
+	static bool IsNight(EMS_DailyTimeZone aTimeZone);
+	
 	
 public:
 	UPROPERTY()

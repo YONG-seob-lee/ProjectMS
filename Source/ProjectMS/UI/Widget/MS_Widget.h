@@ -79,6 +79,7 @@ public:
 
 	TObjectPtr<UWidgetAnimation> GetAnimationByName(FName aAnimName) const;
 	void PlayAnimationByName(FName aName, float aStartTime = 0.f, int32 aLoopCount = 1, EUMGSequencePlayMode::Type aPlayType = EUMGSequencePlayMode::Forward, float aSpeed = 1.f);
+	void StopAnimationByName(FName aName);
 	bool IsExistAnim(FName aAnimName) const;
 	bool IsAnimationPlayingByName(const FName& aName) const;
 	

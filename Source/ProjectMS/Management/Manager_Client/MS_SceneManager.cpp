@@ -49,7 +49,12 @@ void UMS_SceneManager::InitRootWidget()
 	RootWidget = gWidgetMng.GetRootWidget();
 }
 
-FMS_Level* UMS_SceneManager::GetCurrentLevelData()
+EMS_LevelType UMS_SceneManager::GetCurrentLevelType() const
+{
+	return LevelType;
+}
+
+FMS_Level* UMS_SceneManager::GetCurrentLevelData() const
 {
 	MS_CHECK(NewCommand);
 	
@@ -75,7 +80,11 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 {
 	MS_CHECK(aCommand);
 	NewCommand = aCommand;
-
+	if (NewCommand->GetLevelType() != EMS_LevelType::None)
+	{
+		LevelType = NewCommand->GetLevelType();
+	}
+	
 	// 예외체크용 함수
 	RootWidget->ActivatePreventionCover(true);
 	gInputMng.SetAllowInteractActor(false);
@@ -210,7 +219,6 @@ void UMS_SceneManager::EndFade()
 			LevelChangeStep = EMS_FadeStep::Finished;
 			MS_DeleteObject(NewCommand);
 			NewCommand = nullptr;
-
 		}
 	}
 }
@@ -218,11 +226,17 @@ void UMS_SceneManager::EndFade()
 void UMS_SceneManager::RequestLevel()
 {
 	MS_CHECK(NewCommand);
-
+	
 	if(LevelTable)
 	{
-		const FName LevelName = LevelTable->GetLevelName(NewCommand->GetPreviousLevelType());
-		HandleUnloadLevel(LevelName);
+		const FName PreviousLevelName = LevelTable->GetLevelName(NewCommand->GetPreviousLevelType());
+		const FName NewLevelName = LevelTable->GetLevelName(NewCommand->GetLevelType());
+		if (PreviousLevelName == NewLevelName)
+		{
+			return;
+		}
+		
+		HandleUnloadLevel(PreviousLevelName);
 	}
 }
 

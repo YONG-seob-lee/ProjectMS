@@ -75,8 +75,6 @@ public:
 	
 	void RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent);
 	
-	bool IsNight() const;
-	
 	void SetMultiplyIntervalSecondReal(int32 aMultiply);
 	
 	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);

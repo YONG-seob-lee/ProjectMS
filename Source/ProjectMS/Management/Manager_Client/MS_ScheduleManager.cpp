@@ -216,15 +216,6 @@ void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, i
 	PlayTimer(aGamePlayMinute);
 }
 
-bool UMS_ScheduleManager::IsNight() const
-{
-	EMS_DailyTimeZone DailyTimeZone = TimeSchedule.GetDailyTimeZone();
-	
-	return DailyTimeZone == EMS_DailyTimeZone::Evening
-		|| DailyTimeZone == EMS_DailyTimeZone::EveningWork
-		|| DailyTimeZone == EMS_DailyTimeZone::Night;
-}
-
 void UMS_ScheduleManager::SetMultiplyIntervalSecondReal(int32 aMultiply)
 {
 	MultiplyIntervalSecondReal = aMultiply;

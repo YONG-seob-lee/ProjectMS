@@ -41,8 +41,9 @@ public:
 	virtual void PostInitialize() override;
 	virtual void Tick(float DeltaSeconds) override;
 	void InitRootWidget();
-	
-	struct FMS_Level* GetCurrentLevelData();
+
+	EMS_LevelType GetCurrentLevelType() const;
+	struct FMS_Level* GetCurrentLevelData() const;
 	
 	class ALevelScriptActor* GetCurrentLevelScriptActor() const;
 	
@@ -72,6 +73,8 @@ private:
 	TObjectPtr<UWorld> PersistentLevelWorld = nullptr;
 	UPROPERTY()
 	TObjectPtr<UMS_SceneCommand> NewCommand = nullptr;
+	UPROPERTY()
+	EMS_LevelType LevelType = EMS_LevelType::None;
 	UPROPERTY()
 	TObjectPtr<ULevelStreaming> LevelStreamingInst = nullptr;
 	EMS_FadeStep LevelChangeStep= EMS_FadeStep::Undefined;

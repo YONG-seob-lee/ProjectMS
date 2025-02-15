@@ -164,6 +164,14 @@ void UMS_Widget::PlayAnimationByName(FName aName, float aStartTime, int32 aLoopC
 	}
 }
 
+void UMS_Widget::StopAnimationByName(FName aName)
+{
+	if(const TObjectPtr<UWidgetAnimation> WidgetAnimation = GetAnimationByName(aName))
+	{
+		StopAnimation(WidgetAnimation);
+	}
+}
+
 bool UMS_Widget::IsExistAnim(FName aAnimName) const
 {
 	const TObjectPtr<UWidgetAnimation> WidgetAnim = GetAnimationByName(aAnimName);

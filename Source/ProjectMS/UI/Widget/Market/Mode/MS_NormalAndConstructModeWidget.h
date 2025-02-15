@@ -21,8 +21,7 @@ public:
 	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
-	void OnClickedRunButton();
+	
 	void OnClickedExitButton();
 	
 	virtual void OnChangeMode(EMS_ModeState aModeState) override;
@@ -30,9 +29,6 @@ public:
 private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_MarketExpanderWidget> CPP_ExpanderWidget;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_RunButton;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ExitButton;
