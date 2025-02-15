@@ -19,6 +19,7 @@
 #include "Widget/Market/BuyThings/MS_BuyItemWidget.h"
 #include "Widget/Schedule/Modal/MS_ScheduleModalWidget.h"
 #include "Widget/System/Settings/Modal/MS_SettingModalWidget.h"
+#include "Widget/System/Toturial/MS_DescriptionWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -123,6 +124,12 @@ void UMS_GeneralWidget::RequestPassTimer() const
 {
 	CPP_TimeLineWidget->RequestPassTimer();
 }
+
+void UMS_GeneralWidget::Test(int32 test)
+{
+	CPP_DescriptionWidget->Start(static_cast<EMS_TutorialDirection>(test), TEXT("해당 대화창은 튜토리얼 및 퀘스트 진행을 위한 창입니다."), TEXT("글루따띠온~"));
+}
+
 
 void UMS_GeneralWidget::InitLeftExpander()
 {

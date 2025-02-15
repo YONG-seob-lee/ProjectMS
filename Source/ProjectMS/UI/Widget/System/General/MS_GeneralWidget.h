@@ -34,6 +34,8 @@ public:
 	void SetType(EMS_GeneralWidgetType aType);
 
 	void RequestPassTimer() const;
+
+	void Test(int32 test);
 private:
 	void InitLeftExpander();
 	
@@ -56,9 +58,6 @@ private:
 
 	void OpenLeftExpander() const;
 
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UNamedSlot> CPP_NamedSlot = nullptr;
-	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
 	
@@ -103,6 +102,9 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_ExpanderButton = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_DescriptionWidget> CPP_DescriptionWidget = nullptr;
 
 	EMS_GeneralButtonType LeftButtonType = EMS_GeneralButtonType::None;
 	EMS_GeneralButtonType RightButtonType = EMS_GeneralButtonType::None;

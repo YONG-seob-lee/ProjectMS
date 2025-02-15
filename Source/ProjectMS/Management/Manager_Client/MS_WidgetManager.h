@@ -32,9 +32,9 @@ public:
 	
 	TObjectPtr<class UMS_Widget> GetWidget(const FName& aTypeName);
 	TObjectPtr<class UMS_Widget> Create_Widget(const FName& aTypeName, bool bAttachToRoot = true);
-	TObjectPtr<class UMS_Widget> Create_Widget_NotManaging(const FSoftObjectPath& aSoftObjectPath);
+	TObjectPtr<class UMS_Widget> Create_Widget_NotManaging(const FSoftObjectPath& aSoftObjectPath) const;
 
-	void PreDestroyWidget(TObjectPtr<class UMS_Widget> aWidget);
+	void PreDestroyWidget(const TObjectPtr<class UMS_Widget>& aWidget) const;
 	bool DestroyWidget(const FName& aTypeName);
 	bool DestroyWidget(TObjectPtr<UMS_Widget> aWidget);
 	void PostDestroyWidget(const FName& aTypeName);
@@ -56,12 +56,14 @@ public:
 	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
 
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
+
+	void Test(int32 test);
 	
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 
 	void CreateRoot();
-	void AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget);
+	void AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget) const;
 	void RefreshContentWidget();
 	
 	FORCEINLINE TObjectPtr<UMS_RootWidget> GetRootWidget() { return RootWidget; }

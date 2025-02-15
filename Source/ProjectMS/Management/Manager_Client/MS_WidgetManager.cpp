@@ -116,7 +116,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget(const FName& aTypeName, 
 	return Widget;
 }
 
-TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget_NotManaging(const FSoftObjectPath& aSoftObjectPath)
+TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget_NotManaging(const FSoftObjectPath& aSoftObjectPath) const
 {
 	const TObjectPtr<UMS_Widget> Widget = CreateWidget_Internal_NotManaging(aSoftObjectPath.ToString());
 	if(Widget == nullptr)
@@ -128,7 +128,7 @@ TObjectPtr<UMS_Widget> UMS_WidgetManager::Create_Widget_NotManaging(const FSoftO
 	return Widget;
 }
 
-void UMS_WidgetManager::PreDestroyWidget(TObjectPtr<UMS_Widget> aWidget)
+void UMS_WidgetManager::PreDestroyWidget(const TObjectPtr<UMS_Widget>& aWidget) const
 {
 	if(IsValid(aWidget) == false)
 	{
@@ -261,12 +261,17 @@ void UMS_WidgetManager::RequestDialog(const TArray<FMS_DialogParameter>& aDialog
 	RootWidget->RequestDialog(aDialogParameters);
 }
 
+void UMS_WidgetManager::Test(int32 test)
+{
+	RootWidget->Test(test);
+}
+
 void UMS_WidgetManager::CreateRoot()
 {
 	RootWidget = Cast<UMS_RootWidget>(Create_Widget(UMS_RootWidget::GetWidgetName(), false));
 }
 
-void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget)
+void UMS_WidgetManager::AttachToRoot(const TObjectPtr<UMS_Widget>& aWidget) const
 {
 	RootWidget->AttachContentWidget(aWidget);
 }

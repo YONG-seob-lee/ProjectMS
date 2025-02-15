@@ -8,10 +8,24 @@
 
 namespace DescAnim
 {
-	const FName StartTutorial = TEXT("StartTutorial");
-	const FName StopTutorial = TEXT("StopTutorial");
-	const FName DotAnimation = TEXT("DotAnimation");
+	const FName StartUpToRight = TEXT("Start_UpToRight");
+	const FName StopUpToRight = TEXT("Stop_UpToRight");
+	const FName DotAnimation_UpToRight = TEXT("DotAnimation_UpToRight");
+
+	const FName StartDownToRight = TEXT("Start_DownToRight");
+	const FName StopDownToRight = TEXT("Stop_DownToRight");
+	const FName DotAnimation_DownToRight = TEXT("DotAnimation_DownToRight");
 }
+
+UENUM()
+enum class EMS_TutorialDirection
+{
+	UpToRight = 1,
+	DownToRight = 2,
+	UpToLeft = 3,
+	DownToLeft = 4
+};
+
 
 /**
  * 
@@ -25,11 +39,14 @@ public:
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 
 	FORCEINLINE void SetOnFinishedTutorialFunc(const TFunction<void()>& aFunc) { OnFinishedTutorialCallback = aFunc; }
-	
-	void Start(const FString& Desc, const FString& SubDesc);
+
+	void Start(EMS_TutorialDirection aDirection, const FString& Desc, const FString& SubDesc);
 	void Stop();
 
 private:
+	void PlayDescription(EMS_TutorialDirection aDirection);
+
+	EMS_TutorialDirection TargetDirection = EMS_TutorialDirection::UpToRight; 
 	TFunction<void()> OnFinishedTutorialCallback = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
