@@ -61,7 +61,7 @@ bool UMS_GameUserSettings::IsAllProcessTutorialFinished() const
 	return false;
 }
 
-bool UMS_GameUserSettings::IsProcessTutorial(EMS_TutorialType aTutorialKey)
+bool UMS_GameUserSettings::IsTutorialFinished(EMS_TutorialType aTutorialKey)
 {
 	if(ProcessTutorial.Contains(aTutorialKey))
 	{

@@ -3,9 +3,12 @@
 
 #include "MS_Market.h"
 
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Component/Actor/MS_InteractionComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Widget/MS_Widget.h"
 
 
 AMS_Market::AMS_Market(const FObjectInitializer& aObjectInitializer)
@@ -21,7 +24,6 @@ AMS_Market::AMS_Market(const FObjectInitializer& aObjectInitializer)
 void AMS_Market::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 bool AMS_Market::HasInteractionComponent()
@@ -36,6 +38,12 @@ void AMS_Market::OnPressDownEvent()
 
 void AMS_Market::OnPressUpEvent()
 {
+	if(CheckTutorialFinished() == false)
+	{
+		PlayTutorial();
+		return;
+	}
+	
 	InteractionComponent->OnReleasedEvent();
 }
 
@@ -56,5 +64,86 @@ void AMS_Market::LaunchEvent()
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
 
 	gSceneMng.RequestChangeScene(Command);
+}
+
+bool AMS_Market::CheckTutorialFinished()
+{
+	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+	if(!GameUserSettings)
+	{
+		return false;
+	}
+	
+	return GameUserSettings->IsTutorialFinished(EMS_TutorialType::Market);
+}
+
+void AMS_Market::PlayTutorial() const
+{
+	TArray<UActorComponent*> MarketComponents;
+	GetComponents(MarketComponents);
+
+	TObjectPtr<UWidgetComponent> TutorialWidgetComponent = nullptr;
+	for(const auto& MarketComponent : MarketComponents)
+	{
+		if(MarketComponent->GetName() == TEXT("TutorialWidgetComponent"))
+		{
+			TutorialWidgetComponent = Cast<UWidgetComponent>(MarketComponent);
+			break;
+		}
+	}
+	
+	if(!TutorialWidgetComponent)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	const TObjectPtr<UMS_Widget> TutorialSkipWidget = Cast<UMS_Widget>(TutorialWidgetComponent->GetWidget());
+	if(!TutorialSkipWidget)
+	{
+		return;
+	}
+	
+	const TObjectPtr<UMS_TutorialCacheTable> TutorialTable = Cast<UMS_TutorialCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Tutorial));
+	if(TutorialTable == nullptr)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	FText Desc = FText();
+	FText SubDesc = FText();
+	TutorialTable->GetTutorialDesc(static_cast<int32>(EMS_TutorialType::Market), Desc, SubDesc);
+
+	FVector2D ViewPortSize = FVector2D::ZeroVector;
+	GetWorld()->GetGameViewport()->GetViewportSize(ViewPortSize);
+	FVector2D MousePosition = FVector2D::ZeroVector;
+	GetWorld()->GetGameViewport()->GetMousePosition(MousePosition);
+	
+	if(MousePosition.Y * 2 > ViewPortSize.Y)
+	{
+		if(MousePosition.X * 2 > ViewPortSize.X)
+		{
+			//Up
+			TutorialSkipWidget->SetTutorialDirection(EMS_TutorialDirection::UpToLeft);	
+		}
+		else
+		{
+			TutorialSkipWidget->SetTutorialDirection(EMS_TutorialDirection::UpToRight);
+		}
+	}
+	else
+	{
+		if(MousePosition.X * 2 > ViewPortSize.X)
+		{
+			//Down
+			TutorialSkipWidget->SetTutorialDirection(EMS_TutorialDirection::DownToLeft);	
+		}
+		else
+		{
+			TutorialSkipWidget->SetTutorialDirection(EMS_TutorialDirection::DownToRight);
+		}
+	}
+	
+	TutorialSkipWidget->PlayTutorial(Desc, SubDesc);
 }
 

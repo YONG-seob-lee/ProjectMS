@@ -39,7 +39,7 @@ public:
 	void ResetProcessTutorial();
 	void AllSkipProcessTutorial();
 	bool IsAllProcessTutorialFinished() const;
-	bool IsProcessTutorial(EMS_TutorialType aTutorialKey);
+	bool IsTutorialFinished(EMS_TutorialType aTutorialKey);
 private:
 	UPROPERTY(config)
 	TMap<EMS_SoundClassType, float> DefaultSoundVolume;

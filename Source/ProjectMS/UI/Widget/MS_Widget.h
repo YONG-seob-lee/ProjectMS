@@ -82,6 +82,8 @@ public:
 	void StopAnimationByName(FName aName);
 	bool IsExistAnim(FName aAnimName) const;
 	bool IsAnimationPlayingByName(const FName& aName) const;
+
+	FORCEINLINE void SetTutorialDirection(EMS_TutorialDirection aDirection) { TutorialDirection = aDirection; }
 	
 private:
 	bool IsManaged = false;

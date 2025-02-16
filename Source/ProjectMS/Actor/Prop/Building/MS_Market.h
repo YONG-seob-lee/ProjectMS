@@ -24,6 +24,9 @@ public:
 	virtual void LaunchEvent() override;
 
 private:
+	bool CheckTutorialFinished();
+	void PlayTutorial() const;
+
 	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
 };

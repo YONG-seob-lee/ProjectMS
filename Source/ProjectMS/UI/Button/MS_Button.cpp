@@ -22,7 +22,7 @@ bool UMS_Button::CheckIsTutorialFinished(EMS_TutorialType aTutorialKey)
 		return true;
 	}
 
-	if(GameUserSettings->IsProcessTutorial(aTutorialKey) == false)
+	if(GameUserSettings->IsTutorialFinished(aTutorialKey) == false)
 	{
 		const TObjectPtr<UMS_TutorialCacheTable> TutorialTable = Cast<UMS_TutorialCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Tutorial));
 		if(TutorialTable == nullptr)
@@ -84,7 +84,7 @@ void UMS_Button::PlayTutorial(const FText& Desc, const FText& SubDesc)
 	{
 		return; 
 	}
-	
+	NamedSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	NamedSlot->SetContent(DescWidget);
 	RePositionNamedSlot(NamedSlot->Slot);
 	DescWidget->Start(TutorialDirection, Desc, SubDesc);

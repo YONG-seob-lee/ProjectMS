@@ -4,13 +4,11 @@
 #include "MS_Widget.h"
 
 #include "MovieScene.h"
-#include "MS_Define.h"
 #include "Animation/WidgetAnimation.h"
-#include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/NamedSlot.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "System/Toturial/MS_DescriptionWidget.h"
-#include "WidgetComponent/MS_NamedSlot.h"
 
 UMS_Widget::UMS_Widget(const FObjectInitializer& aObjectInitializer) : Super(aObjectInitializer)
 {
@@ -66,7 +64,7 @@ void UMS_Widget::PlayTutorial(const FText& Desc, const FText& SubDesc)
 	{
 		return; 
 	}
-	
+	NamedSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	NamedSlot->SetContent(DescWidget);
 	RePositionNamedSlot(NamedSlot->Slot);
 	DescWidget->Start(TutorialDirection, Desc, SubDesc);
