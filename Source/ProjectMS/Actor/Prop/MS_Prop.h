@@ -76,6 +76,9 @@ protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMeshComponent*> MeshComponents;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class UMS_PropSpaceComponent*> PropSpaceComponents;
 	
 	// Property
 	UPROPERTY(EditDefaultsOnly)
@@ -86,10 +89,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntVector GridNum;
-	
-	// Component
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UMS_PropSpaceComponent*> PropSpaceComponents;
 	
 	// Zone Data
 	UPROPERTY()

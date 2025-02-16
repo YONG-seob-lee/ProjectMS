@@ -4,7 +4,7 @@
 #include "MS_OutsideMoveToMarketAITask.h"
 
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
-#include "AI/AnimInstance/MS_AIAnimInstance.h"
+#include "AnimInstance/MS_AIAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/OutsideAICharacter/MS_OutsideAICharacter.h"
 #include "Manager_Both/MS_UnitManager.h"

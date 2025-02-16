@@ -8,13 +8,12 @@
 #include "MS_MarketFrontActor.h"
 #include "MS_UnitBase.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
-#include "AI/AnimInstance/MS_AIAnimInstance.h"
+#include "AnimInstance/MS_AIAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_AIUnit.h"
 
 
-// Sets default values
 AMS_OutsideAICharacter::AMS_OutsideAICharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,7 +41,6 @@ void AMS_OutsideAICharacter::PostInitializeComponents()
 	}
 }
 
-// Called when the game starts or when spawned
 void AMS_OutsideAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -50,7 +48,6 @@ void AMS_OutsideAICharacter::BeginPlay()
 	NearestSpline = FindNearestSpline();
 }
 
-// Called every frame
 void AMS_OutsideAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
