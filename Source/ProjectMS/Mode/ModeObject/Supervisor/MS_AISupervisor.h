@@ -4,17 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "AISupervisor.generated.h"
+#include "MS_AISupervisor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UAISupervisor : public UObject
+class PROJECTMS_API UMS_AISupervisor : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	UMS_AISupervisor();
+	
 	virtual void Initialize();
 	virtual void Finalize();
 

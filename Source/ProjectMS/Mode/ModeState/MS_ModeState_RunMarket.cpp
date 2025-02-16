@@ -4,10 +4,11 @@
 #include "MS_ModeState_RunMarket.h"
 
 #include "MS_Define.h"
-#include "Mode/ModeObject/Supervisor/Customer/CustomerSupervisor.h"
-#include "Mode/ModeObject/Supervisor/Staff/StaffSupervisor.h"
+#include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
+#include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 
 
 UMS_ModeState_RunMarket::UMS_ModeState_RunMarket()
@@ -19,14 +20,20 @@ void UMS_ModeState_RunMarket::Initialize(uint8 aIndex, const FName& aName)
 	Super::Initialize(aIndex, aName);
 
 	ScheduleEvent.Empty();
+
+	IssueTicketContainer = MS_NewObject<UMS_IssueTicketContainer>(this);
+	if (IsValid(IssueTicketContainer))
+	{
+		IssueTicketContainer->Initialize();
+	}
 	
-	StaffSupervisor = MS_NewObject<UStaffSupervisor>(this);
+	StaffSupervisor = MS_NewObject<UMS_StaffSupervisor>(this);
 	if (IsValid(StaffSupervisor))
 	{
 		StaffSupervisor->Initialize();
 	}
 	
-	CustomerSupervisor = MS_NewObject<UCustomerSupervisor>(this);
+	CustomerSupervisor = MS_NewObject<UMS_CustomerSupervisor>(this);
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->Initialize();
@@ -45,6 +52,12 @@ void UMS_ModeState_RunMarket::Finalize()
 	{
 		StaffSupervisor->Finalize();
 		MS_DeleteObject(StaffSupervisor);
+	}
+
+	if (IsValid(IssueTicketContainer))
+	{
+		IssueTicketContainer->Finalize();
+		MS_DeleteObject(IssueTicketContainer);
 	}
 	
 	Super::Finalize();

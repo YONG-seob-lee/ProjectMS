@@ -39,10 +39,13 @@ private:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<class UStaffSupervisor> StaffSupervisor;
+	TObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
+	
+	UPROPERTY()
+	TObjectPtr<class UMS_StaffSupervisor> StaffSupervisor;
 
 	UPROPERTY()
-	TObjectPtr<class UCustomerSupervisor> CustomerSupervisor;
+	TObjectPtr<class UMS_CustomerSupervisor> CustomerSupervisor;
 	
 	TMap<int32, int32> ScheduleEvent;
 };
