@@ -48,9 +48,34 @@ void AMS_Wall::SetVisibilityByGridOpened(TWeakObjectPtr<AMS_ConstructibleLevelSc
 		bool GridOpend1 = aOwnerLevelScriptActor->IsGridOpened(GridPosition1);
 		bool GridOpend2 = aOwnerLevelScriptActor->IsGridOpened(GridPosition2);
 
-		if ((GridOpend1 && !GridOpend2) || (!GridOpend1 && GridOpend2))
+		if (GridOpend1 && !GridOpend2)
 		{
 			NewVisibility = true;
+
+			TWeakObjectPtr<AActor> WallObject = aOwnerLevelScriptActor->GetGridObject(GridPosition1);
+			if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+			{
+				if (WallProp->GetPropType() == EMS_PropType::Gate)
+				{
+					NewVisibility = false;
+					WallProp->SetActorHiddenInGame(false);
+				}
+			}
+		}
+
+		else if (!GridOpend1 && GridOpend2)
+		{
+			NewVisibility = true;
+
+			TWeakObjectPtr<AActor> WallObject = aOwnerLevelScriptActor->GetGridObject(GridPosition2);
+			if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+			{
+				if (WallProp->GetPropType() == EMS_PropType::Gate)
+				{
+					NewVisibility = false;
+					WallProp->SetActorHiddenInGame(false);
+				}
+			}
 		}
 	}
 

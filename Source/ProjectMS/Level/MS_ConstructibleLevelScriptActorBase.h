@@ -38,6 +38,8 @@ public:
 
 	int32 GetGridZoneIndex(const FIntVector2& aGridPosition) const;
 	bool IsGridOpened(const FIntVector2& aGridPosition) const;
+	
+	TWeakObjectPtr<AActor> GetGridObject(const FIntVector2& aGridPosition) const;
 
 	void InitializeOpenedZoneStates();
 	void RequestOpenZone(int32 aZoneIndex);

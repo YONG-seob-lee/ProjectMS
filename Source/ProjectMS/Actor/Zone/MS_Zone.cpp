@@ -170,6 +170,10 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 					MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
 					MS_ENSURE(false);
 				}
+				else
+				{
+					Unit->GetActor()->SetActorHiddenInGame(true);
+				}
 			}
 			else
 			{

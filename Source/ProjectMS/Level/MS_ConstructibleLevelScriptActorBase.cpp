@@ -279,6 +279,27 @@ bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGri
 	return false;
 }
 
+TWeakObjectPtr<AActor> AMS_ConstructibleLevelScriptActorBase::GetGridObject(const FIntVector2& aGridPosition) const
+{
+	int32 GridZoneIndex = GetGridZoneIndex(aGridPosition);
+	if (GridZoneIndex == INDEX_NONE)
+	{
+		return nullptr;
+	}
+
+	AMS_Zone* Zone = *Zones.Find(GridZoneIndex); // GetGridZoneIndex에서 ContainsCheck 완료
+	if (IsValid(Zone))
+	{
+		const FMS_GridData* GridData = Zone->GetGrid(aGridPosition);
+		if (GridData)
+		{
+			return GridData->Object;
+		}
+	}
+
+	return nullptr;
+}
+
 void AMS_ConstructibleLevelScriptActorBase::InitializeOpenedZoneStates()
 {
 	UWorld* World = GetWorld();
