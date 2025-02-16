@@ -53,7 +53,7 @@ void AMS_Furniture::OnSelectProp(EMS_ModeState aModeState)
 {
 	Super::OnSelectProp(aModeState);
 	
-	if (aModeState == EMS_ModeState::Normal)
+	if (aModeState == EMS_ModeState::Normal || aModeState == EMS_ModeState::RunMarketNormal)
 	{
 		// For PostProcess
 		GetComponents(UMeshComponent::StaticClass(), MeshComponents);
@@ -69,7 +69,7 @@ void AMS_Furniture::OnUnselectProp(EMS_ModeState aModeState)
 {
 	Super::OnUnselectProp(aModeState);
 
-	if (aModeState == EMS_ModeState::Normal)
+	if (aModeState == EMS_ModeState::Normal || aModeState == EMS_ModeState::RunMarketNormal)
 	{
 		// For PostProcess
 		GetComponents(UMeshComponent::StaticClass(), MeshComponents);

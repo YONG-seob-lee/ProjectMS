@@ -65,7 +65,7 @@ FIntVector2 UMS_FurnitureUnit::GetGridPosition() const
 	return Furniture->GetGridPosition();
 }
 
-void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bChangePlayerData /*= false*/)
+void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -75,11 +75,14 @@ void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, boo
 			if (SlotDatas.IsValidIndex(i))
 			{
 				SlotDatas[i] = aSlotDatas[i];
+			}
+			else
+			{
 				break;
 			}
 		}
 
-		if (bChangePlayerData)
+		if (bSavePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
 			PlayerState->SavePlayerData();
@@ -90,7 +93,7 @@ void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, boo
 	}
 }
 
-void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData /*= false*/)
+void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -98,7 +101,7 @@ void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bC
 	
 		SlotDatas[aSlotId].CurrentItemCount += aCount;
 
-		if (bChangePlayerData)
+		if (bSavePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
 			PlayerState->SavePlayerData();
@@ -109,7 +112,7 @@ void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bC
 	}
 }
 
-void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bChangePlayerData /*= false*/)
+void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -117,7 +120,7 @@ void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bo
 	
 		SlotDatas[aSlotId].CurrentItemCount -= aCount;
 
-		if (bChangePlayerData)
+		if (bSavePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
 			PlayerState->SavePlayerData();
@@ -128,7 +131,7 @@ void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bo
 	}
 }
 
-void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChangePlayerData, bool bSavePlayerData /*= false*/)
+void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -146,7 +149,7 @@ void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChang
 		SlotDatas[aSlotId].RequestItemTableId = aItemId;
 		OnChangeRequestSlotDatas();
 
-		if (bChangePlayerData)
+		if (bSavePlayerData)
 		{
 			PlayerState->SetFurnitureSlotDatas(GetGridPosition(), SlotDatas);
 			PlayerState->SavePlayerData();
@@ -155,7 +158,7 @@ void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bChang
 }
 
 void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
-                                             bool bChangePlayerData /*= true*/, bool bSavePlayerData /*= true*/)
+                                             bool bSavePlayerData /*= true*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -219,7 +222,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 							{
 								int32 SubtractCount = FMath::Min(SubtractUnitSlotDatas[i].CurrentItemCount, TotalSubtractCount);
 						
-								SubtractUnit->SubtractCurrentItemCount(i, SubtractCount, bChangePlayerData);
+								SubtractUnit->SubtractCurrentItemCount(i, SubtractCount, bSavePlayerData);
 								TotalSubtractCount -= SubtractCount;
 
 								if (TotalSubtractCount == 0)
@@ -241,7 +244,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 		// 채우기
 		SlotDatas[aSlotId].RequestItemTableId = aItemId;
 		SlotDatas[aSlotId].CurrentItemTableId = aItemId;
-		AddCurrentItemCount(aSlotId, NewItemCount, bChangePlayerData);
+		AddCurrentItemCount(aSlotId, NewItemCount, bSavePlayerData);
 
 		if (bSavePlayerData)
 		{

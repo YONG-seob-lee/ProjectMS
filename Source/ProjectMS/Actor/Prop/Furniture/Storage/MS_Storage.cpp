@@ -1,6 +1,7 @@
 #include "Actor/Prop/Furniture/Storage/MS_Storage.h"
 
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/Storage/MS_StorageStatusWidget.h"
@@ -23,37 +24,35 @@ void AMS_Storage::BeginPlay()
 
 void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 {
-	if (gModeMng.GetCurrentModeStateId() == EMS_ModeState::Normal)
+	StatusWidget= gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false);
+
+	if (StatusWidget != nullptr)
 	{
-		StatusWidget= gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false);
+		gWidgetMng.SetCustomPositionWidget(StatusWidget.Get(), aClickPosition);
 
-		if (StatusWidget != nullptr)
+		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
 		{
-			gWidgetMng.SetCustomPositionWidget(StatusWidget.Get(), aClickPosition);
-
-			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
+			MS_ENSURE(OwnerUnit != nullptr);
+			
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
 			{
-				MS_ENSURE(OwnerUnit != nullptr);
+				StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetSlotCount());
 				
-				if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
+				TArray<FMS_SlotData> SlotDatas;
+				FurnitureUnit->GetSlotDatas(SlotDatas);
+				StorageStatusWidget->UpdateSlotDatas(SlotDatas);
+			
+				// Widget에 Unit함수 Bind
+				StorageStatusWidget->OnClickRequestSlotDelegate.BindWeakLambda(this, [this, FurnitureUnit](int32 aSlotId, int32 aItemId)
 				{
-					StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetSlotCount());
-					
-					TArray<FMS_SlotData> SlotDatas;
-					FurnitureUnit->GetSlotDatas(SlotDatas);
-					StorageStatusWidget->UpdateSlotDatas(SlotDatas);
-				
-					// Widget에 Unit함수 Bind
-					StorageStatusWidget->OnClickRequestSlotDelegate.BindWeakLambda(this, [this, FurnitureUnit](int32 aSlotId, int32 aItemId)
+					if (!IsValid(FurnitureUnit))
 					{
-						if (!IsValid(FurnitureUnit))
-						{
-							return;
-						}
+						return;
+					}
 
-						FurnitureUnit->SetRequestItem(aSlotId, aItemId, true);
-					});
-				}
+					bool bSavePlayerData = !FMS_GameDate::IsRunningTimeZone(gScheduleMng.GetDailyTimeZone());
+					FurnitureUnit->SetRequestItem(aSlotId, aItemId, bSavePlayerData);
+				});
 			}
 		}
 	}

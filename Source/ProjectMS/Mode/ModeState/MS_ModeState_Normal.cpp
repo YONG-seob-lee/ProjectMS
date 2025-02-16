@@ -32,15 +32,15 @@ void UMS_ModeState_Normal::Tick(float aDeltaTime)
 void UMS_ModeState_Normal::Begin()
 {
 	// Delegate
-	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnSelectProp);
-	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnUnselectProp);
+	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnSelectActor);
+	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnUnselectActor);
 
 	// SelectProp
 	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
 	
 	if (SelectedProp != nullptr)
 	{
-		OnSelectProp(SelectedProp.Get());
+		OnSelectActor(SelectedProp.Get());
 	}
 }
 
@@ -50,12 +50,12 @@ void UMS_ModeState_Normal::Exit()
 	
 	if (SelectedProp != nullptr)
 	{
-		OnUnselectProp(SelectedProp.Get());
+		OnUnselectActor(SelectedProp.Get());
 	}
 	
 	// Delegate
-	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnUnselectProp);
-	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnSelectProp);
+	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnUnselectActor);
+	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnSelectActor);
 }
 
 void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
@@ -126,7 +126,7 @@ void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const
 	
 	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
 	{
-		SelectProp(InteractableActor);
+		SelectActor(InteractableActor);
 	}
 }
 
@@ -138,7 +138,7 @@ void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, c
 	{
 		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
-			SelectProp(InteractActor);
+			SelectActor(InteractActor);
 			
 			PropActor->OpenStatusWidget(aPosition);
 		}
@@ -150,7 +150,7 @@ void UMS_ModeState_Normal::OnPinchAction(float aPinchValue)
 	Super::OnPinchAction(aPinchValue);
 }
 
-void UMS_ModeState_Normal::SelectProp(AActor* aSelectedActor)
+void UMS_ModeState_Normal::SelectActor(AActor* aSelectedActor)
 {
 	if (!IsValid(aSelectedActor))
 	{
@@ -168,12 +168,12 @@ void UMS_ModeState_Normal::SelectProp(AActor* aSelectedActor)
 	}
 }
 
-void UMS_ModeState_Normal::UnselectProp()
+void UMS_ModeState_Normal::UnselectActor()
 {
 	gInteractionMng.UnselectActor();
 }
 
-void UMS_ModeState_Normal::OnSelectProp(AActor* aSelectedActor)
+void UMS_ModeState_Normal::OnSelectActor(AActor* aSelectedActor)
 {
 	if (!IsValid(aSelectedActor))
 	{
@@ -186,7 +186,7 @@ void UMS_ModeState_Normal::OnSelectProp(AActor* aSelectedActor)
 	}
 }
 
-void UMS_ModeState_Normal::OnUnselectProp(AActor* aUnselectedActor)
+void UMS_ModeState_Normal::OnUnselectActor(AActor* aUnselectedActor)
 {
 	if (!IsValid(aUnselectedActor))
 	{

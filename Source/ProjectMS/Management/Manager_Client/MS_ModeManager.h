@@ -58,7 +58,7 @@ public:
 	TObjectPtr<UMS_ModeStateBase> GetCurrentModeState() const;
 	EMS_ModeState GetCurrentModeStateId() const;
 	
-	virtual void ChangeState(EMS_ModeState aModeState);
+	void ChangeState(EMS_ModeState aModeState);
 
 	
 private:

@@ -148,6 +148,11 @@ const FMS_GameDate& UMS_ScheduleManager::GetGameDate() const
 	return TimeSchedule.GetGameDate();
 }
 
+const EMS_DailyTimeZone UMS_ScheduleManager::GetDailyTimeZone() const
+{
+	return TimeSchedule.GetGameDate().DailyTimeZone;
+}
+
 void UMS_ScheduleManager::SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone)
 {
 	TimeSchedule.SetDailyTimeZone(aDailyTimeZone);

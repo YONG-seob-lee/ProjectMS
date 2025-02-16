@@ -65,6 +65,7 @@ public:
 	virtual void BeginPlay() override;
 	
 	const FMS_GameDate& GetGameDate() const;
+	const EMS_DailyTimeZone GetDailyTimeZone() const;
 	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone);
 	void PassTheDay();
 	int32 GetMinute() const;

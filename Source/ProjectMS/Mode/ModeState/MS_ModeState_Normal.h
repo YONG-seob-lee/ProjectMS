@@ -50,14 +50,14 @@ public:
 
 	
 	// Select
-	void SelectProp(AActor* aSelectedActor);
-	void UnselectProp();
+	void SelectActor(AActor* aSelectedActor);
+	void UnselectActor();
 	
 	UFUNCTION()
-	void OnSelectProp(AActor* aSelectedActor);	// 기존의 것과 다른 Prop이 선택되야 호출됨
+	void OnSelectActor(AActor* aSelectedActor);	// 기존의 것과 다른 Prop이 선택되야 호출됨
 
 	UFUNCTION()
-	void OnUnselectProp(AActor* aUnselectedActor);
+	void OnUnselectActor(AActor* aUnselectedActor);
 
 
 private:
