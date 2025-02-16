@@ -35,7 +35,10 @@ public:
 	void UpdateTiltType(EMS_TiltType aTilt);
 	FORCEINLINE EMS_TiltType GetQuarterViewCameraTiltType() const { return QuarterViewCameraTilt; }
 
+	// Process Tutorial
 	void ResetProcessTutorial();
+	void AllSkipProcessTutorial();
+	bool IsAllProcessTutorialFinished() const;
 	bool IsProcessTutorial(EMS_TutorialType aTutorialKey);
 private:
 	UPROPERTY(config)

@@ -38,6 +38,29 @@ void UMS_GameUserSettings::ResetProcessTutorial()
 	ProcessTutorial.Empty();
 }
 
+void UMS_GameUserSettings::AllSkipProcessTutorial()
+{
+	for(int32 i = static_cast<int32>(EMS_TutorialType::Schedule) ; i <= static_cast<int32>(EMS_TutorialType::ConstructMode); i++)
+	{
+		ProcessTutorial.Emplace(static_cast<EMS_TutorialType>(i));
+	}
+}
+
+bool UMS_GameUserSettings::IsAllProcessTutorialFinished() const
+{
+	int32 FinishedTutorialCount = 0;
+	for(int32 i = static_cast<int32>(EMS_TutorialType::Schedule) ; i <= static_cast<int32>(EMS_TutorialType::ConstructMode); i++)
+	{
+		FinishedTutorialCount++;
+	}
+	if(ProcessTutorial.Num() == FinishedTutorialCount)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 bool UMS_GameUserSettings::IsProcessTutorial(EMS_TutorialType aTutorialKey)
 {
 	if(ProcessTutorial.Contains(aTutorialKey))
