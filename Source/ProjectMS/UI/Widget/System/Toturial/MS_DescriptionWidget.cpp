@@ -4,7 +4,6 @@
 #include "MS_DescriptionWidget.h"
 
 #include "Components/CanvasPanel.h"
-#include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
 #include "Manager_Client/MS_InputManager.h"
 

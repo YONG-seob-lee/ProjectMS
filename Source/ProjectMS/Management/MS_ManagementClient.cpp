@@ -14,7 +14,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SoundManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Toturial/MS_TutorialHelper.h"
+#include "Tutorial/MS_TutorialHelper.h"
 
 void UMS_ManagementClient::Initialize()
 {
