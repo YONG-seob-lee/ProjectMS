@@ -6,6 +6,7 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
+#include "Manager_Client/MS_InputManager.h"
 
 void UMS_DescriptionWidget::NativeConstruct()
 {
@@ -40,6 +41,7 @@ void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)
 	}
 	else if(aAnimName == DescAnim::StopUpToRight || aAnimName == DescAnim::StopDownToRight || aAnimName == DescAnim::StopUpToLeft || aAnimName == DescAnim::StopDownToLeft)
 	{
+		gInputMng.SetAllowInteractActor(true);
 		if(OnFinishedTutorialCallback)
 		{
 			OnFinishedTutorialCallback();
@@ -51,6 +53,8 @@ void UMS_DescriptionWidget::OnAnimFinished(const FName& aAnimName)
 
 void UMS_DescriptionWidget::Start(EMS_TutorialDirection aDirection, const FText& Desc, const FText& SubDesc)
 {
+	gInputMng.SetAllowInteractActor(false);
+	
 	TargetDirection = aDirection;
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	CPP_Desc->SetText(Desc);
