@@ -17,7 +17,6 @@ class PROJECTMS_API AMS_SpawnPoint : public APlayerStart
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AMS_SpawnPoint(const FObjectInitializer& ObjectInitializer);
 
 	virtual void BeginPlay() override;

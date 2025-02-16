@@ -6,8 +6,9 @@
 UMS_TestDB::UMS_TestDB()
 {
 	bInitDefaultData = false;
-	//GameDate = FMS_GameDate();
+	GameDate = FMS_GameDate();
 	OpenedZoneIds.Empty();
 	MarketFurnitureDatas.Empty();
 	Items.Empty();
+	StaffDatas.Empty();
 }

@@ -10,6 +10,7 @@ namespace AIBlueprintPath
 {
 	const FString OutsideAI = TEXT("/Game/Unit/BP_OutsideAICharacter.BP_OutsideAICharacter_C");
 }
+
 void UMS_AIUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
 {
 	Super::Initialize(aUnitHandle, aUnitType, aUnitTableId);

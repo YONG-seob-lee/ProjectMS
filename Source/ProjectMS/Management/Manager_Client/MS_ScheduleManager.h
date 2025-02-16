@@ -16,7 +16,7 @@ public:
 	FMS_TimeSchedule()
 	{}
 	
-	FMS_TimeSchedule(FMS_GameDate aGameDate, int32 aMinute, EMS_MarketNormalScheduleEvent aType)
+	FMS_TimeSchedule(FMS_GameDate aGameDate, int32 aMinute, EMS_MarketScheduleEvent aType)
 	: GameDate(aGameDate), Minute(aMinute)
 	{}
 	

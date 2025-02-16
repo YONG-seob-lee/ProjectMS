@@ -32,3 +32,13 @@ void UMS_CustomerSupervisor::Exit()
 {
 	Super::Exit();
 }
+
+void UMS_CustomerSupervisor::UpdateMinute(int32 aCurrentMinute)
+{
+	Super::UpdateMinute(aCurrentMinute);
+}
+
+void UMS_CustomerSupervisor::UpdateScheduleEvent(int32 aScheduleEvent)
+{
+	Super::UpdateScheduleEvent(aScheduleEvent);
+}

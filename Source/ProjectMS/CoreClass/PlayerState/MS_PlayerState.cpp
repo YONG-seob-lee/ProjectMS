@@ -142,6 +142,9 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	Items.Emplace(5, 30);
 	Items.Emplace(16, 20);
 	Items.Emplace(17, 10);
+
+	// Staff
+	StaffDatas.Emplace(FMS_StaffData(1));
 }
 
 void AMS_PlayerState::InitPlayerData()
@@ -172,6 +175,8 @@ void AMS_PlayerState::InitPlayerData()
 	}
 	
 	Items = TestDB->Items;
+
+	StaffDatas = TestDB->StaffDatas;
 
 	if (!bInitDefaultData)
 	{
@@ -206,6 +211,8 @@ void AMS_PlayerState::SavePlayerData()
 	}
 
 	NewTestDBData->Items = Items;
+
+	NewTestDBData->StaffDatas = StaffDatas;
 	
 	if (!UGameplayStatics::SaveGameToSlot(NewTestDBData, SaveSlotName, 0))
 	{

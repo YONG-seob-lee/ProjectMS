@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "Mode/ModeObject/Supervisor/MS_AISupervisor.h"
 #include "MS_StaffSupervisor.generated.h"
 
+class UMS_StaffAIUnit;
 /**
  * 
  */
@@ -24,4 +26,24 @@ public:
 	
 	virtual void Begin() override;
 	virtual void Exit() override;
+
+	void SetIssueTicketContainer(TWeakObjectPtr<class UMS_IssueTicketContainer> aIssueTicketContainer);
+
+	
+	virtual void UpdateMinute(int32 aCurrentMinute) override;
+	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
+	
+	void RequestSpawnCharacters(int32 aCurrentMinute);
+	bool SpawnCharacter(const FMS_StaffData& aStaffData);
+
+	
+private:
+	TWeakObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
+
+	TArray<FMS_StaffData> StaffDatas;
+	TMap<int32, int32> NeedToSpawnStaffDataIndexToSpawnMinute;
+
+	TArray<TWeakObjectPtr<UMS_StaffAIUnit>> StaffAIUnits;
+	
+	bool bSpawnCharacter;
 };

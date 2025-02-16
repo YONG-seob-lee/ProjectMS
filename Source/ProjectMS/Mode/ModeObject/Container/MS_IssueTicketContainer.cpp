@@ -4,7 +4,7 @@
 #include "MS_IssueTicketContainer.h"
 
 #include "MS_UnitBase.h"
-#include "Units/MS_StaffCharacterUnit.h"
+#include "Units/MS_StaffAIUnit.h"
 
 
 UMS_IssueTicket::UMS_IssueTicket()
@@ -28,14 +28,9 @@ void UMS_IssueTicket::Finalize()
 	}
 }
 
-void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffCharacterUnit> aStaffUnit)
+void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
 	StaffUnit = aStaffUnit;
-}
-
-int32 UMS_IssueTicket::GetPriority() const
-{
-	return static_cast<int32>(IssueType);
 }
 
 bool UMS_IssueTicket::IsSameIssue(EMS_IssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
@@ -283,11 +278,11 @@ void UMS_IssueTicketContainer::GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTi
 }
 
 void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
-	TWeakObjectPtr<UMS_StaffCharacterUnit> aStaffUnit)
+	TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
 	MS_ENSURE (aTargetTicket != nullptr);
 
-	TWeakObjectPtr<UMS_StaffCharacterUnit> PreviousStaffUnit = aTargetTicket->GetStaffUnit();
+	TWeakObjectPtr<UMS_StaffAIUnit> PreviousStaffUnit = aTargetTicket->GetStaffUnit();
 	
 	if (PreviousStaffUnit != nullptr)
 	{

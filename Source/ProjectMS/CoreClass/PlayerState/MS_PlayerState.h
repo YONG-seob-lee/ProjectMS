@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_PlayerState.generated.h"
 
 /**
@@ -38,6 +39,8 @@ public:
 	void GetAllItems(TMap<int32, int32>& aOutItems) const { aOutItems = Items; }
 	int32 GetItemCount(int32 aItemId) const;
 
+	const TArray<FMS_StaffData>& GetStaffDatas() const { return StaffDatas; }
+
 	
 	void InitDefaultPlayerData();
 	
@@ -61,4 +64,7 @@ private:
 
 	UPROPERTY()
 	TMap<int32, int32> Items;
+
+	UPROPERTY()
+	TArray<FMS_StaffData> StaffDatas;
 };

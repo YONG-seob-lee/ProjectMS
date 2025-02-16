@@ -86,3 +86,5 @@ Id,Directory_Table_Id,BP_File_Name
 8039,8001,BP_MilkE
 8040,8001,BP_MilkF
 8041,8001,BP_MilkG
+9001,9001,BP_StaffAICharacter
+9002,9001,BP_CustomerAICharacter

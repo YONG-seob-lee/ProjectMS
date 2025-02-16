@@ -27,3 +27,11 @@ void UMS_AISupervisor::Begin()
 void UMS_AISupervisor::Exit()
 {
 }
+
+void UMS_AISupervisor::UpdateMinute(int32 aCurrentMinute)
+{
+}
+
+void UMS_AISupervisor::UpdateScheduleEvent(int32 aScheduleEvent)
+{
+}

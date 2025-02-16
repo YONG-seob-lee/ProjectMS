@@ -25,7 +25,7 @@ enum class EMS_ModeState : uint8
 };
 
 UENUM()
-enum class EMS_DailyTimeZone : int32
+enum class EMS_DailyTimeZone : uint8
 {
 	Morning = 0,
 	DayTimeWork = 1,	// Market
@@ -35,7 +35,7 @@ enum class EMS_DailyTimeZone : int32
 };
 
 UENUM()
-enum class EMS_MarketNormalScheduleEvent
+enum class EMS_MarketScheduleEvent : uint8
 {
 	None = 0,
 	Prepare = 1,
@@ -43,6 +43,18 @@ enum class EMS_MarketNormalScheduleEvent
 	OpenMarket = 3,
 	Deadline = 4,
 	CloseMarket = 5,
+};
+
+UENUM()
+enum class EMS_DayOfWeek : uint8
+{
+	Monday = 0,
+	Tuesday = 1,
+	Wednesday = 2,
+	Thursday = 3,
+	Friday = 4,
+	Saturday = 5,
+	Sunday = 6,
 };
 
 USTRUCT()
@@ -55,8 +67,13 @@ struct FMS_GameDate
 	{
 	}
 
+	FMS_GameDate(int32 aYear, int32 aMonth, int32 aDay)
+		: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(EMS_DailyTimeZone::Morning)
+	{
+	}
+	
 	FMS_GameDate(int32 aYear, int32 aMonth, int32 aDay, EMS_DailyTimeZone aDailyTimeZone)
-	: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(aDailyTimeZone)
+		: Year(aYear), Month(aMonth), Day(aDay), DailyTimeZone(aDailyTimeZone)
 	{
 	}
 

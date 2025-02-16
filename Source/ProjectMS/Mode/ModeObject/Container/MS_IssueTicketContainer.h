@@ -25,10 +25,8 @@ public:
 	FORCEINLINE EMS_IssueType GetIssueType() const { return IssueType; }
 	FORCEINLINE TWeakObjectPtr<class UMS_UnitBase> GetRequestUnit() const { return RequestUnit; }
 	FORCEINLINE int32 GetRequestSlot() const { return RequestSlot; }
-	FORCEINLINE TWeakObjectPtr<class UMS_StaffCharacterUnit> GetStaffUnit() const { return StaffUnit; }
-	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffCharacterUnit> aStaffUnit);
-	
-	FORCEINLINE int32 GetPriority() const;
+	FORCEINLINE TWeakObjectPtr<class UMS_StaffAIUnit> GetStaffUnit() const { return StaffUnit; }
+	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
 	bool IsSameIssue(EMS_IssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const;
 	bool IsSameIssue(EMS_IssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit, int32 aRequestSlot) const;
@@ -47,7 +45,7 @@ private:
 	int32 RequestSlot;
 
 	UPROPERTY()
-	TWeakObjectPtr<class UMS_StaffCharacterUnit> StaffUnit;
+	TWeakObjectPtr<class UMS_StaffAIUnit> StaffUnit;
 };
 
 UCLASS()
@@ -73,7 +71,7 @@ public:
 	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle, int32 aSlotId);
 	void GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_IssueType aIssueType, MS_Handle aUnitHandle, int32 aSlotId);
 
-	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffCharacterUnit> aStaffUnit);
+	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 	
 private:
 	TArray<TObjectPtr<UMS_IssueTicket>> IssueTickets;

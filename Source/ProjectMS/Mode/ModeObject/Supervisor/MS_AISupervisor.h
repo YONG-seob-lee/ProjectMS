@@ -24,4 +24,8 @@ public:
 	
 	virtual void Begin();
 	virtual void Exit();
+
+	
+	virtual void UpdateMinute(int32 aCurrentMinute);
+	virtual void UpdateScheduleEvent(int32 aScheduleEvent);
 };

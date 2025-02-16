@@ -6,9 +6,11 @@
 #include "Unit/MS_UnitBase.h"
 #include "Units/MS_AIUnit.h"
 #include "Units/MS_BasePlayerUnit.h"
+#include "Units/MS_CustomerAIUnit.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
 #include "Units/MS_SplineUnit.h"
+#include "Units/MS_StaffAIUnit.h"
 #include "Units/MS_VehicleUnit.h"
 
 
@@ -159,9 +161,17 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 		{
 			return UMS_GateUnit::StaticClass();
 		}
-	case EMS_UnitType::AI:
+	case EMS_UnitType::OutsideAI:
 		{
 			return UMS_AIUnit::StaticClass();
+		}
+	case EMS_UnitType::StaffAI:
+		{
+			return UMS_StaffAIUnit::StaticClass();
+		}
+	case EMS_UnitType::CustomerAI:
+		{
+			return UMS_CustomerAIUnit::StaticClass();
 		}
 	default:
 		{

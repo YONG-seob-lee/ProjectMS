@@ -24,4 +24,8 @@ public:
 	
 	virtual void Begin() override;
 	virtual void Exit() override;
+
+	
+	virtual void UpdateMinute(int32 aCurrentMinute) override;
+	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
 };

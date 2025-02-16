@@ -35,7 +35,7 @@ private:
 	void SetLightColor(EMS_DayAndNight aDayAndNight) const;
 	void SetLightProp(EMS_DayAndNight aDayAndNight);
 	
-	void CollectOutsideDickSpawnPoint() const;
+	void CollectOutsideDuckSpawnPoint() const;
 	
 	void CashingDirectionalLight();
 	void CashingNightPropActors();

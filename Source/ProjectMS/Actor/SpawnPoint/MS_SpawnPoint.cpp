@@ -8,10 +8,8 @@
 #include "Components/CapsuleComponent.h"
 
 
-// Sets default values
 AMS_SpawnPoint::AMS_SpawnPoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
 #if WITH_EDITORONLY_DATA
@@ -48,14 +46,12 @@ AMS_SpawnPoint::AMS_SpawnPoint(const FObjectInitializer& ObjectInitializer) : Su
 
 }
 
-// Called when the game starts or when spawned
 void AMS_SpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AMS_SpawnPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

@@ -8,7 +8,8 @@
 #include "Components/CapsuleComponent.h"
 
 
-AMS_OutsideDuckSpawnPoint::AMS_OutsideDuckSpawnPoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AMS_OutsideDuckSpawnPoint::AMS_OutsideDuckSpawnPoint(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -44,7 +45,6 @@ AMS_OutsideDuckSpawnPoint::AMS_OutsideDuckSpawnPoint(const FObjectInitializer& O
 	const TObjectPtr<UCapsuleComponent> Capsule = GetCapsuleComponent();
 	Capsule->SetCapsuleSize(90.f, 50.f, false);
 #endif
-
 }
 
 FVector AMS_OutsideDuckSpawnPoint::GetSpawnLocation()
@@ -57,14 +57,12 @@ FRotator AMS_OutsideDuckSpawnPoint::GetSpawnRotation()
 	return GetActorRotation();
 }
 
-// Called when the game starts or when spawned
 void AMS_OutsideDuckSpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void AMS_OutsideDuckSpawnPoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

@@ -36,7 +36,7 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 	ParsingCarSplineActors();
 	ParsingDuckSplineActors();
 
-	CollectOutsideDickSpawnPoint();
+	CollectOutsideDuckSpawnPoint();
 }
 
 // Called when the game starts or when spawned
@@ -155,7 +155,7 @@ void AMS_StageLevelScriptActor::SetLightProp(EMS_DayAndNight aDayAndNight)
 	}
 }
 
-void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint() const
+void AMS_StageLevelScriptActor::CollectOutsideDuckSpawnPoint() const
 {
 	TArray<AActor*> DuckSpawnPoints;
 	
@@ -168,8 +168,8 @@ void AMS_StageLevelScriptActor::CollectOutsideDickSpawnPoint() const
 		{
 			return;
 		}
-
-		gUnitMng.CreateUnit(EMS_UnitType::AI, 0,true, DuckSpawnPoint->GetSpawnLocation(), DuckSpawnPoint->GetSpawnRotation());
+		
+		gUnitMng.CreateUnit(EMS_UnitType::OutsideAI, 0,true, DuckSpawnPoint->GetSpawnLocation(), DuckSpawnPoint->GetSpawnRotation());
 	}
 }
 
@@ -281,7 +281,7 @@ void AMS_StageLevelScriptActor::DestroySplineActors()
 
 void AMS_StageLevelScriptActor::DestroyOutsideAIUnits()
 {
-	gUnitMng.DestroyAllUnits(EMS_UnitType::AI);
+	gUnitMng.DestroyAllUnits(EMS_UnitType::OutsideAI);
 }
 
 void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)

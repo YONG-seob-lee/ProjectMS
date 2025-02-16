@@ -6,6 +6,7 @@
 #include "GameFramework/SaveGame.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_TestDB.generated.h"
 
 /**
@@ -30,7 +31,10 @@ public:
 
 	UPROPERTY()
 	TArray<FMS_LevelFurnitureSaveData> MarketFurnitureDatas;
-
+	
 	UPROPERTY()
 	TMap<int32, int32> Items;
+	
+	UPROPERTY()
+	TArray<FMS_StaffData> StaffDatas;
 };

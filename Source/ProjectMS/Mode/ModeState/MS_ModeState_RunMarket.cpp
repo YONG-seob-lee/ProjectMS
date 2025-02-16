@@ -31,6 +31,7 @@ void UMS_ModeState_RunMarket::Initialize(uint8 aIndex, const FName& aName)
 	if (IsValid(StaffSupervisor))
 	{
 		StaffSupervisor->Initialize();
+		StaffSupervisor->SetIssueTicketContainer(IssueTicketContainer);
 	}
 	
 	CustomerSupervisor = MS_NewObject<UMS_CustomerSupervisor>(this);
@@ -117,7 +118,7 @@ void UMS_ModeState_RunMarket::Exit()
 
 void UMS_ModeState_RunMarket::RunSchedule()
 {
-	gScheduleMng.RunSchedule(800, ScheduleEvent);
+	gScheduleMng.RunSchedule(820, ScheduleEvent);
 }
 
 void UMS_ModeState_RunMarket::EndSchedule()
@@ -130,8 +131,26 @@ void UMS_ModeState_RunMarket::EndSchedule()
 
 void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)
 {
+	if (IsValid(StaffSupervisor))
+	{
+		StaffSupervisor->UpdateMinute(aCurrentMinute);
+	}
+	
+	if (IsValid(CustomerSupervisor))
+	{
+		CustomerSupervisor->UpdateMinute(aCurrentMinute);
+	}
 }
 
 void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 {
+	if (IsValid(StaffSupervisor))
+	{
+		StaffSupervisor->UpdateScheduleEvent(aScheduleEvent);
+	}
+	
+	if (IsValid(CustomerSupervisor))
+	{
+		CustomerSupervisor->UpdateScheduleEvent(aScheduleEvent);
+	}
 }

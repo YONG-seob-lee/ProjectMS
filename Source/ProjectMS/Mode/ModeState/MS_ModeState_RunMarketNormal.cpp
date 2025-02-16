@@ -17,11 +17,11 @@ void UMS_ModeState_RunMarketNormal::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
 
-	ScheduleEvent.Emplace(0, static_cast<int32>(EMS_MarketNormalScheduleEvent::Prepare));
-	ScheduleEvent.Emplace(20, static_cast<int32>(EMS_MarketNormalScheduleEvent::LoadingUnloading));
-	ScheduleEvent.Emplace(140, static_cast<int32>(EMS_MarketNormalScheduleEvent::OpenMarket));
-	ScheduleEvent.Emplace(770, static_cast<int32>(EMS_MarketNormalScheduleEvent::Deadline));
-	ScheduleEvent.Emplace(800, static_cast<int32>(EMS_MarketNormalScheduleEvent::CloseMarket));
+	ScheduleEvent.Emplace(0, static_cast<int32>(EMS_MarketScheduleEvent::Prepare));
+	ScheduleEvent.Emplace(20, static_cast<int32>(EMS_MarketScheduleEvent::LoadingUnloading));
+	ScheduleEvent.Emplace(140, static_cast<int32>(EMS_MarketScheduleEvent::OpenMarket));
+	ScheduleEvent.Emplace(770, static_cast<int32>(EMS_MarketScheduleEvent::Deadline));
+	ScheduleEvent.Emplace(800, static_cast<int32>(EMS_MarketScheduleEvent::CloseMarket));
 }
 
 void UMS_ModeState_RunMarketNormal::Finalize()
@@ -53,31 +53,31 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 {
 	Super::UpdateScheduleEvent(aScheduleEvent);
 
-	EMS_MarketNormalScheduleEvent MarketNormalScheduleEvent = static_cast<EMS_MarketNormalScheduleEvent>(aScheduleEvent);
+	EMS_MarketScheduleEvent MarketNormalScheduleEvent = static_cast<EMS_MarketScheduleEvent>(aScheduleEvent);
 	
 	switch(MarketNormalScheduleEvent)
 	{
-	case EMS_MarketNormalScheduleEvent::Prepare:
+	case EMS_MarketScheduleEvent::Prepare:
 		{
-			gWidgetMng.ShowToastMessage(TEXT("준비 단계! 출근 시간은 7:00입니다."));
+			gWidgetMng.ShowToastMessage(TEXT("준비 단계! 출근 시간은 7:00까지 입니다."));
 			break;
 		}
-	case EMS_MarketNormalScheduleEvent::LoadingUnloading:
+	case EMS_MarketScheduleEvent::LoadingUnloading:
 		{
 			gWidgetMng.ShowToastMessage(TEXT("상하차가 시작되었습니다!"));
 			break;
 		}
-	case EMS_MarketNormalScheduleEvent::OpenMarket:
+	case EMS_MarketScheduleEvent::OpenMarket:
 		{
 			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
 			break;
 		}
-	case EMS_MarketNormalScheduleEvent::Deadline:
+	case EMS_MarketScheduleEvent::Deadline:
 		{
 			gWidgetMng.ShowToastMessage(TEXT("곧 마켓 영업이 끝납니다. 계산하고 나가주세요~!"));
 			break;
 		}
-	case EMS_MarketNormalScheduleEvent::CloseMarket:
+	case EMS_MarketScheduleEvent::CloseMarket:
 		{
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
 			FMS_ModalParameter ModalParameter;

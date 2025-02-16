@@ -8,6 +8,39 @@
 /**
  * 
  */
+UENUM()
+enum class EMS_ItemType : uint8
+{
+	Undefined = 0,
+	Money,
+	Cash,
+	Fruit,
+	Fish,
+	Beverage,
+	Frozen,
+	Snack,
+	FrozenSnack,
+	Storage
+};
+
+UENUM()
+enum class EMS_TemperatureType : uint8
+{
+	Undefined = 0,
+	Constant,
+	Refrigeration,
+	Freezing
+};
+
+UENUM()
+enum class EMS_ItemSlotUIType : uint8
+{
+	None,
+	StorageRequestStatus,
+	StorageCurrentStatus,
+	Requestable
+};
+
 USTRUCT()
 struct FMS_SlotData
 {
@@ -39,37 +72,4 @@ public:
 
 	UPROPERTY()
 	int32 CurrentItemCount;
-};
-
-UENUM()
-enum class EMS_ItemSlotUIType : uint8
-{
-	None,
-	StorageRequestStatus,
-	StorageCurrentStatus,
-	Requestable
-};
-
-UENUM()
-enum class EMS_ItemType : uint8
-{
-	Undefined = 0,
-	Money,
-	Cash,
-	Fruit,
-	Fish,
-	Beverage,
-	Frozen,
-	Snack,
-	FrozenSnack,
-	Storage
-};
-
-UENUM()
-enum class EMS_TemperatureType : uint8
-{
-	Undefined = 0,
-	Constant,
-	Refrigeration,
-	Freezing
 };
