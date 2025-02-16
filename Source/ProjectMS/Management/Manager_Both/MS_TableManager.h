@@ -33,7 +33,7 @@ enum class EMS_TableDataType : uint8
 
 namespace MS_LocalizedTableId
 {
-	const FName StringTable = TEXT("StringTable");
+	const FName StringTable = TEXT("/Game/TableData/StringTable/StringTable.StringTable");
 }
 
 USTRUCT()

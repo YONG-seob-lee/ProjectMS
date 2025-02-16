@@ -19,9 +19,7 @@ void UMS_TutorialCacheTable::GetTutorialDesc(int32 TutorialKey, FText& Desc, FTe
 {
 	if(FMS_Tutorial** TutorialData = TutorialDatas.Find(TutorialKey))
 	{
-		Desc = FText::FromStringTable(MS_LocalizedTableId::StringTable, TEXT("Tutorial_Schedule_Desc"));
-		SubDesc = FText::FromStringTable(MS_LocalizedTableId::StringTable, TEXT("Tutorial_Schedule_SubDesc"));
-		//Desc = FText::FromStringTable(MS_LocalizedTableId::StringTable, (*TutorialData)->Desc);
-		//SubDesc = FText::FromStringTable(MS_LocalizedTableId::StringTable, (*TutorialData)->SubDesc);
+		Desc = FText::FromStringTable(MS_LocalizedTableId::StringTable, (*TutorialData)->Desc);
+		SubDesc = FText::FromStringTable(MS_LocalizedTableId::StringTable, (*TutorialData)->SubDesc);
 	}
 }
