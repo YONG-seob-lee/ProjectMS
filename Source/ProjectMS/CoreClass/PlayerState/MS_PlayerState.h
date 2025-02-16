@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
-#include "Save/MS_SaveData.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_PlayerState.generated.h"
 
 /**
