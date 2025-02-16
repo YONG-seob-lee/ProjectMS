@@ -4,8 +4,8 @@
 #include "MS_ModeState_RunMarket.h"
 
 #include "MS_Define.h"
-#include "AI/AISupervisor/Customer/CustomerSupervisor.h"
-#include "AI/AISupervisor/Staff/StaffSupervisor.h"
+#include "Mode/ModeObject/Supervisor/Customer/CustomerSupervisor.h"
+#include "Mode/ModeObject/Supervisor/Staff/StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 
@@ -109,8 +109,10 @@ void UMS_ModeState_RunMarket::RunSchedule()
 
 void UMS_ModeState_RunMarket::EndSchedule()
 {
+	// ToDo : Save Daily Data
+	
 	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
-	gModeMng.ChangeState(EMS_ModeState::Deactive);
+	gModeMng.ChangeState(EMS_ModeState::Normal);
 }
 
 void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)

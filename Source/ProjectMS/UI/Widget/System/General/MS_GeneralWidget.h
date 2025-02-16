@@ -52,9 +52,6 @@ private:
 	void OnClickedFinancialIndicatorButton();
 
 	void OpenLeftExpander() const;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_LeftPanel = nullptr;

@@ -7,9 +7,9 @@
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_TimeLineWidget.generated.h"
 
-namespace Sleep
+namespace RunTime
 {
-	const FName Animation = TEXT("Sleep");
+	const FName Animation = TEXT("RunTime");
 }
 /**
  * 
@@ -27,15 +27,18 @@ public:
 
 	void UpdateTimer(int32 aMinute) const;
 
-	void StartSleepButtonAnim();
+	void StartRunTimeButtonAnim();
+	void StopRunTimeButtonAnim();
 
 	
 private:
 	void FlickerDot(bool bFlicker);
 	void InVisibilityDot() const;
 	
-	void OnClickedSleepButton();
-	
+	void OnClickedRunTimeButton();
+
+
+private:
 	FTimerHandle DotFlickerHandle;
 	int32 SecondPerOneMinute = 0;
 
@@ -50,7 +53,7 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_Dot = nullptr;
-
+	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_SleepButton = nullptr;
+	TObjectPtr<class UMS_Button> CPP_RunTimeButton = nullptr;
 };

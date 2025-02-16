@@ -24,6 +24,8 @@ private:
 	void OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
 	
 	void OnClickedArrowButton();
+
+	void SetOpenExpander(bool bOpen);
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ModeSelectWidget> CPP_ModeSelectWidget = nullptr;

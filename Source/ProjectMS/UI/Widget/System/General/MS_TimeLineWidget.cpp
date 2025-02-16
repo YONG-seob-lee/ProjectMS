@@ -7,10 +7,13 @@
 #include "Components/TextBlock.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_TableManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Widget/Market/Modal/MS_MarketStartModal.h"
+
 
 namespace DotFlicker
 {
@@ -27,7 +30,7 @@ void UMS_TimeLineWidget::NativeConstruct()
 	MS_CHECK(CommonTable);
 
 	SecondPerOneMinute = CommonTable->GetParameter01(CommonContents::SECONDS_PER_ONEMINUTE);
-	CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
 
 	UpdateGameDate(gScheduleMng.GetGameDate());
 	UpdateTimer(gScheduleMng.GetMinute());
@@ -39,7 +42,6 @@ void UMS_TimeLineWidget::NativeConstruct()
 void UMS_TimeLineWidget::NativeDestruct()
 {
 	GetWorld()->GetTimerManager().ClearTimer(DotFlickerHandle);
-
 	
 	Super::NativeDestruct();
 }
@@ -55,15 +57,45 @@ void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 	FlickerDot(bIsRunning);
 
 	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
+	
+	// Run Time Widget
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
 
-	bool bCanSleep = aGameDate.DailyTimeZone == EMS_DailyTimeZone::Evening || aGameDate.DailyTimeZone == EMS_DailyTimeZone::Night;
-	if (bCanSleep)
+	if (!bIsRunning)
 	{
-		StartSleepButtonAnim();
+		if (LevelType == EMS_LevelType::MarketLevel)
+		{
+			
+			if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+			{
+				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
+				StartRunTimeButtonAnim();
+			}
+			else
+			{
+				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
+				StartRunTimeButtonAnim();
+			}
+		}
+		else
+		{
+			if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+			{
+				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
+				StartRunTimeButtonAnim();
+			}
+			else
+			{
+				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
+				StopRunTimeButtonAnim();
+			}
+		}
 	}
 	else
 	{
-		CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
+		CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
+		StopRunTimeButtonAnim();
 	}
 }
 
@@ -92,11 +124,16 @@ void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
 	CPP_Minute->SetText(FText::FromString(MinuteString));
 }
 
-void UMS_TimeLineWidget::StartSleepButtonAnim()
+void UMS_TimeLineWidget::StartRunTimeButtonAnim()
 {
-	CPP_SleepButton->SetVisibility(ESlateVisibility::Visible);
-	CPP_SleepButton->GetOnClickedDelegate().AddUObject(this, &UMS_TimeLineWidget::OnClickedSleepButton);
-	PlayAnimationByName(Sleep::Animation, 0.f, 999999);
+	CPP_RunTimeButton->GetOnClickedDelegate().AddUObject(this, &UMS_TimeLineWidget::OnClickedRunTimeButton);
+	PlayAnimationByName(RunTime::Animation, 0.f, 999999);
+}
+
+void UMS_TimeLineWidget::StopRunTimeButtonAnim()
+{
+	CPP_RunTimeButton->UnbindClickedDelegate();
+	StopAnimationByName(RunTime::Animation);
 }
 
 void UMS_TimeLineWidget::FlickerDot(bool bFlicker)
@@ -124,16 +161,61 @@ void UMS_TimeLineWidget::InVisibilityDot() const
 	}
 }
 
-void UMS_TimeLineWidget::OnClickedSleepButton()
+void UMS_TimeLineWidget::OnClickedRunTimeButton()
 {
-	gScheduleMng.PassTheDay();
-	
-	if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
+
+	if (LevelType == EMS_LevelType::None)
 	{
-		TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);
+		return;
 	}
 	
-	CPP_SleepButton->GetOnClickedDelegate().RemoveAll(this);
+	if (LevelType == EMS_LevelType::MarketLevel)
+	{
+		if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+		{
+			// Town으로 이동
+			CREATE_SCENE_COMMAND(Command);
+			Command->SetLevelType(EMS_LevelType::Stage01);
+			Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
+			Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
+			Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
+			Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
+			Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
+			gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
+			{
+				FViewTargetTransitionParams Param;
+				Param.BlendTime = 0.f;
+				gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
+				gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
+				gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
+			});
+			gSceneMng.RequestChangeScene(Command);
+			
+		}
+		else
+		{
+			// MarketStartModal Open
+			FMS_ModalParameter ModalParameter;
+			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
+			gWidgetMng.ShowModalWidget(ModalParameter);
+		}
+	}
+	else
+	{
+		if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+		{
+			// 수면
+			gScheduleMng.PassTheDay();
+	
+			if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+			{
+				TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);
+			}
+		}
+	}
+	CPP_RunTimeButton->GetOnClickedDelegate().RemoveAll(this);
 	StopAllAnimations();
-	CPP_SleepButton->SetVisibility(ESlateVisibility::Collapsed);
+	CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
 }

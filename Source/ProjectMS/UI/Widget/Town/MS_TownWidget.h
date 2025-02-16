@@ -24,4 +24,8 @@ class PROJECTMS_API UMS_TownWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	static FName GetWidgetName() { return TEXT("Town"); }
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
 };

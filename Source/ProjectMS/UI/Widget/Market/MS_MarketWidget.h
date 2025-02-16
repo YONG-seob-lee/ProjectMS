@@ -32,9 +32,12 @@ private:
 
 	
 private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TMap<EMS_ModeState, int32> ModeStateToWidgetSwitcherId;
-	
+
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_MarketExpanderWidget> CPP_ExpanderWidget;
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_ModeWidgetSwitcher;
 };

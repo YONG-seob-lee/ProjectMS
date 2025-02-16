@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/AISupervisor/AISupervisor.h"
+#include "Mode/ModeObject/Supervisor/AISupervisor.h"
 #include "StaffSupervisor.generated.h"
 
 /**

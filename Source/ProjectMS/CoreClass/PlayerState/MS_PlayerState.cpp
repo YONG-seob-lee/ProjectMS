@@ -187,7 +187,16 @@ void AMS_PlayerState::SavePlayerData()
 	
 	NewTestDBData->bInitDefaultData = bInitDefaultData;
 
-	NewTestDBData->GameDate = GameDate;
+	FMS_GameDate SaveGameDate = GameDate;
+	if (GameDate.DailyTimeZone == EMS_DailyTimeZone::DayTimeWork)
+	{
+		SaveGameDate.DailyTimeZone = EMS_DailyTimeZone::Morning;
+	}
+	else if (GameDate.DailyTimeZone == EMS_DailyTimeZone::EveningWork)
+	{
+		SaveGameDate.DailyTimeZone = EMS_DailyTimeZone::Evening;
+	}
+	NewTestDBData->GameDate = SaveGameDate;
 
 	NewTestDBData->OpenedZoneIds = OpenedZoneIds;
 	

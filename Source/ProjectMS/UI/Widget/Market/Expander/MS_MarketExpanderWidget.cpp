@@ -50,13 +50,28 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 void UMS_MarketExpanderWidget::OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
 	// TODO 용섭 : 나중에 모드 완성되면 추가 작업
-	if(bOpen && bOpenExpander)
+	if (aModeState == EMS_ModeState::Construct)
 	{
-		return;
-	}
+		if(bOpen && bOpenExpander)
+		{
+			return;
+		}
 	
-	PlayAnimationByName(ArrowAnimation::OpenMode);
-	bOpenExpander = true;
+		PlayAnimationByName(ArrowAnimation::OpenMode);
+		bOpen = true;
+		bOpenExpander = true;
+	}
+	else
+	{
+		if(!bOpen && !bOpenExpander)
+		{
+			return;
+		}
+		
+		PlayAnimationByName(ArrowAnimation::Close);
+		bOpen = false;
+		bOpenExpander = false;
+	}
 }
 
 void UMS_MarketExpanderWidget::OnClickedArrowButton()

@@ -216,18 +216,9 @@ void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, i
 	PlayTimer(aGamePlayMinute);
 }
 
-bool UMS_ScheduleManager::IsNight() const
+void UMS_ScheduleManager::SetMultiplyIntervalSecondReal(int32 aMultiply)
 {
-	EMS_DailyTimeZone DailyTimeZone = TimeSchedule.GetDailyTimeZone();
-	
-	return DailyTimeZone == EMS_DailyTimeZone::Evening
-		|| DailyTimeZone == EMS_DailyTimeZone::EveningWork
-		|| DailyTimeZone == EMS_DailyTimeZone::Night;
-}
-
-void UMS_ScheduleManager::SetTest()
-{
-	IntervalSecondReal = 180;
+	MultiplyIntervalSecondReal = aMultiply;
 }
 
 void UMS_ScheduleManager::GetScheduleData(TArray<UMS_ScheduleDayElementData*>& aScheduleDayElementData)
@@ -257,10 +248,11 @@ void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)
 void UMS_ScheduleManager::DuringTimer()
 {
 	int32 PreMinitue = TimeSchedule.GetMinute();
+
+	int32 CalcIntervalSecondReal = IntervalSecondReal * MultiplyIntervalSecondReal;
+	CostTimeSecondReal -= CalcIntervalSecondReal;
 	
-	CostTimeSecondReal -= IntervalSecondReal;
-	
-	TimeSchedule.UpdateMinute(IntervalSecondReal);
+	TimeSchedule.UpdateMinute(CalcIntervalSecondReal);
 	int32 NewMinitue = TimeSchedule.GetMinute();
 	
 	OnUpdateMinuteDelegate.Broadcast(NewMinitue);

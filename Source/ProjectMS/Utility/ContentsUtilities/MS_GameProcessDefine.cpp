@@ -115,3 +115,10 @@ bool FMS_GameDate::IsRunningTimeZone(EMS_DailyTimeZone aTimeZone)
 
 	return false;
 }
+
+bool FMS_GameDate::IsNight(EMS_DailyTimeZone aTimeZone)
+{
+	return aTimeZone == EMS_DailyTimeZone::Evening
+	|| aTimeZone == EMS_DailyTimeZone::EveningWork
+	|| aTimeZone == EMS_DailyTimeZone::Night;
+}

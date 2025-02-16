@@ -140,6 +140,7 @@ void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day, bDirectly);
 	}
 }
+#endif
 
 #if WITH_EDITOR
 void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
@@ -160,6 +161,7 @@ void UMS_CheatManager::RequestTutorial(int32 t)
 }
 #endif
 
+#if WITH_EDITOR
 void UMS_CheatManager::ResetProcessTutorial()
 {
 	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
@@ -169,5 +171,12 @@ void UMS_CheatManager::ResetProcessTutorial()
 	}
 
 	GameUserSettings->ResetProcessTutorial();
+}
+#endif
+
+#if WITH_EDITOR
+void UMS_CheatManager::FastRun(int32 aMultiply)
+{
+	gScheduleMng.SetMultiplyIntervalSecondReal(aMultiply);
 }
 #endif

@@ -50,7 +50,8 @@ void AMS_StageLevelScriptActor::BeginPlay()
 	gCameraMng.LocateCamera(FVector(12600.f, -6380.f, 3200.f), EMS_ViewCameraType::QuarterView);
 	gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
 
-	if(gScheduleMng.IsNight())
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	if(FMS_GameDate::IsNight(GameDate.DailyTimeZone))
 	{
 		SetDayAndNight(EMS_DayAndNight::Night, true);
 	}

@@ -79,7 +79,6 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 		}
 	case EMS_MarketNormalScheduleEvent::CloseMarket:
 		{
-			// 타이머 없어도 돼
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());

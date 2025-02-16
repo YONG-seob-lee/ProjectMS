@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "GameFramework/SaveGame.h"
-#include "Save/MS_SaveData.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_TestDB.generated.h"
 
 /**

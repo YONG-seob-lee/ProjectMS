@@ -22,24 +22,4 @@ void UMS_MarketEndModal::NativeConstruct()
 void UMS_MarketEndModal::OnClickedClosingPlayButton()
 {
 	gWidgetMng.CloseModalWidget();
-
-	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
-	
-	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::LobbyLevel);
-	Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
-	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
-	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
-	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
-	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-	Command->SetNextWidget(TEXT("DoNotCreateNextWidget"));
-	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
-	{
-		FViewTargetTransitionParams Param;
-		Param.BlendTime = 0.f;
-		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
-		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
-		gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
-	});
-	gSceneMng.RequestChangeScene(Command);
 }
