@@ -4,8 +4,7 @@
 #include "MS_OutsideAIController.h"
 
 #include "MS_Define.h"
-#include "AI/BehaviorTree/MS_BehaviorTree.h"
-#include "AI/Blackboard/MS_BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "AI/Blackboard/MS_OutsideBlackboardComponent.h"
 #include "AI/Task/MS_AITask.h"
 #include "Character/AICharacter/OutsideAICharacter/MS_MarketFrontActor.h"

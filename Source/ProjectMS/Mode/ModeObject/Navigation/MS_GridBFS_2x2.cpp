@@ -117,7 +117,8 @@ void UMS_GridBFS_2x2::CollectPalletMovingPoints()
 	}
 }
 
-void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, FIntVector2 aStartPoint, FIntVector2 aTargetPoint)
+void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPoint,
+	const TArray<FIntVector2>& aTargetPoints) const
 {
 	TQueue<FIntVector2> Queue;
 	TMap<FIntVector2, FIntVector2> VisitedPointToPreviousPoints;
@@ -128,6 +129,7 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, FIntVector2 aStartPo
 	VisitedPointToPreviousPoints.Emplace(aStartPoint, FIntVector2::ZeroValue);
 
 	bool bSucceed = false;
+	FIntVector2 SucceedTarget = FIntVector2::ZeroValue;
 	
 	while(!bSucceed && !Queue.IsEmpty())
 	{
@@ -148,9 +150,10 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, FIntVector2 aStartPo
 					}
 				}
 
-				if (EnqueuePoint == aTargetPoint)
+				if (aTargetPoints.Contains(EnqueuePoint))
 				{
 					bSucceed = true;
+					SucceedTarget = EnqueuePoint;
 					break;
 				}
 			}	
@@ -167,7 +170,7 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, FIntVector2 aStartPo
 		TArray<FIntVector2> PathBackwards;
 		PathBackwards.Empty();
 
-		FIntVector2 PreviousPoint = aTargetPoint;
+		FIntVector2 PreviousPoint = SucceedTarget;
 		PathBackwards.Emplace(PreviousPoint);
 
 		while (PreviousPoint == aStartPoint)

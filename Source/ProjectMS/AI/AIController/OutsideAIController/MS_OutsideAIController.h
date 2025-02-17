@@ -23,8 +23,8 @@ public:
 	
 private:	
 	UPROPERTY()
-	TObjectPtr<class UBehaviorTree> OutsideBehaviorTree = nullptr;
+	class UBehaviorTree* OutsideBehaviorTree = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<class UBlackboardData> OutsideBlackboardData = nullptr;
+	class UBlackboardData* OutsideBlackboardData = nullptr;
 };

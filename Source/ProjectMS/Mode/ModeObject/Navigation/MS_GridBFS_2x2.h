@@ -24,7 +24,7 @@ private:
 	void CollectShelfMovingPoints();
 	void CollectPalletMovingPoints();
 	
-	void Search(TArray<FIntVector2>& aOutPath, FIntVector2 aStartPoint, FIntVector2 aTargetPoint);
+	void Search(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPoint, const TArray<FIntVector2>& aTargetPoints) const;
 	
 private:
 	TArray<FIntVector2> DisplayFreeMovableGridPoints = {};
