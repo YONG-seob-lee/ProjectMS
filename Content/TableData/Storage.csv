@@ -10,4 +10,4 @@ Id,ZoneType,TemperatureType,StandName,StandLv,SlotCount,Price,PathFile,ImagePath
 9,1,2,Fresh Display 2,1,1,1000,4009,1009,,0,0
 10,3,2,Palette,1,2,1000,4012,1011,,0,0
 11,2,1,Shelf Stand 1,1,4,10000,4011,1010,,0,0
-,,,,,,,,,,0,0
+12,2,1,Wardrobe,1,0,1000,4013,1010,,0,0

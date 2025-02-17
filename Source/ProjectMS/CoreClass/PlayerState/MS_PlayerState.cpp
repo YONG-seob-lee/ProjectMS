@@ -134,8 +134,11 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	FMS_LevelFurnitureSaveData VeggieStand = FMS_LevelFurnitureSaveData(8, FIntVector2(13, 4), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand.GridPosition, VeggieStand);
 
-	FMS_LevelFurnitureSaveData Rack = FMS_LevelFurnitureSaveData(11, FIntVector2(-8, 13), EMS_Rotation::Rot0);
+	FMS_LevelFurnitureSaveData Rack = FMS_LevelFurnitureSaveData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(Rack.GridPosition, Rack);
+
+	FMS_LevelFurnitureSaveData Wardrobe = FMS_LevelFurnitureSaveData(12, FIntVector2(-10, 11), EMS_Rotation::Rot270);
+	GridPositionToMarketFurnitureDatas.Emplace(Wardrobe.GridPosition, Wardrobe);
 	
 	// Items
 	Items.Emplace(4, 30);
