@@ -5,6 +5,7 @@
 
 #include "UtilityFunctions.h"
 #include "ContentsUtilities/MS_AIDefine.h"
+#include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Table/RowBase/MS_Staff.h"
 
 
@@ -47,10 +48,22 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
+void UMS_StaffAIUnit::RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType)
+{
+	PersonalActions.Emplace(aPersonalActionType);
+}
+
+void UMS_StaffAIUnit::UnregisterPersonalAction(EMS_PersonalActionType aPersonalActionType)
+{
+	int32 RemoveNum = PersonalActions.RemoveSingle(aPersonalActionType);
+}
+
 void UMS_StaffAIUnit::OnRegistedAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
 {
+	IssueTicket = aIssueTicket;
 }
 
 void UMS_StaffAIUnit::OnUnregistedAsIssueTicketStaff()
 {
+	IssueTicket = nullptr;
 }

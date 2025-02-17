@@ -23,6 +23,16 @@ enum class EMS_Rotation : uint8
 	Rot270
 };
 
+UENUM(BlueprintType)
+enum class EMS_Direction : uint8
+{
+	None,
+	Front,
+	Back,
+	Right,
+	Left
+};
+
 UCLASS()
 class UMS_MathUtility : public UObject
 {
@@ -30,41 +40,6 @@ class UMS_MathUtility : public UObject
 
 public:
 	UMS_MathUtility() = default;
-
-	static float CalculateInterpolation(float aProgressRate, EMS_InterpolationType aInterplationType, int aExponent = 2.0f)
-	{
-		float Result = 0.0f;
-
-		switch (aInterplationType)
-		{
-		case EMS_InterpolationType::Undefined:
-		{
-			Result = 0.0f;
-			break;
-		}
-		case EMS_InterpolationType::EaseIn:
-		{
-			Result = 1.0f - cosf(FMath::Lerp(0.0f, PI / aExponent, aProgressRate));
-			break;
-		}
-		case EMS_InterpolationType::EaseOut:
-		{
-			Result = sinf(FMath::Lerp(0.0f, PI / aExponent, aProgressRate));
-			break;
-		}
-		case EMS_InterpolationType::Linear:
-		{
-			Result = aProgressRate;
-			break;
-		}
-		default:
-		{
-			break;
-		}
-		}
-
-		return Result;
-	}
 	
 	static EMS_Rotation ConvertRotation(float aValue)
 	{
@@ -123,5 +98,47 @@ public:
 
 		MS_ENSURE(false);
 		return EMS_Rotation::Rot0;
+	}
+
+	static FVector ConvertDirectionToVector(EMS_Direction aDirection)
+	{
+		switch (aDirection)
+		{
+		case EMS_Direction::Front :
+			return FVector(0.f, -1.f, 0.f);
+		case EMS_Direction::Back :
+			return FVector(0.f, 1.f, 0.f);
+		case EMS_Direction::Right :
+			return FVector(1.f, 0.f, 0.f);
+		case EMS_Direction::Left :
+			return FVector(-1.f, 0.f, 0.f);
+		}
+
+		MS_ENSURE(false);
+		return FVector::ZeroVector;
+	}
+	
+	static EMS_Rotation ConvertDirectionToRotation(EMS_Direction aDirection)
+	{
+		switch (aDirection)
+		{
+		case EMS_Direction::Front :
+			return EMS_Rotation::Rot0;
+		case EMS_Direction::Back :
+			return EMS_Rotation::Rot90;
+		case EMS_Direction::Right :
+			return EMS_Rotation::Rot180;
+		case EMS_Direction::Left :
+			return EMS_Rotation::Rot270;
+		}
+
+		MS_ENSURE(false);
+		return EMS_Rotation::Rot0;
+	}
+
+	static FRotator ConvertDirectionToRotator(EMS_Direction aDirection)
+	{
+		EMS_Rotation Rotation = UMS_MathUtility::ConvertDirectionToRotation(aDirection);
+		return FRotator(0.f, UMS_MathUtility::ConvertRotation(Rotation), 0.f);
 	}
 };

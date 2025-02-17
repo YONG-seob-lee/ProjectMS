@@ -57,8 +57,9 @@ enum class EMS_PurposeType : uint8
 	AfterPayment = 3,
 
 	UseStorage = 4,
-
+	
 	UseGate = 5,
+	UseWardrobe = 6,
 	
 	Any = 100,	// != None
 };

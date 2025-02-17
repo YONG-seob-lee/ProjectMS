@@ -6,6 +6,7 @@
 #include "MS_AIUnit.h"
 #include "MS_StaffAIUnit.generated.h"
 
+enum class EMS_PersonalActionType;
 /**
  * 
  */
@@ -25,9 +26,15 @@ protected:
 	virtual UClass* GetBlueprintClass() const override;
 
 public:
+	void RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
+	void UnregisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
+	
 	void OnRegistedAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
 	void OnUnregistedAsIssueTicketStaff();
 
 private:
 	struct FMS_Staff* StaffTableData = nullptr;
+
+	TArray<EMS_PersonalActionType> PersonalActions;
+	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
 };

@@ -4,7 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "MathUtility/MS_MathUtility.h"
 #include "MS_AIDefine.generated.h"
+
+UENUM()
+enum class EMS_ActionType
+{
+	None = 0,
+	PersonalAction = 1,
+	Issue = 2,
+};
+
+UENUM()
+enum class EMS_PersonalActionType
+{
+	None = 0,
+	ChangeClothes = 1,
+};
 
 UENUM()
 enum class EMS_IssueType
@@ -44,6 +60,9 @@ public:
 	UPROPERTY()
 	int32 StaffId;
 
+	UPROPERTY()
+	TArray<EMS_IssueType> PriorityOfWoks;
+	
 	UPROPERTY()
 	FMS_GameDate FirstDateOfWork;
 
