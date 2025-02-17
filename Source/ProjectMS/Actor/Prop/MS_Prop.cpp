@@ -31,6 +31,7 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 	if (ArrangementWidgetComponent)
 	{
 		ArrangementWidgetComponent->SetupAttachment(GetRootComponent());
+		ArrangementWidgetComponent->SetVisibility(false);
 	}
 }
 
