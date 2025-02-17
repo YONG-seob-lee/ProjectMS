@@ -60,6 +60,11 @@ public:
 	
 	bool MoveAndRotateProp(TWeakObjectPtr<class AMS_Prop> aProp, const FIntVector2& aGridPosition, const EMS_Rotation aRotation);
 
+
+	// Navigation
+	void GetFreeMovableGridPoints(TArray<FIntVector2>& aOutGrids, EMS_ZoneType aInZoneType);
+
+
 	
 protected:
 	UPROPERTY()

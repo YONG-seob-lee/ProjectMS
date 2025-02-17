@@ -4,6 +4,7 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 
 #include "MS_Define.h"
+#include "../../../../../UnrealEngine-5.4/Engine/Source/Editor/PropertyEditor/Public/IDetailTreeNode.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "Prop/MS_Prop.h"
@@ -548,4 +549,34 @@ bool AMS_ConstructibleLevelScriptActorBase::MoveAndRotateProp(TWeakObjectPtr<AMS
 	}
 
 	return false;
+}
+
+void AMS_ConstructibleLevelScriptActorBase::GetFreeMovableGridPoints(TArray<FIntVector2>& aOutGrids,
+	EMS_ZoneType aInZoneType)
+{
+	aOutGrids.Empty();
+
+	for (auto& Zone : Zones)
+	{
+		if (Zone.Value->GetZoneType() == aInZoneType && Zone.Value->IsOpened())
+		{
+			const TMap<FIntVector2, FMS_GridData>& ZoneGrids = Zone.Value->GetGrids();
+
+			for (auto& It : ZoneGrids)
+			{
+				if (It.Value.Object != nullptr)
+				{
+					if (It.Value.PropSpaceComponent != nullptr)
+					{
+						if (It.Value.PropSpaceComponent->GetPropSpaceType() != EMS_PropSpaceType::FreeSpace)
+						{
+							continue;
+						}
+					}
+				}
+
+				aOutGrids.Emplace(It.Key);
+			}
+		}
+	}
 }
