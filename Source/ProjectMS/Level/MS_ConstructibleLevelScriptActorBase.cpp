@@ -4,7 +4,6 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 
 #include "MS_Define.h"
-#include "../../../../../UnrealEngine-5.4/Engine/Source/Editor/PropertyEditor/Public/IDetailTreeNode.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "Prop/MS_Prop.h"
