@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
-#include "MathUtility/MS_MathUtility.h"
 #include "MS_AIDefine.generated.h"
 
 UENUM()
-enum class EMS_ActionType
+enum class EMS_ActionType : uint8
 {
 	None = 0,
 	PersonalAction = 1,
@@ -16,14 +15,14 @@ enum class EMS_ActionType
 };
 
 UENUM()
-enum class EMS_PersonalActionType
+enum class EMS_PersonalActionType : uint8
 {
 	None = 0,
 	ChangeClothes = 1,
 };
 
 UENUM()
-enum class EMS_IssueType
+enum class EMS_IssueType : uint8
 {
 	None = 0,
 	Payment = 1,
@@ -69,3 +68,18 @@ public:
 	UPROPERTY()
 	TArray<EMS_DayOfWeek> WorkingDays;
 };
+
+// Board Key Name
+namespace OutsideBoardKeyName
+{
+	const FName bFinishedIdleAnimation = TEXT("bFinishedIdleAnimation");
+	const FName RemainIdleTime = TEXT("RemainIdleTime");
+	const FName RemainWalkTime = TEXT("RemainWalkTime");
+	const FName RemainWalkToMarketTime = TEXT("RemainWalkToMarketTime");
+	const FName MarketFront = TEXT("MarketFront");
+}
+
+namespace StaffBoardKeyName
+{
+	const FName SelectedPersonalAction = TEXT("SelectedPersonalAction");
+}

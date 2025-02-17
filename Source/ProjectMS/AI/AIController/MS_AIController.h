@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_AIController.generated.h"
 
 

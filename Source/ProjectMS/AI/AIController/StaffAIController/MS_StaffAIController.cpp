@@ -1,13 +1,14 @@
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 
 #include "MS_Define.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "AI/Blackboard/MS_StaffBlackboardComponent.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 
 AMS_StaffAIController::AMS_StaffAIController()
 {
-	/*const ConstructorHelpers::FObjectFinder<UBehaviorTree> STAFF_BEHAVIOR_TREE(TEXT("/Game/AI/AIController/BehaviorTree/BT_StaffAITree"));
+	const ConstructorHelpers::FObjectFinder<UBehaviorTree> STAFF_BEHAVIOR_TREE(TEXT("/Game/AI/AIController/BehaviorTree/BT_StaffAITree"));
 	if(STAFF_BEHAVIOR_TREE.Succeeded())
 	{
 		StaffBehaviorTree = STAFF_BEHAVIOR_TREE.Object;
@@ -17,7 +18,7 @@ AMS_StaffAIController::AMS_StaffAIController()
 	if(STAFF_BLACK_BOARD_DATA.Succeeded())
 	{
 		StaffBlackboardData = STAFF_BLACK_BOARD_DATA.Object; 
-	}*/
+	}
 }
 
 void AMS_StaffAIController::Initialize()

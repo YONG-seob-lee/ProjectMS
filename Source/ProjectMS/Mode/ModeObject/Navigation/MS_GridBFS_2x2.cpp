@@ -17,102 +17,102 @@ void UMS_GridBFS_2x2::CollectMovingPoints()
 
 void UMS_GridBFS_2x2::CollectDisplayMovingPoints()
 {
-	DisplayFreeMovableGridPoints.Empty();
+	DisplayFreeMovableGridPositions.Empty();
 	DisplayFreeMovableWalkingPoints.Empty();
 	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		LevelScriptActor->GetFreeMovableGridPoints(DisplayFreeMovableGridPoints, EMS_ZoneType::Display);
+		LevelScriptActor->GetFreeMovableGridPositions(DisplayFreeMovableGridPositions, EMS_ZoneType::Display);
 
 		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
 		// XX
 		// XO
-		for (const FIntVector2& GridPoint : DisplayFreeMovableGridPoints)
+		for (const FIntVector2& GridPosition : DisplayFreeMovableGridPositions)
 		{
-			if (!DisplayFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, -1)))
+			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
 			{
 				continue;
 			}
 
-			if (!DisplayFreeMovableGridPoints.Contains(GridPoint + FIntVector2(0, -1)))
+			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
 			{
 				continue;
 			}
 
-			if (!DisplayFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, 0)))
+			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
 			{
 				continue;
 			}
 
-			DisplayFreeMovableWalkingPoints.Add(GridPoint);
+			DisplayFreeMovableWalkingPoints.Add(GridPosition);
 		}
 	}
 }
 
 void UMS_GridBFS_2x2::CollectShelfMovingPoints()
 {
-	ShelfFreeMovableGridPoints.Empty();
+	ShelfFreeMovableGridPositions.Empty();
 	ShelfFreeMovableWalkingPoints.Empty();
 	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		LevelScriptActor->GetFreeMovableGridPoints(ShelfFreeMovableGridPoints, EMS_ZoneType::Shelf);
+		LevelScriptActor->GetFreeMovableGridPositions(ShelfFreeMovableGridPositions, EMS_ZoneType::Shelf);
 
 		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
 		// XX
 		// XO
-		for (const FIntVector2& GridPoint : ShelfFreeMovableGridPoints)
+		for (const FIntVector2& GridPosition : ShelfFreeMovableGridPositions)
 		{
-			if (!ShelfFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, -1)))
+			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
 			{
 				continue;
 			}
 
-			if (!ShelfFreeMovableGridPoints.Contains(GridPoint + FIntVector2(0, -1)))
+			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
 			{
 				continue;
 			}
 
-			if (!ShelfFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, 0)))
+			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
 			{
 				continue;
 			}
 
-			ShelfFreeMovableWalkingPoints.Add(GridPoint);
+			ShelfFreeMovableWalkingPoints.Add(GridPosition);
 		}
 	}
 }
 
 void UMS_GridBFS_2x2::CollectPalletMovingPoints()
 {
-	PalletFreeMovableGridPoints.Empty();
+	PalletFreeMovableGridPositions.Empty();
 	PalletFreeMovableWalkingPoints.Empty();
 	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		LevelScriptActor->GetFreeMovableGridPoints(PalletFreeMovableGridPoints, EMS_ZoneType::Pallet);
+		LevelScriptActor->GetFreeMovableGridPositions(PalletFreeMovableGridPositions, EMS_ZoneType::Pallet);
 
 		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
 		// XX
 		// XO
-		for (const FIntVector2& GridPoint : PalletFreeMovableGridPoints)
+		for (const FIntVector2& GridPosition : PalletFreeMovableGridPositions)
 		{
-			if (!PalletFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, -1)))
+			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
 			{
 				continue;
 			}
 
-			if (!PalletFreeMovableGridPoints.Contains(GridPoint + FIntVector2(0, -1)))
+			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
 			{
 				continue;
 			}
 
-			if (!PalletFreeMovableGridPoints.Contains(GridPoint + FIntVector2(-1, 0)))
+			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
 			{
 				continue;
 			}
 
-			PalletFreeMovableWalkingPoints.Add(GridPoint);
+			PalletFreeMovableWalkingPoints.Add(GridPosition);
 		}
 	}
 }

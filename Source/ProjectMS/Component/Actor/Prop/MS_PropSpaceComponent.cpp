@@ -70,3 +70,9 @@ void UMS_PropSpaceComponent::GetGridPositions(FIntVector2& aOutStartGridPosition
 
 	aOutGridNum = FIntVector2(FMath::RoundToInt32(SpaceSize.X) / MS_GridSizeInt.X, FMath::RoundToInt32(SpaceSize.Y) / MS_GridSizeInt.Y);
 }
+
+FIntVector2 UMS_PropSpaceComponent::GetCenterGridPosition() const
+{
+	const FVector& Location = GetComponentLocation();
+	return FMS_GridData::ConvertLocationToGridPosition(Location);
+}

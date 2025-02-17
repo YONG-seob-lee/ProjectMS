@@ -48,6 +48,18 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
+EMS_PersonalActionType UMS_StaffAIUnit::GetFirstPersonalAction() const
+{
+	if (PersonalActions.IsValidIndex(0))
+	{
+		MS_ENSURE (PersonalActions[0] != EMS_PersonalActionType::None);
+		
+		return PersonalActions[0];
+	}
+
+	return EMS_PersonalActionType::None;
+}
+
 void UMS_StaffAIUnit::RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType)
 {
 	PersonalActions.Emplace(aPersonalActionType);

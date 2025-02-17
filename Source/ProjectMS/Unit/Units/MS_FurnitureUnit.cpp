@@ -65,6 +65,15 @@ FIntVector2 UMS_FurnitureUnit::GetGridPosition() const
 	return Furniture->GetGridPosition();
 }
 
+TArray<UMS_PropSpaceComponent*> UMS_FurnitureUnit::GetPropPurposeSpaceComponents(
+	EMS_PurposeType aPropPurposeSpace) const
+{
+	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
+	MS_ENSURE(IsValid(Furniture));
+
+	return Furniture->GetPropPurposeSpaceComponents(aPropPurposeSpace);
+}
+
 void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())

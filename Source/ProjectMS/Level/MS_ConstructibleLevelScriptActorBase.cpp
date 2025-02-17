@@ -550,7 +550,7 @@ bool AMS_ConstructibleLevelScriptActorBase::MoveAndRotateProp(TWeakObjectPtr<AMS
 	return false;
 }
 
-void AMS_ConstructibleLevelScriptActorBase::GetFreeMovableGridPoints(TArray<FIntVector2>& aOutGrids,
+void AMS_ConstructibleLevelScriptActorBase::GetFreeMovableGridPositions(TArray<FIntVector2>& aOutGrids,
 	EMS_ZoneType aInZoneType)
 {
 	aOutGrids.Empty();

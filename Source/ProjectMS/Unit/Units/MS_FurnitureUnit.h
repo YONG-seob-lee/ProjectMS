@@ -32,6 +32,8 @@ public:
 
 	FIntVector2 GetGridPosition() const;
 
+	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
+
 	
 	// Property :: Setter
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);

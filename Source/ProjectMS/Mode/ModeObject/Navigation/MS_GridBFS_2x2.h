@@ -27,13 +27,13 @@ private:
 	void Search(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPoint, const TArray<FIntVector2>& aTargetPoints) const;
 	
 private:
-	TArray<FIntVector2> DisplayFreeMovableGridPoints = {};
+	TArray<FIntVector2> DisplayFreeMovableGridPositions = {};
 	TArray<FIntVector2> DisplayFreeMovableWalkingPoints = {};
 
-	TArray<FIntVector2> ShelfFreeMovableGridPoints = {};
+	TArray<FIntVector2> ShelfFreeMovableGridPositions = {};
 	TArray<FIntVector2> ShelfFreeMovableWalkingPoints = {};
 
-	TArray<FIntVector2> PalletFreeMovableGridPoints = {};
+	TArray<FIntVector2> PalletFreeMovableGridPositions = {};
 	TArray<FIntVector2> PalletFreeMovableWalkingPoints = {};
 
 	// 등록 순서가 탐색 우선순위와 같음

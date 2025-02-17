@@ -36,6 +36,7 @@ public:
 	// 이동과 회전값이 적용된 상태에서 좌상단 기준으로 계산
 	void GetGridPositions(FIntVector2& aOutStartGridPosition, FIntVector2& aOutGridNum) const;
 
+	FIntVector2 GetCenterGridPosition() const;
 	
 private:
 	// Property

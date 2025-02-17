@@ -62,7 +62,7 @@ public:
 
 
 	// Navigation
-	void GetFreeMovableGridPoints(TArray<FIntVector2>& aOutGrids, EMS_ZoneType aInZoneType);
+	void GetFreeMovableGridPositions(TArray<FIntVector2>& aOutGrids, EMS_ZoneType aInZoneType);
 
 
 	

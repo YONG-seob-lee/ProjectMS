@@ -4,16 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_AITask.generated.h"
-
-namespace OutsideBoardKeyName
-{
-	const FName bFinishedIdleAnimation = TEXT("bFinishedIdleAnimation");
-	const FName RemainIdleTime = TEXT("RemainIdleTime");
-	const FName RemainWalkTime = TEXT("RemainWalkTime");
-	const FName RemainWalkToMarketTime = TEXT("RemainWalkToMarketTime");
-	const FName MarketFront = TEXT("MarketFront");
-}
 
 
 /**

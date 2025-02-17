@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MS_AIUnit.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_StaffAIUnit.generated.h"
 
-enum class EMS_PersonalActionType;
 /**
  * 
  */
@@ -25,7 +25,15 @@ protected:
 	virtual int32 GetBlueprintPathId() const override;
 	virtual UClass* GetBlueprintClass() const override;
 
+	
 public:
+	int32 GetPersonalActionNum() const { return PersonalActions.Num(); }
+	EMS_PersonalActionType GetFirstPersonalAction() const;
+
+	const TArray<FIntVector2>& GetTargetPoints() const { return TargetPoints; }
+	void SetTargetPoints(const TArray<FIntVector2>& aTargetPoints) { TargetPoints = aTargetPoints; }
+
+	
 	void RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
 	void UnregisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
 	
@@ -37,4 +45,6 @@ private:
 
 	TArray<EMS_PersonalActionType> PersonalActions;
 	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
+
+	TArray<FIntVector2> TargetPoints;	// Blackboard에 Array형을 지원 안함
 };
