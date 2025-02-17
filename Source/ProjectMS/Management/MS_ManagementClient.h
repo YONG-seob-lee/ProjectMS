@@ -51,4 +51,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<class UMS_TutorialHelper> TutorialHelper = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<class UMS_SequenceManager> SequenceManager = nullptr;
+
 };

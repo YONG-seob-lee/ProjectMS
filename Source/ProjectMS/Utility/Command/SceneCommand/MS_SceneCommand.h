@@ -81,7 +81,7 @@ public:
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 	
 	FMS_FadeEventDelegate OnFadeEventDelegate;
-
+	TFunction<void()> OnFadeInFinishedCallback;
 private:
 	TSubclassOf<UMS_Widget> LoadingWidget = nullptr;
 	FName WidgetName = FName();

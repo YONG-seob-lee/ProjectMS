@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Widget/MS_Widget.h"
 
 
@@ -62,6 +63,10 @@ void AMS_Market::LaunchEvent()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
+	Command->OnFadeInFinishedCallback = []()
+	{
+		gSequenceMng.PlaySequence();
+	};
 
 	gSceneMng.RequestChangeScene(Command);
 }

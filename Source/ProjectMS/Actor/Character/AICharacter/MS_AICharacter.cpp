@@ -4,7 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "AI/AIController/MS_AIController.h"
-#include "AnimInstance/MS_AIAnimInstance.h"
+#include "Animation/MS_AIAnimInstance.h"
 
 AMS_AICharacter::AMS_AICharacter()
 {

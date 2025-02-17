@@ -8,7 +8,7 @@
 #include "MS_MarketFrontActor.h"
 #include "MS_UnitBase.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
-#include "AnimInstance/MS_AIAnimInstance.h"
+#include "Animation/MS_AIAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_AIUnit.h"

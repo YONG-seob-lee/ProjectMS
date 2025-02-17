@@ -14,6 +14,7 @@ public class ProjectMS : ModuleRules
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput"
 			, "Slate", "SlateCore", "GameplayCameras", "AIModule", "NavigationSystem", "GamePlayTasks"
 			, "ProceduralMeshComponent", "AssetRegistry", "UMG", "CommonInput", "NiagaraUIRenderer"
+			, "LevelSequence", "MovieScene"
 		});
 		
 		PrivateDependencyModuleNames.AddRange(new string[]

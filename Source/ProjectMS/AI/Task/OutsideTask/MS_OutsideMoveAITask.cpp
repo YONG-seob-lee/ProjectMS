@@ -5,7 +5,7 @@
 
 #include "MS_Define.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
-#include "AnimInstance/MS_AIAnimInstance.h"
+#include "Animation/MS_AIAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/OutsideAICharacter/MS_OutsideAICharacter.h"
 

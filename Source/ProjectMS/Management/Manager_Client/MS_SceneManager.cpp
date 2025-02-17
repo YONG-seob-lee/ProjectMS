@@ -213,6 +213,11 @@ void UMS_SceneManager::EndFade()
 				OnFadeFinishedEventDelegate.Broadcast();
 				OnFadeFinishedEventDelegate.RemoveAll(this);
 			}
+			if(NewCommand->OnFadeInFinishedCallback)
+			{
+				NewCommand->OnFadeInFinishedCallback();
+				NewCommand->OnFadeInFinishedCallback = nullptr;
+			}
 			
 			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
 			

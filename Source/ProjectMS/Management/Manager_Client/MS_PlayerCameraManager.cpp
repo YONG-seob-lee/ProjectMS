@@ -90,6 +90,16 @@ void AMS_PlayerCameraManager::FinalizeViewCamera()
 	ViewCameraMap.Empty();
 }
 
+void AMS_PlayerCameraManager::ReturnTarget(float aBlendTime)
+{
+	if(const TObjectPtr<AMS_ViewCamera>* QuarterCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView))
+	{
+		FViewTargetTransitionParams Params;
+		Params.BlendTime = aBlendTime;
+		SetViewTarget(*QuarterCamera, Params);
+	}
+}
+
 void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam /* = FViewTargetTransitionParams() */)
 {
 	if (ViewCameraType == aViewCameraType)
@@ -164,6 +174,16 @@ void AMS_PlayerCameraManager::AdjustPostProcessEffect(UMS_CameraPostProcessEffec
 	MS_ENSURE(aCameraPostProcessEffect);
 
 	CurrentCamera->AdjustPostProcessEffect(aCameraPostProcessEffect);
+}
+
+TObjectPtr<AMS_ViewCamera> AMS_PlayerCameraManager::GetViewCamera(EMS_ViewCameraType aType)
+{
+	if(const TObjectPtr<AMS_ViewCamera>* TargetViewCamera = ViewCameraMap.Find(aType))
+	{
+		return *TargetViewCamera;
+	}
+
+	return nullptr;
 }
 
 void AMS_PlayerCameraManager::ZoomCamera(float aDistance)

@@ -39,6 +39,8 @@ public:
 	bool DestroyWidget(TObjectPtr<UMS_Widget> aWidget);
 	void PostDestroyWidget(const FName& aTypeName);
 
+	void HideAllWidget(bool bHide) const;
+	
 	void ActivatePreventionCover(bool bActivate) const;
 	void ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop = true, float aElapsedTime = 3.f, FColor aDisplayColor = FColor::Green);
 	void ShowToastMessage(const FString& aMessage) const;
@@ -57,7 +59,7 @@ public:
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
 	void Test(int32 t) const;
-	
+
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 

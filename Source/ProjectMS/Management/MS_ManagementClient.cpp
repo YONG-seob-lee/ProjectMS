@@ -12,6 +12,7 @@
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_SoundManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Tutorial/MS_TutorialHelper.h"
@@ -60,10 +61,20 @@ void UMS_ManagementClient::Initialize()
 	TutorialHelper = MS_NewObject<UMS_TutorialHelper>(this);
 	MS_CHECK(TutorialHelper);
 	TutorialHelper->Initialize();
+
+	SequenceManager = MS_NewObject<UMS_SequenceManager>(this);
+	MS_CHECK(SequenceManager);
+	SequenceManager->Initialize();
 }
 
 void UMS_ManagementClient::Finalize()
 {
+	if(SequenceManager)
+	{
+		SequenceManager->Finalize();
+		SequenceManager = nullptr;
+	}
+	
 	if(TutorialHelper)
 	{
 		TutorialHelper->Destroyed();

@@ -186,6 +186,11 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 {
 }
 
+void UMS_WidgetManager::HideAllWidget(bool bHide) const
+{
+	RootWidget->SetVisibility(bHide ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+}
+
 void UMS_WidgetManager::ActivatePreventionCover(bool bActivate) const
 {
 	RootWidget->ActivatePreventionCover(bActivate);

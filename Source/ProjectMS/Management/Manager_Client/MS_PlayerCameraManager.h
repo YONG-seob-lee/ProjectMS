@@ -35,6 +35,7 @@ public:
 	void InitializeViewCamera();
 	void FinalizeViewCamera();
 
+	void ReturnTarget(float aBlendTime = 2.f);
 	void SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam = FViewTargetTransitionParams());
 	void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
 
@@ -44,6 +45,8 @@ public:
 	FORCEINLINE bool IsRestrictCameraMovement() const { return bRestrictCameraFlag; }
 	FORCEINLINE FSimpleDelegate& GetOnFinishedCameraTransitionDelegate() { return OnFinishedCameraTransition; }
 	FORCEINLINE TWeakObjectPtr<class AMS_ViewCamera> GetCurrentCamera() const { return CurrentCamera; }
+	TObjectPtr<class AMS_ViewCamera> GetViewCamera(EMS_ViewCameraType aType);
+	
 
 	UFUNCTION(BlueprintCallable) void ZoomCamera(float aDistance);
 	UFUNCTION(BlueprintCallable) void OrbitCamera(float aFloat);

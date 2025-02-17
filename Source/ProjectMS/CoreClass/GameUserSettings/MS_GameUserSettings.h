@@ -40,6 +40,10 @@ public:
 	void AllSkipProcessTutorial();
 	bool IsAllProcessTutorialFinished() const;
 	bool IsTutorialFinished(EMS_TutorialType aTutorialKey);
+
+	FORCEINLINE void SetIsPlaySequence(bool bNewPlaySequence) { bPlaySequence = bNewPlaySequence; }
+	FORCEINLINE bool IsPlaySequence() const { return bPlaySequence; }
+
 private:
 	UPROPERTY(config)
 	TMap<EMS_SoundClassType, float> DefaultSoundVolume;
@@ -49,4 +53,7 @@ private:
 
 	UPROPERTY(config)
 	TArray<EMS_TutorialType> ProcessTutorial;
+
+	UPROPERTY(config)
+	bool bPlaySequence = true;
 };
