@@ -79,6 +79,9 @@ private:
 	void GenerateInertiaForce(const FVector& aMagnitude);
 	FRotator GenerateInertiaForceForRotation(const FRotator& aCurrentRotation, const FRotator& aTargetRotation, float& aVelocity, float aDampingFactor);
 	
+	void CheckRegistCameraPosition(EMS_LevelType LevelType, const FVector& CameraPosition, FVector2D& PointerGlidePositionDeltaTrend);
+
+	
 	EMS_ViewCameraType ViewCameraType = EMS_ViewCameraType::Undefined;
 	bool bRestrictCameraFlag = false;
 

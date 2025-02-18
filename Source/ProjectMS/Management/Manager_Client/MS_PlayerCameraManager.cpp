@@ -14,7 +14,6 @@
 #include "Camera/CameraEffect/MS_CameraEffect.h"
 #include "Camera/CameraEffect/CameraShake/MS_CameraShake.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
-#include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 
 namespace ViewCamera
@@ -22,6 +21,12 @@ namespace ViewCamera
 	const FName Quarter = TEXT("QuarterViewCamera");
 	const FName Side = TEXT("SideViewCamera");
 	const FName Top = TEXT("TopViewCamera");
+
+	const FVector2D TownMax = FVector2D(14484.f, -5603.f);
+	const FVector2D TownMin = FVector2D(10700.f, -10178.f);
+
+	const FVector2D MarketMax = FVector2D(2000.f, 1435.f);
+	const FVector2D MarketMin = FVector2D(-1400.f, -600.f);
 }
 
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
@@ -326,15 +331,17 @@ void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVe
 		return;
 	}
 
-	if(Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::LobbyLevel)
 	{
 		MoveDensity = 3.f;
+		CheckRegistCameraPosition(EMS_LevelType::Stage01, CurrentCamera->GetActorLocation(), aPointerGlidePositionDeltaTrend);
 	}
-	else if(Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+	else if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::MarketLevel)
 	{
 		MoveDensity = 0.8f;
+		CheckRegistCameraPosition(EMS_LevelType::MarketLevel, CurrentCamera->GetActorLocation(), aPointerGlidePositionDeltaTrend);
 	}
-	
+		
 	CurrentCamera->AddActorWorldOffset(FVector(-aPointerGlidePositionDeltaTrend.X, -aPointerGlidePositionDeltaTrend.Y, 0.0f) * MoveSensitivity);
 	GenerateInertiaForce(FVector(-aPointerGlidePositionDeltaTrend.X, -aPointerGlidePositionDeltaTrend.Y, 0.0f) * MoveDensity);
 }
@@ -454,6 +461,31 @@ FRotator AMS_PlayerCameraManager::GenerateInertiaForceForRotation(const FRotator
 	aVelocity *= aDampingFactor;
 
 	return aCurrentRotation + FRotator(0.0f, aVelocity, 0.0f);
+}
+
+void AMS_PlayerCameraManager::CheckRegistCameraPosition(EMS_LevelType LevelType, const FVector& CameraPosition,
+	FVector2D& PointerGlidePositionDeltaTrend)
+{
+	const FVector2D NextCameraLocation = FVector2D(CameraPosition.X, CameraPosition.Y) + (-PointerGlidePositionDeltaTrend);
+	const FVector2D Max = LevelType == EMS_LevelType::MarketLevel ? ViewCamera::MarketMax : ViewCamera::TownMax;
+	const FVector2D Min = LevelType == EMS_LevelType::MarketLevel ? ViewCamera::MarketMin : ViewCamera::TownMin;
+	
+	if(NextCameraLocation.X > Max.X)
+	{
+		PointerGlidePositionDeltaTrend.X = NextCameraLocation.X - Max.X;
+	}
+	if(NextCameraLocation.X < Min.X)
+	{
+		PointerGlidePositionDeltaTrend.X = NextCameraLocation.X - Min.X;
+	}
+	if(NextCameraLocation.Y > Max.Y)
+	{
+		PointerGlidePositionDeltaTrend.Y = NextCameraLocation.Y - Max.Y;
+	}
+	if(NextCameraLocation.Y < Min.Y)
+	{
+		PointerGlidePositionDeltaTrend.Y = NextCameraLocation.Y - Min.Y;
+	}
 }
 
 AMS_PlayerCameraManager* AMS_PlayerCameraManager::GetInstance()

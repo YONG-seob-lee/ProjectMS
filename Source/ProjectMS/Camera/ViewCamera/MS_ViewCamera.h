@@ -20,12 +20,13 @@ public:
 	UFUNCTION() virtual void AdjustCameraDistance(float aDistance);
 	UFUNCTION() virtual void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
 
-	// Component
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") TObjectPtr<class USceneComponent> SceneComponent = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
-
-	// Property
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera") float CameraDistance = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float CameraDistance = 0.0f;
+	
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<class USceneComponent> SceneComponent = nullptr;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
 };
