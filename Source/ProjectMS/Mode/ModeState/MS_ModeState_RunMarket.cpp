@@ -129,7 +129,7 @@ void UMS_ModeState_RunMarket::Exit()
 
 void UMS_ModeState_RunMarket::RunSchedule()
 {
-	gScheduleMng.RunSchedule(820, ScheduleEvent);
+	gScheduleMng.RunSchedule(840, ScheduleEvent);
 }
 
 void UMS_ModeState_RunMarket::EndSchedule()

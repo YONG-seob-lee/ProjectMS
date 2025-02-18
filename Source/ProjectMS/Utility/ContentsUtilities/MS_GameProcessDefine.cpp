@@ -72,12 +72,9 @@ int32 FMS_GameDate::ConvertTimeZoneToMinute(EMS_DailyTimeZone aTimeZone)
 	switch (aTimeZone)
 	{
 	case EMS_DailyTimeZone::Morning :
-		{
-			return 360;		//6:00
-		}
 	case EMS_DailyTimeZone::DayTimeWork :
 		{
-			return 400;		// 6:40
+			return 360;		// 6:40
 		}
 	case EMS_DailyTimeZone::Evening :
 		{

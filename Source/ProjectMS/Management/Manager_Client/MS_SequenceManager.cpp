@@ -12,11 +12,6 @@
 UMS_SequenceManager::UMS_SequenceManager()
 {
 	SequenceManager = this;
-
-	if(const ConstructorHelpers::FObjectFinder<ULevelSequence> LEVELSEQUENCE(TEXT("/Game/Blueprints/Sequence/InToTruckSequence")); LEVELSEQUENCE.Succeeded())
-	{
-		Sequence = LEVELSEQUENCE.Object;
-	}
 }
 
 void UMS_SequenceManager::Initialize()
@@ -44,8 +39,8 @@ void UMS_SequenceManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UMS_SequenceManager::PlaySequence()
-{
+void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType)
+{	
 	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
 	if(!GameUserSettings)
 	{
@@ -53,6 +48,13 @@ void UMS_SequenceManager::PlaySequence()
 	}
 	if(GameUserSettings->IsPlaySequence() == false)
 	{
+		return;
+	}
+
+	const TObjectPtr<ULevelSequence> Sequence = LoadSequence(SequenceType);
+	if(!Sequence)
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("Sequence Is Null. Please Check Sequence Path [ MS_SequenceManager.h Namespace : SequencePath ]"));
 		return;
 	}
 	
@@ -68,6 +70,19 @@ void UMS_SequenceManager::PlaySequence()
 	else
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("Unable to create level sequence player"));
+	}
+}
+
+TObjectPtr<ULevelSequence> UMS_SequenceManager::LoadSequence(EMS_SequenceType SequenceType) const
+{
+	switch(SequenceType)
+	{
+	case EMS_SequenceType::Truck:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::Truck));
+	case EMS_SequenceType::Entrance:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::Entrance));
+	default:
+		return nullptr;
 	}
 }
 

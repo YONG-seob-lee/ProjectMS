@@ -28,11 +28,11 @@ void AMS_OutsideAICharacter::PostInitializeComponents()
 	TArray<AActor*> FrontDoorActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_MarketFrontActor::StaticClass(), FrontDoorActors);
 
-	if(FrontDoorActors.Num() != 1)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("MarkeFrontActor has more than one. [ Confirmed number of actors : %d"), FrontDoorActors.Num());
-		MS_ENSURE(false);
-	}
+	// if(FrontDoorActors.Num() != 1)
+	// {
+	// 	MS_LOG_VERBOSITY(Error, TEXT("MarketFrontActor has more than one. [ Confirmed number of actors : %d"), FrontDoorActors.Num());
+	// 	MS_ENSURE(false);
+	// }
 
 	constexpr int32 FrontDoorIndex = 0;
 	if(FrontDoorActors.IsValidIndex(FrontDoorIndex))

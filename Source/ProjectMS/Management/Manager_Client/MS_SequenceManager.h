@@ -7,6 +7,19 @@
 #include "MS_ManagerBase.h"
 #include "MS_SequenceManager.generated.h"
 
+UENUM()
+enum class EMS_SequenceType
+{
+	None = 0,
+	Truck,
+	Entrance,
+};
+
+namespace SequencePath
+{
+	const FString Truck = TEXT("/Game/Blueprints/Sequence/InToTruckSequence");
+	const FString Entrance = TEXT("/Game/Blueprints/Sequence/DuckEntrance");
+}
 /**
  * 
  */
@@ -23,19 +36,24 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	virtual void BeginPlay() override;
 
-	void PlaySequence();
+	void PlaySequence(EMS_SequenceType SequenceType);
 	
 private:
+	TObjectPtr<class ULevelSequence> LoadSequence(EMS_SequenceType SequenceType) const;
+	
 	void OnSignatureChangedEvent();
 	
 	UFUNCTION()
 	void OnFinishedSequence();
 
 	UPROPERTY()
-	TObjectPtr<class ULevelSequence> Sequence = nullptr;
-
-	UPROPERTY()
 	ALevelSequenceActor* SequenceActor = nullptr;
+
+
+
+
+
+
 	
 public:
 	inline static TObjectPtr<UMS_SequenceManager> SequenceManager = nullptr;

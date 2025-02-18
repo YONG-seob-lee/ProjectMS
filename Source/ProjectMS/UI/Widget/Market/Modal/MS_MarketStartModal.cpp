@@ -6,6 +6,7 @@
 #include "Button/MS_Button.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 
 void UMS_MarketStartModal::NativeConstruct()
@@ -19,6 +20,8 @@ void UMS_MarketStartModal::NativeConstruct()
 		gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
 		gWidgetMng.CloseModalWidget();
 	});
+
+	
 }
 
 void UMS_MarketStartModal::OnClickedOpeningPlayButton()

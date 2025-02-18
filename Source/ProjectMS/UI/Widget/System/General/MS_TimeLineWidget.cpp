@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Widget/Market/Modal/MS_MarketStartModal.h"
@@ -164,7 +165,7 @@ void UMS_TimeLineWidget::InVisibilityDot() const
 void UMS_TimeLineWidget::OnClickedRunTimeButton()
 {
 	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
-	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
+	const EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
 
 	if (LevelType == EMS_LevelType::None)
 	{
@@ -199,6 +200,10 @@ void UMS_TimeLineWidget::OnClickedRunTimeButton()
 			// MarketStartModal Open
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
+			ModalParameter.OnCloseWidgetCallback = []()
+			{
+				gSequenceMng.PlaySequence(EMS_SequenceType::Entrance);
+			};
 			gWidgetMng.ShowModalWidget(ModalParameter);
 		}
 	}
