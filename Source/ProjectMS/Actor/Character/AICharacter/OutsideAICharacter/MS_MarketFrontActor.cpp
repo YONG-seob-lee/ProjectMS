@@ -16,7 +16,7 @@ AMS_MarketFrontActor::AMS_MarketFrontActor(const FObjectInitializer& aObjectInit
 	if(SphereComponent)
 	{
 		SphereComponent->SetupAttachment(SceneRootComponent);
-		SphereComponent->InitSphereRadius(100.f);
+		SphereComponent->InitSphereRadius(150.f);
 	}
 }
 

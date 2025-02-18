@@ -24,9 +24,17 @@ public:
 	virtual void LaunchEvent() override;
 
 private:
+	UFUNCTION()
+	void OnAutoDoorTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult);
+	UFUNCTION()
+	void OnAutoDoorOutTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I);
+
 	bool CheckTutorialFinished();
 	void PlayTutorial() const;
 
-	UPROPERTY(EditAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "Market", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Market", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
 };

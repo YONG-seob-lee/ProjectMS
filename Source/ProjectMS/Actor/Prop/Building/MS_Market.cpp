@@ -3,9 +3,10 @@
 
 #include "MS_Market.h"
 
-#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Character/AICharacter/MS_AICharacter.h"
 #include "Component/Actor/MS_InteractionComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Engine/TriggerBox.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
@@ -19,6 +20,16 @@ AMS_Market::AMS_Market(const FObjectInitializer& aObjectInitializer)
 	if (InteractionComponent)
 	{
 		InteractionComponent->SetupAttachment(SceneRootComponent);
+	}
+
+	AutoDoorTriggerBox = CreateDefaultSubobject<UBoxComponent>("AutoDoorTriggerBox");
+	if(AutoDoorTriggerBox)
+	{
+		AutoDoorTriggerBox->AttachToComponent(SceneRootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		AutoDoorTriggerBox->SetRelativeLocation(FVector(0.f, 560.f, -230.f));
+		AutoDoorTriggerBox->SetBoxExtent(FVector(100.f, 100.f, 100.f));
+		AutoDoorTriggerBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &AMS_Market::OnAutoDoorTrigger);
+		AutoDoorTriggerBox->OnComponentEndOverlap.AddUniqueDynamic(this, &AMS_Market::OnAutoDoorOutTrigger);
 	}
 }
 
@@ -69,6 +80,22 @@ void AMS_Market::LaunchEvent()
 	// };
 
 	gSceneMng.RequestChangeScene(Command);
+}
+
+void AMS_Market::OnAutoDoorTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult)
+{
+	if(TObjectPtr<AMS_AICharacter> DuckAI = Cast<AMS_AICharacter>(Actor))
+	{
+		gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorTown, FMS_SequencePlayParameter(false, false, false));
+	}
+}
+
+void AMS_Market::OnAutoDoorOutTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I)
+{
+	if(TObjectPtr<AMS_AICharacter> DuckAI = Cast<AMS_AICharacter>(Actor))
+	{
+		gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorTown, FMS_SequencePlayParameter(false, false, false));
+	}
 }
 
 bool AMS_Market::CheckTutorialFinished()

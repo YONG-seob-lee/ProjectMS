@@ -40,16 +40,19 @@ void UMS_SequenceManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType)
-{	
-	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
-	if(!GameUserSettings)
+void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_SequencePlayParameter& Parameter)
+{
+	if(Parameter.bCheckedSequencePlay)
 	{
-		return;
-	}
-	if(GameUserSettings->IsPlaySequence() == false)
-	{
-		return;
+		const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+		if(!GameUserSettings)
+		{
+			return;
+		}
+		if(GameUserSettings->IsPlaySequence() == false)
+		{
+			return;
+		}	
 	}
 
 	const TObjectPtr<ULevelSequence> Sequence = LoadSequence(SequenceType);
@@ -61,15 +64,24 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType)
 	
 	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 	{
-		gCameraMng.SetViewTarget(SequenceActor);
-		FVector QuarterCameraLocation;
-		FRotator QuarterCameraRotator;
-		gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
-		SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
+		bSetBlendCamera = Parameter.bSetBlendCamera; 
+		if(Parameter.bSetBlendCamera)
+		{
+			gCameraMng.SetViewTarget(SequenceActor);
+			FVector QuarterCameraLocation;
+			FRotator QuarterCameraRotator;
+			gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
+			SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);	
+		}
+		
 		// Play the level sequence
 		LevelSequencePlayer->Play();
 		LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
-		gWidgetMng.HideAllWidget(true);
+
+		if(Parameter.bHideWidget)
+		{
+			gWidgetMng.HideAllWidget(true);
+		}
 	}
 	else
 	{
@@ -85,6 +97,14 @@ TObjectPtr<ULevelSequence> UMS_SequenceManager::LoadSequence(EMS_SequenceType Se
 		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::Truck));
 	case EMS_SequenceType::Entrance:
 		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::Entrance));
+	case EMS_SequenceType::OpenDoorTown:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Town));
+	case EMS_SequenceType::CloseDoorTown:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Town));
+	case EMS_SequenceType::OpenDoorMarket:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Market));
+	case EMS_SequenceType::CloseDoorMarket:
+		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Market));
 	default:
 		return nullptr;
 	}
@@ -98,8 +118,11 @@ void UMS_SequenceManager::OnSignatureChangedEvent()
 void UMS_SequenceManager::OnFinishedSequence()
 {
 	gWidgetMng.HideAllWidget(false);
-	gCameraMng.ReturnTarget(2.f);
-	
+
+	if(bSetBlendCamera)
+	{
+		gCameraMng.ReturnTarget(2.f);
+	}
 }
 
 UMS_SequenceManager* UMS_SequenceManager::GetInstance()

@@ -13,13 +13,35 @@ enum class EMS_SequenceType
 	None = 0,
 	Truck,
 	Entrance,
+	OpenDoorTown,
+	CloseDoorTown,
+	OpenDoorMarket,
+	CloseDoorMarket,
 };
 
 namespace SequencePath
 {
-	const FString Truck = TEXT("/Game/Blueprints/Sequence/InToTruckSequence");
-	const FString Entrance = TEXT("/Game/Blueprints/Sequence/DuckEntrance");
+	// Town
+	const FString OpenDoor_Town = TEXT("/Game/Blueprints/Sequence/Town/DoorOpenSequence");
+	const FString CloseDoor_Town = TEXT("/Game/Blueprints/Sequence/Town/DoorCloseSequence");
+	
+	// Market
+	const FString Truck = TEXT("/Game/Blueprints/Sequence/Market/InToTruckSequence");
+	const FString Entrance = TEXT("/Game/Blueprints/Sequence/Market/DuckEntrance");
+	const FString OpenDoor_Market = TEXT("/Game/Blueprints/Sequence/Market/DoorOpenSequence");
+	const FString CloseDoor_Market = TEXT("/Game/Blueprints/Sequence/Market/DoorCloseSequence");
 }
+
+struct FMS_SequencePlayParameter
+{
+public:
+	FMS_SequencePlayParameter() { bCheckedSequencePlay = true; bHideWidget = true; bSetBlendCamera = true; }
+	FMS_SequencePlayParameter(bool _bCheckedSequencePlay, bool _bSetBlendCamera,  bool _bHideWidget) : bCheckedSequencePlay(_bCheckedSequencePlay), bSetBlendCamera(_bSetBlendCamera), bHideWidget(_bHideWidget) {}
+	
+	bool bCheckedSequencePlay = true;
+	bool bSetBlendCamera = true;
+	bool bHideWidget = true;
+};
 /**
  * 
  */
@@ -36,7 +58,7 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	virtual void BeginPlay() override;
 
-	void PlaySequence(EMS_SequenceType SequenceType);
+	void PlaySequence(EMS_SequenceType SequenceType, const FMS_SequencePlayParameter& Parameter = FMS_SequencePlayParameter());
 	
 private:
 	TObjectPtr<class ULevelSequence> LoadSequence(EMS_SequenceType SequenceType) const;
@@ -45,6 +67,8 @@ private:
 	
 	UFUNCTION()
 	void OnFinishedSequence();
+
+	bool bSetBlendCamera = true;
 
 	UPROPERTY()
 	ALevelSequenceActor* SequenceActor = nullptr;

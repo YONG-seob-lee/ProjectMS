@@ -36,6 +36,18 @@ void AMS_OutsideAIController::Initialize()
 		{
 			UseBlackboard(OutsideBlackboardData, BlackboardComponent);
 		}
+
+		const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(GetCharacter());
+		if(!AICharacter)
+		{
+			return;
+		}
+
+		const TWeakObjectPtr<AMS_MarketFrontActor> FrontActor = AICharacter->GetMarketFrontActor();
+		if(FrontActor.IsValid())
+		{
+			Blackboard->SetValueAsObject(OutsideBoardKeyName::MarketFront, FrontActor.Get());
+		}
 	}
 }
 
@@ -68,20 +80,20 @@ void AMS_OutsideAIController::BeginPlay()
 		MS_ERROR(TEXT("Warning!!! Please Check OutsideBehaviorTree Instance."));
 	}
 
-	if(Blackboard)
-	{
-		const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(GetCharacter());
-		if(!AICharacter)
-		{
-			return;
-		}
-
-		const TWeakObjectPtr<AMS_MarketFrontActor> FrontActor = AICharacter->GetMarketFrontActor();
-		if(FrontActor.IsValid())
-		{
-			Blackboard->SetValueAsObject(OutsideBoardKeyName::MarketFront, FrontActor.Get());
-		}
-	}
+	// if(Blackboard)
+	// {
+	// 	const TObjectPtr<AMS_OutsideAICharacter> AICharacter = Cast<AMS_OutsideAICharacter>(GetCharacter());
+	// 	if(!AICharacter)
+	// 	{
+	// 		return;
+	// 	}
+	//
+	// 	const TWeakObjectPtr<AMS_MarketFrontActor> FrontActor = AICharacter->GetMarketFrontActor();
+	// 	if(FrontActor.IsValid())
+	// 	{
+	// 		Blackboard->SetValueAsObject(OutsideBoardKeyName::MarketFront, FrontActor.Get());
+	// 	}
+	// }
 }
 
 void AMS_OutsideAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)
