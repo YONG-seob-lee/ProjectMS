@@ -31,6 +31,7 @@ public:
 	virtual bool HandleMouseMoveEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent) override;
 	virtual bool HandleMouseButtonUpEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent) override;
 	virtual bool HandleMouseButtonDoubleClickEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent) override;
+	virtual bool HandleMouseWheelOrGestureEvent(FSlateApplication& SlateApp, const FPointerEvent& InWheelEvent, const FPointerEvent* InGestureEvent) override;
 
 	// Hold, LongTouch, Click, Glide, Pinch 등의 액션은 Data 구조체 내에서 관리.
 	void HandleRotate();

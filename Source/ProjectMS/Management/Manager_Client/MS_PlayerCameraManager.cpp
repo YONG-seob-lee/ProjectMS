@@ -25,8 +25,8 @@ namespace ViewCamera
 	const FVector2D TownMax = FVector2D(14484.f, -5603.f);
 	const FVector2D TownMin = FVector2D(10700.f, -10178.f);
 
-	const FVector2D MarketMax = FVector2D(2000.f, 1435.f);
-	const FVector2D MarketMin = FVector2D(-1400.f, -600.f);
+	const FVector2D MarketMax = FVector2D(1500.f, 1000.f);
+	const FVector2D MarketMin = FVector2D(-250.f, -1000.f);
 }
 
 AMS_PlayerCameraManager::AMS_PlayerCameraManager()
@@ -197,8 +197,9 @@ void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 	MS_CHECK(CommonTable);
 
 	const float CameraDistanceStrength = CommonTable->GetParameter02(CommonContents::CAMERA_DISTANCE_STRENGTH);
-	const float CameraDistanceMax = CommonTable->GetParameter02(CommonContents::MAX_CAMERA_DISTANCE);
-	const float CameraDistanceMin = CommonTable->GetParameter02(CommonContents::MIN_CAMERA_DISTANCE);
+	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
+	const float CameraDistanceMax = CommonTable->GetParameter02(LevelType == EMS_LevelType::MarketLevel ? CommonContents::MAX_CAMERA_DISTANCE_MARKET : CommonContents::MAX_CAMERA_DISTANCE_TOWN);
+	const float CameraDistanceMin = CommonTable->GetParameter02(LevelType == EMS_LevelType::MarketLevel ? CommonContents::MIN_CAMERA_DISTANCE_MARKET : CommonContents::MIN_CAMERA_DISTANCE_TOWN);
 	
 	float TargetCameraDistance = CurrentCamera.Get()->CameraDistance + (-aDistance * CameraDistanceStrength);
 	TargetCameraDistance = FMath::Clamp(TargetCameraDistance, CameraDistanceMin, CameraDistanceMax);
@@ -213,7 +214,7 @@ void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 
 	CameraInertiaForce = NewInertiaForce;
 
-	GetWorld()->GetTimerManager().SetTimer(CameraInertiaTimerHandle, [this]()
+	GetWorld()->GetTimerManager().SetTimer(CameraInertiaTimerHandle, [this, CameraDistanceMax, CameraDistanceMin]()
 		{
 			CameraInertiaForce *= 0.9f;
 
@@ -226,11 +227,8 @@ void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 
 			float NewCameraDistance = CurrentCamera.Get()->CameraDistance + CameraInertiaForce;
 
-		const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
-		MS_CHECK(CommonTable);
-
-		const float CameraDistanceMax = CommonTable->GetParameter02(CommonContents::MAX_CAMERA_DISTANCE);
-		const float CameraDistanceMin = CommonTable->GetParameter02(CommonContents::MIN_CAMERA_DISTANCE);
+			const TObjectPtr<UMS_CommonCacheTable> CommonTable = Cast<UMS_CommonCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Common));
+			MS_ENSURE(CommonTable);
 		
 			NewCameraDistance = FMath::Clamp(NewCameraDistance, CameraDistanceMin, CameraDistanceMax);
 

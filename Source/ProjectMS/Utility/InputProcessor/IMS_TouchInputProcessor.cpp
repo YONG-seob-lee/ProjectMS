@@ -120,6 +120,12 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDoubleClickEvent(FSlateApplicatio
 	return IInputProcessor::HandleMouseButtonDoubleClickEvent(aSlateApp, aMouseEvent);
 }
 
+bool IMS_TouchInputProcessor::HandleMouseWheelOrGestureEvent(FSlateApplication& SlateApp,
+	const FPointerEvent& InWheelEvent, const FPointerEvent* InGestureEvent)
+{
+	return IInputProcessor::HandleMouseWheelOrGestureEvent(SlateApp, InWheelEvent, InGestureEvent);
+}
+
 void IMS_TouchInputProcessor::HandleRotate()
 {
 	const FMS_PointerData* FirstFinger = nullptr;
