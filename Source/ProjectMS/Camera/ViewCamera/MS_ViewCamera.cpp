@@ -43,3 +43,9 @@ void AMS_ViewCamera::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aCamer
 
 	CameraComponent->PostProcessSettings.AddBlendable(aCameraPostProcessEffect->PostProcessMaterial, 1.f);
 }
+
+void AMS_ViewCamera::GetCameraPosition(FVector& CameraLocation, FRotator& CameraRotation) const
+{
+	CameraLocation = CameraComponent->GetComponentLocation();
+	CameraRotation = CameraComponent->GetComponentRotation();
+}

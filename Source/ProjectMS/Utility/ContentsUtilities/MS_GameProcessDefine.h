@@ -39,10 +39,11 @@ enum class EMS_MarketScheduleEvent : uint8
 {
 	None = 0,
 	Prepare = 1,
-	LoadingUnloading = 2,
-	OpenMarket = 3,
-	Deadline = 4,
-	CloseMarket = 5,
+	TruckIn = 2,
+	LoadingUnloading = 3,
+	OpenMarket = 4,
+	Deadline = 5,
+	CloseMarket = 6,
 };
 
 UENUM()

@@ -20,6 +20,8 @@ public:
 	UFUNCTION() virtual void AdjustCameraDistance(float aDistance);
 	UFUNCTION() virtual void AdjustPostProcessEffect(class UMS_CameraPostProcessEffect* aCameraPostProcessEffect);
 
+	void GetCameraPosition(FVector& CameraLocation, FRotator& CameraRotation) const;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float CameraDistance = 0.0f;
 	

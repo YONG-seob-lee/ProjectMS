@@ -29,7 +29,7 @@ class PROJECTMS_API UMS_SequenceManager : public UMS_ManagerBase
 	GENERATED_BODY()
 public:
 	UMS_SequenceManager();
-	
+
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;

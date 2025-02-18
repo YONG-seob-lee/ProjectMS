@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
 #include "Units/MS_GateUnit.h"
@@ -163,6 +164,11 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->UpdateScheduleEvent(aScheduleEvent);
+	}
+
+	if(static_cast<EMS_MarketScheduleEvent>(aScheduleEvent) == EMS_MarketScheduleEvent::TruckIn)
+	{
+		gSequenceMng.PlaySequence(EMS_SequenceType::Truck);
 	}
 }
 

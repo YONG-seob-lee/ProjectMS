@@ -8,6 +8,7 @@
 #include "MS_Define.h"
 #include "MS_PlayerCameraManager.h"
 #include "MS_WidgetManager.h"
+#include "Camera/ViewCamera/MS_ViewCamera.h"
 
 UMS_SequenceManager::UMS_SequenceManager()
 {
@@ -61,7 +62,10 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType)
 	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 	{
 		gCameraMng.SetViewTarget(SequenceActor);
-		SequenceActor->SetActorLocationAndRotation(FVector(518.f, 1392.f, 1003.f), FRotator(-45.f, -90.f, 0.f));
+		FVector QuarterCameraLocation;
+		FRotator QuarterCameraRotator;
+		gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
+		SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
 		// Play the level sequence
 		LevelSequencePlayer->Play();
 		LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
@@ -94,7 +98,8 @@ void UMS_SequenceManager::OnSignatureChangedEvent()
 void UMS_SequenceManager::OnFinishedSequence()
 {
 	gWidgetMng.HideAllWidget(false);
-	gCameraMng.ReturnTarget();
+	gCameraMng.ReturnTarget(2.f);
+	
 }
 
 UMS_SequenceManager* UMS_SequenceManager::GetInstance()

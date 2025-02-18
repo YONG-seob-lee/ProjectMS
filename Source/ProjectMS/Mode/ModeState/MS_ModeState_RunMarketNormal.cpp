@@ -20,6 +20,7 @@ void UMS_ModeState_RunMarketNormal::Initialize(uint8 aIndex, const FName& aName)
 	Super::Initialize(aIndex, aName);
 
 	ScheduleEvent.Emplace(0, static_cast<int32>(EMS_MarketScheduleEvent::Prepare));
+	ScheduleEvent.Emplace(40, static_cast<int32>(EMS_MarketScheduleEvent::TruckIn));
 	ScheduleEvent.Emplace(60, static_cast<int32>(EMS_MarketScheduleEvent::LoadingUnloading));
 	ScheduleEvent.Emplace(180, static_cast<int32>(EMS_MarketScheduleEvent::OpenMarket));
 	ScheduleEvent.Emplace(810, static_cast<int32>(EMS_MarketScheduleEvent::Deadline));
