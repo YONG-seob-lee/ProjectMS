@@ -75,3 +75,8 @@ void UMS_ModeStateBase::OnInputPointerDoubleClickEvent(FVector2D aPosition, cons
 void UMS_ModeStateBase::OnPinchAction(float aPinchValue)
 {
 }
+
+void UMS_ModeStateBase::SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions) const
+{
+}

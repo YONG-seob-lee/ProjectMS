@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SelectPersonalActionAITask.h"
+#include "MS_SelectStaffActionAITask.h"
 
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -9,13 +9,13 @@
 #include "Units/MS_StaffAIUnit.h"
 
 
-UMS_SelectPersonalActionAITask::UMS_SelectPersonalActionAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMS_SelectStaffActionAITask::UMS_SelectStaffActionAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Select Personal Action";
+	NodeName = "Select Staff Action";
 	bNotifyTick = false;
 }
 
-EBTNodeResult::Type UMS_SelectPersonalActionAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const TObjectPtr<AMS_StaffAIController> AIController = Cast<AMS_StaffAIController>(OwnerComp.GetAIOwner());
 	if(!AIController)
@@ -41,13 +41,13 @@ EBTNodeResult::Type UMS_SelectPersonalActionAITask::ExecuteTask(UBehaviorTreeCom
 		return EBTNodeResult::Type::Failed;
 	}
 
-	EMS_PersonalActionType SelectedPersonalAction =  AIUnit->GetFirstPersonalAction();
-	if (SelectedPersonalAction == EMS_PersonalActionType::None)
+	EMS_StaffActionType SelectedStaffAction =  AIUnit->GetFirstStaffAction();
+	if (SelectedStaffAction == EMS_StaffActionType::None)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
 	
-	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::SelectedPersonalAction, static_cast<uint8>(SelectedPersonalAction));
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::SelectedStaffAction, static_cast<uint8>(SelectedStaffAction));
 	
 	return EBTNodeResult::Type::Succeeded;
 }

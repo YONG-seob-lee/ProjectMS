@@ -4,7 +4,9 @@
 #include "MS_StaffAIUnit.h"
 
 #include "UtilityFunctions.h"
+#include "Character/MS_CharacterBase.h"
 #include "ContentsUtilities/MS_AIDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Table/RowBase/MS_Staff.h"
 
@@ -48,34 +50,46 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
-EMS_PersonalActionType UMS_StaffAIUnit::GetFirstPersonalAction() const
+FIntVector2 UMS_StaffAIUnit::GetGridPosition() const
 {
-	if (PersonalActions.IsValidIndex(0))
+	if (GetCharacter())
 	{
-		MS_ENSURE (PersonalActions[0] != EMS_PersonalActionType::None);
-		
-		return PersonalActions[0];
+		FVector CharacterLocation = GetCharacter()->GetActorLocation();
+		return FMS_GridData::ConvertLocationToGridPosition(CharacterLocation);
 	}
 
-	return EMS_PersonalActionType::None;
+	MS_ENSURE(false);
+	return FIntVector2::ZeroValue;
 }
 
-void UMS_StaffAIUnit::RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType)
+EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction() const
 {
-	PersonalActions.Emplace(aPersonalActionType);
+	if (StaffActions.IsValidIndex(0))
+	{
+		MS_ENSURE (StaffActions[0] != EMS_StaffActionType::None);
+		
+		return StaffActions[0];
+	}
+
+	return EMS_StaffActionType::None;
 }
 
-void UMS_StaffAIUnit::UnregisterPersonalAction(EMS_PersonalActionType aPersonalActionType)
+void UMS_StaffAIUnit::RegisterStaffAction(EMS_StaffActionType aStaffActionType)
 {
-	int32 RemoveNum = PersonalActions.RemoveSingle(aPersonalActionType);
+	StaffActions.Emplace(aStaffActionType);
 }
 
-void UMS_StaffAIUnit::OnRegistedAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
+void UMS_StaffAIUnit::UnregisterStaffAction(EMS_StaffActionType aStaffActionType)
+{
+	int32 RemoveNum = StaffActions.RemoveSingle(aStaffActionType);
+}
+
+void UMS_StaffAIUnit::OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
 {
 	IssueTicket = aIssueTicket;
 }
 
-void UMS_StaffAIUnit::OnUnregistedAsIssueTicketStaff()
+void UMS_StaffAIUnit::OnUnregisteredAsIssueTicketStaff()
 {
 	IssueTicket = nullptr;
 }

@@ -75,6 +75,11 @@ public:
 	
 	const FMS_GridData* GetGrid(const FIntVector2& aGridPosition) const;
 
+	void GetGateUnits(TArray<class UMS_GateUnit*>& aOutGateUnits) const
+	{
+		aOutGateUnits = GateUnits;
+	}
+
 	void ShowDebugZoneData();
 
 	
@@ -128,6 +133,9 @@ private:
 
 	UPROPERTY()
 	TArray<TObjectPtr<class AMS_Wall>> Walls;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UMS_GateUnit>> GateUnits;
 
 public:
 	FMS_RequestOpenZoneDelegate RequestOpenZoneDelegate;

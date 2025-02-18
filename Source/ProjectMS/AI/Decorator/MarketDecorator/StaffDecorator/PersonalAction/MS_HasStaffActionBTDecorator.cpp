@@ -1,19 +1,19 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_HasPersonalActionBTDecorator.h"
+#include "MS_HasStaffActionBTDecorator.h"
 
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Units/MS_StaffAIUnit.h"
 
 
-UMS_HasPersonalActionBTDecorator::UMS_HasPersonalActionBTDecorator(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMS_HasStaffActionBTDecorator::UMS_HasStaffActionBTDecorator(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Has Personal Action";
+	NodeName = "Has Staff Action";
 }
 
-bool UMS_HasPersonalActionBTDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+bool UMS_HasStaffActionBTDecorator::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
 	const TObjectPtr<AMS_StaffAIController> AIController = Cast<AMS_StaffAIController>(OwnerComp.GetAIOwner());
 	if(!AIController)
@@ -33,5 +33,5 @@ bool UMS_HasPersonalActionBTDecorator::CalculateRawConditionValue(UBehaviorTreeC
 		return false;
 	}
 
-	return AIUnit->GetPersonalActionNum() > 0;
+	return AIUnit->GetStaffActionNum() > 0;
 }

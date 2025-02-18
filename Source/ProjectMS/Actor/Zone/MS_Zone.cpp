@@ -161,18 +161,20 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 			Gate->SetZoneData(this);
 
 			// Create Unit
-			TObjectPtr<UMS_GateUnit> Unit = Cast<UMS_GateUnit>(gUnitMng.CreateUnit(EMS_UnitType::Gate, Gate->GetTableIndex(), false));
-			if (IsValid(Unit))
+			TObjectPtr<UMS_GateUnit> GateUnit = Cast<UMS_GateUnit>(gUnitMng.CreateUnit(EMS_UnitType::Gate, Gate->GetTableIndex(), false));
+			if (IsValid(GateUnit))
 			{
 				// Set Unit Actor
-				if (!Unit->SetUnitActor(Gate))
+				if (!GateUnit->SetUnitActor(Gate))
 				{
 					MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
 					MS_ENSURE(false);
 				}
 				else
 				{
-					Unit->GetActor()->SetActorHiddenInGame(true);
+					GateUnit->GetActor()->SetActorHiddenInGame(true);
+					
+					GateUnits.Emplace(GateUnit);
 				}
 			}
 			else

@@ -20,6 +20,9 @@ protected:
 
 public:
 	// Getter
+	EMS_ZoneType GetGateZoneType() const { return GateZoneType; }
+	EMS_ZoneType GetLinkedZoneType() const { return LinkedZoneType; }
+	
 	int32 GetGateIndex() const { return GateIndex; }
 	int32 GetLinkedGateIndex() const { return LinkedGateIndex; }
 
@@ -27,8 +30,14 @@ public:
 private:
 	// Gate Data
 	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
-	int32 GateIndex;
+	EMS_ZoneType GateZoneType;
 
+	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
+	EMS_ZoneType LinkedZoneType;
+	
+	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
+	int32 GateIndex;
+	
 	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
 	int32 LinkedGateIndex;
 };

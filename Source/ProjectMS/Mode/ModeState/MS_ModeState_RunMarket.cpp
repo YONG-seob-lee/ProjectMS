@@ -3,12 +3,16 @@
 
 #include "MS_ModeState_RunMarket.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
 #include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
+#include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
+#include "Units/MS_GateUnit.h"
 
 
 UMS_ModeState_RunMarket::UMS_ModeState_RunMarket()
@@ -39,6 +43,8 @@ void UMS_ModeState_RunMarket::Initialize(uint8 aIndex, const FName& aName)
 	{
 		CustomerSupervisor->Initialize();
 	}
+
+	GridBFS_2x2 = MS_NewObject<UMS_GridBFS_2x2>(this);
 }
 
 void UMS_ModeState_RunMarket::Finalize()
@@ -99,6 +105,11 @@ void UMS_ModeState_RunMarket::Begin()
 	{
 		CustomerSupervisor->Begin();
 	}
+
+	if (IsValid(GridBFS_2x2))
+	{
+		GridBFS_2x2->CollectAllZoneTypeMovingPoints();
+	}
 }
 
 void UMS_ModeState_RunMarket::Exit()
@@ -152,5 +163,57 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->UpdateScheduleEvent(aScheduleEvent);
+	}
+}
+
+void UMS_ModeState_RunMarket::SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions) const
+{
+	aOutPath.Empty();
+	
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		if (!aTargetPositions.IsValidIndex(0))
+		{
+			MS_ENSURE(false);
+			return;
+		}
+
+		// ZoneType
+		EMS_ZoneType StartZoneType = LevelScriptActor->GetGridZoneType(aStartPosition);
+		if (StartZoneType != EMS_ZoneType::Display && StartZoneType != EMS_ZoneType::Shelf && StartZoneType != EMS_ZoneType::Pallet)
+		{
+			MS_ENSURE(false);
+			return;
+		}
+		
+		EMS_ZoneType TargetZoneType = LevelScriptActor->GetGridZoneType(aTargetPositions[0]);
+		if (TargetZoneType != EMS_ZoneType::Display && TargetZoneType != EMS_ZoneType::Shelf && TargetZoneType != EMS_ZoneType::Pallet)
+		{
+			MS_ENSURE(false);
+			return;
+		}
+
+		// Search
+		if (StartZoneType == TargetZoneType)
+		{
+			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions);
+		}
+		else
+		{
+			TArray<TWeakObjectPtr<UMS_GateUnit>> GatesUnits;
+			LevelScriptActor->GetGateUnitsInLevel(GatesUnits, StartZoneType, TargetZoneType);
+
+			TArray<FIntVector2> GatePositions = {};
+			for (TWeakObjectPtr<UMS_GateUnit> GateUnit : GatesUnits)
+			{
+				if (GateUnit != nullptr)
+				{
+					GatePositions.Emplace(GateUnit->GetGridPosition());
+				}
+			}
+			
+			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, GatePositions);
+		}
 	}
 }

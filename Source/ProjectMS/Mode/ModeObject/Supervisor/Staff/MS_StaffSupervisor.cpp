@@ -135,7 +135,7 @@ bool UMS_StaffSupervisor::SpawnCharacter(const FMS_StaffData& aStaffData)
 		{
 			StaffAIUnits.Emplace(StaffAIUnit);
 
-			StaffAIUnit->RegisterPersonalAction(EMS_PersonalActionType::ChangeClothes);
+			StaffAIUnit->RegisterStaffAction(EMS_StaffActionType::ChangeClothes);
 			return true;
 		}
 		

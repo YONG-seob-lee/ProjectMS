@@ -8,125 +8,116 @@ UMS_GridBFS_2x2::UMS_GridBFS_2x2()
 {
 }
 
-void UMS_GridBFS_2x2::CollectMovingPoints()
+void UMS_GridBFS_2x2::CollectAllZoneTypeMovingPoints()
 {
-	CollectDisplayMovingPoints();
-	CollectShelfMovingPoints();
-	CollectPalletMovingPoints();
+	CollectMovingPoints(EMS_ZoneType::Display);
+	CollectMovingPoints(EMS_ZoneType::Shelf);
+	CollectMovingPoints(EMS_ZoneType::Pallet);
 }
 
-void UMS_GridBFS_2x2::CollectDisplayMovingPoints()
+void UMS_GridBFS_2x2::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 {
-	DisplayFreeMovableGridPositions.Empty();
-	DisplayFreeMovableWalkingPoints.Empty();
-	
-	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
-	{
-		LevelScriptActor->GetFreeMovableGridPositions(DisplayFreeMovableGridPositions, EMS_ZoneType::Display);
-
-		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
-		// XX
-		// XO
-		for (const FIntVector2& GridPosition : DisplayFreeMovableGridPositions)
-		{
-			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
-			{
-				continue;
-			}
-
-			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
-			{
-				continue;
-			}
-
-			if (!DisplayFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
-			{
-				continue;
-			}
-
-			DisplayFreeMovableWalkingPoints.Add(GridPosition);
-		}
-	}
-}
-
-void UMS_GridBFS_2x2::CollectShelfMovingPoints()
-{
-	ShelfFreeMovableGridPositions.Empty();
-	ShelfFreeMovableWalkingPoints.Empty();
-	
-	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
-	{
-		LevelScriptActor->GetFreeMovableGridPositions(ShelfFreeMovableGridPositions, EMS_ZoneType::Shelf);
-
-		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
-		// XX
-		// XO
-		for (const FIntVector2& GridPosition : ShelfFreeMovableGridPositions)
-		{
-			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
-			{
-				continue;
-			}
-
-			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
-			{
-				continue;
-			}
-
-			if (!ShelfFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
-			{
-				continue;
-			}
-
-			ShelfFreeMovableWalkingPoints.Add(GridPosition);
-		}
-	}
-}
-
-void UMS_GridBFS_2x2::CollectPalletMovingPoints()
-{
-	PalletFreeMovableGridPositions.Empty();
+	TArray<FIntVector2> FreeMovableGridPositions;
+	FreeMovableGridPositions.Empty();
 	PalletFreeMovableWalkingPoints.Empty();
 	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		LevelScriptActor->GetFreeMovableGridPositions(PalletFreeMovableGridPositions, EMS_ZoneType::Pallet);
+		LevelScriptActor->GetFreeMovableGridPositions(FreeMovableGridPositions, aCollectZoneType);
 
 		// O 그리드를 좌상단 좌표 기준으로 3방향 그리드가 있는지 확인
 		// XX
 		// XO
-		for (const FIntVector2& GridPosition : PalletFreeMovableGridPositions)
+		for (const FIntVector2& GridPosition : FreeMovableGridPositions)
 		{
-			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
+			// Check
+			if (!FreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, -1)))
 			{
 				continue;
 			}
 
-			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
+			if (!FreeMovableGridPositions.Contains(GridPosition + FIntVector2(0, -1)))
 			{
 				continue;
 			}
 
-			if (!PalletFreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
+			if (!FreeMovableGridPositions.Contains(GridPosition + FIntVector2(-1, 0)))
 			{
 				continue;
 			}
 
-			PalletFreeMovableWalkingPoints.Add(GridPosition);
+			// Add
+			switch (aCollectZoneType)
+			{
+			case EMS_ZoneType::Display :
+				{
+					DisplayFreeMovableWalkingPoints.Add(GridPosition);
+					break;
+				}
+
+			case EMS_ZoneType::Shelf :
+				{
+					ShelfFreeMovableWalkingPoints.Add(GridPosition);
+					break;
+				}
+
+			case EMS_ZoneType::Pallet :
+				{
+					PalletFreeMovableWalkingPoints.Add(GridPosition);
+					break;
+				}
+
+			default:
+				{
+					MS_ENSURE(false);
+					return;
+				}
+			}
 		}
 	}
 }
 
-void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPoint,
-	const TArray<FIntVector2>& aTargetPoints) const
+void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions) const
 {
+	// 다른 타입의 존일때 Gate까지만 계산해서 계산량을 줄임
+	// ToDo : 같은 존 타입 사이에 Gate를 두게 됐을때 aSearchZoneType 인자를 더 구체적으로 받을 것
+	TArray<FIntVector2> FreeMovableWalkingPoints;
+	switch (aSearchZoneType)
+	{
+	case EMS_ZoneType::Display :
+		{
+			FreeMovableWalkingPoints = DisplayFreeMovableWalkingPoints;
+			break;
+		}
+
+	case EMS_ZoneType::Shelf :
+		{
+			FreeMovableWalkingPoints = ShelfFreeMovableWalkingPoints;
+			break;
+		}
+
+	case EMS_ZoneType::Pallet :
+		{
+			FreeMovableWalkingPoints = PalletFreeMovableWalkingPoints;
+			break;
+		}
+
+	default:
+		{
+			MS_ENSURE(false);
+			return;
+		}
+	}
+
+	// Search
 	TQueue<FIntVector2> Queue;
 	TMap<FIntVector2, FIntVector2> VisitedPointToPreviousPoints;
 	aOutPath.Empty();
 	
-	Queue.Enqueue(aStartPoint);
+	Queue.Enqueue(aStartPosition);
 
-	VisitedPointToPreviousPoints.Emplace(aStartPoint, FIntVector2::ZeroValue);
+	VisitedPointToPreviousPoints.Emplace(aStartPosition, FIntVector2::ZeroValue);
 
 	bool bSucceed = false;
 	FIntVector2 SucceedTarget = FIntVector2::ZeroValue;
@@ -141,7 +132,7 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, const FIntVector2& a
 			{
 				FIntVector2 EnqueuePoint = TestPoint + TestAddedPoint;
 				
-				if (ShelfFreeMovableWalkingPoints.Contains(EnqueuePoint))
+				if (FreeMovableWalkingPoints.Contains(EnqueuePoint))
 				{
 					if (!VisitedPointToPreviousPoints.Contains(EnqueuePoint))
 					{
@@ -150,7 +141,7 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, const FIntVector2& a
 					}
 				}
 
-				if (aTargetPoints.Contains(EnqueuePoint))
+				if (aTargetPositions.Contains(EnqueuePoint))
 				{
 					bSucceed = true;
 					SucceedTarget = EnqueuePoint;
@@ -173,7 +164,7 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, const FIntVector2& a
 		FIntVector2 PreviousPoint = SucceedTarget;
 		PathBackwards.Emplace(PreviousPoint);
 
-		while (PreviousPoint == aStartPoint)
+		while (PreviousPoint != aStartPosition)
 		{
 			FIntVector2* pPreviousPoint = VisitedPointToPreviousPoints.Find(PreviousPoint);
 			if (pPreviousPoint == nullptr)

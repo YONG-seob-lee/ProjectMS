@@ -17,23 +17,17 @@ class PROJECTMS_API UMS_GridBFS_2x2 : public UObject
 public:
 	UMS_GridBFS_2x2();
 	
-	void CollectMovingPoints();
+	void CollectAllZoneTypeMovingPoints();
 
 private:
-	void CollectDisplayMovingPoints();
-	void CollectShelfMovingPoints();
-	void CollectPalletMovingPoints();
-	
-	void Search(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPoint, const TArray<FIntVector2>& aTargetPoints) const;
+	void CollectMovingPoints(EMS_ZoneType aCollectZoneType);
+
+public:
+	void Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const;
 	
 private:
-	TArray<FIntVector2> DisplayFreeMovableGridPositions = {};
 	TArray<FIntVector2> DisplayFreeMovableWalkingPoints = {};
-
-	TArray<FIntVector2> ShelfFreeMovableGridPositions = {};
 	TArray<FIntVector2> ShelfFreeMovableWalkingPoints = {};
-
-	TArray<FIntVector2> PalletFreeMovableGridPositions = {};
 	TArray<FIntVector2> PalletFreeMovableWalkingPoints = {};
 
 	// 등록 순서가 탐색 우선순위와 같음

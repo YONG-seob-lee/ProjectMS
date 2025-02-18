@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "AI/Task/MS_AITask.h"
-#include "MS_SearchPersonalActionTargetsAITask.generated.h"
+#include "MS_SelectStaffActionAITask.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_SearchPersonalActionTargetsAITask : public UMS_AITask
+class PROJECTMS_API UMS_SelectStaffActionAITask : public UMS_AITask
 {
 	GENERATED_BODY()
 
 public:
-	UMS_SearchPersonalActionTargetsAITask(const FObjectInitializer& ObjectInitializer);
+	UMS_SelectStaffActionAITask(const FObjectInitializer& ObjectInitializer);
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

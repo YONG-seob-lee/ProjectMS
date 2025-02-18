@@ -15,6 +15,7 @@
 #include "Prop/Floor/MS_Floor.h"
 #include "Table/RowBase/MS_StorageData.h"
 #include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_GateUnit.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -262,6 +263,20 @@ int32 AMS_ConstructibleLevelScriptActorBase::GetGridZoneIndex(const FIntVector2&
 	return INDEX_NONE;
 }
 
+EMS_ZoneType AMS_ConstructibleLevelScriptActorBase::GetGridZoneType(const FIntVector2& aGridPosition) const
+{
+	for (auto& Zone : Zones)
+	{
+		if (Zone.Value->IsGridContained(aGridPosition))
+		{
+			return Zone.Value->GetZoneType();
+		}
+	}
+
+	// MS_Ensure(false);
+	return EMS_ZoneType::None;
+}
+
 bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGridPosition) const
 {
 	int32 GridZoneIndex = GetGridZoneIndex(aGridPosition);
@@ -277,6 +292,34 @@ bool AMS_ConstructibleLevelScriptActorBase::IsGridOpened(const FIntVector2& aGri
 	}
 
 	return false;
+}
+
+void AMS_ConstructibleLevelScriptActorBase::GetAllGateUnitsInLevel(TArray<UMS_GateUnit*>& OutGateUnits) const
+{
+	OutGateUnits.Empty();
+	for (auto& Zone : Zones)
+	{
+		TArray<UMS_GateUnit*> ZoneGatesUnits;
+		Zone.Value->GetGateUnits(ZoneGatesUnits);
+
+		OutGateUnits.Append(ZoneGatesUnits);
+	}
+}
+
+void AMS_ConstructibleLevelScriptActorBase::GetGateUnitsInLevel(TArray<TWeakObjectPtr<UMS_GateUnit>>& OutGateUnits,
+	EMS_ZoneType ZoneType, EMS_ZoneType LinkedZoneType) const
+{
+	TArray<UMS_GateUnit*> GateUnits;
+	GetAllGateUnitsInLevel(GateUnits);
+
+	for (UMS_GateUnit* GateUnit : GateUnits)
+	{
+		if (GateUnit->GetGateZoneType() == ZoneType
+			&& GateUnit->GetLinkedZoneType() == LinkedZoneType)
+		{
+			OutGateUnits.Emplace(GateUnit);
+		}
+	}
 }
 
 TWeakObjectPtr<AActor> AMS_ConstructibleLevelScriptActorBase::GetGridObject(const FIntVector2& aGridPosition) const

@@ -8,11 +8,11 @@
 
 
 UMS_IssueTicket::UMS_IssueTicket()
-	: IssueType(EMS_IssueType::None), RequestUnit(nullptr), RequestSlot(INDEX_NONE)
+	: IssueType(EMS_StaffIssueType::None), RequestUnit(nullptr), RequestSlot(INDEX_NONE)
 {
 }
 
-void UMS_IssueTicket::Initialize(EMS_IssueType aIssueType, TWeakObjectPtr<UMS_UnitBase> aRequestUnit,
+void UMS_IssueTicket::Initialize(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_UnitBase> aRequestUnit,
 	int32 aRequestSlot)
 {
 	IssueType = aIssueType;
@@ -24,7 +24,7 @@ void UMS_IssueTicket::Finalize()
 {
 	if (StaffUnit != nullptr)
 	{
-		StaffUnit->OnUnregistedAsIssueTicketStaff();
+		StaffUnit->OnUnregisteredAsIssueTicketStaff();
 	}
 }
 
@@ -33,14 +33,14 @@ void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 	StaffUnit = aStaffUnit;
 }
 
-bool UMS_IssueTicket::IsSameIssue(EMS_IssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
+bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
 {
 	return IssueType == aIssueType
 	&& RequestUnit->GetUnitHandle() == aUnitHandle
 	&& RequestSlot == aRequestSlot;
 }
 
-bool UMS_IssueTicket::IsSameIssue(EMS_IssueType aIssueType, TWeakObjectPtr<UMS_UnitBase> aRequestUnit,
+bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_UnitBase> aRequestUnit,
                                   int32 aRequestSlot) const
 {
 	return IssueType == aIssueType
@@ -61,7 +61,7 @@ bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) 
 		&& RequestSlot == aOther->RequestSlot;
 }
 
-bool UMS_IssueTicket::AllowSameIssue(EMS_IssueType aIssueType)
+bool UMS_IssueTicket::AllowSameIssue(EMS_StaffIssueType aIssueType)
 {
 	// ToDo : 타입이 추가된 후 중복 발행이 가능한 이슈는 true
 	return false;
@@ -81,7 +81,7 @@ void UMS_IssueTicketContainer::Finalize()
 	UnregisterAllIssueTickets();
 }
 
-void UMS_IssueTicketContainer::RegisterIssueTicket(EMS_IssueType aIssueType,
+void UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
 	TWeakObjectPtr<UMS_UnitBase> aRequestUnit /*= nullptr*/, int32 aSlotId /*= INDEX_NONE*/)
 {
 	if (!UMS_IssueTicket::AllowSameIssue(aIssueType))
@@ -186,7 +186,7 @@ void UMS_IssueTicketContainer::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTic
 }
 
 void UMS_IssueTicketContainer::GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,
-	EMS_IssueType aIssueType)
+	EMS_StaffIssueType aIssueType)
 {
 	aOutTickets.Empty();
 
@@ -194,7 +194,7 @@ void UMS_IssueTicketContainer::GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 	{
 		if (IsValid(IssueTicket))
 		{
-			EMS_IssueType IssueType = IssueTicket->GetIssueType();
+			EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 		
 			if (IssueType == aIssueType)
 			{
@@ -254,7 +254,7 @@ void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 }
 
 void UMS_IssueTicketContainer::GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,
-	EMS_IssueType aIssueType, MS_Handle aUnitHandle, int32 aSlotId)
+	EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aSlotId)
 {
 	aOutTickets.Empty();
 
@@ -286,12 +286,12 @@ void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_Issue
 	
 	if (PreviousStaffUnit != nullptr)
 	{
-		PreviousStaffUnit->OnUnregistedAsIssueTicketStaff();
+		PreviousStaffUnit->OnUnregisteredAsIssueTicketStaff();
 	}
 
 	if (aStaffUnit != nullptr)
 	{
-		aStaffUnit->OnRegistedAsIssueTicketStaff(aTargetTicket);
+		aStaffUnit->OnRegisteredAsIssueTicketStaff(aTargetTicket);
 	}
 
 	aTargetTicket->SetStaffUnit(aStaffUnit);

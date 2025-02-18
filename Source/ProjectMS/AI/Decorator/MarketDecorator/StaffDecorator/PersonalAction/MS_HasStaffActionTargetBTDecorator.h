@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "AI/Decorator/MS_BTDecorator.h"
-#include "MS_HasPersonalActionBTDecorator.generated.h"
+#include "MS_HasStaffActionTargetBTDecorator.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_HasPersonalActionBTDecorator : public UMS_BTDecorator
+class PROJECTMS_API UMS_HasStaffActionTargetBTDecorator : public UMS_BTDecorator
 {
 	GENERATED_BODY()
 
 public:
-	UMS_HasPersonalActionBTDecorator(const FObjectInitializer& ObjectInitializer);
+	UMS_HasStaffActionTargetBTDecorator(const FObjectInitializer& ObjectInitializer);
 	
 protected:
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;

@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "UObject/Object.h"
-#include "MS_PersonalAction.generated.h"
+#include "MS_StaffAction.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_PersonalAction : public UObject
+class PROJECTMS_API UMS_StaffAction : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	static bool HasPersonalActionTarget(EMS_PersonalActionType aPersonalActionType);
+	static bool HasStaffActionTarget(EMS_StaffActionType aStaffActionType);
 };

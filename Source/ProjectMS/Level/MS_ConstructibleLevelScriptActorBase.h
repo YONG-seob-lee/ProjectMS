@@ -8,6 +8,7 @@
 #include "MathUtility/MS_MathUtility.h"
 #include "MS_ConstructibleLevelScriptActorBase.generated.h"
 
+
 UCLASS()
 class PROJECTMS_API AMS_ConstructibleLevelScriptActorBase : public AMS_LevelScriptActorBase
 {
@@ -37,7 +38,11 @@ public:
 	bool GetGridDatasForPropSpaceLocations(class UMS_PropSpaceComponent* aPropSpaceComponent, TArray<const FMS_GridData*>& aOutGridDatas, const FIntVector2& aInAddtiveGridPosition = FIntVector2::ZeroValue);	// Ret : AllGridInZones
 
 	int32 GetGridZoneIndex(const FIntVector2& aGridPosition) const;
+	EMS_ZoneType GetGridZoneType(const FIntVector2& aGridPosition) const;
 	bool IsGridOpened(const FIntVector2& aGridPosition) const;
+
+	void GetAllGateUnitsInLevel(TArray<class UMS_GateUnit*>& OutGateUnits) const;
+	void GetGateUnitsInLevel(TArray<TWeakObjectPtr<class UMS_GateUnit>>& OutGateUnits, EMS_ZoneType ZoneType, EMS_ZoneType LinkedZoneType) const;
 	
 	TWeakObjectPtr<AActor> GetGridObject(const FIntVector2& aGridPosition) const;
 
@@ -63,7 +68,6 @@ public:
 
 	// Navigation
 	void GetFreeMovableGridPositions(TArray<FIntVector2>& aOutGrids, EMS_ZoneType aInZoneType);
-
 
 	
 protected:

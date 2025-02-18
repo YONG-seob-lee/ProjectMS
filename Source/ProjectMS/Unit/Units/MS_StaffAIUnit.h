@@ -27,24 +27,30 @@ protected:
 
 	
 public:
-	int32 GetPersonalActionNum() const { return PersonalActions.Num(); }
-	EMS_PersonalActionType GetFirstPersonalAction() const;
+	FIntVector2 GetGridPosition() const;
+	
+	int32 GetStaffActionNum() const { return StaffActions.Num(); }
+	EMS_StaffActionType GetFirstStaffAction() const;
 
-	const TArray<FIntVector2>& GetTargetPoints() const { return TargetPoints; }
-	void SetTargetPoints(const TArray<FIntVector2>& aTargetPoints) { TargetPoints = aTargetPoints; }
+	const TArray<FIntVector2>& GetTargetPositions() const { return CacheTargetPositions; }
+	void SetTargetPositions(const TArray<FIntVector2>& aTargetPositions) { CacheTargetPositions = aTargetPositions; }
+
+	const TArray<FIntVector2>& GetPath() const { return CachePath; }
+	void SetPath(const TArray<FIntVector2>& aCachePath) { CachePath = aCachePath; }
 
 	
-	void RegisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
-	void UnregisterPersonalAction(EMS_PersonalActionType aPersonalActionType);
+	void RegisterStaffAction(EMS_StaffActionType aStaffActionType);
+	void UnregisterStaffAction(EMS_StaffActionType aStaffActionType);
 	
-	void OnRegistedAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
-	void OnUnregistedAsIssueTicketStaff();
+	void OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
+	void OnUnregisteredAsIssueTicketStaff();
 
 private:
 	struct FMS_Staff* StaffTableData = nullptr;
 
-	TArray<EMS_PersonalActionType> PersonalActions;
+	TArray<EMS_StaffActionType> StaffActions = {};
 	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
 
-	TArray<FIntVector2> TargetPoints;	// Blackboard에 Array형을 지원 안함
+	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
+	TArray<FIntVector2> CachePath = {};
 };

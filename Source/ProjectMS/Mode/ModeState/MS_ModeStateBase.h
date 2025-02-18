@@ -59,4 +59,8 @@ public:
 	
 	UFUNCTION()
 	virtual void OnPinchAction(float aPinchValue);
+
+public:
+	UFUNCTION()
+	virtual void SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const;
 };

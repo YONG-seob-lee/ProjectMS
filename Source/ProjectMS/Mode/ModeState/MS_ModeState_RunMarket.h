@@ -25,6 +25,7 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 
+	
 private:
 	void RunSchedule();
 	void EndSchedule();
@@ -33,6 +34,10 @@ public:
 	virtual void UpdateMinute(int32 aCurrentMinute);
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent);
 
+	
+	// aTargetPoints가 다른 존에 있을 경우 첫번째 타겟의 게이트를 찾아감
+	virtual void SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const override;
+	
 	
 private:
 	FTimerHandle DelayTimerHandle;
@@ -46,6 +51,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UMS_CustomerSupervisor> CustomerSupervisor;
+
+	UPROPERTY()
+	TObjectPtr<class UMS_GridBFS_2x2> GridBFS_2x2;
 	
 	TMap<int32, int32> ScheduleEvent;
 };

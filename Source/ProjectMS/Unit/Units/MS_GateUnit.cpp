@@ -3,6 +3,8 @@
 
 #include "MS_GateUnit.h"
 
+#include "Prop/Gate/MS_Gate.h"
+
 void UMS_GateUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
 	Super::Initialize(aUnitHandle, aUnitType, aTableId);
@@ -31,4 +33,34 @@ bool UMS_GateUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRo
 void UMS_GateUnit::DestroyUnitActor()
 {
 	Super::DestroyUnitActor();
+}
+
+AMS_Gate* UMS_GateUnit::GetGateActor() const
+{
+	return Cast<AMS_Gate>(GetActor());
+}
+
+EMS_ZoneType UMS_GateUnit::GetGateZoneType() const
+{
+	return GetGateActor()->GetGateZoneType();
+}
+
+EMS_ZoneType UMS_GateUnit::GetLinkedZoneType() const
+{
+	return GetGateActor()->GetLinkedZoneType();
+}
+
+int32 UMS_GateUnit::GetGateIndex() const
+{
+	return GetGateActor()->GetGateIndex();
+}
+
+int32 UMS_GateUnit::GetLinkedGateIndex() const
+{
+	return GetGateActor()->GetLinkedGateIndex();
+}
+
+FIntVector2 UMS_GateUnit::GetGridPosition() const
+{
+	return GetGateActor()->GetGridPosition();
 }

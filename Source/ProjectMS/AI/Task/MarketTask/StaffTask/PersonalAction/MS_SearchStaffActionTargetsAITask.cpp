@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SearchPersonalActionTargetsAITask.h"
+#include "MS_SearchStaffActionTargetsAITask.h"
 
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -12,14 +12,14 @@
 #include "Units/MS_StaffAIUnit.h"
 
 
-UMS_SearchPersonalActionTargetsAITask::UMS_SearchPersonalActionTargetsAITask(
+UMS_SearchStaffActionTargetsAITask::UMS_SearchStaffActionTargetsAITask(
 	const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Search Personal Action Targets";
+	NodeName = "Search Staff Action Targets";
 	bNotifyTick = false;
 }
 
-EBTNodeResult::Type UMS_SearchPersonalActionTargetsAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
+EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
 	uint8* NodeMemory)
 {
 	const TObjectPtr<AMS_StaffAIController> AIController = Cast<AMS_StaffAIController>(OwnerComp.GetAIOwner());
@@ -46,13 +46,13 @@ EBTNodeResult::Type UMS_SearchPersonalActionTargetsAITask::ExecuteTask(UBehavior
 		return EBTNodeResult::Type::Failed;
 	}
 
-	EMS_PersonalActionType SelectedPersonalAction = static_cast<EMS_PersonalActionType>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::SelectedPersonalAction));
-	if (SelectedPersonalAction == EMS_PersonalActionType::None)
+	EMS_StaffActionType SelectedStaffAction = static_cast<EMS_StaffActionType>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::SelectedStaffAction));
+	if (SelectedStaffAction == EMS_StaffActionType::None)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
 
-	if (SelectedPersonalAction == EMS_PersonalActionType::ChangeClothes)
+	if (SelectedStaffAction == EMS_StaffActionType::ChangeClothes)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
 		gUnitMng.GetUnits(EMS_UnitType::Furniture,Units);
@@ -75,13 +75,13 @@ EBTNodeResult::Type UMS_SearchPersonalActionTargetsAITask::ExecuteTask(UBehavior
 				return EBTNodeResult::Type::Failed;
 			}
 
-			TArray<FIntVector2> TargetPoints;
+			TArray<FIntVector2> TargetPositions;
 			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
 			{
-				TargetPoints.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
 			}
 
-			AIUnit->SetTargetPoints(TargetPoints);
+			AIUnit->SetTargetPositions(TargetPositions);
 			return EBTNodeResult::Type::Succeeded;
 		}
 	}

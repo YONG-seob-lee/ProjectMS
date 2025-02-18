@@ -6,23 +6,17 @@
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_AIDefine.generated.h"
 
+
 UENUM()
-enum class EMS_ActionType : uint8
+enum class EMS_StaffActionType : uint8
 {
 	None = 0,
-	PersonalAction = 1,
-	Issue = 2,
+	Issue = 1,
+	ChangeClothes = 2,
 };
 
 UENUM()
-enum class EMS_PersonalActionType : uint8
-{
-	None = 0,
-	ChangeClothes = 1,
-};
-
-UENUM()
-enum class EMS_IssueType : uint8
+enum class EMS_StaffIssueType : uint8
 {
 	None = 0,
 	Payment = 1,
@@ -60,7 +54,7 @@ public:
 	int32 StaffId;
 
 	UPROPERTY()
-	TArray<EMS_IssueType> PriorityOfWoks;
+	TArray<EMS_StaffIssueType> PriorityOfWoks;
 	
 	UPROPERTY()
 	FMS_GameDate FirstDateOfWork;
@@ -81,5 +75,5 @@ namespace OutsideBoardKeyName
 
 namespace StaffBoardKeyName
 {
-	const FName SelectedPersonalAction = TEXT("SelectedPersonalAction");
+	const FName SelectedStaffAction = TEXT("SelectedStaffAction");
 }
