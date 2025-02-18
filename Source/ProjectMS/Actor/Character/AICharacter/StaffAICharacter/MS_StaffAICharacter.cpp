@@ -90,8 +90,11 @@ void AMS_StaffAICharacter::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
 
-	FVector DirectionVector = UMS_MathUtility::ConvertDirectionToVector(Direction);
-	FRotator DirectionRotator = UMS_MathUtility::ConvertDirectionToRotator(Direction);
-	SetActorLocation(GetActorLocation() + DirectionVector * DuckVelocity * aDeltaTime);
-	SetActorRotation(DirectionRotator);
+	if (Direction != EMS_Direction::None)
+	{
+		FVector DirectionVector = UMS_MathUtility::ConvertDirectionToVector(Direction);
+		FRotator DirectionRotator = UMS_MathUtility::ConvertDirectionToRotator(Direction);
+		SetActorLocation(GetActorLocation() + DirectionVector * DuckVelocity * aDeltaTime);
+		SetActorRotation(DirectionRotator);
+	}
 }

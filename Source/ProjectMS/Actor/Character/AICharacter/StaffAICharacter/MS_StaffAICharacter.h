@@ -26,7 +26,7 @@ protected:
 	TArray<class UMS_MovingBoxComponent*> MovingBoxComponents;
 
 	UPROPERTY()
-	EMS_Direction Direction = EMS_Direction::Front;
+	EMS_Direction Direction = EMS_Direction::None;
 	
 	UPROPERTY(EditAnywhere)
 	float DuckVelocity = 5.f;
