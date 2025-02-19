@@ -7,6 +7,9 @@
 #include "MathUtility/MS_MathUtility.h"
 #include "MS_MarketAICharacter.generated.h"
 
+
+DECLARE_DELEGATE_OneParam(FMS_OnReachPathLocationDelegate, const FVector2D&);
+
 UCLASS()
 class PROJECTMS_API AMS_MarketAICharacter : public AMS_AICharacter
 {
@@ -23,8 +26,15 @@ public:
 
 
 	EMS_Direction GetWalkingDirection() const { return WalkingDirection; }
-	void SetWalkingDirection(EMS_Direction aWalkingDirection, FVector2D aPathLocation, bool aStopInPathLocation);
 	
+	void SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection, FVector2D aPathLocation, bool aStopInPathLocation);
+
+	void SetRocationByWalkingDirection(EMS_Direction aWalkingDirection);
+	
+private:
+	void UpdateLocation(float aDeltaTime);
+	void UpdateRotation(float aDeltaTime);
+
 	
 protected:
 	// Component
@@ -33,12 +43,12 @@ protected:
 
 	// Property
 	UPROPERTY(EditAnywhere)
-	float DuckVelocity = 50.f;
+	float DuckVelocity = 100.f;
+
+	UPROPERTY(EditAnywhere)
+	float DuckRotateVelocity = 180.f;	// 1칸 이동할 시간에 90도는 돌 수 있어야 함.
 	
 	// Walking Progress
-	UPROPERTY()
-	FVector CacheLocation;
-	
 	UPROPERTY()
 	EMS_Direction WalkingDirection = EMS_Direction::None;
 	
@@ -47,4 +57,7 @@ protected:
 
 	UPROPERTY()
 	bool bStopInPathLocation;
+
+public:
+	FMS_OnReachPathLocationDelegate OnReachPathLocationDelegate;
 };

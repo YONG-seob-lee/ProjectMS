@@ -5,8 +5,22 @@
 
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
-#include "ContentsUtilities/MS_LevelDefine.h"
 
+
+bool UMS_MarketAIUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
+{
+	if (Super::CreateUnitActor(aPosition, aRotator))
+	{
+		AMS_MarketAICharacter* AICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
+		MS_ENSURE(AICharacter);
+
+		AICharacter->OnReachPathLocationDelegate.BindUObject(this, &UMS_MarketAIUnit::OnReachPathLocation);
+
+		return true;
+	}
+	
+	return false;
+}
 
 FIntVector2 UMS_MarketAIUnit::GetActorGridPosition() const
 {
@@ -40,8 +54,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	
 	if (CachePath.Num() == 0)
 	{
-		MS_ENSURE(false);
-		return EBTNodeResult::Failed;
+		return EBTNodeResult::Succeeded;
 	}
 
 	const FVector2D CurrentLocationXY = FVector2D(GetActorLocation().X, GetActorLocation().Y);
@@ -54,12 +67,13 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		if (Direction == EMS_Direction::None)
 		{
-			// 도착지에 도착한 것
+			// 이미 도착지에 도착한 것
 			CachePath.RemoveAt(0);
+			MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, FVector2D::ZeroVector, true);
 			return EBTNodeResult::Succeeded;
 		}
 
-		MarketAICharacter->SetWalkingDirection(Direction, PathLocationXY, true);
+		MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, PathLocationXY, true);
 		return EBTNodeResult::InProgress;
 	}
 
@@ -76,23 +90,43 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		
 		if (Direction == EMS_Direction::None)
 		{
-			// 방향 바꾸는 타이밍
+			// 이동을 시작할 때 
 			CachePath.RemoveAt(0);
-			MarketAICharacter->SetWalkingDirection(EMS_Direction::None, FVector2D::ZeroVector, true);
+			MarketAICharacter->SetRocationByWalkingDirection(NextDirection);
+			
+			// ===== OnReachPathLocationDelegate를 통해 이미 삭제 된 부분 ===== //
+			// 방향 바꾸는 타이밍
+			// CachePath.RemoveAt(0);
+			// MarketAICharacter->SetWalkingDirection(EMS_Direction::None, FVector2D::ZeroVector, true);
 
 			// 재귀를 이용해 한 틱 멈추거나 코드가 복잡해지지 않고 다시 실행
-			return UpdateActorLocationByPath();
+			//return UpdateActorLocationByPath();
+			// ========== //
 		}
 
 		if (Direction == NextDirection)
 		{
 			// 딱 맞게 서지 말고 자연스럽게 넘어가면서 이동
-			MarketAICharacter->SetWalkingDirection(Direction, PathLocationXY, false);
+			MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, PathLocationXY, false);
 			return EBTNodeResult::InProgress;
 		}
 
 		// 방향이 바뀌므로 딱 맞게 설 것
-		MarketAICharacter->SetWalkingDirection(NextDirection, PathLocationXY, true);
+		MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, PathLocationXY, true);
 		return EBTNodeResult::InProgress;
 	}
+}
+
+void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
+{
+	if (!CachePath.IsValidIndex(0))
+	{
+		return;
+	}
+	
+	FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
+		IsGridSizeXOdd(), IsGridSizeYOdd());
+	
+	MS_ENSURE(aReachedLocation == PathLocationXY);
+	CachePath.RemoveAt(0);
 }

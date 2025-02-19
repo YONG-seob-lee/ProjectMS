@@ -54,4 +54,6 @@ public:
 	static FRotator ConvertDirectionToRotator(EMS_Direction aDirection);
 
 	static EMS_Direction GetDirection(FVector2D LocationXY, FVector2D NextLocationXY);
+
+	static bool IsRotationClockwise(float aYaw, float aTargetYaw);
 };

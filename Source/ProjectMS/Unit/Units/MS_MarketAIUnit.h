@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_AIUnit.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "BehaviorTree/BehaviorTreeTypes.h"
 #include "MS_MarketAIUnit.generated.h"
 
@@ -16,6 +17,8 @@ class PROJECTMS_API UMS_MarketAIUnit : public UMS_AIUnit
 	GENERATED_BODY()
 
 public:
+	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
+	
 	FIntVector2 GetActorGridPosition() const;
 	FVector GetActorLocation() const;
 	
@@ -29,9 +32,13 @@ public:
 	bool IsGridSizeYOdd() const { return false; }
 	
 	EBTNodeResult::Type UpdateActorLocationByPath();
+	void OnReachPathLocation(const FVector2D& aReachedLocation);
 
 	
 private:
 	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
 	TArray<FIntVector2> CachePath = {};
+
+	EMS_Direction CacheDirection = EMS_Direction::None; 
+	EMS_Direction CacheNextDirection = EMS_Direction::None; 
 };

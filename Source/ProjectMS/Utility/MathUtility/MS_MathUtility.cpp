@@ -84,9 +84,9 @@ EMS_Rotation UMS_MathUtility::ConvertDirectionToRotation(EMS_Direction aDirectio
 	case EMS_Direction::Front :
 		return EMS_Rotation::Rot0;
 	case EMS_Direction::Back :
-		return EMS_Rotation::Rot90;
-	case EMS_Direction::Right :
 		return EMS_Rotation::Rot180;
+	case EMS_Direction::Right :
+		return EMS_Rotation::Rot90;
 	case EMS_Direction::Left :
 		return EMS_Rotation::Rot270;
 	}
@@ -132,5 +132,37 @@ EMS_Direction UMS_MathUtility::GetDirection(FVector2D LocationXY, FVector2D Next
 		{
 			return EMS_Direction::Right;
 		}
+	}
+}
+
+bool UMS_MathUtility::IsRotationClockwise(float aYaw, float aTargetYaw)
+{
+	if (aYaw < 0.f)
+	{
+		aYaw += 360.f;
+	}
+
+	if (aTargetYaw < 0.f)
+	{
+		aTargetYaw += 360.f;
+	}
+	
+	if (aTargetYaw > aYaw)
+	{
+		if (aTargetYaw - aYaw > 180.f)
+		{
+			return false;
+		}
+
+		return true;
+	}
+	else
+	{
+		if (aYaw - aTargetYaw > 180.f)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }
