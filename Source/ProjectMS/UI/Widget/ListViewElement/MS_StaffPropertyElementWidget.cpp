@@ -3,8 +3,10 @@
 
 #include "MS_StaffPropertyElementWidget.h"
 
+#include "Components/ComboBoxString.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "ElementData/MS_StaffPropertyElementData.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
@@ -32,6 +34,18 @@ void UMS_StaffPropertyElementWidget::NativeOnListItemObjectSet(UObject* aListIte
 		CPP_PortraitImage->SetBrushFromTexture(PortraitImage);
 	}
 
+	if(CPP_StaffIssueBox)
+	{
+		for(int32 i = static_cast<int32>(EMS_StaffIssueType::None) ; i < static_cast<int32>(EMS_StaffIssueType::AddItemsToShelf); i++)
+		{
+			const FString IssueName = GetIssueName(i);
+			CPP_StaffIssueBox->AddOption(IssueName);
+			SelectItems.Emplace(i, IssueName);
+		}
+
+		CPP_StaffIssueBox->OnSelectionChanged.AddUniqueDynamic(this, &UMS_StaffPropertyElementWidget::OnSelectChanged);
+	}
+	
 	CPP_Name->SetText(FText::FromString(FString::Format(TEXT("이름 : {0}"), {StaffData->StaffName.ToString()})));
 	CPP_HP->SetText(FText::FromString(FString::Format(TEXT("체력 : {0}"), {StaffPropertyData->GetHP()})));
 	CPP_Condition->SetText(FText::FromString(FString::Format(TEXT("컨디션 : {0}"), {StaffPropertyData->GetCondition()})));
@@ -54,4 +68,35 @@ FReply UMS_StaffPropertyElementWidget::NativeOnMouseButtonDown(const FGeometry& 
 	gWidgetMng.ShowModalWidget(Parameter);
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UMS_StaffPropertyElementWidget::OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
+{
+	const int32* StaffIssueType = SelectItems.FindKey(SelectedItem);
+	
+	if(!StaffIssueType)
+	{
+		return;
+	}
+
+	const EMS_StaffIssueType IssueType = static_cast<EMS_StaffIssueType>(*StaffIssueType);
+	// 타입 변경하기.
+}
+
+FString UMS_StaffPropertyElementWidget::GetIssueName(int32 _IssueType)
+{
+	switch(static_cast<EMS_StaffIssueType>(_IssueType))
+	{
+	case EMS_StaffIssueType::Payment:
+		return TEXT("Payment");
+	case EMS_StaffIssueType::RemoveItemsFromDisplay:
+	case EMS_StaffIssueType::AddItemsToDisplay:
+		return TEXT("Store Display");
+	case EMS_StaffIssueType::RemoveItemsFromShelf:
+		return TEXT("Return Item");
+	case EMS_StaffIssueType::AddItemsToShelf:
+		return TEXT("Shelf Loading");
+	default:
+		return TEXT("멍때리기");
+	}
 }

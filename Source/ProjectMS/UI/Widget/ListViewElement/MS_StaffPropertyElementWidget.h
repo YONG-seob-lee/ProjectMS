@@ -20,11 +20,21 @@ public:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 private:
+	UFUNCTION()
+	void OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
+	
+	FString GetIssueName(int32 _IssueType);
+	
 	int32 StaffId = INDEX_NONE;
+
+	TMap<int32, FString> SelectItems;
 	
 	UPROPERTY(meta= (BindWidget))
 	TObjectPtr<class UImage> CPP_PortraitImage = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UComboBoxString> CPP_StaffIssueBox = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_Name = nullptr;
 
