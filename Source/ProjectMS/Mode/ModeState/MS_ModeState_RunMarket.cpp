@@ -5,6 +5,7 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
+#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
@@ -126,6 +127,19 @@ void UMS_ModeState_RunMarket::Exit()
 	}
 
 	Super::Exit();
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
+
+	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
+	{
+		if(const TObjectPtr<AMS_StaffAICharacter> StaffDuck = Cast<AMS_StaffAICharacter>(InteractActor))
+		{
+			StaffDuck->ShowStaffStatusWidget(aPosition);
+		}
+	}
 }
 
 void UMS_ModeState_RunMarket::RunSchedule()

@@ -24,7 +24,8 @@ public:
 protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
-
+	
+	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
 	
 private:
 	void RunSchedule();

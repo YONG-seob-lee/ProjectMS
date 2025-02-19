@@ -13,6 +13,8 @@ class PROJECTMS_API AMS_StaffAICharacter : public AMS_MarketAICharacter
 public:
 	AMS_StaffAICharacter();
 
+	void ShowStaffStatusWidget(const FVector2D& _ClickPosition);
+
 	virtual void PreInitializeComponents() override;
 	virtual void PostInitializeComponents() override;
 	

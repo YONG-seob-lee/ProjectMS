@@ -251,7 +251,7 @@ void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
 
 void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition)
 {
-	if (IsValid(aWidget))
+	if (IsValid(aWidget) == false)
 	{
 		return;
 	}
