@@ -178,7 +178,7 @@ bool UMS_WidgetManager::DestroyWidget(TObjectPtr<UMS_Widget> aWidget)
 	ManagedWidgets.Remove(*TypeName);
 	aWidget->RemoveFromParent();
 	aWidget = nullptr;
-	PostDestroyWidget(*TypeName);	
+	PostDestroyWidget(*TypeName);
 	return true;
 }
 
@@ -188,6 +188,11 @@ void UMS_WidgetManager::PostDestroyWidget(const FName& aTypeName)
 
 void UMS_WidgetManager::HideAllWidget(bool bHide) const
 {
+	for(const auto& Widget : ManagedWidgets)
+	{
+		Widget.Value->SetVisibility(bHide ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+	}
+	
 	if(RootWidget)
 	{
 		RootWidget->SetVisibility(bHide ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
