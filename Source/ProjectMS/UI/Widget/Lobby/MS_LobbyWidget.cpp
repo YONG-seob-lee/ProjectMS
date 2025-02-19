@@ -15,9 +15,14 @@ void UMS_LobbyWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	CPP_StartButton->SetVisibility(ESlateVisibility::Collapsed);
+	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]()
+	{
+		CPP_StartButton->SetVisibility(ESlateVisibility::Visible);
+	});
+	
 	CPP_StartButton->GetOnClickedDelegate().AddUObject(this, &UMS_LobbyWidget::OnClickedStartButton);
 	gCameraMng.SwitchViewCamera(EMS_ViewCameraType::SideView);
-	
 	PlayAnimationByName(DefaultWidgetAnimation::Idle, 0, 100);
 }
 

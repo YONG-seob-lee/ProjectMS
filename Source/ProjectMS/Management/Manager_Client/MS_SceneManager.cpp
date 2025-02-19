@@ -190,7 +190,7 @@ void UMS_SceneManager::EndFade()
 		}
 		
 		gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
-		gCameraMng.RestrictCameraMovement(true);
+		gCameraMng.RestrictCameraMovement(false);
 	}
 	else
 	{
@@ -223,7 +223,7 @@ void UMS_SceneManager::EndFade()
 			}
 			
 			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
-			gCameraMng.RestrictCameraMovement(true);
+			gCameraMng.RestrictCameraMovement(false);
 			
 			LevelChangeStep = EMS_FadeStep::Finished;
 			MS_DeleteObject(NewCommand);
