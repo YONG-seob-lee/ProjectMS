@@ -37,8 +37,6 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 		{
 			OnCloseModalWidgetCallback();
 		}
-
-		gInputMng.SetAllowGlide(true);
 		
 		const TObjectPtr<UMS_Widget> InWidget = Cast<UMS_Widget>(CPP_InModalPanel->GetChildAt(0));
 		if(!InWidget)

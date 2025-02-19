@@ -213,10 +213,7 @@ void FMS_PointerData::UpdatePointerMovePosition()
 
 	gInputMng.OnPointerMoveDelegate.Broadcast(PointerMovePosition, PointerMovePositionDelta, PointerMovePositionDeltaTrend);
 
-	if(gInputMng.IsAllowGlide())
-	{
-		HandlePointerGlide();
-	}
+	HandlePointerGlide();
 }
 
 void FMS_PointerData::PlayParticle() const

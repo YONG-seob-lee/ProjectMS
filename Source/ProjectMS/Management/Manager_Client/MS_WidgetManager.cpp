@@ -231,7 +231,6 @@ void UMS_WidgetManager::HideRotateWidget() const
 
 void UMS_WidgetManager::ShowModalWidget(const FMS_ModalParameter& aModalParameter /* =  = FMS_ModalParameter() */) const
 {
-	gInputMng.SetAllowGlide(true);
 	gInputMng.SetAllowInteractActor(false);
 	
 	RootWidget->ShowModalWidget(aModalParameter);

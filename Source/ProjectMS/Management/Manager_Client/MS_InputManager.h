@@ -46,9 +46,7 @@ public:
 	bool GetHitResultUnderPointerPosition(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 	
 	FORCEINLINE void SetAllowInteractActor(bool bAllowInteract) { bAllowInteractActor = bAllowInteract; }
-	FORCEINLINE void SetAllowGlide(bool bAllow) { bAllowGlide = bAllow; }
 	FORCEINLINE	bool IsAllowInteractActor() const { return bAllowInteractActor;}
-	FORCEINLINE bool IsAllowGlide() const { return bAllowGlide; }
 
 	bool IsPointerPressed() const;
 
@@ -93,7 +91,6 @@ private:
 	// Delegate
 public:
 	bool bAllowInteractActor = false;
-	bool bAllowGlide = true;
 	
 	FMS_OnPointerDownDelegate OnPointerDownDelegate = {};
 	FMS_OnPointerUpDelegate OnPointerUpDelegate = {};

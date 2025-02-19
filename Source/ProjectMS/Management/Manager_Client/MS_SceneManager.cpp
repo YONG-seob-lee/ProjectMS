@@ -4,6 +4,7 @@
 #include "MS_SceneManager.h"
 
 #include "MS_InputManager.h"
+#include "MS_PlayerCameraManager.h"
 #include "MS_SoundManager.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
@@ -88,6 +89,7 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	// 예외체크용 함수
 	RootWidget->ActivatePreventionCover(true);
 	gInputMng.SetAllowInteractActor(false);
+	gCameraMng.RestrictCameraMovement(true);
 	
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
@@ -186,8 +188,9 @@ void UMS_SceneManager::EndFade()
 			NewCommand->OnFadeEventDelegate.Broadcast();
 			NewCommand->OnFadeEventDelegate.RemoveAll(this);
 		}
-
+		
 		gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
+		gCameraMng.RestrictCameraMovement(true);
 	}
 	else
 	{
@@ -220,6 +223,7 @@ void UMS_SceneManager::EndFade()
 			}
 			
 			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
+			gCameraMng.RestrictCameraMovement(true);
 			
 			LevelChangeStep = EMS_FadeStep::Finished;
 			MS_DeleteObject(NewCommand);
