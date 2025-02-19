@@ -93,8 +93,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	TargetPointerData->SetPointerUpPosition(gInputMng.AcquirePointerPositionOnViewport());
 
 	const TSharedPtr<SWidget> UpCachedSlate = aSlateApp.GetUserFocusedWidget(0);
-
-	if(UpCachedSlate == nullptr ? false : UpCachedSlate->GetType() == L"SViewport")
+	if(UpCachedSlate == nullptr || UpCachedSlate->GetType() != L"SCommonButton")
 	{
 		ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up, TargetPointerData->IsGliding());
 	}
