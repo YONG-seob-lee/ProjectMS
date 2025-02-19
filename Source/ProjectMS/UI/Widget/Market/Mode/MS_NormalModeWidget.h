@@ -4,32 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "MS_ModeWidget.h"
-#include "MS_NormalAndConstructModeWidget.generated.h"
+#include "MS_NormalModeWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_NormalAndConstructModeWidget : public UMS_ModeWidget
+class PROJECTMS_API UMS_NormalModeWidget : public UMS_ModeWidget
 {
 	GENERATED_BODY()
-	
+
 public:
-	static FName GetWidgetName() { return TEXT("NormalAndConstruct"); }
+	static FName GetWidgetName() { return TEXT("NormalMode"); }
 
 	virtual void NativeOnInitialized() override;
 	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	void OnClickedExitButton();
+	void OnClickedTownButton();
+	void OnClickedConstructButton();
 	
 	virtual void OnChangeMode(EMS_ModeState aModeState) override;
 	
 private:
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_MarketExpanderWidget> CPP_ExpanderWidget;
+	TObjectPtr<class UMS_Button> CPP_TownButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_ExitButton;
+	TObjectPtr<class UMS_Button> CPP_ConstructButton;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_OpenButton;
 };

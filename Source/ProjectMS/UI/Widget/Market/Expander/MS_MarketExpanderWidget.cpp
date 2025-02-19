@@ -3,22 +3,21 @@
 
 #include "MS_MarketExpanderWidget.h"
 
-#include "MS_ModeSelectWidget.h"
+#include "MS_ConstructExpanerWidget.h"
 #include "Button/MS_Button.h"
+
 
 namespace ArrowAnimation
 {
 	const FName Open = TEXT("Open");
 	const FName Close = TEXT("Close");
-	const FName OpenMode = TEXT("OpenMode");
-	const FName CloseMode = TEXT("CloseMode");
+	const FName OpenItemList = TEXT("OpenItemList");
+	const FName CloseItemList = TEXT("CloseItemList");
 }
 
 void UMS_MarketExpanderWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	gModeMng.OnChangeModeDelegate.AddUObject(this, &UMS_MarketExpanderWidget::OnChangeModeState);
 }
 
 void UMS_MarketExpanderWidget::NativeConstruct()
@@ -27,14 +26,14 @@ void UMS_MarketExpanderWidget::NativeConstruct()
 	
 	FillDefaultAnimations();
 
-	if(CPP_ModeSelectWidget)
+	if(CPP_ConstructExpanderWidget)
 	{
-		CPP_ModeSelectWidget->GetOnClickedModeButtonFunc([this](EMS_ModeState aModeState)
+		CPP_ConstructExpanderWidget->SetOnClickedCategoryButtonFunc([this]()
 		{
-			gModeMng.ChangeState(aModeState);
+			OpenExpander();
 		});
 	}
-
+	
 	if(CPP_ArrowButton)
 	{
 		CPP_ArrowButton->GetOnClickedDelegate().AddUObject(this, &UMS_MarketExpanderWidget::OnClickedArrowButton);
@@ -47,31 +46,17 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_MarketExpanderWidget::OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
+void UMS_MarketExpanderWidget::OpenExpander()
 {
 	// TODO 용섭 : 나중에 모드 완성되면 추가 작업
-	if (aModeState == EMS_ModeState::Construct)
+	if(bOpen && bOpenExpander)
 	{
-		if(bOpen && bOpenExpander)
-		{
-			return;
-		}
+		return;
+	}
 	
-		PlayAnimationByName(ArrowAnimation::OpenMode);
-		bOpen = true;
-		bOpenExpander = true;
-	}
-	else
-	{
-		if(!bOpen && !bOpenExpander)
-		{
-			return;
-		}
-		
-		PlayAnimationByName(ArrowAnimation::Close);
-		bOpen = false;
-		bOpenExpander = false;
-	}
+	PlayAnimationByName(ArrowAnimation::OpenItemList);
+	bOpen = true;
+	bOpenExpander = true;
 }
 
 void UMS_MarketExpanderWidget::OnClickedArrowButton()
@@ -80,7 +65,7 @@ void UMS_MarketExpanderWidget::OnClickedArrowButton()
 	{
 		if(bOpenExpander)
 		{
-			PlayAnimationByName(ArrowAnimation::CloseMode);
+			PlayAnimationByName(ArrowAnimation::CloseItemList);
 			bOpenExpander = false;
 		}
 		else

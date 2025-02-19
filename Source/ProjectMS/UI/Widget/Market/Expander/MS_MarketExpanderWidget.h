@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Manager_Client/MS_ModeManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_MarketExpanderWidget.generated.h"
 
@@ -14,21 +13,22 @@ UCLASS()
 class PROJECTMS_API UMS_MarketExpanderWidget : public UMS_Widget
 {
 	GENERATED_BODY()
+	
 public:
 	virtual void NativeOnInitialized() override;
 	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+	
+	void OpenExpander();
 
 private:
-	void OnChangeModeState(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
-	
 	void OnClickedArrowButton();
-
-	void SetOpenExpander(bool bOpen);
 	
+
+private:
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_ModeSelectWidget> CPP_ModeSelectWidget = nullptr;
+	TObjectPtr<class UMS_ConstructExpanerWidget> CPP_ConstructExpanderWidget = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ArrowButton = nullptr;
