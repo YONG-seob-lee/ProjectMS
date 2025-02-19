@@ -49,7 +49,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	if (CachePath.Num() == 1)
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
-			!IsGridSizeXOdd(), !IsGridSizeYOdd());
+			IsGridSizeXOdd(), IsGridSizeYOdd());
 
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		if (Direction == EMS_Direction::None)
@@ -66,10 +66,10 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	else
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
-			!IsGridSizeXOdd(), !IsGridSizeYOdd());
+			IsGridSizeXOdd(), IsGridSizeYOdd());
 
 		FVector2D NextPathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[1],
-	!IsGridSizeXOdd(), !IsGridSizeYOdd());
+	IsGridSizeXOdd(), IsGridSizeYOdd());
 
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		EMS_Direction NextDirection = UMS_MathUtility::GetDirection(PathLocationXY, NextPathLocationXY);
@@ -77,10 +77,11 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		if (Direction == EMS_Direction::None)
 		{
 			// 방향 바꾸는 타이밍
-			// 멈추고 다음 틱부터 방향 바꿔서 이동
 			CachePath.RemoveAt(0);
 			MarketAICharacter->SetWalkingDirection(EMS_Direction::None, FVector2D::ZeroVector, true);
-			return EBTNodeResult::InProgress;
+
+			// 재귀를 이용해 한 틱 멈추거나 코드가 복잡해지지 않고 다시 실행
+			return UpdateActorLocationByPath();
 		}
 
 		if (Direction == NextDirection)
@@ -91,7 +92,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		}
 
 		// 방향이 바뀌므로 딱 맞게 설 것
-		MarketAICharacter->SetWalkingDirection(Direction, PathLocationXY, true);
+		MarketAICharacter->SetWalkingDirection(NextDirection, PathLocationXY, true);
 		return EBTNodeResult::InProgress;
 	}
 }
