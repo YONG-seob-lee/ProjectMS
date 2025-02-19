@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/MS_Widget.h"
 
 
@@ -52,6 +53,7 @@ void AMS_Market::OnPressUpEvent()
 {
 	if(CheckTutorialFinished() == false)
 	{
+		gWidgetMng.HideAllWidget(true);
 		PlayTutorial();
 		return;
 	}
@@ -176,6 +178,9 @@ void AMS_Market::PlayTutorial() const
 		}
 	}
 	
-	TutorialSkipWidget->PlayTutorial(Desc, SubDesc);
+	TutorialSkipWidget->PlayTutorial(Desc, SubDesc, []()
+	{
+		gWidgetMng.HideAllWidget(false);
+	});
 }
 

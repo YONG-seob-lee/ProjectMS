@@ -87,6 +87,8 @@ protected:
 	bool bUseLongPressedEvent = false;
 	UPROPERTY(Category = UMS_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", EditCondition = "bUseLongPressedEvent"))
 	float LongPressedTime = 0.f;
+
+	bool bLockClick = false;
 	
 	FCommonButtonEvent MS_OnClickedDelegate;
 	FCommonButtonEvent MS_OnPressedDelegate;

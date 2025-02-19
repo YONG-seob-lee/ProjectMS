@@ -52,7 +52,7 @@ void UMS_Widget::NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime)
 	Super::NativeTick(aMyGeometry, aInDeltaTime);
 }
 
-void UMS_Widget::PlayTutorial(const FText& Desc, const FText& SubDesc)
+void UMS_Widget::PlayTutorial(const FText& Desc, const FText& SubDesc, const TFunction<void()>& OnFinishedTutorialFunc)
 {
 	const TObjectPtr<UNamedSlot> NamedSlot = GetNamedSlot();
 	if(!NamedSlot)
@@ -64,6 +64,7 @@ void UMS_Widget::PlayTutorial(const FText& Desc, const FText& SubDesc)
 	{
 		return; 
 	}
+	DescWidget->SetOnFinishedTutorialFunc(OnFinishedTutorialFunc);
 	NamedSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	NamedSlot->SetContent(DescWidget);
 	RePositionNamedSlot(NamedSlot->Slot);

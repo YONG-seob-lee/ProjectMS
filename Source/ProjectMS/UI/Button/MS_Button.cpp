@@ -7,6 +7,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/NamedSlot.h"
 #include "GameUserSettings/MS_GameUserSettings.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/System/Toturial/MS_DescriptionWidget.h"
 
@@ -86,7 +87,15 @@ void UMS_Button::PlayTutorial(const FText& Desc, const FText& SubDesc)
 	}
 	NamedSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	NamedSlot->SetContent(DescWidget);
+	gCameraMng.RestrictCameraMovement(true);
+	bLockClick = true;
+	
 	RePositionNamedSlot(NamedSlot->Slot);
+	DescWidget->SetOnFinishedTutorialFunc([this]()
+	{
+		gCameraMng.RestrictCameraMovement(false);
+		bLockClick = false;
+	});
 	DescWidget->Start(TutorialDirection, Desc, SubDesc);
 }
 
@@ -101,6 +110,11 @@ void UMS_Button::SetDelegates()
 
 void UMS_Button::OnClick()
 {
+	if(bLockClick)
+	{
+		return;
+	}
+	
 	if (IsUseClockedDelay())
 	{
 		const TObjectPtr<UWorld> World = GetWorld();

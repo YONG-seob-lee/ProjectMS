@@ -62,7 +62,7 @@ public:
 	
 	virtual void NativeTick(const FGeometry& aMyGeometry, float aInDeltaTime) override;
 
-	virtual void PlayTutorial(const FText& Desc, const FText& SubDesc);
+	virtual void PlayTutorial(const FText& Desc, const FText& SubDesc, const TFunction<void()>& OnFinishedTutorialFunc = nullptr);
 	
 	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 	
