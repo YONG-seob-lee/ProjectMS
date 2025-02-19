@@ -222,9 +222,9 @@ void UMS_RootWidget::ShowModalWidget(const FMS_ModalParameter& aModalParameter) 
 	}
 }
 
-void UMS_RootWidget::CloseModalWidget() const
+void UMS_RootWidget::CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const
 {
-	CPP_ModalWidget->CloseModal();
+	CPP_ModalWidget->CloseModal(_OnCloseModalWidgetCallback);
 }
 
 void UMS_RootWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const

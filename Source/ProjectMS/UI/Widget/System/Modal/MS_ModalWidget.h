@@ -39,7 +39,7 @@ public:
 	virtual void OnAnimFinished(const FName& aAnimName) override;
 
 	void SetModal(const FMS_ModalParameter& aModalParameter);
-	void CloseModal();
+	void CloseModal(const TFunction<void()>& _OnCloseModalWidgetCallback);
 
 	void SetInModalPosition(const FVector2D& aInModalPosition) const;
 private:

@@ -30,13 +30,13 @@ public:
 	void StartRunTimeButtonAnim();
 	void StopRunTimeButtonAnim();
 
+	void StopRuntimeButton();
 	
 private:
 	void FlickerDot(bool bFlicker);
 	void InVisibilityDot() const;
 	
 	void OnClickedRunTimeButton();
-
 
 private:
 	FTimerHandle DotFlickerHandle;

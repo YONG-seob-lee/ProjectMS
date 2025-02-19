@@ -49,7 +49,7 @@ public:
 	void HideRotateWidget() const;
 
 	void ShowModalWidget(const FMS_ModalParameter& aModalParameter = FMS_ModalParameter()) const;
-	void CloseModalWidget() const;
+	void CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback = nullptr) const;
 	
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;

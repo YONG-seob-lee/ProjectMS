@@ -237,11 +237,11 @@ void UMS_WidgetManager::ShowModalWidget(const FMS_ModalParameter& aModalParamete
 	RootWidget->ShowModalWidget(aModalParameter);
 }
 
-void UMS_WidgetManager::CloseModalWidget() const
+void UMS_WidgetManager::CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const
 {
 	gInputMng.SetAllowInteractActor(true);
 	
-	RootWidget->CloseModalWidget();
+	RootWidget->CloseModalWidget(_OnCloseModalWidgetCallback);
 }
 
 void UMS_WidgetManager::SetGeneralWidget(EMS_LevelType aLevelType) const

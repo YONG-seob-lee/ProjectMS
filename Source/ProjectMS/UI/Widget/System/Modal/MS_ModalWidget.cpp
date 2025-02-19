@@ -62,14 +62,16 @@ void UMS_ModalWidget::SetModal(const FMS_ModalParameter& aModalParameter)
 	}
 }
 
-void UMS_ModalWidget::CloseModal()
+void UMS_ModalWidget::CloseModal(const TFunction<void()>& _OnCloseModalWidgetCallback)
 {
 	if(bPlayCloseAnimation)
 	{
+		OnCloseModalWidgetCallback = _OnCloseModalWidgetCallback;
 		PlayAnimationByName(ModalWidgetAnimation::Close);
 	}
 	else
 	{
+		OnCloseModalWidgetCallback = _OnCloseModalWidgetCallback;
 		SetVisibility(ESlateVisibility::Collapsed);
 		SetModalInternal(gWidgetMng.Create_Widget_NotManaging(DefaultModal::InModalWidgetPath));
 	}

@@ -43,7 +43,7 @@ public:
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void SetBGMAnimation(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
-	void CloseModalWidget() const;
+	void CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const;
 	
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 

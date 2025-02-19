@@ -4,6 +4,7 @@
 #include "Expander/MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Mode/MS_ModeWidget.h"
+#include "Widget/System/General/MS_TimeLineWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 
@@ -29,6 +30,14 @@ void UMS_MarketWidget::NativeDestruct()
 void UMS_MarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType)
 {
 	SetActiveModeSwitcherIndex(aModeState);
+}
+
+void UMS_MarketWidget::StopRuntimeButton()
+{
+	if(CPP_TimeLineWidget)
+	{
+		CPP_TimeLineWidget->StopRuntimeButton();
+	}
 }
 
 void UMS_MarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)

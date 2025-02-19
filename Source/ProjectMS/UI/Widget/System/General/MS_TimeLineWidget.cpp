@@ -137,6 +137,13 @@ void UMS_TimeLineWidget::StopRunTimeButtonAnim()
 	StopAnimationByName(RunTime::Animation);
 }
 
+void UMS_TimeLineWidget::StopRuntimeButton()
+{
+	CPP_RunTimeButton->GetOnClickedDelegate().RemoveAll(this);
+	StopAllAnimations();
+	CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UMS_TimeLineWidget::FlickerDot(bool bFlicker)
 {
 	if(bFlicker)
@@ -193,17 +200,13 @@ void UMS_TimeLineWidget::OnClickedRunTimeButton()
 				gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 			});
 			gSceneMng.RequestChangeScene(Command);
-			
+			StopRuntimeButton();
 		}
 		else
 		{
 			// MarketStartModal Open
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
-			ModalParameter.OnCloseWidgetCallback = []()
-			{
-				gSequenceMng.PlaySequence(EMS_SequenceType::Entrance);
-			};
 			gWidgetMng.ShowModalWidget(ModalParameter);
 		}
 	}
@@ -217,10 +220,8 @@ void UMS_TimeLineWidget::OnClickedRunTimeButton()
 			if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 			{
 				TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);
+				StopRuntimeButton();
 			}
 		}
 	}
-	CPP_RunTimeButton->GetOnClickedDelegate().RemoveAll(this);
-	StopAllAnimations();
-	CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
 }
