@@ -26,7 +26,7 @@ void UMS_BuyItemWidget::NativeConstruct()
 		CPP_ItemTileView->SetElements(TArray<UObject*>(OrderItemElementDatas));
 		for(const auto& OrderItemElementData : OrderItemElementDatas)
 		{
-			OrderItemElementData->OnClickCountDelegate.AddUObject(this, &UMS_BuyItemWidget::OnClickedUpAndDown, OrderItemElementData->GetItemName());
+			OrderItemElementData->OnClickCountDelegate.AddUObject(this, &UMS_BuyItemWidget::OnClickedLoadingUnloading, OrderItemElementData->GetItemName());
 		}
 	}
 
@@ -72,7 +72,7 @@ void UMS_BuyItemWidget::OnClickedCancelButton()
 	gWidgetMng.CloseModalWidget();
 }
 
-void UMS_BuyItemWidget::OnClickedUpAndDown(int32 aCount, FString aItemName)
+void UMS_BuyItemWidget::OnClickedLoadingUnloading(int32 aCount, FString aItemName)
 {
 	TotalPrice = 0;
 	

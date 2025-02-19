@@ -21,7 +21,7 @@ public:
 private:
 	void OnClickedConfirmButton();
 	void OnClickedCancelButton();
-	void OnClickedUpAndDown(int32 aCount, FString aFurnitureName);
+	void OnClickedLoadingUnloading(int32 aCount, FString aFurnitureName);
 	
 	int32 TotalPrice = 0;
 	

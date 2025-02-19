@@ -26,7 +26,7 @@ void UMS_BuyFurnitureWidget::NativeConstruct()
 		CPP_FurnitureTileView->SetElements(TArray<UObject*>(OrderFurnitureElementDatas));
 		for(const auto& OrderFurnitureElementData : OrderFurnitureElementDatas)
 		{
-			OrderFurnitureElementData->OnClickCountDelegate.AddUObject(this, &UMS_BuyFurnitureWidget::OnClickedUpAndDown, OrderFurnitureElementData->GetItemName());
+			OrderFurnitureElementData->OnClickCountDelegate.AddUObject(this, &UMS_BuyFurnitureWidget::OnClickedLoadingUnloading, OrderFurnitureElementData->GetItemName());
 		}
 	}
 
@@ -72,7 +72,7 @@ void UMS_BuyFurnitureWidget::OnClickedCancelButton()
 	gWidgetMng.CloseModalWidget();
 }
 
-void UMS_BuyFurnitureWidget::OnClickedUpAndDown(int32 aCount, FString aFurnitureName)
+void UMS_BuyFurnitureWidget::OnClickedLoadingUnloading(int32 aCount, FString aFurnitureName)
 {
 	TotalPrice = 0;
 	

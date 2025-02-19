@@ -27,7 +27,7 @@ void UMS_MarketOrderModalWidget::NativeConstruct()
 		CPP_ItemTileView->SetElements(TArray<UObject*>(OrderItemElementDatas));
 		for(const auto& OrderItemElementData : OrderItemElementDatas)
 		{
-			OrderItemElementData->OnClickCountDelegate.AddUObject(this, &UMS_MarketOrderModalWidget::OnClickedUpAndDown, OrderItemElementData->GetItemName());
+			OrderItemElementData->OnClickCountDelegate.AddUObject(this, &UMS_MarketOrderModalWidget::OnClickedLoadingUnloading, OrderItemElementData->GetItemName());
 		}
 	}
 
@@ -67,7 +67,7 @@ void UMS_MarketOrderModalWidget::OnClickedCancelButton()
 	gWidgetMng.CloseModalWidget();
 }
 
-void UMS_MarketOrderModalWidget::OnClickedUpAndDown(int32 aCount, FString aItemName)
+void UMS_MarketOrderModalWidget::OnClickedLoadingUnloading(int32 aCount, FString aItemName)
 {
 	TotalPrice = 0;
 	
