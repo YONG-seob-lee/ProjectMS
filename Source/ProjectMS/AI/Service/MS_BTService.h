@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_MarketAIUnit.h"
-#include "MS_CustomerAIUnit.generated.h"
+#include "BehaviorTree/BTService.h"
+#include "MS_BTService.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_CustomerAIUnit : public UMS_MarketAIUnit
+class PROJECTMS_API UMS_BTService : public UBTService
 {
 	GENERATED_BODY()
 };

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Character/AICharacter/MS_AICharacter.h"
-#include "MathUtility/MS_MathUtility.h"
+#include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "MS_StaffAICharacter.generated.h"
 
 
 UCLASS()
-class PROJECTMS_API AMS_StaffAICharacter : public AMS_AICharacter
+class PROJECTMS_API AMS_StaffAICharacter : public AMS_MarketAICharacter
 {
 	GENERATED_BODY()
 	
@@ -19,15 +18,4 @@ public:
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
-
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UMS_MovingBoxComponent*> MovingBoxComponents;
-
-	UPROPERTY()
-	EMS_Direction Direction = EMS_Direction::None;
-	
-	UPROPERTY(EditAnywhere)
-	float DuckVelocity = 5.f;
 };

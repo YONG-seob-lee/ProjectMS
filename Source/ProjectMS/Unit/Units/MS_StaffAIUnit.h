@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_AIUnit.h"
+#include "MS_MarketAIUnit.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_StaffAIUnit.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_StaffAIUnit : public UMS_AIUnit
+class PROJECTMS_API UMS_StaffAIUnit : public UMS_MarketAIUnit
 {
 	GENERATED_BODY()
 
@@ -27,17 +27,9 @@ protected:
 
 	
 public:
-	FIntVector2 GetGridPosition() const;
-	
 	int32 GetStaffActionNum() const { return StaffActions.Num(); }
 	EMS_StaffActionType GetFirstStaffAction() const;
-
-	const TArray<FIntVector2>& GetTargetPositions() const { return CacheTargetPositions; }
-	void SetTargetPositions(const TArray<FIntVector2>& aTargetPositions) { CacheTargetPositions = aTargetPositions; }
-
-	const TArray<FIntVector2>& GetPath() const { return CachePath; }
-	void SetPath(const TArray<FIntVector2>& aCachePath) { CachePath = aCachePath; }
-
+	
 	
 	void RegisterStaffAction(EMS_StaffActionType aStaffActionType);
 	void UnregisterStaffAction(EMS_StaffActionType aStaffActionType);

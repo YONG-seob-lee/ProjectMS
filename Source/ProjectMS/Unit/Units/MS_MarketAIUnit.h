@@ -1,0 +1,37 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "MS_AIUnit.h"
+#include "BehaviorTree/BehaviorTreeTypes.h"
+#include "MS_MarketAIUnit.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECTMS_API UMS_MarketAIUnit : public UMS_AIUnit
+{
+	GENERATED_BODY()
+
+public:
+	FIntVector2 GetActorGridPosition() const;
+	FVector GetActorLocation() const;
+	
+	const TArray<FIntVector2>& GetTargetPositions() const { return CacheTargetPositions; }
+	void SetTargetPositions(const TArray<FIntVector2>& aTargetPositions) { CacheTargetPositions = aTargetPositions; }
+
+	const TArray<FIntVector2>& GetPath() const { return CachePath; }
+	void SetPath(const TArray<FIntVector2>& aCachePath) { CachePath = aCachePath; }
+
+	bool IsGridSizeXOdd() const { return false; }
+	bool IsGridSizeYOdd() const { return false; }
+	
+	EBTNodeResult::Type UpdateActorLocationByPath();
+
+	
+private:
+	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
+	TArray<FIntVector2> CachePath = {};
+};

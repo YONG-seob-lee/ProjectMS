@@ -9,6 +9,11 @@ AMS_CustomerAICharacter::AMS_CustomerAICharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
+void AMS_CustomerAICharacter::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+}
+
 void AMS_CustomerAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();

@@ -6,7 +6,6 @@
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
 #include "ContentsUtilities/MS_AIDefine.h"
-#include "ContentsUtilities/MS_LevelDefine.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Table/RowBase/MS_Staff.h"
 
@@ -48,18 +47,6 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	}
 
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
-}
-
-FIntVector2 UMS_StaffAIUnit::GetGridPosition() const
-{
-	if (GetCharacter())
-	{
-		FVector CharacterLocation = GetCharacter()->GetActorLocation();
-		return FMS_GridData::ConvertLocationToGridPosition(CharacterLocation);
-	}
-
-	MS_ENSURE(false);
-	return FIntVector2::ZeroValue;
 }
 
 EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction() const

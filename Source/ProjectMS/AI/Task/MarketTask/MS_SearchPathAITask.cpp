@@ -3,11 +3,12 @@
 
 #include "MS_SearchPathAITask.h"
 
-#include "AI/AIController/StaffAIController/MS_StaffAIController.h"
-#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "AI/AIController/MS_AIController.h"
+#include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
-#include "Units/MS_StaffAIUnit.h"
+#include "Units/MS_MarketAIUnit.h"
+
 
 UMS_SearchPathAITask::UMS_SearchPathAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -17,19 +18,19 @@ UMS_SearchPathAITask::UMS_SearchPathAITask(const FObjectInitializer& ObjectIniti
 
 EBTNodeResult::Type UMS_SearchPathAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	const TObjectPtr<AMS_StaffAIController> AIController = Cast<AMS_StaffAIController>(OwnerComp.GetAIOwner());
+	const TObjectPtr<AMS_AIController> AIController = Cast<AMS_AIController>(OwnerComp.GetAIOwner());
 	if(!AIController)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
 
-	const TObjectPtr<AMS_StaffAICharacter> AICharacter = Cast<AMS_StaffAICharacter>(AIController->GetCharacter());
+	const TObjectPtr<AMS_MarketAICharacter> AICharacter = Cast<AMS_MarketAICharacter>(AIController->GetCharacter());
 	if(!AICharacter)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
 
-	const TObjectPtr<UMS_StaffAIUnit> AIUnit = Cast<UMS_StaffAIUnit>(AICharacter->GetOwnerUnitBase());
+	const TObjectPtr<UMS_MarketAIUnit> AIUnit = Cast<UMS_MarketAIUnit>(AICharacter->GetOwnerUnitBase());
 	if(!AIUnit)
 	{
 		return EBTNodeResult::Type::Failed;
@@ -44,7 +45,7 @@ EBTNodeResult::Type UMS_SearchPathAITask::ExecuteTask(UBehaviorTreeComponent& Ow
 	TArray<FIntVector2> Path = {};
 	bool bSearchGate = false;
 	
-	ModeState->SearchPathToTargetOrGate(Path, bSearchGate, AIUnit->GetGridPosition(), AIUnit->GetTargetPositions());
+	ModeState->SearchPathToTargetOrGate(Path, bSearchGate, AIUnit->GetActorGridPosition(), AIUnit->GetTargetPositions());
 
 	AIUnit->SetPath(Path);
 	return EBTNodeResult::Type::Succeeded;

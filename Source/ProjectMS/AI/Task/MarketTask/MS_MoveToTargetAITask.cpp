@@ -3,6 +3,10 @@
 
 #include "MS_MoveToTargetAITask.h"
 
+#include "AI/AIController/MS_AIController.h"
+#include "Character/AICharacter/MS_MarketAICharacter.h"
+#include "Units/MS_MarketAIUnit.h"
+
 UMS_MoveToTargetAITask::UMS_MoveToTargetAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "Move To Target";
@@ -11,7 +15,25 @@ UMS_MoveToTargetAITask::UMS_MoveToTargetAITask(const FObjectInitializer& ObjectI
 
 EBTNodeResult::Type UMS_MoveToTargetAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	return Super::ExecuteTask(OwnerComp, NodeMemory);
+	const TObjectPtr<AMS_AIController> AIController = Cast<AMS_AIController>(OwnerComp.GetAIOwner());
+	if(!AIController)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	const TObjectPtr<AMS_MarketAICharacter> AICharacter = Cast<AMS_MarketAICharacter>(AIController->GetCharacter());
+	if(!AICharacter)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	const TObjectPtr<UMS_MarketAIUnit> AIUnit = Cast<UMS_MarketAIUnit>(AICharacter->GetOwnerUnitBase());
+	if(!AIUnit)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	return AIUnit->UpdateActorLocationByPath();
 }
 
 void UMS_MoveToTargetAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
