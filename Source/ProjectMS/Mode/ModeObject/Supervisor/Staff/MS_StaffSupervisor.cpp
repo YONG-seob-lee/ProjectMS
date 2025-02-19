@@ -56,17 +56,7 @@ void UMS_StaffSupervisor::Begin()
 
 	StaffDatas = PlayerState->GetStaffDatas();
 
-	for (int32 i = 0 ; i < StaffDatas.Num(); ++i)
-	{
-		if (StaffDatas[i].StaffId == 1)
-		{
-			NeedToSpawnStaffDataIndexToSpawnMinute.Emplace(i, 0);
-		}
-		else
-		{
-			// ToDo
-		}
-	}
+	InitStaffSpawnPoint();
 }
 
 void UMS_StaffSupervisor::Exit()
@@ -101,46 +91,56 @@ void UMS_StaffSupervisor::UpdateScheduleEvent(int32 aScheduleEvent)
 
 void UMS_StaffSupervisor::RequestSpawnCharacters(int32 aCurrentMinute)
 {
-	for (auto& It : NeedToSpawnStaffDataIndexToSpawnMinute)
+	for (const auto& StaffSpawnPoint : StaffSpawnPoints)
 	{
-		if (It.Value <= aCurrentMinute)
+		TArray<int32> StaffIds = {};
+		if(StaffSpawnPoint->IsSpawnThisMinute(aCurrentMinute, StaffIds))
 		{
-			MS_ENSURE(StaffDatas.IsValidIndex(It.Key));
-			
-			if (SpawnCharacter(StaffDatas[It.Key]))
+			for(const int32 StaffId : StaffIds)
 			{
-				NeedToSpawnStaffDataIndexToSpawnMinute.Remove(It.Key);
-				return;
+				SpawnCharacter(StaffId, StaffSpawnPoint->GetSpawnLocation(), StaffSpawnPoint->GetSpawnRotation());
 			}
 		}
 	}
 }
 
-bool UMS_StaffSupervisor::SpawnCharacter(const FMS_StaffData& aStaffData)
+bool UMS_StaffSupervisor::SpawnCharacter(int32 StaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator)
 {
-	TArray<AActor*> DuckSpawnPoints;
-	
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_StaffDuckSpawnPoint::StaticClass(), DuckSpawnPoints);
-
-	for(AActor* SpawnPoint : DuckSpawnPoints)
+	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, StaffId,true, SpawnLocation, SpawnRotator);
+	if (UMS_StaffAIUnit* StaffAIUnit = Cast<UMS_StaffAIUnit>(Unit))
 	{
-		AMS_StaffDuckSpawnPoint* DuckSpawnPoint = Cast<AMS_StaffDuckSpawnPoint>(SpawnPoint);
-		if(!DuckSpawnPoint)
-		{
-			continue;
-		}
+		StaffAIUnits.Emplace(StaffAIUnit);
 
-		UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aStaffData.StaffId,true, DuckSpawnPoint->GetSpawnLocation(), DuckSpawnPoint->GetSpawnRotation());
-		if (UMS_StaffAIUnit* StaffAIUnit = Cast<UMS_StaffAIUnit>(Unit))
-		{
-			StaffAIUnits.Emplace(StaffAIUnit);
-
-			StaffAIUnit->RegisterStaffAction(EMS_StaffActionType::ChangeClothes);
-			return true;
-		}
-		
-		MS_ENSURE(false);
+		StaffAIUnit->RegisterStaffAction(EMS_StaffActionType::ChangeClothes);
+		return true;
 	}
-
+		
+	MS_ENSURE(false);
 	return false;
+}
+
+void UMS_StaffSupervisor::InitStaffSpawnPoint()
+{
+	StaffSpawnPoints.Empty();
+	TArray<AActor*> SpawnPoints;
+	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_StaffDuckSpawnPoint::StaticClass(), SpawnPoints);
+
+	for(const auto& SpawnPoint : SpawnPoints)
+	{
+		if(AMS_StaffDuckSpawnPoint* StaffSpawnPoint = Cast<AMS_StaffDuckSpawnPoint>(SpawnPoint))
+		{
+			StaffSpawnPoints.Emplace(StaffSpawnPoint);
+		}		
+	}	
+	
+	for(const auto& StaffData : StaffDatas)
+	{
+		const int32 TargetSpawnIndex = FMath::RandRange(0, StaffSpawnPoints.Num() - 1);
+		
+		if(StaffSpawnPoints.IsValidIndex(TargetSpawnIndex))
+		{
+			StaffSpawnPoints[TargetSpawnIndex]->UpdateSpawnData(StaffData.StaffId, FMath::RandRange(0, 30));
+		}
+	}
 }

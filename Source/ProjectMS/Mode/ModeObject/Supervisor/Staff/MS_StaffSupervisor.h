@@ -23,7 +23,7 @@ public:
 	virtual void Finalize() override;
 
 	virtual void Tick(float aDeltaTime) override;
-	
+
 	virtual void Begin() override;
 	virtual void Exit() override;
 
@@ -34,16 +34,19 @@ public:
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
 	
 	void RequestSpawnCharacters(int32 aCurrentMinute);
-	bool SpawnCharacter(const FMS_StaffData& aStaffData);
+	bool SpawnCharacter(int32 StaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator);
 
 	
 private:
+	void InitStaffSpawnPoint();
+	
 	TWeakObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
 
 	TArray<FMS_StaffData> StaffDatas;
 	TMap<int32, int32> NeedToSpawnStaffDataIndexToSpawnMinute;
 
 	TArray<TWeakObjectPtr<UMS_StaffAIUnit>> StaffAIUnits;
+	TArray<TWeakObjectPtr<class AMS_StaffDuckSpawnPoint>>  StaffSpawnPoints;
 	
 	bool bSpawnCharacter;
 };

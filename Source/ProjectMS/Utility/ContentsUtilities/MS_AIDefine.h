@@ -12,7 +12,9 @@ enum class EMS_StaffActionType : uint8
 {
 	None = 0,
 	Issue = 1,
-	ChangeClothes = 2,
+	GoingWork = 2,
+	GoingHome = 3,
+	ChangeClothes = 4,
 };
 
 UENUM()
