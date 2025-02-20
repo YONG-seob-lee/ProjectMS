@@ -8,7 +8,6 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Widget/Market/MS_MarketWidget.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -33,9 +32,5 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 	gWidgetMng.CloseModalWidget([]()
 	{
 		gSequenceMng.PlaySequence(EMS_SequenceType::Entrance);
-		if(UMS_MarketWidget* MarketWidget = Cast<UMS_MarketWidget>(gWidgetMng.GetWidget(UMS_MarketWidget::GetWidgetName())))
-		{
-			MarketWidget->StopRuntimeButton();
-		}
 	});
 }

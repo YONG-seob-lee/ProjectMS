@@ -22,12 +22,15 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	
-	void OnClickedTownButton();
-	void OnClickedConstructButton();
 	
 	virtual void OnChangeMode(EMS_ModeState aModeState) override;
 	
 private:
+	void OnClickedTownButton();
+	void OnClickedConstructButton();
+	void OnClickedOpenMarket();
+	void OnClickedCloseMarket();
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_TownButton;
 

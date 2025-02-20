@@ -54,50 +54,28 @@ void UMS_TimeLineWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 {
-	bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
-	FlickerDot(bIsRunning);
-
-	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
-	
-	// Run Time Widget
-	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
-	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
-
-	if (!bIsRunning)
+	if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::MarketLevel)
 	{
-		if (LevelType == EMS_LevelType::MarketLevel)
-		{
-			
-			if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
-			{
-				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
-				StartRunTimeButtonAnim();
-			}
-			else
-			{
-				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
-				StartRunTimeButtonAnim();
-			}
-		}
-		else
-		{
-			if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
-			{
-				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
-				StartRunTimeButtonAnim();
-			}
-			else
-			{
-				CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
-				StopRunTimeButtonAnim();
-			}
-		}
+		CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+	{
+		CPP_RunTimeButton->SetVisibility(ESlateVisibility::Visible);
+		StartRunTimeButtonAnim();
 	}
 	else
 	{
 		CPP_RunTimeButton->SetVisibility(ESlateVisibility::Collapsed);
 		StopRunTimeButtonAnim();
 	}
+
+	const bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
+	FlickerDot(bIsRunning);
+
+	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
 }
 
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
@@ -172,56 +150,16 @@ void UMS_TimeLineWidget::InVisibilityDot() const
 void UMS_TimeLineWidget::OnClickedRunTimeButton()
 {
 	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
-	const EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
 
-	if (LevelType == EMS_LevelType::None)
+	if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
 	{
-		return;
-	}
+		// 수면
+		gScheduleMng.PassTheDay();
 	
-	if (LevelType == EMS_LevelType::MarketLevel)
-	{
-		if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+		if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
-			// Town으로 이동
-			CREATE_SCENE_COMMAND(Command);
-			Command->SetLevelType(EMS_LevelType::Stage01);
-			Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
-			Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
-			Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
-			Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
-			Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-			gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
-			{
-				FViewTargetTransitionParams Param;
-				Param.BlendTime = 0.f;
-				gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
-				gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
-				gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
-			});
-			gSceneMng.RequestChangeScene(Command);
+			TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);
 			StopRuntimeButton();
-		}
-		else
-		{
-			// MarketStartModal Open
-			FMS_ModalParameter ModalParameter;
-			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
-			gWidgetMng.ShowModalWidget(ModalParameter);
-		}
-	}
-	else
-	{
-		if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))
-		{
-			// 수면
-			gScheduleMng.PassTheDay();
-	
-			if(const TObjectPtr<AMS_StageLevelScriptActor> TownLevelScriptActor = Cast<AMS_StageLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
-			{
-				TownLevelScriptActor->SetDayAndNight(EMS_DayAndNight::Day);
-				StopRuntimeButton();
-			}
 		}
 	}
 }
