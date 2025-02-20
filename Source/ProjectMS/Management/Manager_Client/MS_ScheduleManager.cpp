@@ -221,6 +221,16 @@ void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, i
 	PlayTimer(aGamePlayMinute);
 }
 
+void UMS_ScheduleManager::PauseSchedule()
+{
+	PauseTimer();
+}
+
+void UMS_ScheduleManager::ResumeSchedule(int32 aRenewalCostTime /* = 0 */)
+{
+	ResumeTimer(aRenewalCostTime);
+}
+
 void UMS_ScheduleManager::SetMultiplyIntervalSecondReal(int32 aMultiply)
 {
 	MultiplyIntervalSecondReal = aMultiply;
@@ -250,9 +260,21 @@ void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)
 	GetWorld()->GetTimerManager().SetTimer(MarketPlayTimerHandle, this, &UMS_ScheduleManager::DuringTimer, 1, true);
 }
 
+void UMS_ScheduleManager::PauseTimer()
+{
+	GetWorld()->GetTimerManager().PauseTimer(MarketPlayTimerHandle);
+}
+
+void UMS_ScheduleManager::ResumeTimer(int32 aRenewalCostTime)
+{
+	CostTimeSecondReal = ScheduleDefault::GamePlayMinute - aRenewalCostTime;
+	TimeSchedule.ForcedRenewalMinute(aRenewalCostTime); 
+	GetWorld()->GetTimerManager().UnPauseTimer(MarketPlayTimerHandle);
+}
+
 void UMS_ScheduleManager::DuringTimer()
 {
-	int32 PreMinitue = TimeSchedule.GetMinute();
+	int32 PreMinute = TimeSchedule.GetMinute();
 
 	int32 CalcIntervalSecondReal = IntervalSecondReal * MultiplyIntervalSecondReal;
 	CostTimeSecondReal -= CalcIntervalSecondReal;
@@ -262,7 +284,7 @@ void UMS_ScheduleManager::DuringTimer()
 	
 	OnUpdateMinuteDelegate.Broadcast(NewMinitue);
 
-	for (int32 i = PreMinitue + 1; i <= NewMinitue; ++i)
+	for (int32 i = PreMinute + 1; i <= NewMinitue; ++i)
 	{
 		if (MinuteToScheduleEvent.Contains(i))
 		{

@@ -71,22 +71,68 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 			FVector QuarterCameraLocation;
 			FRotator QuarterCameraRotator;
 			gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
-			SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);	
+			SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
+		}
+
+		if(Parameter.OnFinishedSequenceCallback)
+		{
+			OnFinishedSequenceCallback = Parameter.OnFinishedSequenceCallback;
+			LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
 		}
 		
 		// Play the level sequence
 		LevelSequencePlayer->Play();
-		LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
-
 		if(Parameter.bHideWidget)
 		{
 			gWidgetMng.HideAllWidget(true);
 		}
+
 	}
 	else
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("Unable to create level sequence player"));
 	}
+}
+
+void UMS_SequenceManager::StopSequence()
+{
+	if(!SequenceActor)
+	{
+		return;
+	}
+	
+	if(const TObjectPtr<ULevelSequencePlayer> SequencePlayer = SequenceActor->GetSequencePlayer())
+	{
+		SequencePlayer->GoToEndAndStop();
+	}
+
+	gWidgetMng.HideAllWidget(false);
+
+	if(bSetBlendCamera)
+	{
+		gCameraMng.ReturnTarget();
+	}
+	
+	if(OnFinishedSequenceCallback)
+	{
+		OnFinishedSequenceCallback();
+	}
+
+	GetWorld()->DestroyActor(SequenceActor);
+	SequenceActor = nullptr;
+}
+
+bool UMS_SequenceManager::IsPlayingSequence() const
+{
+	if(SequenceActor)
+	{
+		if(const TObjectPtr<ULevelSequencePlayer> SequencePlayer = SequenceActor->GetSequencePlayer())
+		{
+			return SequencePlayer->IsPlaying();
+		}
+	}
+
+	return false;
 }
 
 TObjectPtr<ULevelSequence> UMS_SequenceManager::LoadSequence(EMS_SequenceType SequenceType) const
@@ -119,10 +165,17 @@ void UMS_SequenceManager::OnFinishedSequence()
 {
 	gWidgetMng.HideAllWidget(false);
 
+	if(OnFinishedSequenceCallback)
+	{
+		OnFinishedSequenceCallback();
+	}
+	
 	if(bSetBlendCamera)
 	{
 		gCameraMng.ReturnTarget(2.f);
 	}
+
+	GetWorld()->DestroyActor(SequenceActor);
 }
 
 UMS_SequenceManager* UMS_SequenceManager::GetInstance()

@@ -101,6 +101,18 @@ void AMS_PlayerCameraManager::ReturnTarget(float aBlendTime)
 	{
 		FViewTargetTransitionParams Params;
 		Params.BlendTime = aBlendTime;
+
+		if(aBlendTime > 0.f)
+		{
+			GetWorld()->GetTimerManager().SetTimer(CameraTransitionTimerHandle, [this]()
+			{
+				if(OnFinishedCameraTransition.IsBound())
+				{
+					OnFinishedCameraTransition.Execute();
+					OnFinishedCameraTransition.Unbind();
+				}
+			}, aBlendTime, false);
+		}
 		SetViewTarget(*QuarterCamera, Params);
 	}
 }
@@ -144,7 +156,6 @@ void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraTyp
 				OnFinishedCameraTransition.Unbind();
 			}
 		}, aTransitionParam.BlendTime, false);
-		
 	}
 	
 	SetViewTarget(CurrentCamera.Get(), aTransitionParam);

@@ -35,7 +35,7 @@ public:
 	void InitializeViewCamera();
 	void FinalizeViewCamera();
 
-	void ReturnTarget(float aBlendTime = 2.f);
+	void ReturnTarget(float aBlendTime = 0.f);
 	void SwitchViewCamera(EMS_ViewCameraType aViewCameraType, FViewTargetTransitionParams aTransitionParam = FViewTargetTransitionParams());
 	void SwitchCameraMode(EMS_CameraModeType aCameraModeType);
 

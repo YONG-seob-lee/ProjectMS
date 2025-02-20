@@ -35,12 +35,13 @@ namespace SequencePath
 struct FMS_SequencePlayParameter
 {
 public:
-	FMS_SequencePlayParameter() { bCheckedSequencePlay = true; bHideWidget = true; bSetBlendCamera = true; }
-	FMS_SequencePlayParameter(bool _bCheckedSequencePlay, bool _bSetBlendCamera,  bool _bHideWidget) : bCheckedSequencePlay(_bCheckedSequencePlay), bSetBlendCamera(_bSetBlendCamera), bHideWidget(_bHideWidget) {}
+	FMS_SequencePlayParameter() { bCheckedSequencePlay = true; bHideWidget = true; bSetBlendCamera = true; OnFinishedSequenceCallback = nullptr; }
+	FMS_SequencePlayParameter(bool _bCheckedSequencePlay, bool _bSetBlendCamera,  bool _bHideWidget, TFunction<void()> _OnFinishedSequenceCallback = nullptr) : bCheckedSequencePlay(_bCheckedSequencePlay), bSetBlendCamera(_bSetBlendCamera), bHideWidget(_bHideWidget), OnFinishedSequenceCallback(_OnFinishedSequenceCallback) {}
 	
 	bool bCheckedSequencePlay = true;
 	bool bSetBlendCamera = true;
 	bool bHideWidget = true;
+	TFunction<void()> OnFinishedSequenceCallback = nullptr;
 };
 /**
  * 
@@ -59,7 +60,9 @@ public:
 	virtual void BeginPlay() override;
 
 	void PlaySequence(EMS_SequenceType SequenceType, const FMS_SequencePlayParameter& Parameter = FMS_SequencePlayParameter());
-	
+	void StopSequence();
+	bool IsPlayingSequence() const;
+
 private:
 	TObjectPtr<class ULevelSequence> LoadSequence(EMS_SequenceType SequenceType) const;
 	
@@ -73,7 +76,7 @@ private:
 	UPROPERTY()
 	ALevelSequenceActor* SequenceActor = nullptr;
 
-
+	TFunction<void()> OnFinishedSequenceCallback = nullptr;
 
 
 

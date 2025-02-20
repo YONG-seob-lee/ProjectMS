@@ -48,7 +48,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 {
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
-
+	
 	CachedSlate = aSlateApp.GetUserFocusedWidget(0);
 	if(CachedSlate)
 	{

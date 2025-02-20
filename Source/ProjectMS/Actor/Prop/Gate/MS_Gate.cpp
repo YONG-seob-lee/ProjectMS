@@ -35,7 +35,10 @@ void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	if(Cast<AMS_AICharacter>(OtherActor))
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket);
+		if(gSequenceMng.IsPlayingSequence() == false)
+		{
+			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket);
+		}
 	}
 }
 
@@ -44,7 +47,10 @@ void AMS_Gate::OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AA
 {
 	if(Cast<AMS_AICharacter>(OtherActor))
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket);
+		if(gSequenceMng.IsPlayingSequence() == false)
+		{
+			gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket);
+		}
 	}
 }
 

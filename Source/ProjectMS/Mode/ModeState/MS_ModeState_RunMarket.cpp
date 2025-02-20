@@ -96,8 +96,6 @@ void UMS_ModeState_RunMarket::Begin()
 	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_ModeState_RunMarket::UpdateScheduleEvent);
 	gScheduleMng.OnEndSchedule.AddUObject(this, &UMS_ModeState_RunMarket::EndSchedule);
 	
-	GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, this, &UMS_ModeState_RunMarket::RunSchedule, 3, false);
-	
 	if (IsValid(StaffSupervisor))
 	{
 		StaffSupervisor->Begin();
@@ -142,11 +140,6 @@ void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition
 	}
 }
 
-void UMS_ModeState_RunMarket::RunSchedule()
-{
-	gScheduleMng.RunSchedule(840, ScheduleEvent);
-}
-
 void UMS_ModeState_RunMarket::EndSchedule()
 {
 	// ToDo : Save Daily Data
@@ -182,7 +175,14 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 
 	if(static_cast<EMS_MarketScheduleEvent>(aScheduleEvent) == EMS_MarketScheduleEvent::TruckIn)
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::Truck);
+		gScheduleMng.PauseSchedule();
+		
+		FMS_SequencePlayParameter Parameter;
+		Parameter.OnFinishedSequenceCallback = []()
+		{
+			gScheduleMng.ResumeSchedule(38);
+		};
+		gSequenceMng.PlaySequence(EMS_SequenceType::Truck, Parameter);
 	}
 }
 

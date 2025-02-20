@@ -8,6 +8,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Mode/ModeState/MS_ModeState_RunMarket.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -31,6 +32,16 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 	gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
 	gWidgetMng.CloseModalWidget([]()
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::Entrance);
+		FMS_SequencePlayParameter Parameter;
+		Parameter.OnFinishedSequenceCallback = []()
+		{
+			if(const UMS_ModeState_RunMarket* RunMarketMode = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
+			{
+				TMap<int32, int32> ScheduleEvent = {};
+				RunMarketMode->GetScheduleEvent(ScheduleEvent);
+				gScheduleMng.RunSchedule(ScheduleDefault::GamePlayMinute, ScheduleEvent);
+			}
+		};
+		gSequenceMng.PlaySequence(EMS_SequenceType::Entrance, Parameter);
 	});
 }

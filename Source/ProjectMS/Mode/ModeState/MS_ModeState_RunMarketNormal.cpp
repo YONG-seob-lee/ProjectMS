@@ -6,6 +6,7 @@
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
@@ -19,12 +20,12 @@ void UMS_ModeState_RunMarketNormal::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
 
-	ScheduleEvent.Emplace(0, static_cast<int32>(EMS_MarketScheduleEvent::Prepare));
-	ScheduleEvent.Emplace(40, static_cast<int32>(EMS_MarketScheduleEvent::TruckIn));
-	ScheduleEvent.Emplace(60, static_cast<int32>(EMS_MarketScheduleEvent::LoadingUnloading));
-	ScheduleEvent.Emplace(180, static_cast<int32>(EMS_MarketScheduleEvent::OpenMarket));
-	ScheduleEvent.Emplace(810, static_cast<int32>(EMS_MarketScheduleEvent::Deadline));
-	ScheduleEvent.Emplace(840, static_cast<int32>(EMS_MarketScheduleEvent::CloseMarket));
+	ScheduleEvent.Emplace(00, static_cast<int32>(EMS_MarketScheduleEvent::Prepare));
+	ScheduleEvent.Emplace(20, static_cast<int32>(EMS_MarketScheduleEvent::TruckIn));
+	ScheduleEvent.Emplace(40, static_cast<int32>(EMS_MarketScheduleEvent::LoadingUnloading));
+	ScheduleEvent.Emplace(160, static_cast<int32>(EMS_MarketScheduleEvent::OpenMarket));
+	ScheduleEvent.Emplace(790, static_cast<int32>(EMS_MarketScheduleEvent::Deadline));
+	ScheduleEvent.Emplace(ScheduleDefault::GamePlayMinute, static_cast<int32>(EMS_MarketScheduleEvent::CloseMarket));
 }
 
 void UMS_ModeState_RunMarketNormal::Finalize()
@@ -117,16 +118,19 @@ void UMS_ModeState_RunMarketNormal::UpdateScheduleEvent(int32 aScheduleEvent)
 	}
 }
 
-void UMS_ModeState_RunMarketNormal::OnInputPointerDownEvent(FVector2D aPointerDownPosition,
-	const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarketNormal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
 }
 
-void UMS_ModeState_RunMarketNormal::OnInputPointerUpEvent(FVector2D aPointerUpPosition,
-	const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarketNormal::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+	
+	if(gSequenceMng.IsPlayingSequence())
+	{
+		gSequenceMng.StopSequence();
+	}
 }
 
 void UMS_ModeState_RunMarketNormal::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,

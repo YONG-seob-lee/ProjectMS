@@ -25,7 +25,8 @@ public:
 	
 	FORCEINLINE void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone) { GameDate.DailyTimeZone = aDailyTimeZone; }
 	FORCEINLINE EMS_DailyTimeZone GetDailyTimeZone() const { return GameDate.DailyTimeZone; }
-	
+
+	FORCEINLINE void ForcedRenewalMinute(int32 aRenewalMinute) { Minute = aRenewalMinute; }
 	FORCEINLINE void UpdateMinute(int32 aPlusMinute) { Minute += aPlusMinute; }
 	FORCEINLINE void ResetMinute() { Minute = 0; }
 	FORCEINLINE int32 GetMinute() const { return Minute; }
@@ -37,6 +38,11 @@ private:
 	FMS_GameDate GameDate;
 	int32 Minute = 0;
 };
+
+namespace ScheduleDefault
+{
+	constexpr int32 GamePlayMinute = 820;
+}
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateGameDateDelegate, const FMS_GameDate&);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMinuteDelegate, int32);
@@ -75,14 +81,18 @@ public:
 	void TakeItems(const TMap<int32, int32>* aTakeItems);
 	
 	void RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent);
+	void PauseSchedule();
+	void ResumeSchedule(int32 aRenewalCostTime = 0);
 	
 	void SetMultiplyIntervalSecondReal(int32 aMultiply);
 	
 	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
-	
+
 private:
 	void PlayTimer(int32 aGamePlayMinute);
+	void PauseTimer();
+	void ResumeTimer(int32 aRenewalCostTime);
 	void DuringTimer();
 	void EndTimer();
 

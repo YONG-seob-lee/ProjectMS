@@ -28,13 +28,13 @@ protected:
 	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
 	
 private:
-	void RunSchedule();
 	void EndSchedule();
 
 public:
 	virtual void UpdateMinute(int32 aCurrentMinute);
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent);
 
+	FORCEINLINE void GetScheduleEvent(TMap<int32, int32>& _ScheduleEvent) const { _ScheduleEvent = ScheduleEvent; }
 	
 	// aTargetPoints가 다른 존에 있을 경우 첫번째 타겟의 게이트를 찾아감
 	virtual void SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const override;
