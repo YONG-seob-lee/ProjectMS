@@ -109,8 +109,6 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
 	{
 		SelectProp(InteractableActor);
-
-		gCameraMng.RestrictCameraMovement(true);
 	}
 
 	if (IsValid(PreviewProp))
