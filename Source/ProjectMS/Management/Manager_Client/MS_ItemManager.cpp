@@ -3,9 +3,10 @@
 
 #include "MS_ItemManager.h"
 
-#include "Controller/MS_PlayerController.h"
+#include "MS_ModeManager.h"
+#include "MS_SceneManager.h"
+#include "MS_ScheduleManager.h"
 #include "Manager_Both/MS_UnitManager.h"
-#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
@@ -71,35 +72,9 @@ void UMS_ItemManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
-void UMS_ItemManager::GetCurrentItems(TMap<int32, int32>& OutItems) const
+void UMS_ItemManager::GetRemainItems(TMap<int32, int32>& OutItems) const
 {
-	OutItems.Empty();
-
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		return;
-	}
-
-	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return;
-	}
-	
-	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-	if (!IsValid(PlayerState))
-	{
-		return;
-	}
-
-	PlayerState->GetAllItems(OutItems);
-
-	for (const auto& AddedItem : AddedItems)
-	{
-		int32& Count = OutItems.FindOrAdd(AddedItem.Key);
-		Count += AddedItem.Value;
-	}
+	OutItems = Items;
 
 	for (const auto& SoldItem : SoldItems)
 	{
@@ -108,32 +83,15 @@ void UMS_ItemManager::GetCurrentItems(TMap<int32, int32>& OutItems) const
 	}
 }
 
-int32 UMS_ItemManager::GetCurrentItemCount(int32 aItemId) const
+int32 UMS_ItemManager::GetRemainItemCount(int32 aItemId)
 {
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
+	const int32* pItemCount = Items.Find(aItemId);
+	if(!pItemCount)
 	{
 		return 0;
 	}
 
-	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return 0;
-	}
-	
-	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-	if (!IsValid(PlayerState))
-	{
-		return 0;
-	}
-
-	int32 ItemCount = PlayerState->GetItemCount(aItemId);
-
-	if (AddedItems.Contains(aItemId))
-	{
-		ItemCount += *AddedItems.Find(aItemId);
-	}
+	int32 ItemCount = *pItemCount;
 
 	if (SoldItems.Contains(aItemId))
 	{
@@ -154,7 +112,7 @@ void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			if (const UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
 			{
 				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Display)
 				{
@@ -181,56 +139,16 @@ void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
 
 int32 UMS_ItemManager::GetDisplayItemCount(int32 aItemId) const
 {
-	int32 ItemCount = 0;
-
-	if (const TObjectPtr UnitManager = gUnitMng)
-	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
-
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
-		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
-			{
-				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Display)
-				{
-					continue;
-				}
-				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
-
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
-				{
-					if (SlotData.CurrentItemTableId == aItemId)
-					{
-						ItemCount += SlotData.CurrentItemCount; 
-					}
-				}
-			}
-		}
-	}
-	
-	return ItemCount;
-}
-
-void UMS_ItemManager::GetNoneDisplayItems(TMap<int32, int32>& OutItems) const
-{
-	GetCurrentItems(OutItems);
-
 	TMap<int32, int32> DisplayItems;
 	GetDisplayItems(DisplayItems);
 
-	for (const auto& DisplayItem : DisplayItems)
+	const int32* ItemCount = DisplayItems.Find(aItemId);
+	if(!ItemCount)
 	{
-		int32& Count = OutItems.FindOrAdd(DisplayItem.Key);
-		Count -= DisplayItem.Value;
+		return 0;
 	}
-}
-
-int32 UMS_ItemManager::GetNoneDisplayItemCount(int32 aItemId) const
-{
-	return GetCurrentItemCount(aItemId) - GetDisplayItemCount(aItemId);
+	
+	return *ItemCount;
 }
 
 void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems) const
@@ -306,7 +224,17 @@ int32 UMS_ItemManager::GetShelfItemCount(int32 aItemId) const
 
 void UMS_ItemManager::GetPalletItems(TMap<int32, int32>& OutItems) const
 {
-	GetNoneDisplayItems(OutItems);
+	OutItems = Items;
+
+
+	TMap<int32, int32> DisplayItems;
+	GetDisplayItems(DisplayItems);
+
+	for (const auto& DisplayItem : DisplayItems)
+	{
+		int32& Count = OutItems.FindOrAdd(DisplayItem.Key);
+		Count -= DisplayItem.Value;
+	}
 	
 	TMap<int32, int32> ShelfItems;
 	GetShelfItems(ShelfItems);
@@ -318,9 +246,30 @@ void UMS_ItemManager::GetPalletItems(TMap<int32, int32>& OutItems) const
 	}
 }
 
-int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
+int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId)
 {
-	return GetNoneDisplayItemCount(aItemId) - GetShelfItemCount(aItemId);
+	return GetRemainItemCount(aItemId) - GetDisplayItemCount(aItemId) - GetShelfItemCount(aItemId);
+}
+
+bool UMS_ItemManager::IsAvailablePurchase() const
+{
+	if(gSceneMng.GetCurrentLevelType() != EMS_LevelType::MarketLevel)
+	{
+		return false;
+	}
+
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	if(FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+	{
+		return true;
+	}
+	
+	if(gScheduleMng.IsOverTime(EMS_MarketScheduleEvent::LoadingUnloading) == false)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const

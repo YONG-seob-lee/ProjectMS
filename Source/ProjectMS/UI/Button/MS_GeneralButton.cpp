@@ -11,7 +11,8 @@ namespace ImagePath
 	const FString Menu = TEXT("/Game/UI/Image/Icon/MenuIcon.MenuIcon");
 	const FString Schedule = TEXT("/Game/UI/Image/Icon/BoardIcon.BoardIcon");
 	const FString Manage = TEXT("/Game/UI/Image/Icon/ManageIcon.ManageIcon");
-	const FString BuyItem = TEXT("/Game/UI/Image/Icon/BuyItem.BuyItem");
+	const FString OrderItem = TEXT("/Game/UI/Image/Icon/BuyItem.BuyItem");
+	const FString CheckOrderItem = TEXT("/Game/UI/Image/Icon/CheckOrderItem.CheckOrderItem");
 	const FString BuyFurniture = TEXT("/Game/UI/Image/Icon/BuyFurniture.BuyFurniture");
 	const FString HireStaff = TEXT("/Game/UI/Image/Icon/HireStaffIcon.HireStaffIcon");
 	const FString StaffManage = TEXT("/Game/UI/Image/Icon/StaffManageIcon.StaffManageIcon");
@@ -52,10 +53,17 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
-	case EMS_GeneralButtonType::BuyItem:
+	case EMS_GeneralButtonType::OrderItem:
 		{
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
-			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::BuyItem));
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::OrderItem));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::CheckOrderItem:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::CheckOrderItem));
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
@@ -136,10 +144,17 @@ void UMS_GeneralButton::SynchronizeProperties()
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
-	case EMS_GeneralButtonType::BuyItem:
+	case EMS_GeneralButtonType::OrderItem:
 		{
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
-			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::BuyItem));
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::OrderItem));
+			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::CheckOrderItem:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::CheckOrderItem));
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}

@@ -196,7 +196,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 		int32 NewItemCount = 0;
 		if (GetZoneType() == EMS_ZoneType::Display)
 		{
-			NewItemCount = FMath::Min(gItemMng.GetNoneDisplayItemCount(aItemId), ItemData->Slot100x100MaxCount);
+			NewItemCount = FMath::Min(gItemMng.GetShelfItemCount(aItemId), ItemData->Slot100x100MaxCount);
 		}
 		else
 		{

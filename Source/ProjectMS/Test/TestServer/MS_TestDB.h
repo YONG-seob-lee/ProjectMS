@@ -34,6 +34,9 @@ public:
 	
 	UPROPERTY()
 	TMap<int32, int32> Items;
+
+	UPROPERTY()
+	TMap<int32, int32>OrderItems;
 	
 	UPROPERTY()
 	TArray<FMS_StaffData> StaffDatas;

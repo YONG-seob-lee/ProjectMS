@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
-#include "MS_MarketStockModalWidget.generated.h"
+#include "MS_MarketOrderCheckModalWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_MarketStockModalWidget : public UMS_Widget
+class PROJECTMS_API UMS_MarketOrderCheckModalWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/MarketStockModalWidget.MarketStockModalWidget")); }
+	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/UI/Widget/Market/Modal/MarketOrderCheckModalWidget.MarketOrderCheckModalWidget")); }
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 

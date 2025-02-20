@@ -31,9 +31,6 @@ void UMS_TestServer::RenewItems(TMap<int32, int32> aTransferItems)
 			Items.Emplace(TransferItem.Key, TransferItem.Value);
 		}
 	}
-	
-	// "TEST" Step.4 : 서버에서 클라로 전송.
-	gItemMng.SetItems(&Items);
 }
 
 UMS_TestServer* UMS_TestServer::GetInstance()

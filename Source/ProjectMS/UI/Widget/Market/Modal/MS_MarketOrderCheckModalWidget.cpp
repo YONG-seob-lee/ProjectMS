@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_MarketStockModalWidget.h"
+#include "MS_MarketOrderCheckModalWidget.h"
 
 #include "MS_Define.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -10,16 +10,16 @@
 #include "Widget/WidgetComponent/MS_TileView.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
-void UMS_MarketStockModalWidget::NativeConstruct()
+void UMS_MarketOrderCheckModalWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TMap<int32, int32> Items;
-	gItemMng.GetCurrentItems(Items);
-	TArray<UMS_StockItemElementData*> StockItemElementDatas;
-	CreateStockElement(Items, StockItemElementDatas);
+	TMap<int32, int32> OrderItems;
+	gItemMng.GetOrderItems(OrderItems);
+	TArray<UMS_StockItemElementData*> StockOrderItemElementDatas;
+	CreateStockElement(OrderItems, StockOrderItemElementDatas);
 
-	if(StockItemElementDatas.Num() == 0)
+	if(StockOrderItemElementDatas.Num() == 0)
 	{
 		CPP_ItemSwitcher->SetActiveWidgetIndex(0);
 	}
@@ -28,17 +28,17 @@ void UMS_MarketStockModalWidget::NativeConstruct()
 		CPP_ItemSwitcher->SetActiveWidgetIndex(1);
 		if(CPP_ItemTileView)
 		{
-			CPP_ItemTileView->SetElements(TArray<UObject*>(StockItemElementDatas));
+			CPP_ItemTileView->SetElements(TArray<UObject*>(StockOrderItemElementDatas));
 		}
 	}
 }
 
-void UMS_MarketStockModalWidget::NativeDestruct()
+void UMS_MarketOrderCheckModalWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
 }
 
-void UMS_MarketStockModalWidget::CreateStockElement(TMap<int32, int32> aItems, TArray<UMS_StockItemElementData*>& aStockItemElementData)
+void UMS_MarketOrderCheckModalWidget::CreateStockElement(TMap<int32, int32> aItems, TArray<UMS_StockItemElementData*>& aStockItemElementData)
 {
 	aStockItemElementData.Empty();
 

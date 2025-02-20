@@ -3,12 +3,10 @@
 
 #include "MS_GeneralWidget.h"
 
-#include "MS_TimeLineWidget.h"
 #include "Button/MS_DefaultButton.h"
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
-#include "Components/NamedSlot.h"
-#include "GameUserSettings/MS_GameUserSettings.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
@@ -19,10 +17,10 @@
 #include "Widget/Customer/Modal/MS_CustomerManagementWidget.h"
 #include "Widget/Finance/Modal/MS_FinancialManagementWidget.h"
 #include "Widget/Market/BuyThings/MS_BuyFurnitureWidget.h"
-#include "Widget/Market/BuyThings/MS_BuyItemWidget.h"
+#include "Widget/Market/Modal/MS_MarketOrderCheckModalWidget.h"
+#include "Widget/Market/Modal/MS_MarketOrderModalWidget.h"
 #include "Widget/Schedule/Modal/MS_ScheduleModalWidget.h"
 #include "Widget/System/Settings/Modal/MS_SettingModalWidget.h"
-#include "Widget/System/Toturial/MS_DescriptionWidget.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
 void UMS_GeneralWidget::NativeConstruct()
@@ -130,34 +128,39 @@ void UMS_GeneralWidget::InitLeftExpander()
 {
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 	if(CPP_LeftExpanderButton01)
-	{
-		CPP_LeftExpanderButton01->SetButtonType(EMS_GeneralButtonType::BuyItem);
-		CPP_LeftExpanderButton01->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedBuyItemButton);
+	{		
+		CPP_LeftExpanderButton01->SetButtonType(EMS_GeneralButtonType::OrderItem);
+		CPP_LeftExpanderButton01->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedOrderItemButton);
 	}
 	if(CPP_LeftExpanderButton02)
 	{
-		CPP_LeftExpanderButton02->SetButtonType(EMS_GeneralButtonType::BuyFurniture);
-		CPP_LeftExpanderButton02->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedBuyFurnitureButton);
+		CPP_LeftExpanderButton02->SetButtonType(EMS_GeneralButtonType::CheckOrderItem);
+		CPP_LeftExpanderButton02->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedCheckOrderButton);
 	}
 	if(CPP_LeftExpanderButton03)
 	{
-		CPP_LeftExpanderButton03->SetButtonType(EMS_GeneralButtonType::HireStaff);
-		CPP_LeftExpanderButton03->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedHireStaffButton);
+		CPP_LeftExpanderButton03->SetButtonType(EMS_GeneralButtonType::BuyFurniture);
+		CPP_LeftExpanderButton03->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedBuyFurnitureButton);
 	}
 	if(CPP_LeftExpanderButton04)
 	{
-		CPP_LeftExpanderButton04->SetButtonType(EMS_GeneralButtonType::StaffManage);
-		CPP_LeftExpanderButton04->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageStaffButton);
+		CPP_LeftExpanderButton04->SetButtonType(EMS_GeneralButtonType::HireStaff);
+		CPP_LeftExpanderButton04->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedHireStaffButton);
 	}
 	if(CPP_LeftExpanderButton05)
 	{
-		CPP_LeftExpanderButton05->SetButtonType(EMS_GeneralButtonType::CustomerManage);
-		CPP_LeftExpanderButton05->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageCustomerButton);
+		CPP_LeftExpanderButton05->SetButtonType(EMS_GeneralButtonType::StaffManage);
+		CPP_LeftExpanderButton05->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageStaffButton);
 	}
 	if(CPP_LeftExpanderButton06)
 	{
-		CPP_LeftExpanderButton06->SetButtonType(EMS_GeneralButtonType::SalesDetail);
-		CPP_LeftExpanderButton06->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedFinancialIndicatorButton);
+		CPP_LeftExpanderButton06->SetButtonType(EMS_GeneralButtonType::CustomerManage);
+		CPP_LeftExpanderButton06->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedManageCustomerButton);
+	}
+	if(CPP_LeftExpanderButton07)
+	{
+		CPP_LeftExpanderButton07->SetButtonType(EMS_GeneralButtonType::SalesDetail);
+		CPP_LeftExpanderButton07->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedFinancialIndicatorButton);
 	}
 }
 
@@ -225,10 +228,25 @@ void UMS_GeneralWidget::OnClickedExpanderButton()
 	gWidgetMng.ShowModalWidget(Parameter);
 }
 
-void UMS_GeneralWidget::OnClickedBuyItemButton()
+void UMS_GeneralWidget::OnClickedOrderItemButton()
+{
+	if(gItemMng.IsAvailablePurchase() == false)
+	{
+		gWidgetMng.ShowToastMessage(TEXT("이용 가능한 시간대가 아닙니다."));
+		return;
+	}
+	
+	FMS_ModalParameter Parameter;
+	Parameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketOrderModalWidget::GetWidgetPath());
+	gWidgetMng.ShowModalWidget(Parameter);
+
+	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UMS_GeneralWidget::OnClickedCheckOrderButton()
 {
 	FMS_ModalParameter Parameter;
-	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_BuyItemWidget::GetWidgetName());
+	Parameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketOrderCheckModalWidget::GetWidgetPath());
 	gWidgetMng.ShowModalWidget(Parameter);
 
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);

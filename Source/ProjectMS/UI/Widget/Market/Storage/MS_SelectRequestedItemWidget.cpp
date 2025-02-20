@@ -26,7 +26,7 @@ void UMS_SelectRequestedItemWidget::SetTileView()
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
-		gItemMng.GetNoneDisplayItems(RequestableItems);
+		gItemMng.GetShelfItems(RequestableItems);
 	}
 	else if (OwnerZoneType == EMS_ZoneType::Shelf)
 	{

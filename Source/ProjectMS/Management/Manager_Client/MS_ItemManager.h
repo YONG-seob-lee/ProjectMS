@@ -31,32 +31,36 @@ public:
 	virtual void BuiltInFinalize() override;
 
 	virtual void Tick(float aDeltaTime) override;
-	
-	void GetCurrentItems(TMap<int32, int32>& OutItems) const;
-	int32 GetCurrentItemCount(int32 aItemId) const;
-	
+
+	// 판매하고 남은
+	void GetRemainItems(TMap<int32, int32>& OutItems) const;
+	int32 GetRemainItemCount(int32 aItemId);
+
+	// Display
 	void GetDisplayItems(TMap<int32, int32>& OutItems) const;
 	int32 GetDisplayItemCount(int32 aItemId) const;
-	
-	void GetNoneDisplayItems(TMap<int32, int32>& OutItems) const;
-	int32 GetNoneDisplayItemCount(int32 aItemId) const;
 
+	// Shelf
 	void GetShelfItems(TMap<int32, int32>& OutItems) const;
 	int32 GetShelfItemCount(int32 aItemId) const;
 
+	// Pallet
 	void GetPalletItems(TMap<int32, int32>& OutItems) const;
-	int32 GetPalletItemCount(int32 aItemId) const;
-	
-	FORCEINLINE void SetItems(const TMap<int32, int32>* aTakeItems) { Items = *aTakeItems; }
+	int32 GetPalletItemCount(int32 aItemId);
 
-	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
+	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
+	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { AddedItems = aOrderItems; }
+	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = AddedItems; }
 	
+	bool IsAvailablePurchase() const;
+	
+	// Staff
+	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
 	void UpdateStaffProperty(TArray<FMS_StaffData>& aStaffDatas);
 	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
 private:
 	TMap<int32, int32> Items = {};
-	
 	TMap<int32, int32> AddedItems = {};
 	TMap<int32, int32> SoldItems = {};
 

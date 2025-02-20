@@ -36,9 +36,11 @@ public:
 
 	void SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData);
 
-	void GetAllItems(TMap<int32, int32>& aOutItems) const { aOutItems = Items; }
-	int32 GetItemCount(int32 aItemId) const;
+	// Items
+	void UpdateOrderItems(TMap<int32, int32>& aOrderItems);
+	void OrganizeItems(); 
 
+	// Staff
 	void RegisterStaff(int32 StaffId, int32 WorkDay);
 	const TArray<FMS_StaffData>& GetStaffDatas() const { return StaffDatas; }
 
@@ -62,10 +64,13 @@ private:
 	
 	UPROPERTY()
 	TMap<FIntVector2, FMS_LevelFurnitureSaveData> GridPositionToMarketFurnitureDatas;
-
+	
 	UPROPERTY()
 	TMap<int32, int32> Items;
 
+	UPROPERTY()
+	TMap<int32, int32> OrderItems;
+	
 	UPROPERTY()
 	TArray<FMS_StaffData> StaffDatas;
 };

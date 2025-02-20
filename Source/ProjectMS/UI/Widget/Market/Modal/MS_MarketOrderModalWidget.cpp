@@ -9,6 +9,7 @@
 #include "Manager_Both/MS_TableManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
@@ -50,14 +51,30 @@ void UMS_MarketOrderModalWidget::NativeDestruct()
 
 void UMS_MarketOrderModalWidget::OnClickedConfirmButton()
 {
-	TMap<int32, int32> TransferItems;
+	TMap<int32, int32> OrderItems;
 
 	for(const auto& OrderItemElementData : OrderItemElementDatas)
 	{
-		TransferItems.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
+		OrderItems.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
+
+	const TObjectPtr<UWorld> World = GetWorld();
+	if(!World)
+	{
+		return;
+	}
+	const TObjectPtr<APlayerController> Controller = World->GetFirstPlayerController();
+	if(!Controller)
+	{
+		return;
+	}
+	const TObjectPtr<AMS_PlayerState> PlayerState = Controller->GetPlayerState<AMS_PlayerState>();
+	if(!PlayerState)
+	{
+		return;
+	}
+	PlayerState->UpdateOrderItems(OrderItems);
 	
-	// gScheduleMng.TransferItemsToServer(TransferItems);
 	gWidgetMng.CloseModalWidget();
 	gWidgetMng.ShowToastMessage(TEXT("물품 구매를 완료했습니다!!"));
 }

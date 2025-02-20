@@ -203,11 +203,6 @@ void UMS_ScheduleManager::SaveGameDate() const
 	PlayerState->SavePlayerData();
 }
 
-void UMS_ScheduleManager::TakeItems(const TMap<int32, int32>* aTakeItems)
-{
-	gItemMng.SetItems(aTakeItems);
-}
-
 void UMS_ScheduleManager::RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent)
 {
 	MinuteToScheduleEvent = aMinuteToScheduleEvent;
@@ -246,6 +241,17 @@ void UMS_ScheduleManager::GetFinancialData(TArray<UMS_MonthFinancialElementData*
 {
 	aMonthFinancialElementDatas.Empty();
 	aMonthFinancialElementDatas = MonthFinancialElementDatas;
+}
+
+bool UMS_ScheduleManager::IsOverTime(EMS_MarketScheduleEvent ScheduleEvent)
+{
+	const int32* ScheduleEventTime = MinuteToScheduleEvent.FindKey(static_cast<int32>(ScheduleEvent));
+	if(!ScheduleEventTime)
+	{
+		return false;
+	}
+
+	return *ScheduleEventTime < TimeSchedule.GetMinute();
 }
 
 void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)

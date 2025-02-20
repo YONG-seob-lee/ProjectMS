@@ -6,6 +6,7 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "Controller/MS_PlayerController.h"
 #include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
@@ -14,6 +15,7 @@
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Units/MS_GateUnit.h"
 
 
@@ -178,9 +180,27 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 		gScheduleMng.PauseSchedule();
 		
 		FMS_SequencePlayParameter Parameter;
-		Parameter.OnFinishedSequenceCallback = []()
+		Parameter.OnFinishedSequenceCallback = [this]()
 		{
 			gScheduleMng.ResumeSchedule(38);
+			const UWorld* World = GetWorld();
+			if (!IsValid(World))
+			{
+				return;
+			}
+
+			const AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+			if (!IsValid(PlayerController))
+			{
+				return;
+			}
+	
+			AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+			if (!IsValid(PlayerState))
+			{
+				return;
+			}
+			PlayerState->OrganizeItems();
 		};
 		gSequenceMng.PlaySequence(EMS_SequenceType::Truck, Parameter);
 	}

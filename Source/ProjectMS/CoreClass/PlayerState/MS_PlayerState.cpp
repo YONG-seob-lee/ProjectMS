@@ -104,14 +104,30 @@ void AMS_PlayerState::SetFurnitureSlotDatas(const FIntVector2& aGridPosition, co
 	FurnitureData.SlotDatas = aSlotData;
 }
 
-int32 AMS_PlayerState::GetItemCount(int32 aItemId) const
+void AMS_PlayerState::UpdateOrderItems(TMap<int32, int32>& aOrderItems)
 {
-	if (!Items.Contains(aItemId))
+	for(const auto& OrderItem : aOrderItems)
 	{
-		return 0;
+		int32& OrderItemCount = OrderItems.FindOrAdd(OrderItem.Key);
+		OrderItemCount += OrderItem.Value;
 	}
 
-	return *Items.Find(aItemId);
+	SavePlayerData();
+	gItemMng.UpdateOrderItems(OrderItems);
+}
+
+void AMS_PlayerState::OrganizeItems()
+{
+	for(const auto& OrderItem : OrderItems)
+	{
+		int32& Item = Items.FindOrAdd(OrderItem.Key);
+		Item += OrderItem.Value;
+	}
+	OrderItems.Empty();
+	
+	SavePlayerData();
+	gItemMng.UpdateItems(Items);
+	gItemMng.UpdateOrderItems(OrderItems);
 }
 
 void AMS_PlayerState::RegisterStaff(int32 StaffId, int32 WorkDay)
@@ -189,7 +205,10 @@ void AMS_PlayerState::InitPlayerData()
 	}
 	
 	Items = TestDB->Items;
-
+	OrderItems = TestDB->OrderItems;
+	gItemMng.UpdateItems(Items);
+	gItemMng.UpdateOrderItems(OrderItems);
+	
 	StaffDatas = TestDB->StaffDatas;
 	gItemMng.UpdateStaffProperty(StaffDatas);
 
@@ -225,6 +244,7 @@ void AMS_PlayerState::SavePlayerData()
 		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
 	}
 
+	NewTestDBData->OrderItems = OrderItems;
 	NewTestDBData->Items = Items;
 
 	NewTestDBData->StaffDatas = StaffDatas;

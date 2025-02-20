@@ -78,8 +78,6 @@ public:
 
 	void SaveGameDate() const;
 	
-	void TakeItems(const TMap<int32, int32>* aTakeItems);
-	
 	void RunSchedule(int32 aGamePlayMinute, const TMap<int32, int32>& aMinuteToScheduleEvent);
 	void PauseSchedule();
 	void ResumeSchedule(int32 aRenewalCostTime = 0);
@@ -89,6 +87,8 @@ public:
 	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
 
+	bool IsOverTime(EMS_MarketScheduleEvent ScheduleEvent);
+	
 private:
 	void PlayTimer(int32 aGamePlayMinute);
 	void PauseTimer();
