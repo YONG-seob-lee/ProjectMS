@@ -19,9 +19,10 @@ public:
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
-	void SetProfile(int32 aStaffId);
+	void SetProfile(int32 aStaffId, int32 aWorkDay);
 private:
 	int32 StaffId = INDEX_NONE;
+	int32 WorkDay = 0;
 	
 	UPROPERTY(meta= (BindWidget))
 	TObjectPtr<class UImage> CPP_PortraitImage = nullptr;
@@ -39,5 +40,9 @@ private:
 	TObjectPtr<class UTextBlock> CPP_MBTI = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_WorkDay = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_RequiredSalary = nullptr;
+
 };

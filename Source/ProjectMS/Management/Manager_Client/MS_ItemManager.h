@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_ItemManager.generated.h"
 
@@ -50,9 +51,8 @@ public:
 
 	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
 	
-	void SetStaffProperty(int32 aStaffId, class UMS_StaffPropertyElementData* aStaffProperty);
-	void GetStaffPropertys(TArray<UMS_StaffPropertyElementData*>& aStaffPropertys);
-	
+	void UpdateStaffProperty(TArray<FMS_StaffData>& aStaffDatas);
+	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
 private:
 	TMap<int32, int32> Items = {};

@@ -78,6 +78,27 @@ struct FMS_GameDate
 	{
 	}
 
+
+	FMS_GameDate(FMS_GameDate aStartDate, int32 aPlusDay)
+	{
+		aStartDate.Day += aPlusDay;
+		if(aStartDate.Day > 28)
+		{
+			aStartDate.Day = 1;
+			aStartDate.Month += 1;
+		}
+		if(aStartDate.Month > 12)
+		{
+			aStartDate.Month = 1;
+			aStartDate.Year += 1;
+		}
+
+		Day = aStartDate.Day;
+		Month = aStartDate.Month;
+		Year = aStartDate.Year;
+		DailyTimeZone = aStartDate.DailyTimeZone;
+	}
+
 	bool operator==(const FMS_GameDate& aOther) const;
 	bool operator!=(const FMS_GameDate& aOther) const;
 	bool operator<(const FMS_GameDate& aOther) const;

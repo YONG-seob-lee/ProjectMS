@@ -26,7 +26,8 @@ private:
 	FString GetIssueName(int32 _IssueType);
 	
 	int32 StaffId = INDEX_NONE;
-
+	int32 WorkDay = 0;
+	
 	TMap<int32, FString> SelectItems;
 	
 	UPROPERTY(meta= (BindWidget))
@@ -49,4 +50,7 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_ExpirationDate = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_BlurPanel = nullptr;
 };

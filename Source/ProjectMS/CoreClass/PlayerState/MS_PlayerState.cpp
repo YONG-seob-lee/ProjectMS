@@ -5,6 +5,8 @@
 
 #include "MS_Define.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager_Client/MS_ItemManager.h"
+#include "Table/Caches/MS_StaffCacheTable.h"
 #include "Test/TestServer/MS_TestDB.h"
 
 
@@ -112,6 +114,18 @@ int32 AMS_PlayerState::GetItemCount(int32 aItemId) const
 	return *Items.Find(aItemId);
 }
 
+void AMS_PlayerState::RegisterStaff(int32 StaffId, int32 WorkDay)
+{
+	// Save ( 직원은 다음날 출근하기에 + 1일 )
+	FMS_GameDate FirstDateOfWork = GameDate;
+	FirstDateOfWork.Day += 1;
+	StaffDatas.Emplace(FMS_StaffData(StaffId, FirstDateOfWork, WorkDay));
+	SavePlayerData();
+	
+	// 아이템으로 재등록
+	gItemMng.UpdateStaffProperty(StaffDatas);
+}
+
 void AMS_PlayerState::InitDefaultPlayerData()
 {
 	// GameData
@@ -145,9 +159,6 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	Items.Emplace(5, 30);
 	Items.Emplace(16, 20);
 	Items.Emplace(17, 10);
-
-	// Staff
-	StaffDatas.Emplace(FMS_StaffData(1));
 }
 
 void AMS_PlayerState::InitPlayerData()
@@ -180,6 +191,7 @@ void AMS_PlayerState::InitPlayerData()
 	Items = TestDB->Items;
 
 	StaffDatas = TestDB->StaffDatas;
+	gItemMng.UpdateStaffProperty(StaffDatas);
 
 	if (!bInitDefaultData)
 	{

@@ -51,6 +51,9 @@ public:
 	{
 		WorkingDays.Empty();
 	}
+
+	FMS_StaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork, int32 aWorkDay)
+		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork), ExpirationDate(FMS_GameDate(aFirstDateOfWork, aWorkDay)), WorkDay(aWorkDay) {}
 	
 	UPROPERTY()
 	int32 StaffId;
@@ -60,6 +63,12 @@ public:
 	
 	UPROPERTY()
 	FMS_GameDate FirstDateOfWork;
+
+	UPROPERTY()
+	FMS_GameDate ExpirationDate;
+
+	UPROPERTY()
+	int32 WorkDay = 0;
 
 	UPROPERTY()
 	TArray<EMS_DayOfWeek> WorkingDays;

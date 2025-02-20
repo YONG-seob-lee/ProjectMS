@@ -28,7 +28,7 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	void SetDetail(int32 aStaffId);
+	void SetDetail(int32 aStaffId, int32 aWorkDay);
 	void ShowButtonPanel(bool bShow) const;
 	
 private:
@@ -38,6 +38,7 @@ private:
 	FString GetAbilityName(int32 aAbilityType);
 
 	int32 StaffId = INDEX_NONE;
+	int32 WorkDay = 0;
 	
 	UPROPERTY()
 	TArray<class UMS_AbilityElementData*> AbilityElementDatas;

@@ -17,7 +17,7 @@ void UMS_StaffProfileElementWidget::NativeOnListItemObjectSet(UObject* aListItem
 
 	if(const TObjectPtr<UMS_StaffProfileElementData> Data = Cast<UMS_StaffProfileElementData>(aListItemObject))
 	{
-		SetProfile(Data->GetStaffId());
+		SetProfile(Data->GetStaffId(), Data->GetWorkDay());
 	}
 }
 
@@ -30,16 +30,17 @@ FReply UMS_StaffProfileElementWidget::NativeOnMouseButtonDown(const FGeometry& I
 
 	if(const TObjectPtr<UMS_StaffDetailWidget> StaffDetailWidget = Cast<UMS_StaffDetailWidget>(Parameter.InModalWidget))
 	{
-		StaffDetailWidget->SetDetail(StaffId);
+		StaffDetailWidget->SetDetail(StaffId, WorkDay);
 	}
 	gWidgetMng.ShowModalWidget(Parameter);
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UMS_StaffProfileElementWidget::SetProfile(int32 aStaffId)
+void UMS_StaffProfileElementWidget::SetProfile(int32 aStaffId, int32 aWorkDay)
 {
 	StaffId = aStaffId;
+	WorkDay = aWorkDay;
 	
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
@@ -59,5 +60,6 @@ void UMS_StaffProfileElementWidget::SetProfile(int32 aStaffId)
 		
 	const FString MBTIString = ConvertEnumToString("EMS_MBTI", StaffData->MBTI);
 	CPP_MBTI->SetText(FText::FromString(FString::Format(TEXT("MBTI : {0}"), {MBTIString})));
+	CPP_WorkDay->SetText(FText::FromString(FString::Format(TEXT("근무 일수 : {0}일"), {WorkDay})));
 	CPP_RequiredSalary->SetText(FText::FromString(FString::Format(TEXT("요구 월급 : {0}Gold"), {StaffData->RequiredSalaryMax})));
 }

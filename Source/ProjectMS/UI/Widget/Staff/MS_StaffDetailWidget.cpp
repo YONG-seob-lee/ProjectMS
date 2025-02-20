@@ -6,8 +6,10 @@
 #include "Button/MS_Button.h"
 #include "Test/TestServer/MS_TestServer.h"
 #include "Components/CanvasPanel.h"
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StaffAbilityCacheTable.h"
 #include "Widget/ListViewElement/MS_StaffProfileElementWidget.h"
 #include "Widget/ListViewElement/ElementData/MS_AbilityElementData.h"
@@ -31,11 +33,12 @@ void UMS_StaffDetailWidget::NativeDestruct()
 	}
 }
 
-void UMS_StaffDetailWidget::SetDetail(int32 aStaffId)
+void UMS_StaffDetailWidget::SetDetail(int32 aStaffId, int32 aWorkDay)
 {
 	StaffId = aStaffId;
+	WorkDay = aWorkDay;
 	
-	CPP_ProfileWidget->SetProfile(aStaffId);
+	CPP_ProfileWidget->SetProfile(aStaffId, aWorkDay);
 	
 	const TObjectPtr<UMS_StaffAbilityCacheTable> StaffAbilityTable = Cast<UMS_StaffAbilityCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::StaffAbility));
 	MS_ENSURE(StaffAbilityTable);
@@ -83,7 +86,28 @@ void UMS_StaffDetailWidget::ShowButtonPanel(bool bShow) const
 
 void UMS_StaffDetailWidget::OnClickedHireButton()
 {
-	gTestServer.RenewStaff(StaffId);
+	//gTestServer.RenewStaff(StaffId);
+
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerState> PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+
+	PlayerState->RegisterStaff(StaffId, WorkDay);
+	
 	gWidgetMng.CloseModalWidget();
 	gWidgetMng.ShowToastMessage(TEXT("새로운 스텝을 고용하였습니다!!"));
 }

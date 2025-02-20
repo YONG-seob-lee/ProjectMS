@@ -9,6 +9,7 @@
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
+#include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
 
 UMS_ItemManager::UMS_ItemManager()
@@ -28,7 +29,8 @@ void UMS_ItemManager::BuiltInInitialize()
 void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
-	
+
+	// 해당 데이터는 원래라면 서버에서 받아야 함
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
 
@@ -38,8 +40,10 @@ void UMS_ItemManager::Initialize()
 	{
 		UMS_StaffProfileElementData* Data = MS_NewObject<UMS_StaffProfileElementData>(this);
 		Data->SetStaffId(StaffData.Key);
+		Data->SetWorkDay(FMath::RandRange(30, 120));
 		StaffProfileDatas.Emplace(Data);
 	}
+	// 여기까지
 }
 
 void UMS_ItemManager::PostInitialize()
@@ -325,15 +329,29 @@ void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProf
 	aProfileDatas = StaffProfileDatas;
 }
 
-void UMS_ItemManager::SetStaffProperty(int32 aStaffId, UMS_StaffPropertyElementData* aStaffProperty)
+void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_StaffData>& aStaffDatas)
 {
-	StaffPropertys.Emplace(aStaffId, aStaffProperty);
+	StaffPropertys.Empty();
+	for(const auto& StaffData : aStaffDatas)
+	{
+		if(UMS_StaffPropertyElementData* StaffProperty = MS_NewObject<UMS_StaffPropertyElementData>())
+    	{
+    		StaffProperty->SetStaffId(StaffData.StaffId);
+			StaffProperty->SetWorkDay(StaffData.WorkDay);
+    		StaffProperty->SetHP(100);
+    		StaffProperty->SetCondition(100);
+    		StaffProperty->SetFeeling(1);
+			StaffProperty->SetFirstDateOfWork(StaffData.FirstDateOfWork);
+    		StaffProperty->SetExpirationDate(StaffData.ExpirationDate);
+    		StaffPropertys.Emplace(StaffData.StaffId, StaffProperty);
+    	}	
+	}
 }
 
-void UMS_ItemManager::GetStaffPropertys(TArray<UMS_StaffPropertyElementData*>& aStaffPropertys)
+void UMS_ItemManager::GetStaffProperties(TArray<UMS_StaffPropertyElementData*>& aStaffProperties)
 {
-	aStaffPropertys.Empty();
-	StaffPropertys.GenerateValueArray(aStaffPropertys);
+	aStaffProperties.Empty();
+	StaffPropertys.GenerateValueArray(aStaffProperties);
 }
 
 UMS_ItemManager* UMS_ItemManager::GetInstance()

@@ -36,20 +36,6 @@ void UMS_TestServer::RenewItems(TMap<int32, int32> aTransferItems)
 	gItemMng.SetItems(&Items);
 }
 
-void UMS_TestServer::RenewStaff(int32 aStaffId)
-{
-	if(UMS_StaffPropertyElementData* StaffProperty = MS_NewObject<UMS_StaffPropertyElementData>())
-	{
-		StaffPropertys.Emplace(aStaffId, StaffProperty);
-		StaffProperty->SetStaffId(aStaffId);
-		StaffProperty->SetHP(100);
-		StaffProperty->SetCondition(100);
-		StaffProperty->SetFeeling(1);
-		StaffProperty->SetExpirationDate(5, 31);
-	}
-	gItemMng.SetStaffProperty(aStaffId, StaffPropertys[aStaffId]);
-}
-
 UMS_TestServer* UMS_TestServer::GetInstance()
 {
 	return TestServer;

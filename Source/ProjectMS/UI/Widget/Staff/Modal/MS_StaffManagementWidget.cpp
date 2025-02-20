@@ -14,7 +14,7 @@ void UMS_StaffManagementWidget::InitWidget(const FName& aTypeName, bool bManaged
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
 
 	TArray<UMS_StaffPropertyElementData*> StaffPropertys;
-	gItemMng.GetStaffPropertys(StaffPropertys);
+	gItemMng.GetStaffProperties(StaffPropertys);
 
 	if(StaffPropertys.Num() == 0)
 	{

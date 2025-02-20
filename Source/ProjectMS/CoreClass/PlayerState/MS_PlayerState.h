@@ -39,6 +39,7 @@ public:
 	void GetAllItems(TMap<int32, int32>& aOutItems) const { aOutItems = Items; }
 	int32 GetItemCount(int32 aItemId) const;
 
+	void RegisterStaff(int32 StaffId, int32 WorkDay);
 	const TArray<FMS_StaffData>& GetStaffDatas() const { return StaffDatas; }
 
 	

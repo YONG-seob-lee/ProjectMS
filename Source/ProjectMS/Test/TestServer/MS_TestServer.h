@@ -21,10 +21,6 @@ public:
 
 	// Order Item
 	void RenewItems(TMap<int32, int32> aTransferItems);
-
-
-	// Staff
-	void RenewStaff(int32 aStaffId);
 	
 private:
 	// Order Item
