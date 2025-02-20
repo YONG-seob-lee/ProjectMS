@@ -60,7 +60,7 @@ void UMS_ModeState_Construct::Begin()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		// ShowUnconstructableGrid
-		LevelScriptActor->ShowUnconstructableGrid(true);
+		LevelScriptActor->UpdateUnconstructableGridView(true, nullptr, false);
 
 		// Zone Openable
 		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Construct);
@@ -92,7 +92,7 @@ void UMS_ModeState_Construct::Exit()
 		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Normal);
 		
 		// ShowUnconstructableGrid
-		LevelScriptActor->ShowUnconstructableGrid(false);
+		LevelScriptActor->UpdateUnconstructableGridView(false, nullptr, false);
 	}
 
 	// Delegate
@@ -123,6 +123,7 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(false);
+			LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, false);
 		}
 	}
 }
@@ -138,6 +139,7 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(true);
+			LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, true);
 		}
 	}
 
@@ -539,6 +541,7 @@ void UMS_ModeState_Construct::CancelPreviewProp()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		LevelScriptActor->SetZoneOpenWidgetVisibility(false);
+		LevelScriptActor->UpdateUnconstructableGridView(true, nullptr, false);
 	}
 	
 	if (PreviewProp->GetLinkedProp() != nullptr)

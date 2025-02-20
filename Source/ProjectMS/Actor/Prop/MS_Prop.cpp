@@ -123,6 +123,35 @@ UMS_PropSpaceComponent* AMS_Prop::GetPropSpaceComponentByRelativeLocation(const 
 	return nullptr;
 }
 
+void AMS_Prop::GetAllGridPositions(TArray<FIntVector2>& aOutGridPositions) const
+{
+	if (GetPropType() != EMS_PropType::Furniture && GetPropType() != EMS_PropType::Structure)
+	{
+		return;
+	}
+
+	aOutGridPositions.Empty();
+	
+	for (UMS_PropSpaceComponent* PropSpaceComponent : PropSpaceComponents)
+	{
+		FIntVector2 PropSpaceStartGridPosition = FIntVector2::ZeroValue;
+		FIntVector2 PropSpaceGridNum = FIntVector2::ZeroValue;
+			
+		PropSpaceComponent->GetGridPositions(PropSpaceStartGridPosition, PropSpaceGridNum);
+		
+		// Set With Grid
+		for (int i = 0; i < PropSpaceGridNum.Y; ++i)
+		{
+			for (int j = 0; j < PropSpaceGridNum.X; ++j)
+			{
+				FIntVector2 GridPosition = FIntVector2(PropSpaceStartGridPosition.X + j, PropSpaceStartGridPosition.Y + i);
+				
+				aOutGridPositions.Emplace(GridPosition);
+			}
+		}
+	}
+}
+
 void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 {
 	OwnerZone = aOwnerZone;

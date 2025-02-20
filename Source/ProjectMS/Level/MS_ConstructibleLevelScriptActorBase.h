@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MS_LevelScriptActorBase.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MathUtility/MS_MathUtility.h"
 #include "MS_ConstructibleLevelScriptActorBase.generated.h"
 
@@ -55,7 +56,7 @@ public:
 	void SetZoneOpenableView(EMS_ModeState aModeState);
 	void SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced = false);
 	
-	void ShowUnconstructableGrid(bool bShow);
+	void UpdateUnconstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected);
 
 	
 	// Prop
@@ -76,6 +77,4 @@ protected:
 	
 	UPROPERTY()
 	TMap<int32, TObjectPtr<class AMS_Zone>> Zones;
-
-	bool bShowUnconstructableGrid;
 };

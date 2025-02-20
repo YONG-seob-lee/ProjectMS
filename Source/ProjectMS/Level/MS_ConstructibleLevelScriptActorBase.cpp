@@ -480,14 +480,23 @@ void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenWidgetVisibility(bool bHi
 	}
 }
 
-void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
+void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected)
 {
-	return;
-	
-	if (bShowUnconstructableGrid != bShow)
+	if (bShow)
 	{
-		bShowUnconstructableGrid = bShow;
+		TWeakObjectPtr<AMS_Prop> LinkedProp = nullptr;
+		TArray<FIntVector2> PreviewPropGridPositions = {};
 		
+		if (aTargetPreviewProp != nullptr)
+		{
+			LinkedProp = aTargetPreviewProp->GetLinkedProp();
+
+			if (bShowSelected)
+			{
+				aTargetPreviewProp->GetAllGridPositions(PreviewPropGridPositions);
+			}
+		}
+	
 		for (auto& Zone : Zones)
 		{
 			const TMap<FIntVector2, FMS_GridData>& Grids = Zone.Value->GetGrids();
@@ -496,19 +505,51 @@ void AMS_ConstructibleLevelScriptActorBase::ShowUnconstructableGrid(bool bShow)
 				{
 					if (AMS_Floor* Floor = Cast<AMS_Floor>(Grid.Value.Floor.Get()))
 					{
-						if (!bShowUnconstructableGrid || Grid.Value.Object == nullptr)
+						if (bShowSelected && PreviewPropGridPositions.Contains(Grid.Value.GetGridPosition()))
 						{
-							Floor->SetMaterial(FName("Normal"));
+							if (Grid.Value.Object == nullptr || Grid.Value.Object == LinkedProp)
+							{
+								Floor->SetMaterial(FName("Selected"));
+							}
+							else
+							{
+								Floor->SetMaterial(FName("SelectedUnconstructable"));
+							}
 						}
 						else
 						{
-							Floor->SetMaterial(FName("Unconstructable"));
+							if (Grid.Value.Object == nullptr || Grid.Value.Object == LinkedProp)
+							{
+								Floor->SetMaterial(FName("Normal"));
+							}
+							else
+							{
+								Floor->SetMaterial(FName("Unconstructable"));
+							}
 						}
 					}
 				}
 			}
 		}
 	}
+
+	else
+	{
+		for (auto& Zone : Zones)
+		{
+			const TMap<FIntVector2, FMS_GridData>& Grids = Zone.Value->GetGrids();
+			{
+				for (auto& Grid : Grids)
+				{
+					if (AMS_Floor* Floor = Cast<AMS_Floor>(Grid.Value.Floor.Get()))
+					{
+						Floor->SetMaterial(FName("Normal"));
+					}
+				}
+			}
+		}
+	}
+
 }
 
 TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
