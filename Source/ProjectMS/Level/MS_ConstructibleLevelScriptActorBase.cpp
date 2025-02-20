@@ -455,13 +455,13 @@ void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)
 			Zone.Value->OnAnyZoneOpened(this);
 		}
 		
-		SetZoneOpenableView();
+		SetZoneOpenableView(gModeMng.GetCurrentModeStateId());
 	}
 }
 
-void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenableView()
+void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenableView(EMS_ModeState aModeState)
 {
-	bool bZoneOpenableMode = gModeMng.GetCurrentModeStateId() == EMS_ModeState::Construct;
+	bool bZoneOpenableMode = aModeState == EMS_ModeState::Construct;
 
 	for (auto& Zone : Zones)
 	{

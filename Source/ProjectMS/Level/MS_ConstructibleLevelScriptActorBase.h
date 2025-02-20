@@ -52,7 +52,7 @@ public:
 	UFUNCTION()
 	void OnZoneOpened(AMS_Zone* aZone);
 
-	void SetZoneOpenableView();
+	void SetZoneOpenableView(EMS_ModeState aModeState);
 	void SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced = false);
 	
 	void ShowUnconstructableGrid(bool bShow);

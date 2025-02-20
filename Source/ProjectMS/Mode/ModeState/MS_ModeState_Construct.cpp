@@ -63,7 +63,7 @@ void UMS_ModeState_Construct::Begin()
 		LevelScriptActor->ShowUnconstructableGrid(true);
 
 		// Zone Openable
-		LevelScriptActor->SetZoneOpenableView();
+		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Construct);
 	}
 
 	// SelectProp
@@ -89,7 +89,7 @@ void UMS_ModeState_Construct::Exit()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		// Zone Openable
-		LevelScriptActor->SetZoneOpenableView();
+		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Normal);
 		
 		// ShowUnconstructableGrid
 		LevelScriptActor->ShowUnconstructableGrid(false);
