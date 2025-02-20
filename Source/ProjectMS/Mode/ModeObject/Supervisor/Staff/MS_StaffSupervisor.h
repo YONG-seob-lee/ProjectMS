@@ -34,7 +34,13 @@ public:
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
 	
 	void RequestSpawnCharacters(int32 aCurrentMinute);
+	
+# if WITH_EDITOR
+	void RequestSpawnCharacterInMarket(int32 aStaffId);
+#endif
+	
 	bool SpawnCharacter(int32 StaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator);
+	void RemoveAllCharacter();
 
 	
 private:

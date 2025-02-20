@@ -104,6 +104,11 @@ void UMS_StaffSupervisor::RequestSpawnCharacters(int32 aCurrentMinute)
 	}
 }
 
+void UMS_StaffSupervisor::RequestSpawnCharacterInMarket(int32 aStaffId)
+{
+	SpawnCharacter(aStaffId, FVector(500.f, 500.f, 80.f), FRotator(0.f,0.f,0.f));
+}
+
 bool UMS_StaffSupervisor::SpawnCharacter(int32 StaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator)
 {
 	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, StaffId,true, SpawnLocation, SpawnRotator);
@@ -117,6 +122,12 @@ bool UMS_StaffSupervisor::SpawnCharacter(int32 StaffId, const FVector& SpawnLoca
 		
 	MS_ENSURE(false);
 	return false;
+}
+
+void UMS_StaffSupervisor::RemoveAllCharacter()
+{
+	gUnitMng.DestroyAllUnits(EMS_UnitType::StaffAI);
+	StaffAIUnits.Empty();
 }
 
 void UMS_StaffSupervisor::InitStaffSpawnPoint()

@@ -7,9 +7,12 @@
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
+#include "Mode/ModeState/MS_ModeState_RunMarketNormal.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Widget/Dialog/MS_DialogWidget.h"
 
@@ -18,9 +21,7 @@ void UMS_CheatManager::TestCheatManager(const FString aTestString)
 {
 	gWidgetMng.ShowMessageOnScreen(aTestString);
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 {
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
@@ -43,9 +44,7 @@ void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 
 	gWidgetMng.ShowToastMessage(Behavior);
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::AIExitMarket(int32 UnitId)
 {
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
@@ -64,9 +63,7 @@ void UMS_CheatManager::AIExitMarket(int32 UnitId)
 	
 	gWidgetMng.ShowToastMessage(Behavior);
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 {
 	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
@@ -84,9 +81,7 @@ void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 	}
 	gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitId, gScheduleMng.GetMinute(), FText::FromString(Chatting)));
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
 {
 	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
@@ -105,9 +100,7 @@ void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
 	}
 	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, gScheduleMng.GetMinute(), FText::FromString(Behavior)));
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 {
 	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
@@ -125,9 +118,29 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 	}
 	gUnitMng.OnPurchaseDelegate.Broadcast(FMS_PurchaseParameter(UnitId, ItemId, ItemCount));
 }
-#endif
 
-#if WITH_EDITOR
+void UMS_CheatManager::AddStaff(int32 aStaffId)
+{
+	if (UMS_ModeState_RunMarketNormal* RunMarketNormal = Cast<UMS_ModeState_RunMarketNormal>(gModeMng.GetCurrentModeState()))
+	{
+		if (UMS_StaffSupervisor* StaffSupervisor = RunMarketNormal->GetStaffSupervisor())
+		{
+			StaffSupervisor->RequestSpawnCharacterInMarket(aStaffId);
+		}
+	}
+}
+
+void UMS_CheatManager::RemoveAllStaff()
+{
+	if (UMS_ModeState_RunMarketNormal* RunMarketNormal = Cast<UMS_ModeState_RunMarketNormal>(gModeMng.GetCurrentModeState()))
+	{
+		if (UMS_StaffSupervisor* StaffSupervisor = RunMarketNormal->GetStaffSupervisor())
+		{
+			StaffSupervisor->RemoveAllCharacter();
+		}
+	}
+}
+
 void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 {
 	if(bTurnNight == true && bDirectly == false)
@@ -140,9 +153,7 @@ void UMS_CheatManager::DayNight(bool bTurnNight, bool bDirectly /* = true */)
 		TownLevelScriptActor->SetDayAndNight(bTurnNight ? EMS_DayAndNight::Night : EMS_DayAndNight::Day, bDirectly);
 	}
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 {
 	TArray<FMS_DialogParameter> DialogParameters;
@@ -152,16 +163,12 @@ void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 	DialogParameters.Emplace(FMS_DialogParameter(DialogType, TypeSpeed));
 	gWidgetMng.RequestDialog(DialogParameters);
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::RequestTutorial(int32 t)
 {
 	gWidgetMng.Test(t);
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::ResetProcessTutorial()
 {
 	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
@@ -172,9 +179,7 @@ void UMS_CheatManager::ResetProcessTutorial()
 
 	GameUserSettings->ResetProcessTutorial();
 }
-#endif
 
-#if WITH_EDITOR
 void UMS_CheatManager::FastRun(int32 aMultiply)
 {
 	gScheduleMng.SetMultiplyIntervalSecondReal(aMultiply);

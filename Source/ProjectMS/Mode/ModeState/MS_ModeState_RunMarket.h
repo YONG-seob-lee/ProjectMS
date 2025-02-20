@@ -38,7 +38,10 @@ public:
 	
 	// aTargetPoints가 다른 존에 있을 경우 첫번째 타겟의 게이트를 찾아감
 	virtual void SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const override;
+
 	
+	TObjectPtr<class UMS_StaffSupervisor> GetStaffSupervisor() const { return StaffSupervisor; }
+
 	
 private:
 	FTimerHandle DelayTimerHandle;
