@@ -16,6 +16,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/NightProp/MS_NightProp.h"
+#include "Vehicle/MS_VehicleCharacter.h"
 #include "Vehicle/MS_VehicleSplineActor.h"
 
 
@@ -32,6 +33,7 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 
 	CashingDirectionalLight();
 	CashingNightPropActors();
+	CashingNightCarActors();
 	
 	ParsingCarSplineActors();
 	ParsingDuckSplineActors();
@@ -97,7 +99,8 @@ void AMS_StageLevelScriptActor::SetDayAndNight_Internal(EMS_DayAndNight aDayAndN
 	if(bDirectly)
 	{
 		SetLightColor(aDayAndNight);
-		SetLightProp(aDayAndNight);		
+		SetLightProp(aDayAndNight);
+		SetLightCar(aDayAndNight);
 	}
 	else
 	{
@@ -155,6 +158,24 @@ void AMS_StageLevelScriptActor::SetLightProp(EMS_DayAndNight aDayAndNight)
 	}
 }
 
+void AMS_StageLevelScriptActor::SetLightCar(EMS_DayAndNight aDayAndNight)
+{
+	if(aDayAndNight == EMS_DayAndNight::Day)
+	{
+		for(const auto& Car : Cars)
+		{
+			Car->TurnOffLight();
+		}
+	}
+	else
+	{
+		for(const auto& Car : Cars)
+		{
+			Car->TurnOnLight();
+		}
+	}
+}
+
 void AMS_StageLevelScriptActor::CollectOutsideDuckSpawnPoint() const
 {
 	TArray<AActor*> DuckSpawnPoints;
@@ -200,6 +221,20 @@ void AMS_StageLevelScriptActor::CashingNightPropActors()
 		if(AMS_NightProp* NightProp = Cast<AMS_NightProp>(Prop))
 		{
 			NightProps.Emplace(NightProp);
+		}
+	}
+}
+
+void AMS_StageLevelScriptActor::CashingNightCarActors()
+{
+	TArray<AActor*> VehicleActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_VehicleCharacter::StaticClass(), VehicleActors);
+
+	for(const auto& Vehicle : VehicleActors)
+	{
+		if(AMS_VehicleCharacter* Car = Cast<AMS_VehicleCharacter>(Vehicle))
+		{
+			Cars.Emplace(Car);
 		}
 	}
 }
@@ -327,6 +362,7 @@ void AMS_StageLevelScriptActor::ProcessNightToDay(float DeltaTime)
 	{
 		SetLightColor(EMS_DayAndNight::Day);
 		SetLightProp(EMS_DayAndNight::Day);
+		SetLightCar(EMS_DayAndNight::Day);
 	}
 
 	if(DirectionalLight)

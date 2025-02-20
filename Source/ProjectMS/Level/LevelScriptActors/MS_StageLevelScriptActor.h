@@ -34,11 +34,13 @@ private:
 	
 	void SetLightColor(EMS_DayAndNight aDayAndNight) const;
 	void SetLightProp(EMS_DayAndNight aDayAndNight);
+	void SetLightCar(EMS_DayAndNight aDayAndNight);
 	
 	void CollectOutsideDuckSpawnPoint() const;
 	
 	void CashingDirectionalLight();
 	void CashingNightPropActors();
+	void CashingNightCarActors();
 	
 	void ParsingCarSplineActors() const;
 	void ParsingDuckSplineActors() const;
@@ -61,4 +63,7 @@ private:
 	
 	UPROPERTY()
 	TArray<class AMS_NightProp*> NightProps = {};
+
+	UPROPERTY()
+	TArray<class AMS_VehicleCharacter*> Cars = {}; 
 };

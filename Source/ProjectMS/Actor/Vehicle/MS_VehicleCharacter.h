@@ -14,7 +14,11 @@ class PROJECTMS_API AMS_VehicleCharacter : public AMS_CharacterBase
 public:
 	AMS_VehicleCharacter();
 
+	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaTime) override;
+
+	void TurnOnLight();
+	void TurnOffLight();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -26,6 +30,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float VehicleVelocity = 5.f;
+
+	UPROPERTY(EditAnywhere)
+	float FrontLightDistance = 140.f;
+
+	UPROPERTY()
+	TArray<class USpotLightComponent*> SpotLightComponents = {};
 	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;

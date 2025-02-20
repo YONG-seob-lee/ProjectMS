@@ -8,6 +8,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "DrawDebugHelpers.h"
+#include "Components/SpotLightComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -32,6 +33,19 @@ AMS_VehicleCharacter::AMS_VehicleCharacter()
 	}
 }
 
+void AMS_VehicleCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	
+	GetComponents(USpotLightComponent::StaticClass(), SpotLightComponents);
+
+	for(const auto& SpotLight : SpotLightComponents)
+	{
+		FTransform SpotLightTransform = SpotLight->GetRelativeTransform();
+		SpotLightTransform.SetLocation(FVector(FrontLightDistance, SpotLightTransform.GetLocation().Y, SpotLightTransform.GetLocation().Z));
+	}
+}
+
 // Called every frame
 void AMS_VehicleCharacter::Tick(float DeltaTime)
 {
@@ -48,6 +62,22 @@ void AMS_VehicleCharacter::Tick(float DeltaTime)
 			SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * VehicleVelocity);
 			SetActorRotation(MoveNextRotation);
 		}
+	}
+}
+
+void AMS_VehicleCharacter::TurnOnLight()
+{
+	for(const auto& SpotLightComponent : SpotLightComponents)
+	{
+		SpotLightComponent->SetHiddenInGame(false);
+	}
+}
+
+void AMS_VehicleCharacter::TurnOffLight()
+{
+	for(const auto& SpotLightComponent : SpotLightComponents)
+	{
+		SpotLightComponent->SetHiddenInGame(true);
 	}
 }
 
