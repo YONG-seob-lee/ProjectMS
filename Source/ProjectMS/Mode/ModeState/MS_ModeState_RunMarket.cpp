@@ -186,7 +186,7 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 	}
 }
 
-void UMS_ModeState_RunMarket::SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition,
+void UMS_ModeState_RunMarket::SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition,
 	const TArray<FIntVector2>& aTargetPositions) const
 {
 	aOutPath.Empty();
@@ -201,14 +201,14 @@ void UMS_ModeState_RunMarket::SearchPathToTargetOrGate(TArray<FIntVector2>& aOut
 
 		// ZoneType
 		EMS_ZoneType StartZoneType = LevelScriptActor->GetGridZoneType(aStartPosition);
-		if (StartZoneType != EMS_ZoneType::Display && StartZoneType != EMS_ZoneType::Shelf && StartZoneType != EMS_ZoneType::Pallet)
+		if (StartZoneType == EMS_ZoneType::None || StartZoneType == EMS_ZoneType::Passage)
 		{
-			MS_ENSURE(false);
+			// MS_ENSURE(false);
 			return;
 		}
 		
 		EMS_ZoneType TargetZoneType = LevelScriptActor->GetGridZoneType(aTargetPositions[0]);
-		if (TargetZoneType != EMS_ZoneType::Display && TargetZoneType != EMS_ZoneType::Shelf && TargetZoneType != EMS_ZoneType::Pallet)
+		if (StartZoneType == EMS_ZoneType::None || StartZoneType == EMS_ZoneType::Passage)
 		{
 			MS_ENSURE(false);
 			return;
@@ -221,6 +221,9 @@ void UMS_ModeState_RunMarket::SearchPathToTargetOrGate(TArray<FIntVector2>& aOut
 		}
 		else
 		{
+			// Start에서 Gate까지
+			TArray<FIntVector2> PathToGate;
+			
 			TArray<TWeakObjectPtr<UMS_GateUnit>> GatesUnits;
 			LevelScriptActor->GetGateUnitsInLevel(GatesUnits, StartZoneType, TargetZoneType);
 
@@ -233,7 +236,38 @@ void UMS_ModeState_RunMarket::SearchPathToTargetOrGate(TArray<FIntVector2>& aOut
 				}
 			}
 			
-			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, GatePositions);
+			GridBFS_2x2->Search(PathToGate, StartZoneType, aStartPosition, GatePositions);
+
+			
+			// Linked Gate에서 타겟까지
+			if (PathToGate.Num() != 0)
+			{
+				TArray<FIntVector2> PathToTarget;
+			
+				TWeakObjectPtr<UMS_GateUnit> TargetGateUnit;
+				for (TWeakObjectPtr<UMS_GateUnit> GateUnit : GatesUnits)
+				{
+					if (GateUnit != nullptr)
+					{
+						if (GateUnit->GetGridPosition() == PathToGate.Last())
+						{
+							TargetGateUnit = GateUnit;
+						}
+					}
+				}
+
+				GridBFS_2x2->Search(PathToTarget, TargetGateUnit->GetLinkedZoneType(), TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
+
+				if (PathToTarget.Num() != 0)
+				{
+					aOutPath.Append(PathToGate);
+					aOutPath.Append(PathToTarget);
+				}
+				else
+				{
+					// ToDo : 다른 Gate를 통하면 목표에 갈 수 있나
+				}
+			}
 		}
 	}
 }

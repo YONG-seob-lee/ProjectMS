@@ -20,11 +20,10 @@ protected:
 
 public:
 	// Getter
-	EMS_ZoneType GetGateZoneType() const { return GateZoneType; }
-	EMS_ZoneType GetLinkedZoneType() const { return LinkedZoneType; }
-	
-	int32 GetGateIndex() const { return GateIndex; }
-	int32 GetLinkedGateIndex() const { return LinkedGateIndex; }
+	EMS_ZoneType GetGateZoneType() const;
+	EMS_ZoneType GetLinkedZoneType() const;
+
+	TWeakObjectPtr<AMS_Gate> GetLinkedGate() const { return LinkedGate; }
 
 	
 private:
@@ -32,20 +31,12 @@ private:
 	void OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	
 	// Gate Data
-	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
-	EMS_ZoneType GateZoneType;
-
-	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
-	EMS_ZoneType LinkedZoneType;
+	UPROPERTY(EditInstanceOnly, Category=MS_GateInfo)
+	TWeakObjectPtr<AMS_Gate> LinkedGate;
 	
-	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
-	int32 GateIndex;
-	
-	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
-	int32 LinkedGateIndex;
-
-	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
+	UPROPERTY(EditAnywhere, Category=MS_Gate)
 	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
 };

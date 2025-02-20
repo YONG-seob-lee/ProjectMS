@@ -6,10 +6,11 @@
 #include "Character/AICharacter/MS_AICharacter.h"
 #include "Components/BoxComponent.h"
 #include "Manager_Client/MS_SequenceManager.h"
+#include "Zone/MS_Zone.h"
 
 
 AMS_Gate::AMS_Gate(const FObjectInitializer& aObjectInitializer)
-	: Super(aObjectInitializer), GateIndex(INDEX_NONE), LinkedGateIndex(INDEX_NONE)
+	: Super(aObjectInitializer)
 {
 	// Property
 	PropType = EMS_PropType::Gate;
@@ -30,8 +31,28 @@ void AMS_Gate::BeginPlay()
 	Super::BeginPlay();
 }
 
+EMS_ZoneType AMS_Gate::GetGateZoneType() const
+{
+	if (OwnerZone == nullptr)
+	{
+		MS_ENSURE(false);
+	}
+
+	return OwnerZone->GetZoneType();
+}
+
+EMS_ZoneType AMS_Gate::GetLinkedZoneType() const
+{
+	if (LinkedGate == nullptr)
+	{
+		return EMS_ZoneType::None;
+	}
+
+	return LinkedGate->GetGateZoneType();
+}
+
 void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(Cast<AMS_AICharacter>(OtherActor))
 	{

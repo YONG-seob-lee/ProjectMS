@@ -50,17 +50,17 @@ EMS_ZoneType UMS_GateUnit::GetLinkedZoneType() const
 	return GetGateActor()->GetLinkedZoneType();
 }
 
-int32 UMS_GateUnit::GetGateIndex() const
+TWeakObjectPtr<AMS_Gate> UMS_GateUnit::GetLinkedGateActor() const
 {
-	return GetGateActor()->GetGateIndex();
-}
-
-int32 UMS_GateUnit::GetLinkedGateIndex() const
-{
-	return GetGateActor()->GetLinkedGateIndex();
+	return GetGateActor()->GetLinkedGate();
 }
 
 FIntVector2 UMS_GateUnit::GetGridPosition() const
 {
 	return GetGateActor()->GetGridPosition();
+}
+
+FIntVector2 UMS_GateUnit::GetLinkedGridPosition() const
+{
+	return GetLinkedGateActor()->GetGridPosition();
 }

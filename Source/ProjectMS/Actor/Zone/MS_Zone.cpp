@@ -206,7 +206,7 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 						}
 						else
 						{
-							MS_LOG_VERBOSITY(Error, TEXT("[%s] All gate prop spaces must be within the attacked zone [Gate Id : %d]"), *MS_FUNC_STRING, Gate->GetGateIndex());
+							MS_LOG_VERBOSITY(Error, TEXT("[%s] All gate prop spaces must be within the attacked zone [Name : %s]"), *MS_FUNC_STRING, *Gate->GetName());
 							MS_ENSURE(false);
 						}
 					}

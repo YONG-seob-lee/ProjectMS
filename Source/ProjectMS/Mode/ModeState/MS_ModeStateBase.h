@@ -62,5 +62,5 @@ public:
 
 public:
 	UFUNCTION()
-	virtual void SearchPathToTargetOrGate(TArray<FIntVector2>& aOutPath, bool& bOutSearchGate, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const;
+	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const;
 };

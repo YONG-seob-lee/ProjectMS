@@ -56,6 +56,9 @@ protected:
 	FVector2D PathLocation;
 
 	UPROPERTY()
+	FVector2D PreviousPathLocation;
+
+	UPROPERTY()
 	bool bStopInPathLocation;
 
 public:

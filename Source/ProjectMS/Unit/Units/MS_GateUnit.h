@@ -30,8 +30,8 @@ public:
 	FORCEINLINE EMS_ZoneType GetGateZoneType() const;
 	FORCEINLINE EMS_ZoneType GetLinkedZoneType() const;
 	
-	FORCEINLINE int32 GetGateIndex() const;
-	FORCEINLINE int32 GetLinkedGateIndex() const;
+	FORCEINLINE TWeakObjectPtr<AMS_Gate> GetLinkedGateActor() const;
 
 	FORCEINLINE FIntVector2 GetGridPosition() const;
+	FORCEINLINE FIntVector2 GetLinkedGridPosition() const;
 };
