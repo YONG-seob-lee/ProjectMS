@@ -486,11 +486,13 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 	{
 		TWeakObjectPtr<AMS_Prop> LinkedProp = nullptr;
 		TArray<FIntVector2> PreviewPropGridPositions = {};
+		EMS_ZoneType ConstructibleZoneType = EMS_ZoneType::None;
 		
 		if (aTargetPreviewProp != nullptr)
 		{
 			LinkedProp = aTargetPreviewProp->GetLinkedProp();
-
+			ConstructibleZoneType = aTargetPreviewProp->GetConstructableZoneType();
+			
 			if (bShowSelected)
 			{
 				aTargetPreviewProp->GetAllGridPositions(PreviewPropGridPositions);
@@ -505,6 +507,18 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 				{
 					if (AMS_Floor* Floor = Cast<AMS_Floor>(Grid.Value.Floor.Get()))
 					{
+						// 설치할 수 없는 ZoneType 일때
+						if (aTargetPreviewProp != nullptr)
+						{
+							if (ConstructibleZoneType != Zone.Value->GetZoneType())
+							{
+								Floor->SetMaterial(FName("Unconstructable"));
+								continue;
+							}
+						}
+
+						// 설치할 수 있는 ZoneType 일때
+						// 프리뷰 프롭이 차지하는 공간
 						if (bShowSelected && PreviewPropGridPositions.Contains(Grid.Value.GetGridPosition()))
 						{
 							if (Grid.Value.Object == nullptr || Grid.Value.Object == LinkedProp)
@@ -516,6 +530,8 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 								Floor->SetMaterial(FName("SelectedUnconstructable"));
 							}
 						}
+
+						// 프리뷰 프롭이 차지하는 공간이 아님
 						else
 						{
 							if (Grid.Value.Object == nullptr || Grid.Value.Object == LinkedProp)

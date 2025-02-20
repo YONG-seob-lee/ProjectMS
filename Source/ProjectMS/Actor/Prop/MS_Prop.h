@@ -44,7 +44,10 @@ public:
 
 	class UMS_PropSpaceComponent* GetPropSpaceComponentByRelativeLocation(const FVector& aRelativeLocation) const;
 
-	virtual void GetAllGridPositions(TArray<FIntVector2>& aOutGridPositions) const;
+	void GetAllGridPositions(TArray<FIntVector2>& aOutGridPositions) const;
+
+	virtual EMS_ZoneType GetConstructableZoneType() const;
+
 	
 	// Zone Data :: Setter
 	virtual void SetZoneData(TWeakObjectPtr<class AMS_Zone> aOwnerZone);

@@ -6,6 +6,8 @@
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Table/RowBase/MS_StorageData.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "Zone/MS_Zone.h"
@@ -150,6 +152,19 @@ void AMS_Prop::GetAllGridPositions(TArray<FIntVector2>& aOutGridPositions) const
 			}
 		}
 	}
+}
+
+EMS_ZoneType AMS_Prop::GetConstructableZoneType() const
+{
+	if (PropType == EMS_PropType::Furniture)
+	{
+		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, TableIndex);
+		MS_ENSURE(FurnitureData != nullptr);
+
+		return static_cast<EMS_ZoneType>(FurnitureData->ZoneType);
+	}
+
+	return EMS_ZoneType::None;
 }
 
 void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)

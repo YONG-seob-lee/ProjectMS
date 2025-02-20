@@ -16,6 +16,7 @@
 #include "MathUtility/MS_MathUtility.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Table/RowBase/MS_StorageData.h"
+#include "Zone/MS_Zone.h"
 
 
 UMS_ModeState_Construct::UMS_ModeState_Construct()
@@ -627,7 +628,19 @@ bool UMS_ModeState_Construct::CheckGridDatas(const TArray<FMS_GridDataForPropSpa
 			{
 				continue;
 			}
-		
+
+			if (AMS_Zone* GridOwnerZone = Cast<AMS_Zone>(GridData->GetOwnerZone()))
+			{
+				if (GridOwnerZone->GetZoneType() == aTargetProp->GetConstructableZoneType())
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+			
 			if (GridData->Object != nullptr)
 			{
 				return false;
