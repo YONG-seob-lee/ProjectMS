@@ -18,6 +18,7 @@ enum class EMS_ZoneType : uint8
 	Display = 1,
 	Shelf = 2,
 	Pallet = 3,
+	Outside = 4,
 
 	Passage = 100,
 };

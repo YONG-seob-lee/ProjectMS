@@ -104,13 +104,13 @@ protected:
 
 private:
 	// Zone Data
-	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
+	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
 	int32 ZoneIndex;
 	
-	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
+	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
 	EMS_ZoneType ZoneType;
 
-	UPROPERTY(EditInstanceOnly, Category=MS_Zone)
+	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
 	TArray<int32> TestConditionZoneIds;
 	
 	UPROPERTY()

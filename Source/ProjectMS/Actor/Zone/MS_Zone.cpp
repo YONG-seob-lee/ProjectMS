@@ -96,7 +96,7 @@ void AMS_Zone::BeginPlay()
 		}
 	}
 	
-	if (ZoneType == EMS_ZoneType::Pallet)
+	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
 	{
 		SetZoneOpened(true);	// LevelScriptActor에서 확인해서 OnZoneOpened 호출
 	}

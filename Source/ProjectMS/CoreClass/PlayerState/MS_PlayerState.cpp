@@ -122,16 +122,16 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	OpenedZoneIds.AddUnique(10);
 
 	//Furniture
-	FMS_LevelFurnitureSaveData Counter = FMS_LevelFurnitureSaveData(1, FIntVector2(13, 15), EMS_Rotation::Rot270);
+	FMS_LevelFurnitureSaveData Counter = FMS_LevelFurnitureSaveData(1, FIntVector2(13, 13), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Counter.GridPosition, Counter);
 
-	FMS_LevelFurnitureSaveData RoomTemperature1 = FMS_LevelFurnitureSaveData(7, FIntVector2(7, 4), EMS_Rotation::Rot0);
+	FMS_LevelFurnitureSaveData RoomTemperature1 = FMS_LevelFurnitureSaveData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature1.GridPosition, RoomTemperature1);
 
-	FMS_LevelFurnitureSaveData RoomTemperature2 = FMS_LevelFurnitureSaveData(7, FIntVector2(9, 4), EMS_Rotation::Rot0);
+	FMS_LevelFurnitureSaveData RoomTemperature2 = FMS_LevelFurnitureSaveData(7, FIntVector2(9, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature2.GridPosition, RoomTemperature2);
 
-	FMS_LevelFurnitureSaveData VeggieStand = FMS_LevelFurnitureSaveData(8, FIntVector2(13, 4), EMS_Rotation::Rot0);
+	FMS_LevelFurnitureSaveData VeggieStand = FMS_LevelFurnitureSaveData(8, FIntVector2(13, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand.GridPosition, VeggieStand);
 
 	FMS_LevelFurnitureSaveData Rack = FMS_LevelFurnitureSaveData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);

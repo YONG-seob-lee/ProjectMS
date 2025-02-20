@@ -46,6 +46,6 @@ private:
 	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
 	int32 LinkedGateIndex;
 
-	UPROPERTY()
+	UPROPERTY(EditInstanceOnly, Category=MS_Gate)
 	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
 };
