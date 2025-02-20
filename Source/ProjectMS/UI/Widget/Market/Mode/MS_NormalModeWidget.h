@@ -33,7 +33,13 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ConstructButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_PlayButtonSwitcher;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_OpenButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_CloseButton;
 };
