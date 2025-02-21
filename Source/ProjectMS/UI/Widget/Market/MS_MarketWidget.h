@@ -26,8 +26,7 @@ public:
 	virtual void NativeDestruct() override;
 
 	virtual void OnChangeMode(EMS_ModeState aModeState, EMS_ControllerModeType aControllerModeType);
-
-	void StopRuntimeButton();
+	
 private:
 	void SetActiveModeSwitcherIndex(EMS_ModeState aModeState);
 

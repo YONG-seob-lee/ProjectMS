@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Widget/MS_Widget.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_TownWidget.generated.h"
 
-enum class EMS_ModeState : uint8;
-enum class EMS_ControllerModeType : uint8;
 
 namespace ModePanelAnimation
 {
@@ -25,7 +24,21 @@ class PROJECTMS_API UMS_TownWidget : public UMS_Widget
 public:
 	static FName GetWidgetName() { return TEXT("Town"); }
 
+	virtual void NativeOnInitialized() override;
+	
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	void OnUpdateGameDate(const FMS_GameDate& aGameDate);
+	
+private:
+	void OnClickedSleepButton();
+	
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UMS_TimeLineWidget> CPP_TimeLineWidget = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_SleepButton = nullptr;
 };

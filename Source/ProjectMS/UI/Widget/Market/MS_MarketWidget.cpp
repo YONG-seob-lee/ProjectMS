@@ -32,14 +32,6 @@ void UMS_MarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerMode
 	SetActiveModeSwitcherIndex(aModeState);
 }
 
-void UMS_MarketWidget::StopRuntimeButton()
-{
-	if(CPP_TimeLineWidget)
-	{
-		CPP_TimeLineWidget->StopRuntimeButton();
-	}
-}
-
 void UMS_MarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
 {
 	if (ModeStateToWidgetSwitcherId.Contains(aModeState))

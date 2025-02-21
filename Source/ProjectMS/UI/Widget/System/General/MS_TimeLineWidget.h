@@ -26,17 +26,10 @@ public:
 	void UpdateGameDate(const FMS_GameDate& aGameDate);
 
 	void UpdateTimer(int32 aMinute) const;
-
-	void StartRunTimeButtonAnim();
-	void StopRunTimeButtonAnim();
-
-	void StopRuntimeButton();
 	
 private:
 	void FlickerDot(bool bFlicker);
 	void InVisibilityDot() const;
-	
-	void OnClickedRunTimeButton();
 
 private:
 	FTimerHandle DotFlickerHandle;
@@ -53,7 +46,4 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_Dot = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_RunTimeButton = nullptr;
 };

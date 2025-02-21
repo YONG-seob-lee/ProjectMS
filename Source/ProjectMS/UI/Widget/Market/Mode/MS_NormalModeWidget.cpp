@@ -33,11 +33,11 @@ void UMS_NormalModeWidget::NativeOnInitialized()
 
 	if(CPP_OpenButton)
 	{
-		CPP_OpenButton->GetOnClickedDelegate().AddUObject(this, &UMS_NormalModeWidget::OnClickedOpenMarket);
+		CPP_OpenButton->GetOnClickedDelegate().AddUObject(this, &UMS_NormalModeWidget::OnClickedOpenMarketButton);
 	}
 	if(CPP_CloseButton)
 	{
-		CPP_CloseButton->GetOnClickedDelegate().AddUObject(this, &UMS_NormalModeWidget::OnClickedCloseMarket);
+		CPP_CloseButton->GetOnClickedDelegate().AddUObject(this, &UMS_NormalModeWidget::OnClickedCloseMarketButton);
 	}
 }
 
@@ -79,14 +79,14 @@ void UMS_NormalModeWidget::OnClickedConstructButton()
 	gModeMng.ChangeState(EMS_ModeState::Construct);
 }
 
-void UMS_NormalModeWidget::OnClickedOpenMarket()
+void UMS_NormalModeWidget::OnClickedOpenMarketButton()
 {
 	FMS_ModalParameter ModalParameter;
 	ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketStartModal::GetWidgetPath());
 	gWidgetMng.ShowModalWidget(ModalParameter);
 }
 
-void UMS_NormalModeWidget::OnClickedCloseMarket()
+void UMS_NormalModeWidget::OnClickedCloseMarketButton()
 {
 	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
 	if (FMS_GameDate::IsNight(GameDate.DailyTimeZone))

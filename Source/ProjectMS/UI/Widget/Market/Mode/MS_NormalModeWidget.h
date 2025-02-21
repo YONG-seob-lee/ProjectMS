@@ -28,8 +28,8 @@ public:
 private:
 	void OnClickedTownButton();
 	void OnClickedConstructButton();
-	void OnClickedOpenMarket();
-	void OnClickedCloseMarket();
+	void OnClickedOpenMarketButton();
+	void OnClickedCloseMarketButton();
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_TownButton;
