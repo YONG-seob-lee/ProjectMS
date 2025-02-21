@@ -24,6 +24,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 RequiredSalaryMin = 0;
 	UPROPERTY(EditAnywhere)
+	int32 SlotCount = 0;
+	UPROPERTY(EditAnywhere)
 	int32 PortraitPath = 0;
 	UPROPERTY(EditAnywhere)
 	int32 PathFile = 0;

@@ -16,6 +16,12 @@ void UMS_StaffAIUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, 
 
 	StaffTableData = gTableMng.GetTableRowData<FMS_Staff>(EMS_TableDataType::Staff, aTableId);
 	MS_ENSURE(StaffTableData != nullptr);
+
+	int32 SlotCount = StaffTableData->SlotCount;
+	for (int32 i = 0; i < SlotCount; ++i)
+	{
+		SlotDatas.Emplace(FMS_SlotData());
+	}
 }
 
 void UMS_StaffAIUnit::Finalize()

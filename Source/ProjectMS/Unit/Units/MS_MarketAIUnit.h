@@ -55,6 +55,7 @@ private:
 	EMS_Direction CacheDirection = EMS_Direction::None; 
 	EMS_Direction CacheNextDirection = EMS_Direction::None;
 
+protected:
 	// Slot
 	UPROPERTY()
 	TArray<FMS_SlotData> SlotDatas;
