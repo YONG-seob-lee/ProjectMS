@@ -71,7 +71,7 @@ public:
 	void AddFurnitureData(FMS_FurniturePositionData aFurnitureData);
 	void RemoveFurnitureData(FIntVector2 aGridPosition);
 
-	void InitializeFurnitureDatas();
+	void InitializePlayerDatas();
 	void SaveFurniturePosition() const;
 	
 	// Staff

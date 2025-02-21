@@ -33,6 +33,11 @@ public:
 	void OrderItem(TMap<int32, int32>& aOrderItems);
 	void OrganizeItems();
 
+	FORCEINLINE void GetAllItems(TMap<int32, int32>& aItems) const
+	{
+		aItems = Items;
+	}
+	
 	// Furniture
 	void OrderFurniture(const TMap<int32, int32>& aOrderFurnitures);
 	void OrganizeFurniture();

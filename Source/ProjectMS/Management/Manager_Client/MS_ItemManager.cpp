@@ -75,7 +75,7 @@ void UMS_ItemManager::BeginPlay()
 	Super::BeginPlay();
 
 	// Furniture
-	InitializeFurnitureDatas();
+	InitializePlayerDatas();
 }
 
 void UMS_ItemManager::Tick(float aDeltaTime)
@@ -343,7 +343,7 @@ void UMS_ItemManager::RemoveFurnitureData(FIntVector2 aGridPosition)
 	GridPositionToMarketFurnitureDatas.Remove(aGridPosition);
 }
 
-void UMS_ItemManager::InitializeFurnitureDatas()
+void UMS_ItemManager::InitializePlayerDatas()
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	MS_CHECK(World);
@@ -355,6 +355,8 @@ void UMS_ItemManager::InitializeFurnitureDatas()
 	MS_CHECK(PlayerState);
 
 	PlayerState->GetAllFurnitureDatas(GridPositionToMarketFurnitureDatas);
+	
+	PlayerState->GetAllItems(Items);
 }
 
 void UMS_ItemManager::SaveFurniturePosition() const
