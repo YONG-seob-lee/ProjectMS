@@ -56,7 +56,8 @@ public:
 	
 	void LocateCamera(const FVector& aLocation) const;
 	void RotateCamera(const FRotator& aRotation) const;
-	
+
+	void ReplaceCamera(EMS_LevelType LevelType);
 	void SetQuarterViewTilt(EMS_TiltType aTiltType);
 
 	UFUNCTION() void DollyIn(const FInputActionValue& aValue);

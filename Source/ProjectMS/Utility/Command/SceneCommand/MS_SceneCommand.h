@@ -89,6 +89,7 @@ public:
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 	
 	void CheckTownLevelType(EMS_LevelType& aLevelType, const UWorld* aWorld = nullptr);
+	void ReplaceCamera(EMS_LevelType aType);
 	
 	FMS_FadeEventDelegate OnFadeEventDelegate;
 	TFunction<void()> OnFadeInFinishedCallback;

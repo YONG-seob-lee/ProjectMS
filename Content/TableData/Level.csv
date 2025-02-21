@@ -2,9 +2,9 @@ Id,LevelName,LevelKey,PrimitiveWidgetName
 1,PersistentLevel,1,Persistent
 2,AccountLevel,2,Logo
 3,stage01,3,Lobby
-4,stage01,4,Town
-5,stage02,5,Town
-6,stage03,6,Town
+4,stage01,4,Lobby
+5,stage02,5,Lobby
+6,stage03,6,Lobby
 7,MarketLevel,7,Market
 8,PracticeLevel_01,1000,Practice_01
 9,PracticeLevel_02,1001,Practice_02

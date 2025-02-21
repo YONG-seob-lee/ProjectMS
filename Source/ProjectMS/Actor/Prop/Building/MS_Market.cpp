@@ -65,9 +65,6 @@ void AMS_Market::LaunchEvent()
 {
 	Super::LaunchEvent();
 	
-	gCameraMng.LocateCamera(FVector(370.f, 440.f, 0.f), EMS_ViewCameraType::QuarterView);
-	gCameraMng.LocateCamera(FVector::ZeroVector, EMS_ViewCameraType::SideView);
-	
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::MarketLevel);
 	// TODO : All : 언로드해야할 스테이지를 판별해야함.

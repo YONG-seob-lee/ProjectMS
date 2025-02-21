@@ -4,6 +4,7 @@
 #include "MS_SceneCommand.h"
 
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "PlayerState/MS_PlayerState.h"
 
 void UMS_SceneCommand::SetLevelType(EMS_LevelType aType, const UWorld* aWorld /* = nullptr */)
@@ -11,7 +12,10 @@ void UMS_SceneCommand::SetLevelType(EMS_LevelType aType, const UWorld* aWorld /*
 	if(aType == EMS_LevelType::LobbyLevel)
 	{
 		CheckTownLevelType(LevelType, aWorld);
+		return;
 	}
+
+	ReplaceCamera(aType);
 	LevelType = aType;
 }
 
@@ -20,6 +24,7 @@ void UMS_SceneCommand::SetPreviousLevelType(EMS_LevelType aType, const UWorld* a
 	if(aType == EMS_LevelType::LobbyLevel)
 	{
 		CheckTownLevelType(PreviousLevelType, aWorld);
+		return;
 	}
 	PreviousLevelType = aType;
 }
@@ -66,4 +71,9 @@ void UMS_SceneCommand::CheckTownLevelType(EMS_LevelType& aLevelType, const UWorl
 			aLevelType = EMS_LevelType::Stage03;
 		}
 	}
+}
+
+void UMS_SceneCommand::ReplaceCamera(EMS_LevelType aType)
+{
+	gCameraMng.ReplaceCamera(aType);
 }
