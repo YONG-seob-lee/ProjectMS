@@ -37,6 +37,11 @@ public:
 	void OrderFurniture(const TMap<int32, int32>& aOrderFurnitures);
 	void OrganizeFurniture();
 
+	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas) const
+	{
+		aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
+	}
+	
 	void SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData);
 	void SaveFurniturePositionDatas(TMap<FIntVector2, FMS_FurniturePositionData> aGridPositionToMarketFurnitureDatas);
 	

@@ -179,4 +179,9 @@ void UMS_ManagementClient::BeginPlay()
 	{
 		ScheduleManager->BeginPlay();
 	}
+
+	if(ItemManager)
+	{
+		ItemManager->BeginPlay();
+	}
 }

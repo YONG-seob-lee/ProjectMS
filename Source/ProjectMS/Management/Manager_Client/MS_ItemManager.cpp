@@ -33,7 +33,7 @@ void UMS_ItemManager::BuiltInInitialize()
 void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
-
+	
 	// 해당 데이터는 원래라면 서버에서 받아야 함
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
@@ -68,6 +68,14 @@ void UMS_ItemManager::Finalize()
 void UMS_ItemManager::BuiltInFinalize()
 {
 	Super::BuiltInFinalize();
+}
+
+void UMS_ItemManager::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Furniture
+	InitializeFurnitureDatas();
 }
 
 void UMS_ItemManager::Tick(float aDeltaTime)
@@ -333,6 +341,20 @@ void UMS_ItemManager::RemoveFurnitureData(FIntVector2 aGridPosition)
 	}
 	
 	GridPositionToMarketFurnitureDatas.Remove(aGridPosition);
+}
+
+void UMS_ItemManager::InitializeFurnitureDatas()
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	PlayerState->GetAllFurnitureDatas(GridPositionToMarketFurnitureDatas);
 }
 
 void UMS_ItemManager::SaveFurniturePosition() const
