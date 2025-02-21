@@ -95,27 +95,13 @@ TObjectPtr<AMS_VehicleSplineActor> AMS_VehicleCharacter::FindNearestSpline() con
 	TArray<TObjectPtr<UMS_UnitBase>> VehicleSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::CarSpline, VehicleSplineUnits);
 
-	float DistanceMin = 0.f;
-	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
-	
-	for(const auto& SplineUnit : VehicleSplineUnits)
-	{
-		if(const TObjectPtr<UMS_ActorUnitBase> SplineActorUnit = Cast<UMS_ActorUnitBase>(SplineUnit))
-		{
-			const float Distance = FVector::Distance(GetActorLocation(), SplineActorUnit->GetUnitPosition());
-			if(DistanceMin == 0.f || DistanceMin > Distance)
-			{
-				DistanceMin = Distance;
-				NearestSplineUnit = SplineActorUnit;
-			}
-		}
-	}
-
-	if(!NearestSplineUnit)
+	const int32 TargetSpline = FMath::RandRange(0, VehicleSplineUnits.Num() - 1);
+	if(VehicleSplineUnits.IsValidIndex(TargetSpline) == false)
 	{
 		return nullptr;
 	}
 
-	TObjectPtr<AMS_VehicleSplineActor> VehicleSplineActor = Cast<AMS_VehicleSplineActor>(NearestSplineUnit->GetActor());
+	const TObjectPtr<UMS_ActorUnitBase> VehicleUnit = Cast<UMS_ActorUnitBase>(VehicleSplineUnits[TargetSpline]);
+	TObjectPtr<AMS_VehicleSplineActor> VehicleSplineActor = Cast<AMS_VehicleSplineActor>(VehicleUnit->GetActor());
 	return VehicleSplineActor;
 }

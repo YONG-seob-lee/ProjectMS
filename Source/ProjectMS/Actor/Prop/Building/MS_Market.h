@@ -31,10 +31,11 @@ private:
 
 	bool CheckTutorialFinished();
 	void PlayTutorial() const;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Market", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMS_InteractionComponent> InteractionComponent = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Market", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
+
 };

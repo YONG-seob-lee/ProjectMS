@@ -297,7 +297,7 @@ void AMS_PlayerCameraManager::ReplaceCamera(EMS_LevelType LevelType) const
 		}
 	case EMS_LevelType::Stage02:
 		{
-			gCameraMng.LocateCamera(FVector(8060.f, -2100.f, 3200.f), EMS_ViewCameraType::QuarterView);
+			gCameraMng.LocateCamera(FVector(9270.f, -5010.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(8770.f, -3720.f, 390.f), EMS_ViewCameraType::SideView);
 			break;
 		}
