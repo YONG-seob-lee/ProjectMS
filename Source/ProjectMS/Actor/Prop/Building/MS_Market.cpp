@@ -73,10 +73,6 @@ void AMS_Market::LaunchEvent()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-	// Command->OnFadeInFinishedCallback = []()
-	// {
-	// 	gSequenceMng.PlaySequence(EMS_SequenceType::Entrance);
-	// };
 
 	gSceneMng.RequestChangeScene(Command);
 }

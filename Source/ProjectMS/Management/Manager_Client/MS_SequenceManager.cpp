@@ -7,6 +7,7 @@
 #include "LevelSequencePlayer.h"
 #include "MS_Define.h"
 #include "MS_PlayerCameraManager.h"
+#include "MS_SceneManager.h"
 #include "MS_WidgetManager.h"
 #include "Camera/ViewCamera/MS_ViewCamera.h"
 
@@ -144,9 +145,37 @@ TObjectPtr<ULevelSequence> UMS_SequenceManager::LoadSequence(EMS_SequenceType Se
 	case EMS_SequenceType::Entrance:
 		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::Entrance));
 	case EMS_SequenceType::OpenDoorTown:
-		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Town));
+		{
+			const EMS_LevelType TownType = gSceneMng.GetCurrentLevelType();
+			if(TownType == EMS_LevelType::Stage01)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Town1));	
+			}
+			if(TownType == EMS_LevelType::Stage02)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Town2));
+			}
+			if(TownType == EMS_LevelType::Stage03)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Town3));
+			}
+		}
 	case EMS_SequenceType::CloseDoorTown:
-		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Town));
+		{
+			const EMS_LevelType TownType = gSceneMng.GetCurrentLevelType();
+			if(TownType == EMS_LevelType::Stage01)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Town1));	
+			}
+			if(TownType == EMS_LevelType::Stage02)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Town2));
+			}
+			if(TownType == EMS_LevelType::Stage03)
+			{
+				return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::CloseDoor_Town3));
+			}
+		}
 	case EMS_SequenceType::OpenDoorMarket:
 		return Cast<ULevelSequence>(StaticLoadObject(ULevelSequence::StaticClass(), nullptr, *SequencePath::OpenDoor_Market));
 	case EMS_SequenceType::CloseDoorMarket:

@@ -22,8 +22,12 @@ enum class EMS_SequenceType
 namespace SequencePath
 {
 	// Town
-	const FString OpenDoor_Town = TEXT("/Game/Blueprints/Sequence/Town/DoorOpenSequence");
-	const FString CloseDoor_Town = TEXT("/Game/Blueprints/Sequence/Town/DoorCloseSequence");
+	const FString OpenDoor_Town1 = TEXT("/Game/Blueprints/Sequence/Town/DoorOpenSequence_Stage01");
+	const FString OpenDoor_Town2 = TEXT("/Game/Blueprints/Sequence/Town/DoorOpenSequence_Stage02");
+	const FString OpenDoor_Town3 = TEXT("/Game/Blueprints/Sequence/Town/DoorOpenSequence_Stage03");
+	const FString CloseDoor_Town1 = TEXT("/Game/Blueprints/Sequence/Town/DoorCloseSequence_Stage01");
+	const FString CloseDoor_Town2 = TEXT("/Game/Blueprints/Sequence/Town/DoorCloseSequence_Stage02");
+	const FString CloseDoor_Town3 = TEXT("/Game/Blueprints/Sequence/Town/DoorCloseSequence_Stage03");
 	
 	// Market
 	const FString Truck = TEXT("/Game/Blueprints/Sequence/Market/InToTruckSequence");
