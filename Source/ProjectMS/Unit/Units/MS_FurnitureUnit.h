@@ -38,8 +38,8 @@ public:
 	// Property :: Setter
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 
-	void AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData = false);
-	void SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData = false);
+	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
+	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
 
 	UFUNCTION()
 	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);

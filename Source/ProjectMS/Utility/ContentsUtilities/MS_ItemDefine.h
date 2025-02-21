@@ -73,3 +73,15 @@ public:
 	UPROPERTY()
 	int32 CurrentItemCount;
 };
+
+namespace EquipmentName
+{
+	const FName BigBox = TEXT("BIGBOX");
+	const FName SmallBox = TEXT("SMALLBOX");
+}
+
+namespace CommonItemTableKeyName
+{
+	const FString BIGBOX_COUNT = TEXT("BIGBOX_COUNT");
+	const FString SMALLBOX_COUNT = TEXT("SMALLBOX_COUNT");
+}

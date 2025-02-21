@@ -130,3 +130,69 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	MS_ENSURE(aReachedLocation == PathLocationXY);
 	CachePath.RemoveAt(0);
 }
+
+bool UMS_MarketAIUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount)
+{
+	if (!SlotDatas.IsValidIndex(aSlotId))
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+	
+	if (SlotDatas[aSlotId].CurrentItemTableId != aItemId)
+	{
+		if (SlotDatas[aSlotId].CurrentItemCount == 0)
+		{
+			SlotDatas[aSlotId].CurrentItemTableId = aItemId;
+		}
+		else
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+	}
+	
+	SlotDatas[aSlotId].CurrentItemCount += aCount;
+	
+	OnChangeCurrentSlotDatas();
+	return true;
+}
+
+bool UMS_MarketAIUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount)
+{
+	if (!SlotDatas.IsValidIndex(aSlotId))
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+
+	if (SlotDatas[aSlotId].CurrentItemTableId != aItemId)
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+
+	if (SlotDatas[aSlotId].CurrentItemCount < aCount)
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+		
+	SlotDatas[aSlotId].CurrentItemCount -= aCount;
+
+	if (SlotDatas[aSlotId].CurrentItemCount == 0)
+	{
+		SlotDatas[aSlotId].CurrentItemTableId = INDEX_NONE;
+	}
+	
+	OnChangeCurrentSlotDatas();
+	return true;
+}
+
+void UMS_MarketAIUnit::OnChangeCurrentSlotDatas()
+{
+	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
+	MS_ENSURE (IsValid(MarketAICharacter));
+	
+	MarketAICharacter->OnChangeCurrentSlotDatas(SlotDatas);
+}

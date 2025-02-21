@@ -28,17 +28,34 @@ public:
 	const TArray<FIntVector2>& GetPath() const { return CachePath; }
 	void SetPath(const TArray<FIntVector2>& aCachePath) { CachePath = aCachePath; }
 
+	// Location
 	bool IsGridSizeXOdd() const { return false; }
 	bool IsGridSizeYOdd() const { return false; }
 	
 	EBTNodeResult::Type UpdateActorLocationByPath();
 	void OnReachPathLocation(const FVector2D& aReachedLocation);
 
+	// Slot
+	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+
+	FORCEINLINE virtual int32 GetSlotCount() const { return 0; }
+	
+	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
+	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
 	
 private:
+	void OnChangeCurrentSlotDatas();
+
+	
+private:
+	// Location
 	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
 	TArray<FIntVector2> CachePath = {};
 
 	EMS_Direction CacheDirection = EMS_Direction::None; 
-	EMS_Direction CacheNextDirection = EMS_Direction::None; 
+	EMS_Direction CacheNextDirection = EMS_Direction::None;
+
+	// Slot
+	UPROPERTY()
+	TArray<FMS_SlotData> SlotDatas;
 };

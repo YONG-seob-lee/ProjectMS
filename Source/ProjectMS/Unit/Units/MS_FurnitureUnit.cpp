@@ -102,11 +102,28 @@ void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, boo
 	}
 }
 
-void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData /*= false*/)
+bool UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
-		MS_ENSURE(SlotDatas.IsValidIndex(aSlotId));
+		if (!SlotDatas.IsValidIndex(aSlotId))
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+		
+		if (SlotDatas[aSlotId].CurrentItemTableId != aItemId)
+		{
+			if (SlotDatas[aSlotId].CurrentItemCount == 0)
+			{
+				SlotDatas[aSlotId].CurrentItemTableId = aItemId;
+			}
+			else
+			{
+				MS_ENSURE(false);
+				return false;
+			}
+		}
 	
 		SlotDatas[aSlotId].CurrentItemCount += aCount;
 
@@ -118,16 +135,40 @@ void UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aCount, bool bS
 
 		OnChangeRequestSlotDatas();
 		OnChangeCurrentSlotDatas();
+		return true;
 	}
+
+	return false;
 }
 
-void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bool bSavePlayerData /*= false*/)
+bool UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
-		MS_ENSURE(SlotDatas.IsValidIndex(aSlotId));
-	
+		if (!SlotDatas.IsValidIndex(aSlotId))
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+
+		if (SlotDatas[aSlotId].CurrentItemTableId != aItemId)
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+
+		if (SlotDatas[aSlotId].CurrentItemCount < aCount)
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+		
 		SlotDatas[aSlotId].CurrentItemCount -= aCount;
+
+		if (SlotDatas[aSlotId].CurrentItemCount == 0)
+		{
+			SlotDatas[aSlotId].CurrentItemTableId = INDEX_NONE;
+		}
 
 		if (bSavePlayerData)
 		{
@@ -137,7 +178,10 @@ void UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aCount, bo
 		
 		OnChangeRequestSlotDatas();
 		OnChangeCurrentSlotDatas();
+		return true;
 	}
+
+	return false;
 }
 
 void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData)

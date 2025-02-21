@@ -7,6 +7,9 @@
 #include "Component/Actor/Character/MS_MovingBoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "Actor/Equipment/MS_Equipment.h"
+#include "ContentsUtilities/MS_AIDefine.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 
 AMS_MarketAICharacter::AMS_MarketAICharacter()
@@ -80,6 +83,9 @@ void AMS_MarketAICharacter::PostInitializeComponents()
 
 		SetActorLocation(FVector(Location.X, Location.Y, LocationZ));
 	}
+
+	// Equipment
+	SpawnAllEquipment();	// 비용 절감을 미리 스폰
 }
 
 void AMS_MarketAICharacter::BeginPlay()
@@ -250,5 +256,88 @@ void AMS_MarketAICharacter::UpdateRotation(float aDeltaTime)
 		}
 			
 		SetActorRotation(FRotator(0.f, NewRotatorYaw, 0.f));
+	}
+}
+
+void AMS_MarketAICharacter::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+{
+}
+
+void AMS_MarketAICharacter::SpawnAllEquipment()
+{
+	for (auto& EquipmentClass : EquipmentClasses)
+	{
+		AMS_Equipment* SpawnEquipment = GetWorld()->SpawnActor<AMS_Equipment>(EquipmentClass.Value);
+		
+		const USkeletalMeshSocket* EquipmentSocket = GetMesh()->GetSocketByName(SocketName::Equipment);
+
+		if (SpawnEquipment)
+		{
+			if (EquipmentSocket)
+			{
+				EquipmentSocket->AttachActor(SpawnEquipment, GetMesh());
+			}
+			else
+			{
+				MS_ENSURE(false);
+			}
+
+			SpawnEquipment->Unequip();
+			Equipments.Emplace(EquipmentClass.Key, SpawnEquipment);
+		}
+		else
+		{
+			MS_ENSURE(false);
+		}
+	}
+}
+
+void AMS_MarketAICharacter::Equip(const FName& aEquipmentName)
+{
+	if (!Equipments.Contains(aEquipmentName))
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	for (auto& Equipment : Equipments)
+	{
+		if (!IsValid(Equipment.Value))
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		
+		if (Equipment.Key == aEquipmentName)
+		{
+			if (!Equipment.Value->IsEquipped())
+			{
+				Equipment.Value->Equip();
+			}
+		}
+		else
+		{
+			if (Equipment.Value->IsEquipped())
+			{
+				Equipment.Value->Unequip();
+			}
+		}
+	}
+}
+
+void AMS_MarketAICharacter::Unequip()
+{
+	for (auto& Equipment : Equipments)
+	{
+		if (!IsValid(Equipment.Value))
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		
+		if (Equipment.Value->IsEquipped())
+		{
+			Equipment.Value->Unequip();
+		}
 	}
 }

@@ -20,4 +20,8 @@ public:
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
+	
+
+	// Slot Datas
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
 };

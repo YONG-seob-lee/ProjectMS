@@ -88,3 +88,8 @@ namespace StaffBoardKeyName
 {
 	const FName SelectedStaffAction = TEXT("SelectedStaffAction");
 }
+
+namespace SocketName
+{
+	const FName Equipment = TEXT("Equipment");
+}

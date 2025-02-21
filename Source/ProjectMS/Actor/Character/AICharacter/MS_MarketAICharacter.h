@@ -35,6 +35,17 @@ private:
 	void UpdateLocation(float aDeltaTime);
 	void UpdateRotation(float aDeltaTime);
 
+
+public:
+	// Slot Datas
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+
+	// Equipment
+	void SpawnAllEquipment();
+	
+	void Equip(const FName& aEquipmentName);
+	void Unequip();
+
 	
 protected:
 	// Component
@@ -61,6 +72,14 @@ protected:
 	UPROPERTY()
 	bool bStopInPathLocation;
 
+	// Equipment
+	UPROPERTY(EditAnywhere)
+	TMap<FName, TSubclassOf<class AMS_Equipment>> EquipmentClasses;
+
+	UPROPERTY()
+	TMap<FName, TObjectPtr<class AMS_Equipment>> Equipments;
+	
 public:
+	// Walking Progress
 	FMS_OnReachPathLocationDelegate OnReachPathLocationDelegate;
 };

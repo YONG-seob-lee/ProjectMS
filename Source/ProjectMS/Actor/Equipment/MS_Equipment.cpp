@@ -11,11 +11,27 @@ AMS_Equipment::AMS_Equipment(const FObjectInitializer& aObjectInitializer) : Sup
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
 	if(MeshComponent)
 	{
-		MeshComponent->SetupAttachment(GetRootComponent());
+		MeshComponent->SetupAttachment(SceneRootComponent);
 	}
 }
 
 void AMS_Equipment::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AMS_Equipment::Equip()
+{
+	bIsEquipped = true;
+	
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(true);
+}
+
+void AMS_Equipment::Unequip()
+{
+	bIsEquipped = false;
+	
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(false);
 }
