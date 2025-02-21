@@ -3,20 +3,13 @@
 
 #include "MS_ModeState_RunMarket.h"
 
-#include "MS_ConstructibleLevelScriptActorBase.h"
-#include "MS_Define.h"
-#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
-#include "Controller/MS_PlayerController.h"
-#include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
-#include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
-#include "Manager_Client/MS_ModeManager.h"
-#include "Manager_Client/MS_SceneManager.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
-#include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
-#include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
-#include "PlayerState/MS_PlayerState.h"
-#include "Units/MS_GateUnit.h"
+#include "Manager_Client/MS_WidgetManager.h"
+#include "Prop/MS_Prop.h"
+#include "Widget/Market/Modal/MS_MarketEndModal.h"
 
 
 UMS_ModeState_RunMarket::UMS_ModeState_RunMarket()
@@ -27,268 +20,228 @@ void UMS_ModeState_RunMarket::Initialize(uint8 aIndex, const FName& aName)
 {
 	Super::Initialize(aIndex, aName);
 
-	ScheduleEvent.Empty();
-
-	IssueTicketContainer = MS_NewObject<UMS_IssueTicketContainer>(this);
-	if (IsValid(IssueTicketContainer))
-	{
-		IssueTicketContainer->Initialize();
-	}
-	
-	StaffSupervisor = MS_NewObject<UMS_StaffSupervisor>(this);
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->Initialize();
-		StaffSupervisor->SetIssueTicketContainer(IssueTicketContainer);
-	}
-	
-	CustomerSupervisor = MS_NewObject<UMS_CustomerSupervisor>(this);
-	if (IsValid(CustomerSupervisor))
-	{
-		CustomerSupervisor->Initialize();
-	}
-
-	GridBFS_2x2 = MS_NewObject<UMS_GridBFS_2x2>(this);
+	ScheduleEvent.Emplace(00, static_cast<int32>(EMS_MarketScheduleEvent::Prepare));
+	ScheduleEvent.Emplace(20, static_cast<int32>(EMS_MarketScheduleEvent::TruckIn));
+	ScheduleEvent.Emplace(40, static_cast<int32>(EMS_MarketScheduleEvent::LoadingUnloading));
+	ScheduleEvent.Emplace(160, static_cast<int32>(EMS_MarketScheduleEvent::OpenMarket));
+	ScheduleEvent.Emplace(790, static_cast<int32>(EMS_MarketScheduleEvent::Deadline));
+	ScheduleEvent.Emplace(ScheduleDefault::GamePlayMinute, static_cast<int32>(EMS_MarketScheduleEvent::CloseMarket));
 }
 
 void UMS_ModeState_RunMarket::Finalize()
 {
-	if (IsValid(CustomerSupervisor))
-	{
-		CustomerSupervisor->Finalize();
-		MS_DeleteObject(CustomerSupervisor);
-	}
-
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->Finalize();
-		MS_DeleteObject(StaffSupervisor);
-	}
-
-	if (IsValid(IssueTicketContainer))
-	{
-		IssueTicketContainer->Finalize();
-		MS_DeleteObject(IssueTicketContainer);
-	}
-	
 	Super::Finalize();
 }
 
 void UMS_ModeState_RunMarket::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
-
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->Tick(aDeltaTime);
-	}
-	
-	if (IsValid(CustomerSupervisor))
-	{
-		CustomerSupervisor->Tick(aDeltaTime);
-	}
 }
 
 void UMS_ModeState_RunMarket::Begin()
 {
 	Super::Begin();
 
-	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::DayTimeWork);
-	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_ModeState_RunMarket::UpdateMinute);
-	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_ModeState_RunMarket::UpdateScheduleEvent);
-	gScheduleMng.OnEndSchedule.AddUObject(this, &UMS_ModeState_RunMarket::EndSchedule);
+	// Select
+	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_RunMarket::OnSelectActor);
+	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_RunMarket::OnUnselectActor);
 	
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->Begin();
-	}
+	TWeakObjectPtr<AActor> SelectedActor =  gInteractionMng.GetSelectedActor();
 	
-	if (IsValid(CustomerSupervisor))
+	if (SelectedActor != nullptr)
 	{
-		CustomerSupervisor->Begin();
-	}
-
-	if (IsValid(GridBFS_2x2))
-	{
-		GridBFS_2x2->CollectAllZoneTypeMovingPoints();
+		UnselectActor();
 	}
 }
 
 void UMS_ModeState_RunMarket::Exit()
 {
-	if (IsValid(CustomerSupervisor))
+	TWeakObjectPtr<AActor> SelectedActor =  gInteractionMng.GetSelectedActor();
+	
+	if (SelectedActor != nullptr)
 	{
-		CustomerSupervisor->Finalize();
+		UnselectActor();
 	}
-
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->Finalize();
-	}
-
+	
+	// Delegate
+	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_RunMarket::OnUnselectActor);
+	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_RunMarket::OnSelectActor);
+	
 	Super::Exit();
 }
 
-void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)
+{
+	Super::UpdateMinute(aCurrentMinute);
+}
+
+void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
+{
+	Super::UpdateScheduleEvent(aScheduleEvent);
+
+	EMS_MarketScheduleEvent MarketNormalScheduleEvent = static_cast<EMS_MarketScheduleEvent>(aScheduleEvent);
+	
+	switch(MarketNormalScheduleEvent)
+	{
+	case EMS_MarketScheduleEvent::Prepare:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("준비 단계! 출근 시간은 7:00까지 입니다."));
+			break;
+		}
+	case EMS_MarketScheduleEvent::LoadingUnloading:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("상하차가 시작되었습니다!"));
+			break;
+		}
+	case EMS_MarketScheduleEvent::OpenMarket:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("매장 오픈~!! 달려보자고!"));
+			break;
+		}
+	case EMS_MarketScheduleEvent::Deadline:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("곧 마켓 영업이 끝납니다. 계산하고 나가주세요~!"));
+			break;
+		}
+	case EMS_MarketScheduleEvent::CloseMarket:
+		{
+			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
+			FMS_ModalParameter ModalParameter;
+			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());
+			gWidgetMng.ShowModalWidget(ModalParameter);
+			break;
+		}
+	default:
+		{
+			break;
+		}
+	}
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+	
+	if(gSequenceMng.IsPlayingSequence())
+	{
+		gSequenceMng.StopSequence();
+	}
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
+	const FVector2D& aPositionDeltaTrend)
+{
+	Super::OnInputPointerMove(aPosition, aPositionDelta, aPositionDeltaTrend);
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta,
+	const FVector2D& aPositionDeltaTrend)
+{
+	Super::OnInputPointerGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
+}
+
+void UMS_ModeState_RunMarket::OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta,
+	const FVector2D& aPositionDeltaTrend)
+{
+	Super::OnMouseRightButtonGlide(aPosition, aPositionDelta, aPositionDeltaTrend);
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition,
+	const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition,
+	const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerLongTouch(aElapsedTime, aPosition, aInteractableHitResult);
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerClick(const FVector2D& aPosition,
+	const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerClick(aPosition, aInteractableHitResult);
+
+	AActor* InteractableActor = aInteractableHitResult.GetActor();
+	
+	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
+	{
+		SelectActor(InteractableActor);
+	}
+}
+
+void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition,
+	const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
 
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
-		if(const TObjectPtr<AMS_StaffAICharacter> StaffDuck = Cast<AMS_StaffAICharacter>(InteractActor))
+		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
-			StaffDuck->ShowStaffStatusWidget(aPosition);
+			SelectActor(InteractActor);
+			
+			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
 }
 
-void UMS_ModeState_RunMarket::EndSchedule()
+void UMS_ModeState_RunMarket::OnPinchAction(float aPinchValue)
 {
-	// ToDo : Save Daily Data
-	
-	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
-	gModeMng.ChangeState(EMS_ModeState::Normal);
+	Super::OnPinchAction(aPinchValue);
 }
 
-void UMS_ModeState_RunMarket::UpdateMinute(int32 aCurrentMinute)
+void UMS_ModeState_RunMarket::SelectActor(AActor* aSelectedActor)
 {
-	if (IsValid(StaffSupervisor))
+	if (!IsValid(aSelectedActor))
 	{
-		StaffSupervisor->UpdateMinute(aCurrentMinute);
+		return;
 	}
 	
-	if (IsValid(CustomerSupervisor))
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		CustomerSupervisor->UpdateMinute(aCurrentMinute);
-	}
-}
-
-void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
-{
-	if (IsValid(StaffSupervisor))
-	{
-		StaffSupervisor->UpdateScheduleEvent(aScheduleEvent);
-	}
-	
-	if (IsValid(CustomerSupervisor))
-	{
-		CustomerSupervisor->UpdateScheduleEvent(aScheduleEvent);
-	}
-
-	if(static_cast<EMS_MarketScheduleEvent>(aScheduleEvent) == EMS_MarketScheduleEvent::TruckIn)
-	{
-		gScheduleMng.PauseSchedule();
-		
-		FMS_SequencePlayParameter Parameter;
-		Parameter.OnFinishedSequenceCallback = [this]()
+		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
 		{
-			gScheduleMng.ResumeSchedule(38);
-			const UWorld* World = GetWorld();
-			if (!IsValid(World))
-			{
-				return;
-			}
-
-			const AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-			if (!IsValid(PlayerController))
-			{
-				return;
-			}
-	
-			AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-			if (!IsValid(PlayerState))
-			{
-				return;
-			}
-			PlayerState->OrganizeItems();
-			PlayerState->OrganizeFurniture();
-		};
-		gSequenceMng.PlaySequence(EMS_SequenceType::Truck, Parameter);
-	}
-}
-
-void UMS_ModeState_RunMarket::SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition,
-	const TArray<FIntVector2>& aTargetPositions) const
-{
-	aOutPath.Empty();
-	
-	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
-	{
-		if (!aTargetPositions.IsValidIndex(0))
-		{
-			MS_ENSURE(false);
-			return;
-		}
-
-		// ZoneType
-		EMS_ZoneType StartZoneType = LevelScriptActor->GetGridZoneType(aStartPosition);
-		if (StartZoneType == EMS_ZoneType::None || StartZoneType == EMS_ZoneType::Passage)
-		{
-			// MS_ENSURE(false);
 			return;
 		}
 		
-		EMS_ZoneType TargetZoneType = LevelScriptActor->GetGridZoneType(aTargetPositions[0]);
-		if (StartZoneType == EMS_ZoneType::None || StartZoneType == EMS_ZoneType::Passage)
-		{
-			MS_ENSURE(false);
-			return;
-		}
+		gInteractionMng.SelectActor(aSelectedActor);
+	}
+}
 
-		// Search
-		if (StartZoneType == TargetZoneType)
-		{
-			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions);
-		}
-		else
-		{
-			// Start에서 Gate까지
-			TArray<FIntVector2> PathToGate;
-			
-			TArray<TWeakObjectPtr<UMS_GateUnit>> GatesUnits;
-			LevelScriptActor->GetGateUnitsInLevel(GatesUnits, StartZoneType, TargetZoneType);
+void UMS_ModeState_RunMarket::UnselectActor()
+{
+	gInteractionMng.UnselectActor();
+}
 
-			TArray<FIntVector2> GatePositions = {};
-			for (TWeakObjectPtr<UMS_GateUnit> GateUnit : GatesUnits)
-			{
-				if (GateUnit != nullptr)
-				{
-					GatePositions.Emplace(GateUnit->GetGridPosition());
-				}
-			}
-			
-			GridBFS_2x2->Search(PathToGate, StartZoneType, aStartPosition, GatePositions);
+void UMS_ModeState_RunMarket::OnSelectActor(AActor* aSelectedActor)
+{
+	if (!IsValid(aSelectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	{
+		SelectedProp->OnSelectProp(EMS_ModeState::RunMarket);
+	}
+}
 
-			
-			// Linked Gate에서 타겟까지
-			if (PathToGate.Num() != 0)
-			{
-				TArray<FIntVector2> PathToTarget;
-			
-				TWeakObjectPtr<UMS_GateUnit> TargetGateUnit;
-				for (TWeakObjectPtr<UMS_GateUnit> GateUnit : GatesUnits)
-				{
-					if (GateUnit != nullptr)
-					{
-						if (GateUnit->GetGridPosition() == PathToGate.Last())
-						{
-							TargetGateUnit = GateUnit;
-						}
-					}
-				}
-
-				GridBFS_2x2->Search(PathToTarget, TargetGateUnit->GetLinkedZoneType(), TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
-
-				if (PathToTarget.Num() != 0)
-				{
-					aOutPath.Append(PathToGate);
-					aOutPath.Append(PathToTarget);
-				}
-				else
-				{
-					// ToDo : 다른 Gate를 통하면 목표에 갈 수 있나
-				}
-			}
-		}
+void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
+{
+	if (!IsValid(aUnselectedActor))
+	{
+		return;
+	}
+	
+	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
+	{
+		SelectedProp->OnUnselectProp(EMS_ModeState::RunMarket);
 	}
 }

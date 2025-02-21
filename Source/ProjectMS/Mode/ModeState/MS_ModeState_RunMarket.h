@@ -3,19 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_ModeStateBase.h"
+#include "MS_ModeState_RunMarketBase.h"
 #include "MS_ModeState_RunMarket.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract)
-class PROJECTMS_API UMS_ModeState_RunMarket : public UMS_ModeStateBase
+UCLASS()
+class PROJECTMS_API UMS_ModeState_RunMarket : public UMS_ModeState_RunMarketBase
 {
 	GENERATED_BODY()
+
 public:
 	UMS_ModeState_RunMarket();
-
+	
 	virtual void Initialize(uint8 aIndex, const FName& aName) override;
 	virtual void Finalize() override;
 
@@ -25,39 +26,38 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 	
-	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
-	
-private:
-	void EndSchedule();
+	virtual void UpdateMinute(int32 aCurrentMinute) override;
+	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
 
 public:
-	virtual void UpdateMinute(int32 aCurrentMinute);
-	virtual void UpdateScheduleEvent(int32 aScheduleEvent);
-
-	FORCEINLINE void GetScheduleEvent(TMap<int32, int32>& _ScheduleEvent) const { _ScheduleEvent = ScheduleEvent; }
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult) override;
 	
-	// aTargetPoints가 다른 존에 있을 경우 첫번째 타겟의 게이트를 찾아감
-	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const override;
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult) override;
+	
+	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
+	
+	virtual void OnInputPointerGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
+	
+	virtual void OnMouseRightButtonGlide(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
+
+	virtual void OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
+
+	virtual void OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
+	
+	virtual void OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
+
+	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
+
+	virtual void OnPinchAction(float aPinchValue) override;
 
 	
-	TObjectPtr<class UMS_StaffSupervisor> GetStaffSupervisor() const { return StaffSupervisor; }
-
+	// Select
+	void SelectActor(AActor* aSelectedActor);
+	void UnselectActor();
 	
-private:
-	FTimerHandle DelayTimerHandle;
+	UFUNCTION()
+	void OnSelectActor(AActor* aSelectedActor);	// 기존의 것과 다른 Prop이 선택되야 호출됨
 
-protected:
-	UPROPERTY()
-	TObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
-	
-	UPROPERTY()
-	TObjectPtr<class UMS_StaffSupervisor> StaffSupervisor;
-
-	UPROPERTY()
-	TObjectPtr<class UMS_CustomerSupervisor> CustomerSupervisor;
-
-	UPROPERTY()
-	TObjectPtr<class UMS_GridBFS_2x2> GridBFS_2x2;
-	
-	TMap<int32, int32> ScheduleEvent;
+	UFUNCTION()
+	void OnUnselectActor(AActor* aUnselectedActor);
 };
