@@ -32,79 +32,7 @@ void AMS_PlayerState::AddOpenedZoneId(int32 aZoneId)
 	OpenedZoneIds.AddUnique(aZoneId);
 }
 
-void AMS_PlayerState::GetAllMarketFurnitureDatas(
-	TMap<FIntVector2, FMS_LevelFurnitureSaveData>& aOutFurnitureDatas) const
-{
-	aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
-}
-
-bool AMS_PlayerState::GetMarketFurnitureData(const FIntVector2& aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const
-{
-	if (!GridPositionToMarketFurnitureDatas.Contains(aInGridPosition))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
-			, *MS_FUNC_STRING, aInGridPosition.X, aInGridPosition.Y);
-		MS_ENSURE(false);
-
-		return false;
-	}
-
-	aOutFurnitureData = *GridPositionToMarketFurnitureDatas.Find(aInGridPosition);
-	return true;
-}
-
-void AMS_PlayerState::AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
-                                   EMS_Rotation aRotation)
-{
-	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
-			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
-		MS_CHECK(false);
-	}
-	
-	GridPositionToMarketFurnitureDatas.Emplace(aGridPosition, FMS_LevelFurnitureSaveData(aFurnitureTableId, aGridPosition, aRotation));
-}
-
-void AMS_PlayerState::AddFurnitureData(FMS_LevelFurnitureSaveData aFurnitureData)
-{
-	if (GridPositionToMarketFurnitureDatas.Contains(aFurnitureData.GridPosition))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
-			, *MS_FUNC_STRING, aFurnitureData.GridPosition.X, aFurnitureData.GridPosition.Y);
-		MS_CHECK(false);
-	}
-	
-	GridPositionToMarketFurnitureDatas.Emplace(aFurnitureData.GridPosition, aFurnitureData);
-}
-
-void AMS_PlayerState::RemoveFurnitureData(FIntVector2 aGridPosition)
-{
-	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
-			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
-		MS_ENSURE(false);
-	}
-	
-	GridPositionToMarketFurnitureDatas.Remove(aGridPosition);
-}
-
-void AMS_PlayerState::SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData)
-{
-	// ToDo: 슬롯정보가 무결한지 체크
-	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
-			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
-		MS_ENSURE(false);
-	}
-	
-	FMS_LevelFurnitureSaveData& FurnitureData = *GridPositionToMarketFurnitureDatas.Find(aGridPosition);
-	FurnitureData.SlotDatas = aSlotData;
-}
-
-void AMS_PlayerState::UpdateOrderItems(TMap<int32, int32>& aOrderItems)
+void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 {
 	for(const auto& OrderItem : aOrderItems)
 	{
@@ -130,6 +58,49 @@ void AMS_PlayerState::OrganizeItems()
 	gItemMng.UpdateOrderItems(OrderItems);
 }
 
+void AMS_PlayerState::OrderFurniture(const TMap<int32, int32>& aOrderFurnitures)
+{
+	for(const auto& OrderFurniture : aOrderFurnitures)
+	{
+		int32& OrderCount = OrderFurnitures.FindOrAdd(OrderFurniture.Key);
+		OrderCount += OrderFurniture.Value;
+	}
+	SavePlayerData();
+}
+
+void AMS_PlayerState::OrganizeFurniture()
+{
+	for(const auto& OrderFurniture : OrderFurnitures)
+	{
+		int32& FurnitureCount = Furnitures.FindOrAdd(OrderFurniture.Key);
+		FurnitureCount += OrderFurniture.Value;
+	}
+	
+	OrderFurnitures.Empty();
+	gItemMng.UpdateOrderFurnitures(OrderFurnitures);
+	gItemMng.UpdateFurnitures(Furnitures);
+}
+
+void AMS_PlayerState::SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData)
+{
+	// ToDo: 슬롯정보가 무결한지 체크
+	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
+			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
+		MS_ENSURE(false);
+	}
+	
+	FMS_FurniturePositionData& FurnitureData = *GridPositionToMarketFurnitureDatas.Find(aGridPosition);
+	FurnitureData.SlotDatas = aSlotData;
+}
+
+void AMS_PlayerState::SaveFurniturePositionDatas(TMap<FIntVector2, FMS_FurniturePositionData> aGridPositionToMarketFurnitureDatas)
+{
+	GridPositionToMarketFurnitureDatas = aGridPositionToMarketFurnitureDatas;
+	SavePlayerData();
+}
+
 void AMS_PlayerState::RegisterStaff(int32 StaffId, int32 WorkDay)
 {
 	// Save ( 직원은 다음날 출근하기에 + 1일 )
@@ -152,24 +123,24 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	OpenedZoneIds.AddUnique(10);
 
 	//Furniture
-	FMS_LevelFurnitureSaveData Counter = FMS_LevelFurnitureSaveData(1, FIntVector2(13, 13), EMS_Rotation::Rot270);
+	FMS_FurniturePositionData Counter = FMS_FurniturePositionData(1, FIntVector2(13, 13), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Counter.GridPosition, Counter);
 
-	FMS_LevelFurnitureSaveData RoomTemperature1 = FMS_LevelFurnitureSaveData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);
+	FMS_FurniturePositionData RoomTemperature1 = FMS_FurniturePositionData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature1.GridPosition, RoomTemperature1);
 
-	FMS_LevelFurnitureSaveData RoomTemperature2 = FMS_LevelFurnitureSaveData(7, FIntVector2(9, 2), EMS_Rotation::Rot0);
+	FMS_FurniturePositionData RoomTemperature2 = FMS_FurniturePositionData(7, FIntVector2(9, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature2.GridPosition, RoomTemperature2);
 
-	FMS_LevelFurnitureSaveData VeggieStand = FMS_LevelFurnitureSaveData(8, FIntVector2(13, 2), EMS_Rotation::Rot0);
+	FMS_FurniturePositionData VeggieStand = FMS_FurniturePositionData(8, FIntVector2(13, 2), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand.GridPosition, VeggieStand);
 
-	FMS_LevelFurnitureSaveData Rack = FMS_LevelFurnitureSaveData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);
+	FMS_FurniturePositionData Rack = FMS_FurniturePositionData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(Rack.GridPosition, Rack);
 
-	FMS_LevelFurnitureSaveData Wardrobe = FMS_LevelFurnitureSaveData(12, FIntVector2(-10, 11), EMS_Rotation::Rot270);
+	FMS_FurniturePositionData Wardrobe = FMS_FurniturePositionData(12, FIntVector2(-10, 11), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Wardrobe.GridPosition, Wardrobe);
-	
+
 	// Items
 	Items.Emplace(4, 30);
 	Items.Emplace(5, 30);
@@ -192,7 +163,7 @@ void AMS_PlayerState::InitPlayerData()
 	OpenedZoneIds = TestDB->OpenedZoneIds;
 
 	GridPositionToMarketFurnitureDatas.Empty();
-	for (const FMS_LevelFurnitureSaveData MarketFurnitureData : TestDB->MarketFurnitureDatas)
+	for (const FMS_FurniturePositionData MarketFurnitureData : TestDB->MarketFurnitureDatas)
 	{
 		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurnitureData.GridPosition))
 		{
@@ -208,6 +179,11 @@ void AMS_PlayerState::InitPlayerData()
 	OrderItems = TestDB->OrderItems;
 	gItemMng.UpdateItems(Items);
 	gItemMng.UpdateOrderItems(OrderItems);
+
+	Furnitures = TestDB->Furnitures;
+	OrderFurnitures = TestDB->OrderFurnitures;
+	gItemMng.UpdateFurnitures(Furnitures);
+	gItemMng.UpdateOrderFurnitures(OrderFurnitures);
 	
 	StaffDatas = TestDB->StaffDatas;
 	gItemMng.UpdateStaffProperty(StaffDatas);
@@ -243,10 +219,13 @@ void AMS_PlayerState::SavePlayerData()
 	{
 		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
 	}
-
+	
 	NewTestDBData->OrderItems = OrderItems;
 	NewTestDBData->Items = Items;
 
+	NewTestDBData->OrderFurnitures = OrderFurnitures;
+	NewTestDBData->Furnitures = Furnitures;
+	
 	NewTestDBData->StaffDatas = StaffDatas;
 	
 	if (!UGameplayStatics::SaveGameToSlot(NewTestDBData, SaveSlotName, 0))

@@ -6,16 +6,38 @@
 #include "MS_Define.h"
 #include "Button/MS_ConfirmButton.h"
 #include "Components/TextBlock.h"
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StorageCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
+void UMS_BuyFurnitureWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
+{
+	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
+	InitializeBuyFurnitureWidget();
+}
+
 void UMS_BuyFurnitureWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
 
+void UMS_BuyFurnitureWidget::NativeDestruct()
+{
+	// for(const auto& OrderItemElementData : OrderFurnitureElementDatas)
+	// {
+	// 	MS_DeleteObject(OrderItemElementData);
+	// }
+	OrderFurnitureElementDatas.Empty();
+	
+	Super::NativeDestruct();
+}
+
+void UMS_BuyFurnitureWidget::InitializeBuyFurnitureWidget()
+{
 	const TObjectPtr<UMS_StorageCacheTable> ItemTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
 	MS_ENSURE(ItemTable);
 
@@ -33,38 +55,51 @@ void UMS_BuyFurnitureWidget::NativeConstruct()
 	if(CPP_ConfirmButton)
 	{
 		CPP_ConfirmButton->SetButtonName(TEXT("구매"));
+		CPP_ConfirmButton->GetOnClickedDelegate().RemoveAll(this);
 		CPP_ConfirmButton->GetOnClickedDelegate().AddUObject(this, &UMS_BuyFurnitureWidget::OnClickedConfirmButton);
 	}
 	if(CPP_CancelButton)
 	{
 		CPP_CancelButton->SetButtonName(TEXT("취소"));
-		CPP_CancelButton->GetOnClickedDelegate().AddUObject(this, &UMS_BuyFurnitureWidget::OnClickedCancelButton);
+		if(CPP_CancelButton->GetOnClickedDelegate().IsBound() == false)
+		{
+			CPP_CancelButton->GetOnClickedDelegate().AddUObject(this, &UMS_BuyFurnitureWidget::OnClickedCancelButton);
+		}
 	}
-}
-
-void UMS_BuyFurnitureWidget::NativeDestruct()
-{
-	// for(const auto& OrderItemElementData : OrderFurnitureElementDatas)
-	// {
-	// 	MS_DeleteObject(OrderItemElementData);
-	// }
-	OrderFurnitureElementDatas.Empty();
-	
-	Super::NativeDestruct();
 }
 
 void UMS_BuyFurnitureWidget::OnClickedConfirmButton()
 {
-	TMap<int32, int32> TransferItems;
+	if(bOrder)
+	{
+		return;
+	}
+	
+	TMap<int32, int32> OrderFurnitures;
 
 	for(const auto& OrderItemElementData : OrderFurnitureElementDatas)
 	{
-		TransferItems.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
+		if(OrderItemElementData->GetItemCount() == 0)
+		{
+			continue;
+		}
+		OrderFurnitures.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
+
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
 	
-	// gScheduleMng.TransferItemsToServer(TransferItems);
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+  	PlayerState->OrderFurniture(OrderFurnitures);
+	
 	gWidgetMng.CloseModalWidget();
 	gWidgetMng.ShowToastMessage(TEXT("가구 구매를 완료했습니다!!"));
+	bOrder = true;
 }
 
 void UMS_BuyFurnitureWidget::OnClickedCancelButton()

@@ -6,6 +6,7 @@
 #include "MS_ManagerBase.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_ItemManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnClickedItem, int32, int32); /* ItemId, ItemType */
@@ -32,27 +33,43 @@ public:
 
 	virtual void Tick(float aDeltaTime) override;
 
-	// 판매하고 남은
+	FMS_OnClickedItem OnClickedItemDelegate;
+	FMS_OnClickedTileViewItem OnClickedTileViewItem;
+	
+	// Items
 	void GetRemainItems(TMap<int32, int32>& OutItems) const;
 	int32 GetRemainItemCount(int32 aItemId);
 
-	// Display
 	void GetDisplayItems(TMap<int32, int32>& OutItems) const;
 	int32 GetDisplayItemCount(int32 aItemId) const;
 
-	// Shelf
-	void GetShelfItems(TMap<int32, int32>& OutItems) const;
+	void GetShelfItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
 	int32 GetShelfItemCount(int32 aItemId) const;
 
-	// Pallet
 	void GetPalletItems(TMap<int32, int32>& OutItems) const;
 	int32 GetPalletItemCount(int32 aItemId);
 
 	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
-	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { AddedItems = aOrderItems; }
-	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = AddedItems; }
+	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }
+	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = OrderItems; }
 	
 	bool IsAvailablePurchase() const;
+	
+	// Furniture
+	void GetNotDeployFurniture(TMap<int32, int32>& aNotDeployFurnitures);
+	
+	FORCEINLINE void UpdateFurnitures(TMap<int32, int32> aFurnitures) { Furnitures = aFurnitures; }
+	FORCEINLINE void UpdateOrderFurnitures(TMap<int32, int32> aOrderFurnitures) { OrderFurnitures = aOrderFurnitures; }
+	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas)
+	{
+		aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
+	}
+	
+	void AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation);
+	void AddFurnitureData(FMS_FurniturePositionData aFurnitureData);
+	void RemoveFurnitureData(FIntVector2 aGridPosition);
+
+	void SaveFurniturePosition() const;
 	
 	// Staff
 	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
@@ -60,26 +77,31 @@ public:
 	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
 private:
+	// Items
 	TMap<int32, int32> Items = {};
-	TMap<int32, int32> AddedItems = {};
+	TMap<int32, int32> OrderItems = {};
 	TMap<int32, int32> SoldItems = {};
 
-	TMap<int32, struct FMS_StorageData*> Stand = {};
 
-	// 나중에 서버에서 받을지 미리 캐싱해뒀다 쓸지 고려
+	// Furniture
+	TMap<int32, int32> Furnitures = {};
+	TMap<int32, int32> OrderFurnitures = {};
+	TMap<FIntVector2, FMS_FurniturePositionData> GridPositionToMarketFurnitureDatas = {};
+
+	// Staff
 	UPROPERTY()
 	TArray<TObjectPtr<UMS_StaffProfileElementData>> StaffProfileDatas;
 
 	UPROPERTY()
 	TMap<int32, UMS_StaffPropertyElementData*> StaffPropertys;
+
+
+
+
 	
 public:
 	inline static TObjectPtr<UMS_ItemManager> ItemManager = nullptr;
 	static UMS_ItemManager* GetInstance();
-
-	FMS_OnClickedItem OnClickedItemDelegate;
-	
-	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 	
 #define gItemMng (*UMS_ItemManager::GetInstance())
 };

@@ -46,7 +46,7 @@ private:
 
 	void OnClickedOrderItemButton();
 	void OnClickedCheckOrderButton();
-	void OnClickedBuyFurnitureButton();
+	void OnClickedOrderFurnitureButton();
 	void OnClickedHireStaffButton();
 	void OnClickedManageStaffButton();
 	void OnClickedManageCustomerButton();

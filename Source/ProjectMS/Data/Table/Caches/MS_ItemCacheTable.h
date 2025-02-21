@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "Table/MS_CacheTable.h"
 #include "Table/RowBase/MS_ItemData.h"
 #include "MS_ItemCacheTable.generated.h"
@@ -26,7 +27,7 @@ public:
 	UTexture2D* GetItemImage(int32 aItemId);
 	const FMS_ItemData* GetItemByName(const FName& aItemName);
 	TArray<FName> GetAllItemNames();
-	
+	EMS_TemperatureType GetItemTemperature(int32 aItemId) const;
 
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;

@@ -128,3 +128,14 @@ TArray<FName> UMS_ItemCacheTable::GetAllItemNames()
 
 	return ItemNameArray;
 }
+
+EMS_TemperatureType UMS_ItemCacheTable::GetItemTemperature(int32 aItemId) const
+{
+	const FMS_ItemData* TargetItem = GetItem(aItemId);
+	if(!TargetItem)
+	{
+		return EMS_TemperatureType::Undefined;
+	}
+
+	return static_cast<EMS_TemperatureType>(TargetItem->TemperatureType);
+}

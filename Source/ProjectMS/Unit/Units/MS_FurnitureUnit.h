@@ -6,6 +6,7 @@
 #include "MS_ActorUnitBase.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "Table/RowBase/MS_StorageData.h"
 #include "MS_FurnitureUnit.generated.h"
 
 /**
@@ -26,6 +27,7 @@ public:
 
 	// Property :: Getter
 	FORCEINLINE EMS_ZoneType GetZoneType() const;
+	FORCEINLINE EMS_TemperatureType GetTemperatureType() const { return static_cast<EMS_TemperatureType>(FurnitureData->TemperatureType); }
 
 	FORCEINLINE int32 GetSlotCount() const;
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }

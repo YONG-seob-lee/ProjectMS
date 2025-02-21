@@ -6,7 +6,10 @@
 #include "MS_ModeManager.h"
 #include "MS_SceneManager.h"
 #include "MS_ScheduleManager.h"
+#include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "PlayerState/MS_PlayerState.h"
+#include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
@@ -151,7 +154,7 @@ int32 UMS_ItemManager::GetDisplayItemCount(int32 aItemId) const
 	return *ItemCount;
 }
 
-void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems) const
+void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType /* = EMS_TemperatureType::Undefined */) const
 {
 	OutItems.Empty();
 
@@ -162,26 +165,39 @@ void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems) const
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			const UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get());
+			if (!FurnitureUnit)
 			{
-				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+				continue;
+			}
+			if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+			{
+				continue;
+			}
+				
+			TArray<FMS_SlotData> FurnitureSlotDatas;
+			FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+			for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+			{
+				if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
 				{
 					continue;
 				}
-				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
 
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				if(aTemperatureType != EMS_TemperatureType::Undefined)
 				{
-					if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
+					TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+					MS_ENSURE(ItemTable);
+					
+					if(ItemTable->GetItemTemperature(SlotData.CurrentItemTableId) != aTemperatureType)
 					{
 						continue;
-					}
-					
-					int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
-					Count += SlotData.CurrentItemCount;
+					}	
 				}
+					
+				int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
+				Count += SlotData.CurrentItemCount;
 			}
 		}
 	}
@@ -270,6 +286,67 @@ bool UMS_ItemManager::IsAvailablePurchase() const
 	}
 
 	return true;
+}
+
+void UMS_ItemManager::GetNotDeployFurniture(TMap<int32, int32>& aNotDeployFurnitures)
+{
+	aNotDeployFurnitures = Furnitures;
+
+	for(const auto& GridPositionToMarketFurnitureData : GridPositionToMarketFurnitureDatas)
+	{
+		int32& FurnitureCount = aNotDeployFurnitures.FindOrAdd(GridPositionToMarketFurnitureData.Value.FurnitureTableId);
+		FurnitureCount -= 1;
+	}
+}
+
+void UMS_ItemManager::AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation)
+{
+	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
+			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
+		MS_CHECK(false);
+	}
+	
+	GridPositionToMarketFurnitureDatas.Emplace(aGridPosition, FMS_FurniturePositionData(aFurnitureTableId, aGridPosition, aRotation));
+}
+
+void UMS_ItemManager::AddFurnitureData(FMS_FurniturePositionData aFurnitureData)
+{
+	if (GridPositionToMarketFurnitureDatas.Contains(aFurnitureData.GridPosition))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
+			, *MS_FUNC_STRING, aFurnitureData.GridPosition.X, aFurnitureData.GridPosition.Y);
+		MS_CHECK(false);
+	}
+	
+	GridPositionToMarketFurnitureDatas.Emplace(aFurnitureData.GridPosition, aFurnitureData);
+}
+
+void UMS_ItemManager::RemoveFurnitureData(FIntVector2 aGridPosition)
+{
+	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
+			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
+		MS_ENSURE(false);
+	}
+	
+	GridPositionToMarketFurnitureDatas.Remove(aGridPosition);
+}
+
+void UMS_ItemManager::SaveFurniturePosition() const
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	PlayerState->SaveFurniturePositionDatas(GridPositionToMarketFurnitureDatas);
 }
 
 void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const

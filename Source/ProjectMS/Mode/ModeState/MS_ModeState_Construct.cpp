@@ -503,33 +503,30 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 	{
 		if (PreviewProp->GetLinkedProp() == nullptr)
 		{
-			EMS_PropType PropType = PreviewProp->GetPropType();
-			int32 TableId = PreviewProp->GetTableIndex();
-			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
-			EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
+			const EMS_PropType PropType = PreviewProp->GetPropType();
+			const int32 TableId = PreviewProp->GetTableIndex();
+			const FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
+			const EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
 
 			if (LevelScriptActor->CreateProp(PropType, TableId, GridPosition, Rotation) != nullptr)
 			{
-				PlayerState->AddFurnitureData(TableId, GridPosition, Rotation);
-				PlayerState->SavePlayerData();
+				gItemMng.AddFurnitureData(TableId, GridPosition, Rotation);
 			}
 		}
 
 		else
 		{
-			TWeakObjectPtr<AMS_Prop> LinkedProp = PreviewProp->GetLinkedProp();
-			int32 TableId = PreviewProp->GetTableIndex();
+			const TWeakObjectPtr<AMS_Prop> LinkedProp = PreviewProp->GetLinkedProp();
+			const int32 TableId = PreviewProp->GetTableIndex();
 			
-			FIntVector2 OldGridPosition = LinkedProp->GetGridPosition();
-			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
-			EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
+			const FIntVector2 OldGridPosition = LinkedProp->GetGridPosition();
+			const FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
+			const EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
 			
 			if (LevelScriptActor->MoveAndRotateProp(LinkedProp, GridPosition, Rotation))
 			{
-				// Save Player Data
-				PlayerState->RemoveFurnitureData(OldGridPosition);
-				PlayerState->AddFurnitureData(TableId, GridPosition, Rotation);
-				PlayerState->SavePlayerData();
+				gItemMng.RemoveFurnitureData(OldGridPosition);
+				gItemMng.AddFurnitureData(TableId, GridPosition, Rotation);
 			}
 		}
 	}

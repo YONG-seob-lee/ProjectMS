@@ -28,18 +28,17 @@ public:
 	const TArray<int32>& GetOpenedZoneIds();
 	void AddOpenedZoneId(int32 aZoneId);
 
-	void GetAllMarketFurnitureDatas(TMap<FIntVector2, FMS_LevelFurnitureSaveData>& aOutFurnitureDatas) const;
-	bool GetMarketFurnitureData(const FIntVector2& aInGridPosition, FMS_LevelFurnitureSaveData& aOutFurnitureData) const;
-	void AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation);
-	void AddFurnitureData(FMS_LevelFurnitureSaveData aFurnitureData);
-	void RemoveFurnitureData(FIntVector2 aGridPosition);
+	// Items
+	void OrderItem(TMap<int32, int32>& aOrderItems);
+	void OrganizeItems();
+
+	// Furniture
+	void OrderFurniture(const TMap<int32, int32>& aOrderFurnitures);
+	void OrganizeFurniture();
 
 	void SetFurnitureSlotDatas(const FIntVector2& aGridPosition, const TArray<FMS_SlotData>& aSlotData);
-
-	// Items
-	void UpdateOrderItems(TMap<int32, int32>& aOrderItems);
-	void OrganizeItems(); 
-
+	void SaveFurniturePositionDatas(TMap<FIntVector2, FMS_FurniturePositionData> aGridPositionToMarketFurnitureDatas);
+	
 	// Staff
 	void RegisterStaff(int32 StaffId, int32 WorkDay);
 	const TArray<FMS_StaffData>& GetStaffDatas() const { return StaffDatas; }
@@ -62,15 +61,24 @@ private:
 	UPROPERTY()
 	TArray<int32> OpenedZoneIds;
 	
-	UPROPERTY()
-	TMap<FIntVector2, FMS_LevelFurnitureSaveData> GridPositionToMarketFurnitureDatas;
-	
+	//Items
 	UPROPERTY()
 	TMap<int32, int32> Items;
 
 	UPROPERTY()
 	TMap<int32, int32> OrderItems;
+
+	//Furniture
+	UPROPERTY()
+	TMap<FIntVector2, FMS_FurniturePositionData> GridPositionToMarketFurnitureDatas;
+		
+	UPROPERTY()
+	TMap<int32, int32> Furnitures;
 	
+	UPROPERTY()
+	TMap<int32, int32> OrderFurnitures;
+	
+	//Staff
 	UPROPERTY()
 	TArray<FMS_StaffData> StaffDatas;
 };

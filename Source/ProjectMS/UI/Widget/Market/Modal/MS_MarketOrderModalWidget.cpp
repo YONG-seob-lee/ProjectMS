@@ -73,7 +73,7 @@ void UMS_MarketOrderModalWidget::OnClickedConfirmButton()
 	{
 		return;
 	}
-	PlayerState->UpdateOrderItems(OrderItems);
+	PlayerState->OrderItem(OrderItems);
 	
 	gWidgetMng.CloseModalWidget();
 	gWidgetMng.ShowToastMessage(TEXT("물품 구매를 완료했습니다!!"));

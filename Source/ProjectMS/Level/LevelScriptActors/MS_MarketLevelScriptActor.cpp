@@ -201,12 +201,12 @@ void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
 		return;
 	}
 
-	TMap<FIntVector2, FMS_LevelFurnitureSaveData> FurnitureDatas;
-	PlayerState->GetAllMarketFurnitureDatas(FurnitureDatas);
-
+	TMap<FIntVector2, FMS_FurniturePositionData> FurnitureDatas;
+	gItemMng.GetAllFurnitureDatas(FurnitureDatas);
+	
 	for (const auto& It : FurnitureDatas)
 	{
-		FMS_LevelFurnitureSaveData FurnitureData = It.Value;
+		FMS_FurniturePositionData FurnitureData = It.Value;
 		
 		TWeakObjectPtr<UMS_FurnitureUnit> NewUnit = CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
 		NewUnit->SetSlotDatas(FurnitureData.SlotDatas);

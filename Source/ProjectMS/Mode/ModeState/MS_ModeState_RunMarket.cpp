@@ -201,6 +201,7 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 				return;
 			}
 			PlayerState->OrganizeItems();
+			PlayerState->OrganizeFurniture();
 		};
 		gSequenceMng.PlaySequence(EMS_SequenceType::Truck, Parameter);
 	}

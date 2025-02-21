@@ -30,13 +30,19 @@ public:
 	TArray<int32> OpenedZoneIds;
 
 	UPROPERTY()
-	TArray<FMS_LevelFurnitureSaveData> MarketFurnitureDatas;
+	TArray<FMS_FurniturePositionData> MarketFurnitureDatas;
 	
 	UPROPERTY()
 	TMap<int32, int32> Items;
 
 	UPROPERTY()
 	TMap<int32, int32>OrderItems;
+
+	UPROPERTY()
+	TMap<int32, int32> Furnitures;
+	
+	UPROPERTY()
+	TMap<int32, int32> OrderFurnitures;
 	
 	UPROPERTY()
 	TArray<FMS_StaffData> StaffDatas;

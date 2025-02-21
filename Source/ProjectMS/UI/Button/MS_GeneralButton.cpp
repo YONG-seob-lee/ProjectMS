@@ -67,7 +67,7 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
-	case EMS_GeneralButtonType::BuyFurniture:
+	case EMS_GeneralButtonType::OrderFurniture:
 		{
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::BuyFurniture));
@@ -158,7 +158,7 @@ void UMS_GeneralButton::SynchronizeProperties()
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
 		}
-	case EMS_GeneralButtonType::BuyFurniture:
+	case EMS_GeneralButtonType::OrderFurniture:
 		{
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::BuyFurniture));

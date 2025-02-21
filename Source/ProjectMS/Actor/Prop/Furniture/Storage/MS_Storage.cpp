@@ -36,7 +36,7 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 			
 			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
 			{
-				StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetSlotCount());
+				StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetTemperatureType(), FurnitureUnit->GetSlotCount());
 				
 				TArray<FMS_SlotData> SlotDatas;
 				FurnitureUnit->GetSlotDatas(SlotDatas);

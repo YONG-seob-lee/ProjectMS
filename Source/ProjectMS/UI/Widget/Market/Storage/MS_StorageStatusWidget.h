@@ -30,14 +30,14 @@ private:
 	void OnClickedCloseButton();
 
 public:
-	void InitializeStorageDatas(EMS_ZoneType aOwnerZoneType, int32 aSlotCount);
+	void InitializeStorageDatas(EMS_ZoneType aOwnerZoneType, EMS_TemperatureType aTemperatureType, int32 aSlotCount);
 	
 	void UpdateSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
 	
 protected:
 	EMS_ZoneType OwnerZoneType = EMS_ZoneType::None;
-
+	EMS_TemperatureType TemperatureType = EMS_TemperatureType::Undefined;
 	int32 SlotCount = 0;
 	
 	TArray<TObjectPtr<class UMS_StorageSlotElementData>> StorageItemElementDatas;

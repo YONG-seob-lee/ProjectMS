@@ -20,13 +20,13 @@ void UMS_SelectRequestedItemWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UMS_SelectRequestedItemWidget::SetTileView()
+void UMS_SelectRequestedItemWidget::SetTileView(EMS_TemperatureType aTemperatureType)
 {
 	TMap<int32, int32> RequestableItems;
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
-		gItemMng.GetShelfItems(RequestableItems);
+		gItemMng.GetShelfItems(RequestableItems, aTemperatureType);
 	}
 	else if (OwnerZoneType == EMS_ZoneType::Shelf)
 	{

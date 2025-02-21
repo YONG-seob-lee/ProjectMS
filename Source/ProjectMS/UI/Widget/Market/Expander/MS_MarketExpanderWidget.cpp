@@ -32,6 +32,12 @@ void UMS_MarketExpanderWidget::NativeConstruct()
 		{
 			OpenExpander();
 		});
+		CPP_ConstructExpanderWidget->SetOnClickedConstructItemFunc([this]()
+		{
+			bOpen = false;
+			bOpenExpander = false;
+			PlayAnimationByName(ArrowAnimation::Close);
+		});
 	}
 	
 	if(CPP_ArrowButton)

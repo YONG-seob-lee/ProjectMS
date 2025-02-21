@@ -35,15 +35,55 @@ void UMS_ConstructExpanerWidget::InitCategory() const
 	CPP_ExpanderCategoryListView->ClearSelection();
 }
 
-void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneType)
+void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneType) const
 {
+	TMap<int32, int32> NotDeployFurnitures;
+	gItemMng.GetNotDeployFurniture(NotDeployFurnitures);
+
 	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
 	MS_CHECK(StorageTable);
+	TArray<TObjectPtr<UMS_ConstructItemElement>> FurnitureItems;
+	for(const auto& NotDeployFurniture : NotDeployFurnitures)
+	{
+		if(NotDeployFurniture.Value < 0)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at Shelf Furniture. Check Save Data.")
+			, *MS_FUNC_STRING);
+			MS_ENSURE(false);
+			continue;
+		}
+		if(NotDeployFurniture.Value == 0)
+		{
+			// 전부 배치가 되었을 때
+			continue;
+		}
+		
+		const FMS_StorageData* StorageData = StorageTable->GetStorageData(NotDeployFurniture.Key);
+		
+		if(StorageData->ZoneType != static_cast<int32>(aZoneType))
+		{
+			continue;
+		}
+		
+		TObjectPtr<UMS_ConstructItemElement> ConstructItem = MS_NewObject<UMS_ConstructItemElement>();
+		ConstructItem->SetElementName(StorageData->StandName.ToString());
+		const FString ImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, StorageData->ImagePath); 
+		if(UTexture2D* ImageImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
+		{
+			ConstructItem->SetImage(ImageImage);
+		}
+		ConstructItem->SetItemId(NotDeployFurniture.Key);
+		ConstructItem->OnClickConstructItem.AddWeakLambda(this, [this]()
+		{
+			if(OnClickedConstructItemCallback)
+			{
+				OnClickedConstructItemCallback();
+			}
+		});
+		FurnitureItems.Emplace(ConstructItem);
+	}
 	
-	TArray<TObjectPtr<UMS_ConstructItemElement>> Items;
-	StorageTable->GetStorageData(aZoneType, Items);
-	
-	CPP_ExpanderItemListView->SetListItems(Items);
+	CPP_ExpanderItemListView->SetListItems(FurnitureItems);
 }
 
 void UMS_ConstructExpanerWidget::OnClickedCategoryButton(UObject* Object)

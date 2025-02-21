@@ -51,7 +51,7 @@ void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 	if (!CPP_SelectRequestedItemWidget->IsVisible())
 	{
 		CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Visible);
-		CPP_SelectRequestedItemWidget->SetTileView();	
+		CPP_SelectRequestedItemWidget->SetTileView(TemperatureType);	
 	}
 }
 
@@ -60,9 +60,10 @@ void UMS_StorageStatusWidget::OnClickedCloseButton()
 	gWidgetMng.DestroyWidget(this);
 }
 
-void UMS_StorageStatusWidget::InitializeStorageDatas(EMS_ZoneType aOwnerZoneType, int32 aSlotCount)
+void UMS_StorageStatusWidget::InitializeStorageDatas(EMS_ZoneType aOwnerZoneType, EMS_TemperatureType aTemperatureType, int32 aSlotCount)
 {
 	OwnerZoneType = aOwnerZoneType;
+	TemperatureType = aTemperatureType;
 	SlotCount = aSlotCount;
 
 	if (CPP_SelectRequestedItemWidget)

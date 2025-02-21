@@ -4,8 +4,8 @@
 #include "MS_ConstructModeWidget.h"
 
 #include "Button/MS_Button.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
-#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/Market/Expander/MS_MarketExpanderWidget.h"
 
 
@@ -31,6 +31,7 @@ void UMS_ConstructModeWidget::NativeDestruct()
 
 void UMS_ConstructModeWidget::OnClickedExitButton()
 {
+	gItemMng.SaveFurniturePosition();
 	gModeMng.ChangeState(EMS_ModeState::Normal);
 }
 

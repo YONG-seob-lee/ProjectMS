@@ -139,8 +139,8 @@ void UMS_GeneralWidget::InitLeftExpander()
 	}
 	if(CPP_LeftExpanderButton03)
 	{
-		CPP_LeftExpanderButton03->SetButtonType(EMS_GeneralButtonType::BuyFurniture);
-		CPP_LeftExpanderButton03->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedBuyFurnitureButton);
+		CPP_LeftExpanderButton03->SetButtonType(EMS_GeneralButtonType::OrderFurniture);
+		CPP_LeftExpanderButton03->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedOrderFurnitureButton);
 	}
 	if(CPP_LeftExpanderButton04)
 	{
@@ -252,8 +252,14 @@ void UMS_GeneralWidget::OnClickedCheckOrderButton()
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UMS_GeneralWidget::OnClickedBuyFurnitureButton()
+void UMS_GeneralWidget::OnClickedOrderFurnitureButton()
 {
+	if(gItemMng.IsAvailablePurchase() == false)
+	{
+		gWidgetMng.ShowToastMessage(TEXT("이용 가능한 시간대가 아닙니다."));
+		return;
+	}
+	
 	FMS_ModalParameter Parameter;
 	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_BuyFurnitureWidget::GetWidgetName());
 	gWidgetMng.ShowModalWidget(Parameter);

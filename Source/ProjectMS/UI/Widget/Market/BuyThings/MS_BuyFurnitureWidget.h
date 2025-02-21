@@ -15,14 +15,19 @@ class PROJECTMS_API UMS_BuyFurnitureWidget : public UMS_Widget
 	GENERATED_BODY()
 public:
 	static FName GetWidgetName() { return TEXT("BuyFurniture"); }
+	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 private:
+	bool bOrder = false;
+	
+	void InitializeBuyFurnitureWidget();
+	
 	void OnClickedConfirmButton();
 	void OnClickedCancelButton();
 	void OnClickedLoadingUnloading(int32 aCount, FString aFurnitureName);
-	
+
 	int32 TotalPrice = 0;
 	
 	TArray<TObjectPtr<class UMS_OrderItemElementData>> OrderFurnitureElementDatas;

@@ -23,5 +23,9 @@ void UMS_ConstructItemElementWidget::NativeOnItemSelectionChanged(bool bIsSelect
 {
 	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
 
+	if(const TObjectPtr<UMS_ConstructItemElement> StorageSlotElementData = GetListItem<UMS_ConstructItemElement>())
+	{
+		StorageSlotElementData->OnClickConstructItem.Broadcast();
+	}
 	gItemMng.OnClickedItemDelegate.Broadcast(ItemId, static_cast<int32>(EMS_ItemType::Storage));
 }

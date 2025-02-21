@@ -133,23 +133,23 @@ public:
 };
 
 USTRUCT()
-struct FMS_LevelFurnitureSaveData
+struct FMS_FurniturePositionData
 {
 	GENERATED_BODY()
 
 public:
-	FMS_LevelFurnitureSaveData()
+	FMS_FurniturePositionData()
 	{
 	}
 
-	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
+	FMS_FurniturePositionData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
 	EMS_Rotation aRotation)
 		: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation)
 	{
 		SlotDatas.Empty();
 	}
 
-	FMS_LevelFurnitureSaveData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
+	FMS_FurniturePositionData(int32 aFurnitureTableId, const FIntVector2& aGridPosition,
 	EMS_Rotation aRotation, const TArray<FMS_SlotData>& aSlotDatas)
 	: FurnitureTableId(aFurnitureTableId), GridPosition(aGridPosition), Rotation(aRotation),
 	SlotDatas(aSlotDatas)

@@ -6,6 +6,7 @@
 
 #include "MS_ConstructItemElement.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FMS_OnClickConstructItem)
 /**
  * 
  */
@@ -23,7 +24,8 @@ public:
 	FORCEINLINE FString GetElementName() { return ElementName; }
 	FORCEINLINE int32 GetItemId() const { return ItemId; }
 	FORCEINLINE int32 GetZoneType() const { return ZoneType; }
-	
+
+	FMS_OnClickConstructItem OnClickConstructItem;
 private:
 	UPROPERTY()
 	UTexture2D* Image = nullptr;
