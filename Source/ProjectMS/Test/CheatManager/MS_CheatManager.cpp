@@ -12,7 +12,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
-#include "Mode/ModeState/MS_ModeState_RunMarketNormal.h"
+#include "Mode/ModeState/MS_ModeState_RunMarket.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Widget/Dialog/MS_DialogWidget.h"
 
@@ -121,9 +121,9 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 
 void UMS_CheatManager::AddStaff(int32 aStaffId)
 {
-	if (UMS_ModeState_RunMarketNormal* RunMarketNormal = Cast<UMS_ModeState_RunMarketNormal>(gModeMng.GetCurrentModeState()))
+	if (UMS_ModeState_RunMarket* RunMarket = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
 	{
-		if (UMS_StaffSupervisor* StaffSupervisor = RunMarketNormal->GetStaffSupervisor())
+		if (UMS_StaffSupervisor* StaffSupervisor = RunMarket->GetStaffSupervisor())
 		{
 			StaffSupervisor->RequestSpawnCharacterInMarket(aStaffId);
 		}
@@ -132,9 +132,9 @@ void UMS_CheatManager::AddStaff(int32 aStaffId)
 
 void UMS_CheatManager::RemoveAllStaff()
 {
-	if (UMS_ModeState_RunMarketNormal* RunMarketNormal = Cast<UMS_ModeState_RunMarketNormal>(gModeMng.GetCurrentModeState()))
+	if (UMS_ModeState_RunMarket* RunMarket = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
 	{
-		if (UMS_StaffSupervisor* StaffSupervisor = RunMarketNormal->GetStaffSupervisor())
+		if (UMS_StaffSupervisor* StaffSupervisor = RunMarket->GetStaffSupervisor())
 		{
 			StaffSupervisor->RemoveAllCharacter();
 		}

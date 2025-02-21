@@ -21,7 +21,7 @@ enum class EMS_ModeState : uint8
 	Deactive = 0,
 	Normal = 1,
 	Construct = 2,
-	RunMarketNormal = 3,
+	RunMarket = 3,
 };
 
 UENUM()

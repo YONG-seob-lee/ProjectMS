@@ -8,7 +8,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Mode/ModeState/MS_ModeState_RunMarket.h"
+#include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -18,7 +18,7 @@ void UMS_MarketStartModal::NativeConstruct()
 
 	CPP_FastButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 	{
-		gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
+		gModeMng.ChangeState(EMS_ModeState::RunMarket);
 		gWidgetMng.CloseModalWidget();
 	});
 
@@ -29,13 +29,13 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 {
 	CPP_OpeningPlayButton->GetOnClickedDelegate().RemoveAll(this);
 
-	gModeMng.ChangeState(EMS_ModeState::RunMarketNormal);
+	gModeMng.ChangeState(EMS_ModeState::RunMarket);
 	gWidgetMng.CloseModalWidget([]()
 	{
 		FMS_SequencePlayParameter Parameter;
 		Parameter.OnFinishedSequenceCallback = []()
 		{
-			if(const UMS_ModeState_RunMarket* RunMarketMode = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
+			if(const UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(gModeMng.GetCurrentModeState()))
 			{
 				TMap<int32, int32> ScheduleEvent = {};
 				RunMarketMode->GetScheduleEvent(ScheduleEvent);
