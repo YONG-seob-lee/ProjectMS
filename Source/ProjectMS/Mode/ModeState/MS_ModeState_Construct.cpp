@@ -107,24 +107,18 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 
 	AActor* InteractableActor = aInteractableHitResult.GetActor();
 	
-	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
+	if (IsValid(InteractableActor))
 	{
-		SelectProp(InteractableActor);
-	}
-
-	if (IsValid(PreviewProp))
-	{
-		if(PreviewProp == InteractableActor)
+		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(InteractableActor))
 		{
+			if (InteractableProp->GetPropType() == EMS_PropType::Floor || InteractableProp->GetPropType() == EMS_PropType::Wall)
+			{
+				return;
+			}
+			
+			SelectProp(InteractableActor);
+		
 			gCameraMng.RestrictCameraMovement(true);
-		}
-		
-		PreviewProp->ShowArrangementWidget(false);
-		
-		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
-		{
-			LevelScriptActor->SetZoneOpenWidgetVisibility(false);
-			LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, false);
 		}
 	}
 }
@@ -183,6 +177,8 @@ void UMS_ModeState_Construct::OnMouseRightButtonGlide(const FVector2D& aPosition
 void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
+
+	AActor* InteractableActor = aInteractableHitResult.GetActor();
 	
 	if (PreviewProp == nullptr)
 	{
@@ -193,15 +189,24 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 	{
 		return;
 	}
-
+	
 	if (IsValid(GridBasedMoveHelper))
 	{
 		// Position Offset
 		if (GridBasedMoveHelper->GetTargetActor() == nullptr)
 		{
-			if(gCameraMng.IsRestrictCameraMovement())
+			if (PreviewProp == aInteractableHitResult.GetActor())
 			{
 				GridBasedMoveHelper->SetPositionOffset(PreviewProp);
+				
+				// View
+				PreviewProp->ShowArrangementWidget(false);
+		
+				if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+				{
+					LevelScriptActor->SetZoneOpenWidgetVisibility(false);
+					LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, false);
+				}
 			}
 		}
 		else
