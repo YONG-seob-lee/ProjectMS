@@ -31,6 +31,7 @@ public:
 	virtual void Finalize() override;
 	virtual void BuiltInFinalize() override;
 
+	virtual auto BeginPlay() -> void override;
 	virtual void Tick(float aDeltaTime) override;
 
 	FMS_OnClickedItem OnClickedItemDelegate;
@@ -60,7 +61,8 @@ public:
 	
 	FORCEINLINE void UpdateFurnitures(TMap<int32, int32> aFurnitures) { Furnitures = aFurnitures; }
 	FORCEINLINE void UpdateOrderFurnitures(TMap<int32, int32> aOrderFurnitures) { OrderFurnitures = aOrderFurnitures; }
-	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas)
+
+	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas) const
 	{
 		aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
 	}
@@ -69,6 +71,7 @@ public:
 	void AddFurnitureData(FMS_FurniturePositionData aFurnitureData);
 	void RemoveFurnitureData(FIntVector2 aGridPosition);
 
+	void InitializeFurnitureDatas();
 	void SaveFurniturePosition() const;
 	
 	// Staff

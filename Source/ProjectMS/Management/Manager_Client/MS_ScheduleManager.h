@@ -67,8 +67,8 @@ public:
 	virtual void Finalize() override;
 	virtual void BuiltInFinalize() override;
 
+	virtual auto BeginPlay() -> void override;
 	virtual void Tick(float aDeltaTime) override;
-	virtual void BeginPlay() override;
 	
 	const FMS_GameDate& GetGameDate() const;
 	const EMS_DailyTimeZone GetDailyTimeZone() const;

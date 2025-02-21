@@ -118,11 +118,6 @@ void UMS_ScheduleManager::BuiltInFinalize()
 	Super::BuiltInFinalize();
 }
 
-void UMS_ScheduleManager::Tick(float aDeltaTime)
-{
-	Super::Tick(aDeltaTime);
-}
-
 void UMS_ScheduleManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -141,6 +136,11 @@ void UMS_ScheduleManager::BeginPlay()
 
 	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
 	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
+}
+
+void UMS_ScheduleManager::Tick(float aDeltaTime)
+{
+	Super::Tick(aDeltaTime);
 }
 
 const FMS_GameDate& UMS_ScheduleManager::GetGameDate() const
