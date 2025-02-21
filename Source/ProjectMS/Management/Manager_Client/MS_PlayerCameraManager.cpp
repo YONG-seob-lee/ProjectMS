@@ -285,7 +285,7 @@ void AMS_PlayerCameraManager::RotateCamera(const FRotator& aRotation) const
 	}
 }
 
-void AMS_PlayerCameraManager::ReplaceCamera(EMS_LevelType LevelType)
+void AMS_PlayerCameraManager::ReplaceCamera(EMS_LevelType LevelType) const
 {
 	switch (LevelType)
 	{
@@ -293,21 +293,25 @@ void AMS_PlayerCameraManager::ReplaceCamera(EMS_LevelType LevelType)
 		{
 			gCameraMng.LocateCamera(FVector(12600.f, -6380.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
+			break;
 		}
 	case EMS_LevelType::Stage02:
 		{
 			gCameraMng.LocateCamera(FVector(8060.f, -2100.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(8770.f, -3720.f, 390.f), EMS_ViewCameraType::SideView);
+			break;
 		}
 	case EMS_LevelType::Stage03:
-		{		
+		{	
 			gCameraMng.LocateCamera(FVector(5290.f, 3880.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(6000.f, 2200.f, 390.f), EMS_ViewCameraType::SideView);
+			break;
 		}
 	case EMS_LevelType::MarketLevel:
 		{
 			gCameraMng.LocateCamera(FVector(370.f, 440.f, 0.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector::ZeroVector, EMS_ViewCameraType::SideView);
+			break;
 		}
 		default:
 		{
