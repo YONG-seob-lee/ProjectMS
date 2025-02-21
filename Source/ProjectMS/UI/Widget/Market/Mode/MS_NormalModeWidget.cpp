@@ -54,7 +54,9 @@ void UMS_NormalModeWidget::NativeDestruct()
 void UMS_NormalModeWidget::OnClickedTownButton()
 {
 	CREATE_SCENE_COMMAND(Command);
-	Command->SetLevelType(EMS_LevelType::LobbyLevel);
+	EMS_LevelType TownLevelType = EMS_LevelType::None;
+	Command->CheckTownLevelType(TownLevelType, GetWorld());
+	Command->SetLevelType(TownLevelType);
 	Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
@@ -91,7 +93,9 @@ void UMS_NormalModeWidget::OnClickedCloseMarket()
 	{
 		// Town으로 이동
 		CREATE_SCENE_COMMAND(Command);
-		Command->SetLevelType(EMS_LevelType::Stage01);
+		EMS_LevelType TownLevelType = EMS_LevelType::None;
+		Command->CheckTownLevelType(TownLevelType, GetWorld());
+		Command->SetLevelType(TownLevelType);
 		Command->SetPreviousLevelType(EMS_LevelType::MarketLevel);
 		Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 		Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);

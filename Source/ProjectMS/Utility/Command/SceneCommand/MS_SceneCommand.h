@@ -25,6 +25,14 @@ enum class EMS_LevelType
 };
 
 UENUM()
+enum class EMS_TownBoundary
+{
+	Stage1 = 0,
+	Stage2 = 7,
+	Stage3 = 13,
+};
+
+UENUM()
 enum class EMS_TransitionStyle : uint8
 {
 	Undefined = 0,
@@ -59,8 +67,8 @@ class PROJECTMS_API UMS_SceneCommand : public UObject
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetLevelType(EMS_LevelType aType) { LevelType = aType; }
-	FORCEINLINE void SetPreviousLevelType(EMS_LevelType aType) { PreviousLevelType = aType; }
+	void SetLevelType(EMS_LevelType aType, const UWorld* aWorld = nullptr);
+	void SetPreviousLevelType(EMS_LevelType aType, const UWorld* aWorld = nullptr);
 	FORCEINLINE void SetFadeOutTransitionType(EMS_TransitionStyle aStyle) { FadeOutTransitionStyle = aStyle; }
 	FORCEINLINE void SetFadeInTransitionType(EMS_TransitionStyle aStyle) { FadeInTransitionStyle = aStyle; }
 	FORCEINLINE void SetLoadingWidgetType(EMS_LoadingWidgetType aType) { LoadingWidgetType = aType; }
@@ -80,9 +88,13 @@ public:
 	FORCEINLINE bool IsAllowInteractActor() const { return bAllowInteractActor; }
 	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 	
+	void CheckTownLevelType(EMS_LevelType& aLevelType, const UWorld* aWorld = nullptr);
+	
 	FMS_FadeEventDelegate OnFadeEventDelegate;
 	TFunction<void()> OnFadeInFinishedCallback;
+	
 private:
+	
 	TSubclassOf<UMS_Widget> LoadingWidget = nullptr;
 	FName WidgetName = FName();
 

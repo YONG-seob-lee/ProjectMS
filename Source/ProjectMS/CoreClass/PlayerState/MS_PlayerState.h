@@ -26,6 +26,7 @@ public:
 	void SetGameDate(FMS_GameDate aGameDate) { GameDate = aGameDate; }
 	
 	const TArray<int32>& GetOpenedZoneIds();
+	int32 GetOpenedZoneCount() const;
 	void AddOpenedZoneId(int32 aZoneId);
 
 	// Items

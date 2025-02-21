@@ -27,6 +27,11 @@ const TArray<int32>& AMS_PlayerState::GetOpenedZoneIds()
 	return OpenedZoneIds;
 }
 
+int32 AMS_PlayerState::GetOpenedZoneCount() const
+{
+	return OpenedZoneIds.Num();
+}
+
 void AMS_PlayerState::AddOpenedZoneId(int32 aZoneId)
 {
 	OpenedZoneIds.AddUnique(aZoneId);

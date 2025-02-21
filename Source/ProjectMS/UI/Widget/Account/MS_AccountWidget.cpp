@@ -46,11 +46,10 @@ void UMS_AccountWidget::OnClickAccountButton()
 void UMS_AccountWidget::OnClickStartButton()
 {
 	CPP_StartButton->GetOnClickedDelegate().RemoveAll(this);
-	
 	CREATE_SCENE_COMMAND(Command);
 	// TODO : all : 서버 데이터에서 클리어한 위치를 찾아서 레벨 타입 적용.
-	Command->SetLevelType(EMS_LevelType::LobbyLevel);
-	Command->SetPreviousLevelType(EMS_LevelType::AccountLevel);
+	Command->SetLevelType(EMS_LevelType::LobbyLevel, GetWorld());
+	Command->SetPreviousLevelType(EMS_LevelType::AccountLevel, GetWorld());
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
