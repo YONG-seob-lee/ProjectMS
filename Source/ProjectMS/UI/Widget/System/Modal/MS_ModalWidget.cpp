@@ -18,6 +18,7 @@ void UMS_ModalWidget::NativeConstruct()
 	{
 		CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
 		{
+			CPP_BlurButton->GetOnClickedDelegate().RemoveAll(this);
 			gWidgetMng.CloseModalWidget();
 		});
 	}
