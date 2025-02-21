@@ -24,7 +24,7 @@ void AMS_Equipment::Equip()
 {
 	bIsEquipped = true;
 	
-	SetActorHiddenInGame(true);
+	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 }
 
@@ -32,6 +32,6 @@ void AMS_Equipment::Unequip()
 {
 	bIsEquipped = false;
 	
-	SetActorHiddenInGame(false);
+	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 }
