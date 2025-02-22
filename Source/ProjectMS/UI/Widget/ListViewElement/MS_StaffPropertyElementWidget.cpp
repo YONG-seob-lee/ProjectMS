@@ -110,10 +110,10 @@ FString UMS_StaffPropertyElementWidget::GetIssueName(int32 _IssueType)
 	{
 	case EMS_StaffIssueType::Payment:
 		return TEXT("Payment");
-	case EMS_StaffIssueType::RemoveItemsFromDisplay:
+	case EMS_StaffIssueType::ReturnItemsFromDisplay:
 	case EMS_StaffIssueType::AddItemsToDisplay:
 		return TEXT("Store Display");
-	case EMS_StaffIssueType::RemoveItemsFromShelf:
+	case EMS_StaffIssueType::ReturnItemsFromShelf:
 		return TEXT("Return Item");
 	case EMS_StaffIssueType::AddItemsToShelf:
 		return TEXT("Shelf Loading");

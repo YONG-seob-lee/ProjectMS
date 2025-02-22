@@ -59,12 +59,14 @@ public:
 	void Initialize();
 	void Finalize();
 
-	void RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit = nullptr, int32 aSlotId = INDEX_NONE);
+	TWeakObjectPtr<UMS_IssueTicket> RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit = nullptr, int32 aSlotId = INDEX_NONE);
 
 	void UnregisterAllIssueTickets();
 	void UnregisterUnitIssueTickets(MS_Handle aUnitHandle);
+	void UnregisterUnitIssueTickets(TWeakObjectPtr<class UMS_UnitBase> aUnitHandle);
 	void UnregisterUnitSlotIssueTickets(MS_Handle aUnitHandle, int32 aSlotId);
-	void UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
+	void UnregisterUnitSlotIssueTickets(TWeakObjectPtr<class UMS_UnitBase> aUnitBase, int32 aSlotId);
+	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
 
 	void GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_StaffIssueType aIssueType);
 	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle);
@@ -74,5 +76,6 @@ public:
 	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 	
 private:
+	UPROPERTY()
 	TArray<TObjectPtr<UMS_IssueTicket>> IssueTickets;
 };

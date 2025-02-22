@@ -9,6 +9,8 @@
 #include "Table/RowBase/MS_StorageData.h"
 #include "MS_FurnitureUnit.generated.h"
 
+enum class EMS_StaffIssueType : uint8;
+class UMS_IssueTicket;
 /**
  * 
  */
@@ -37,7 +39,7 @@ public:
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
 
 	
-	// Property :: Setter
+	// Slot Datas
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 
 	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
@@ -52,6 +54,18 @@ public:
 private:
 	void OnChangeRequestSlotDatas();
 	void OnChangeCurrentSlotDatas();
+
+public:
+	// IssueTickets
+	void UpdateIssueTickets();
+	void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer);
+
+private:
+	void UpdateStorageSlotIssueTickets();
+	
+	bool RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId = INDEX_NONE);
+	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
+	
 	
 private:
 	struct FMS_StorageData* FurnitureData = nullptr;
@@ -59,4 +73,9 @@ private:
 	// Property
 	UPROPERTY()
 	TArray<FMS_SlotData> SlotDatas;
+	
+	UPROPERTY()
+	TArray<TWeakObjectPtr<class UMS_IssueTicket>> IssueTickets;
+
+	float AddPercentage = 1.f;
 };

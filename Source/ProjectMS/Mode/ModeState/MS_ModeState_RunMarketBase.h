@@ -6,6 +6,7 @@
 #include "MS_ModeStateBase.h"
 #include "MS_ModeState_RunMarketBase.generated.h"
 
+enum class EMS_StaffIssueType : uint8;
 /**
  * 
  */
@@ -41,6 +42,13 @@ public:
 
 	
 	TObjectPtr<class UMS_StaffSupervisor> GetStaffSupervisor() const { return StaffSupervisor; }
+
+	// Issue Tickets
+	void UpdateAllFurnitureIssueTickets();
+	void ClearIssueTickets();
+	
+	TWeakObjectPtr<class UMS_IssueTicket> RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit = nullptr, int32 aSlotId = INDEX_NONE);
+	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
 
 	
 private:

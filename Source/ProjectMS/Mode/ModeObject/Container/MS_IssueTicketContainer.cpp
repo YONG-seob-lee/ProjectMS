@@ -81,7 +81,7 @@ void UMS_IssueTicketContainer::Finalize()
 	UnregisterAllIssueTickets();
 }
 
-void UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
+TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
 	TWeakObjectPtr<UMS_UnitBase> aRequestUnit /*= nullptr*/, int32 aSlotId /*= INDEX_NONE*/)
 {
 	if (!UMS_IssueTicket::AllowSameIssue(aIssueType))
@@ -92,7 +92,7 @@ void UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType
 			{
 				if (TestTicket->IsSameIssue(aIssueType, aRequestUnit, aSlotId))
 				{
-					return;
+					return nullptr;
 				}
 			}
 		}
@@ -103,7 +103,10 @@ void UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType
 	{
 		IssueTicket->Initialize(aIssueType, aRequestUnit, aSlotId);
 		IssueTickets.Emplace(IssueTicket);
+		return IssueTicket;
 	}
+
+	return nullptr;
 }
 
 void UMS_IssueTicketContainer::UnregisterAllIssueTickets()
@@ -143,6 +146,29 @@ void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(MS_Handle aUnitHandle)
 	}
 }
 
+void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(TWeakObjectPtr<UMS_UnitBase> aUnitBase)
+{
+	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	{
+		if (IsValid(IssueTickets[i]))
+		{
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTickets[i]->GetRequestUnit();
+		
+			if (RequestUnit == nullptr)
+			{
+				continue;
+			}
+		
+			if (RequestUnit == aUnitBase)
+			{
+				IssueTickets[i]->Finalize();
+				MS_DeleteObject(IssueTickets[i]);
+				IssueTickets.RemoveAt(i);
+			}
+		}
+	}
+}
+
 void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(MS_Handle aUnitHandle, int32 aSlotId)
 {
 	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
@@ -167,7 +193,31 @@ void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(MS_Handle aUnitHan
 	}
 }
 
-void UMS_IssueTicketContainer::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
+void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(TWeakObjectPtr<UMS_UnitBase> aUnitBase, int32 aSlotId)
+{
+	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	{
+		if (IsValid(IssueTickets[i]))
+		{
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTickets[i]->GetRequestUnit();
+			int32 RequestSlot = IssueTickets[i]->GetRequestSlot();
+			
+			if (RequestUnit == nullptr)
+			{
+				continue;
+			}
+		
+			if (RequestUnit == aUnitBase && RequestSlot == aSlotId)
+			{
+				IssueTickets[i]->Finalize();
+				MS_DeleteObject(IssueTickets[i]);
+				IssueTickets.RemoveAt(i);
+			}
+		}
+	}
+}
+
+bool UMS_IssueTicketContainer::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
 {
 	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
 	{
@@ -179,10 +229,12 @@ void UMS_IssueTicketContainer::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTic
 				MS_DeleteObject(IssueTickets[i]);
 				IssueTickets.RemoveAt(i);
 			
-				return;
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 void UMS_IssueTicketContainer::GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,

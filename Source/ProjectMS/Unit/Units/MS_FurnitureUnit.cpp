@@ -7,6 +7,9 @@
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_ModeManager.h"
+#include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
+#include "Mode/ModeState/MS_ModeState_RunMarket.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Furniture/MS_Furniture.h"
 #include "Table/RowBase/MS_ItemData.h"
@@ -24,6 +27,15 @@ void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType
 	for (int32 i = 0; i < SlotCount; ++i)
 	{
 		SlotDatas.Emplace(FMS_SlotData());
+	}
+
+	if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+	{
+		AddPercentage = 0.5f;
+	}
+	else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
+	{
+		AddPercentage = 1.f;
 	}
 }
 
@@ -308,6 +320,8 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 
 void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
 {
+	UpdateStorageSlotIssueTickets();
+	
 	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
 	MS_ENSURE(IsValid(Furniture));
 
@@ -316,8 +330,183 @@ void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
 
 void UMS_FurnitureUnit::OnChangeCurrentSlotDatas()
 {
+	UpdateStorageSlotIssueTickets();
+	
 	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
 	MS_ENSURE(IsValid(Furniture));
 
 	Furniture->OnChangeCurrentSlotDatas(SlotDatas);
+}
+
+void UMS_FurnitureUnit::UpdateIssueTickets()
+{
+	UpdateStorageSlotIssueTickets();
+}
+
+void UMS_FurnitureUnit::ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer)
+{
+	if (bNeedToUpdateIssueTicketContainer)
+	{
+		for (TWeakObjectPtr<UMS_IssueTicket> IssueTicket : IssueTickets)
+		{
+			UnregisterIssueTicket(IssueTicket);
+		}
+	}
+
+	IssueTickets.Empty();
+}
+
+void UMS_FurnitureUnit::UpdateStorageSlotIssueTickets()
+{
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		if (FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Display)
+			&& FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Shelf))
+		{
+			return;
+		}
+
+		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+		{
+			if (IssueTickets[i] == nullptr)
+			{
+				IssueTickets.RemoveAt(i);
+			}
+		}
+		
+		// 필요한 이슈 정리
+		TMap<int32, EMS_StaffIssueType> SlotIdToStaffIssueTypes = {};
+		for (int32 i = 0;  i < SlotDatas.Num(); ++i)
+		{
+			// 요구 아이템과 현재 아이템이 다를 때
+			if (SlotDatas[i].RequestItemTableId != SlotDatas[i].CurrentItemTableId)
+			{
+				// 아이템 빼기
+				if (SlotDatas[i].CurrentItemCount > 0)
+				{
+					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+					{
+						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromDisplay);
+					}
+					else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
+					{
+						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromShelf);
+					}
+				}
+			
+				// 아이템 채우기
+				else
+				{
+					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+					{
+						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToDisplay);
+					}
+					else
+					{
+						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToShelf);
+					}
+				}
+			}
+			// 요구 아이템과 현재 아이템이 같을 때
+			else
+			{
+				FMS_ItemData* CurrentItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotDatas[i].CurrentItemTableId);
+				if (CurrentItemData != nullptr)
+				{
+					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+					{
+						int32 RequestAddNum = FMath::Floor(CurrentItemData->Slot100x100MaxCount * AddPercentage);
+						if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
+						{
+							SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToDisplay);
+						}
+					}
+					else
+					{
+						int32 RequestAddNum = FMath::Floor(CurrentItemData->BoxMaxCount * AddPercentage);
+						if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
+						{
+							SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToShelf);
+						}
+					}
+				}
+			}
+		}
+	
+		// 기존 이슈에 슬롯 번호가 겹치는 것 정리
+		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+		{
+			int32 SlotId = IssueTickets[i]->GetRequestSlot();
+			if (SlotId == INDEX_NONE)
+			{
+				continue;
+			}
+			if (!SlotDatas.IsValidIndex(SlotId))
+			{
+				MS_ENSURE(false);
+				continue;
+			}
+
+			// 현재 슬롯 이슈와 필요한 슬롯 이슈가 다를 때
+			if (SlotIdToStaffIssueTypes.Contains(SlotId))
+			{
+				EMS_StaffIssueType SlotIssueType = *SlotIdToStaffIssueTypes.Find(SlotId);
+				if (SlotIssueType != IssueTickets[i]->GetIssueType())
+				{
+					UnregisterIssueTicket(IssueTickets[i]);
+					RegisterIssueTicket(SlotIssueType, SlotId);
+
+					SlotIdToStaffIssueTypes.Remove(SlotId);
+				}
+			}
+			// 현재 슬롯 이슈가 필요하지 않을 때
+			else
+			{
+				UnregisterIssueTicket(IssueTickets[i]);
+			}
+		}
+
+		// 기존 이슈에 슬롯 번호가 없는 것 추가
+		for (auto& It : SlotIdToStaffIssueTypes)
+		{
+			RegisterIssueTicket(It.Value, It.Key);
+		}
+	}
+}
+
+bool UMS_FurnitureUnit::RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId /*= INDEX_NONE*/)
+{
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		TWeakObjectPtr<UMS_IssueTicket> IssueTicket = RunMarketMode->RegisterIssueTicket(aIssueType, this, aSlotId);
+
+		IssueTickets.Emplace(IssueTicket);
+
+		return true;
+	}
+	
+	return false;
+}
+
+bool UMS_FurnitureUnit::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
+{
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		for (TWeakObjectPtr<UMS_IssueTicket> TestTicket : IssueTickets)
+		{
+			if (TestTicket->IsSameIssue(aIssueTicket))
+			{
+				IssueTickets.RemoveSingle(TestTicket);
+				return RunMarketMode->UnregisterIssueTicket(aIssueTicket);
+			}
+		}
+	}
+	
+	return false;
 }

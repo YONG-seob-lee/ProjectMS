@@ -7,6 +7,7 @@
 #include "MS_Define.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
@@ -16,6 +17,7 @@
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
 #include "PlayerState/MS_PlayerState.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
 
 
@@ -112,10 +114,14 @@ void UMS_ModeState_RunMarketBase::Begin()
 	{
 		GridBFS_2x2->CollectAllZoneTypeMovingPoints();
 	}
+
+	UpdateAllFurnitureIssueTickets();
 }
 
 void UMS_ModeState_RunMarketBase::Exit()
 {
+	ClearIssueTickets();
+	
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->Finalize();
@@ -291,4 +297,55 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 			}
 		}
 	}
+}
+
+void UMS_ModeState_RunMarketBase::UpdateAllFurnitureIssueTickets()
+{
+	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	gUnitMng.GetUnits(EMS_UnitType::Furniture, Units);
+
+	for (TObjectPtr<UMS_UnitBase> Unit : Units)
+	{
+		if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit))
+		{
+			FurnitureUnit->UpdateIssueTickets();
+		}
+	}
+}
+
+void UMS_ModeState_RunMarketBase::ClearIssueTickets()
+{
+	IssueTicketContainer->UnregisterAllIssueTickets();
+	
+	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	gUnitMng.GetUnits(EMS_UnitType::Furniture, Units);
+
+	for (TObjectPtr<UMS_UnitBase> Unit : Units)
+	{
+		if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit))
+		{
+			FurnitureUnit->ClearIssueTickets(false);
+		}
+	}
+}
+
+TWeakObjectPtr<UMS_IssueTicket> UMS_ModeState_RunMarketBase::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
+                                                                                 TWeakObjectPtr<UMS_UnitBase> aRequestUnit, int32 aSlotId)
+{
+	if (IssueTicketContainer)
+	{
+		return IssueTicketContainer->RegisterIssueTicket(aIssueType, aRequestUnit, aSlotId);
+	}
+
+	return nullptr;
+}
+
+bool UMS_ModeState_RunMarketBase::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
+{
+	if (IssueTicketContainer)
+	{
+		return IssueTicketContainer->UnregisterIssueTicket(aIssueTicket);
+	}
+
+	return false;
 }

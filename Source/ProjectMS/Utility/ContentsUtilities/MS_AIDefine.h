@@ -22,9 +22,9 @@ enum class EMS_StaffIssueType : uint8
 {
 	None = 0,
 	Payment = 1,
-	RemoveItemsFromDisplay = 2,
+	ReturnItemsFromDisplay = 2,
 	AddItemsToDisplay = 3,
-	RemoveItemsFromShelf = 4,
+	ReturnItemsFromShelf = 4,
 	AddItemsToShelf = 5,
 };
 
