@@ -146,6 +146,9 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	FMS_FurniturePositionData Wardrobe = FMS_FurniturePositionData(12, FIntVector2(-10, 11), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Wardrobe.GridPosition, Wardrobe);
 
+	FMS_FurniturePositionData Pallet = FMS_FurniturePositionData(10, FIntVector2(-4, 27), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet.GridPosition, Pallet);
+	
 	// Items
 	Items.Emplace(4, 30);
 	Items.Emplace(5, 30);
