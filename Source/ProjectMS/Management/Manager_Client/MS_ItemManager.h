@@ -41,6 +41,12 @@ public:
 	void GetRemainItems(TMap<int32, int32>& OutItems) const;
 	int32 GetRemainItemCount(int32 aItemId);
 
+	void GetStaffItems(TMap<int32, int32>& OutItems) const;
+	int32 GetStaffItemCount(int32 aItemId) const;
+
+	void GetCustomerItems(TMap<int32, int32>& OutItems) const;
+	int32 GetCustomerItemCount(int32 aItemId) const;
+	
 	void GetDisplayItems(TMap<int32, int32>& OutItems) const;
 	int32 GetDisplayItemCount(int32 aItemId) const;
 
@@ -49,6 +55,9 @@ public:
 
 	void GetPalletItems(TMap<int32, int32>& OutItems) const;
 	int32 GetPalletItemCount(int32 aItemId);
+
+	void GetNotPlacedItems(TMap<int32, int32>& OutItems) const;
+	int32 GetNotPlacedItemCount(int32 aItemId);
 
 	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
 	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }
