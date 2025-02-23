@@ -13,4 +13,9 @@ UCLASS()
 class PROJECTMS_API UMS_DefaultLoadingWidget : public UMS_Widget
 {
 	GENERATED_BODY()
+public:
+
+private:
+	UPROPERTY()
+	TObjectPtr<class UMS_LoadingTutorialWidget> CPP_LoadingTutorialWidget = nullptr;
 };
