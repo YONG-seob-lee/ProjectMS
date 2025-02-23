@@ -1,7 +1,6 @@
 #include "Camera/ViewCamera/MS_ViewCamera.h"
 
 #include "Components/SceneComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
 #include "Camera/CameraEffect/CameraPostProcessEffect/MS_CameraPostProcessEffect.h"

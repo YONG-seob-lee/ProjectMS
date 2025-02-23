@@ -20,6 +20,10 @@ public:
 	virtual void AdjustCameraDistance(float aDistance) override;
 
 	void SetTilt(EMS_TiltType aTiltType);
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;
 private:
 	TMap<EMS_TiltType, float> Tilts; 
 };

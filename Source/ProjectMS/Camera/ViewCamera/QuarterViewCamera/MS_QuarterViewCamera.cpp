@@ -5,10 +5,9 @@
 AMS_QuarterViewCamera::AMS_QuarterViewCamera()
 {
 	SceneComponent->SetAbsolute(false, true, true);
-
+	SetActorEnableCollision(true);
 	CameraDistance = 500.0f;
 	CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(0.f, 0.0f, 0.0f));
-
 	Tilts.Emplace(EMS_TiltType::VeryVeryLow, -30.f);
 	Tilts.Emplace(EMS_TiltType::VeryLow, -40.f);
 	Tilts.Emplace(EMS_TiltType::Low, -50.f);
@@ -16,6 +15,19 @@ AMS_QuarterViewCamera::AMS_QuarterViewCamera()
 	Tilts.Emplace(EMS_TiltType::High, -70.f);
 	Tilts.Emplace(EMS_TiltType::VeryHigh, -80.f);
 	Tilts.Emplace(EMS_TiltType::VeryVeryHigh, -90.f);
+
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	if(StaticMeshComponent)
+	{
+		SetRootComponent(StaticMeshComponent);
+		CameraComponent->SetupAttachment(StaticMeshComponent);
+
+		if(UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Environment/CameraBlock/CameraDummySphere.CameraDummySphere"))))
+		{
+			StaticMeshComponent->SetStaticMesh(Mesh);
+		}
+	}
+	SetHidden(true);
 }
 
 void AMS_QuarterViewCamera::BeginPlay()
