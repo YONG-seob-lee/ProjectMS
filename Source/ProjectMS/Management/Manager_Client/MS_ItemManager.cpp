@@ -502,13 +502,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 					if (NotPlacedItemCount < EmptyCount)
 					{
-						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
 
 						NotPlacedItems.Remove(FurnitureSlotDatas[i].CurrentItemTableId);
 					}
 					else
 					{
-						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
 
 						NotPlacedItemCount -= EmptyCount;
 					}
