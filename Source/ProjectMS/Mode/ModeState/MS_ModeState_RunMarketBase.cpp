@@ -341,11 +341,11 @@ void UMS_ModeState_RunMarketBase::ClearIssueTickets()
 }
 
 TWeakObjectPtr<UMS_IssueTicket> UMS_ModeState_RunMarketBase::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
-                                                                                 TWeakObjectPtr<UMS_UnitBase> aRequestUnit, int32 aSlotId)
+                                                                                 TWeakObjectPtr<UMS_FurnitureUnit> aRequestFurnitureUnit, int32 aSlotId)
 {
 	if (IssueTicketContainer)
 	{
-		return IssueTicketContainer->RegisterIssueTicket(aIssueType, aRequestUnit, aSlotId);
+		return IssueTicketContainer->RegisterIssueTicket(aIssueType, aRequestFurnitureUnit, aSlotId);
 	}
 
 	return nullptr;
@@ -359,4 +359,12 @@ bool UMS_ModeState_RunMarketBase::UnregisterIssueTicket(TWeakObjectPtr<UMS_Issue
 	}
 
 	return false;
+}
+
+void UMS_ModeState_RunMarketBase::UpdateStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
+{
+	if (IssueTicketContainer)
+	{
+		IssueTicketContainer->UpdateStorageIssueTicketsEnabled(aZoneType);
+	}
 }

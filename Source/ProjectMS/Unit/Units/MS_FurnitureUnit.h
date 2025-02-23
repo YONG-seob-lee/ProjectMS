@@ -39,6 +39,7 @@ public:
 	// Slot Datas
 	FORCEINLINE int32 GetSlotCount() const;
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+	FORCEINLINE FMS_SlotData GetSlotData(int32 aSlotId) const;
 	
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 

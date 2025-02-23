@@ -46,15 +46,11 @@ public:
 
 	void GetCustomerItems(TMap<int32, int32>& OutItems) const;
 	int32 GetCustomerItemCount(int32 aItemId) const;
+
+	void GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
+	int32 GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId) const;
 	
-	void GetDisplayItems(TMap<int32, int32>& OutItems) const;
-	int32 GetDisplayItemCount(int32 aItemId) const;
-
-	void GetShelfItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
-	int32 GetShelfItemCount(int32 aItemId) const;
-
-	void GetPalletItems(TMap<int32, int32>& OutItems) const;
-	int32 GetPalletItemCount(int32 aItemId) const;
+	bool CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_ZoneType aZoneType) const;
 
 	void GetNotPlacedItems(TMap<int32, int32>& OutItems);
 	int32 GetNotPlacedItemCount(int32 aItemId) const;
