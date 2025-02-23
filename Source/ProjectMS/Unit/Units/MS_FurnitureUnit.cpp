@@ -86,6 +86,16 @@ int32 UMS_FurnitureUnit::GetSlotCount() const
 	return FurnitureData->SlotCount;
 }
 
+FMS_SlotData UMS_FurnitureUnit::GetSlotData(int32 aSlotId) const
+{
+	if (SlotDatas.IsValidIndex(aSlotId))
+	{
+		return SlotDatas[aSlotId];
+	}
+
+	return FMS_SlotData();
+}
+
 void UMS_FurnitureUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
@@ -252,11 +262,11 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 		int32 NewItemCount = 0;
 		if (GetZoneType() == EMS_ZoneType::Display)
 		{
-			NewItemCount = FMath::Min(gItemMng.GetShelfItemCount(aItemId), ItemData->Slot100x100MaxCount);
+			NewItemCount = FMath::Min(gItemMng.GetStorageItemCount(EMS_ZoneType::Shelf, aItemId), ItemData->Slot100x100MaxCount);
 		}
 		else
 		{
-			NewItemCount = FMath::Min(gItemMng.GetPalletItemCount(aItemId), ItemData->BoxMaxCount);
+			NewItemCount = FMath::Min(gItemMng.GetStorageItemCount(EMS_ZoneType::Pallet, aItemId), ItemData->BoxMaxCount);
 		}
 		
 		// 창고에서 빼기

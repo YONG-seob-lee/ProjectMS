@@ -204,57 +204,7 @@ int32 UMS_ItemManager::GetCustomerItemCount(int32 aItemId) const
 	return *ItemCount;
 }
 
-void UMS_ItemManager::GetDisplayItems(TMap<int32, int32>& OutItems) const
-{
-	OutItems.Empty();
-
-	if (const TObjectPtr UnitManager = gUnitMng)
-	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
-
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
-		{
-			if (const UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
-			{
-				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Display)
-				{
-					continue;
-				}
-				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
-
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
-				{
-					if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
-					{
-						continue;
-					}
-					
-					int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
-					Count += SlotData.CurrentItemCount;
-				}
-			}
-		}
-	}
-}
-
-int32 UMS_ItemManager::GetDisplayItemCount(int32 aItemId) const
-{
-	TMap<int32, int32> DisplayItems;
-	GetDisplayItems(DisplayItems);
-
-	const int32* ItemCount = DisplayItems.Find(aItemId);
-	if(!ItemCount)
-	{
-		return 0;
-	}
-	
-	return *ItemCount;
-}
-
-void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType /* = EMS_TemperatureType::Undefined */) const
+void UMS_ItemManager::GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType /*= EMS_TemperatureType::Undefined*/) const
 {
 	OutItems.Empty();
 
@@ -270,7 +220,7 @@ void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems, EMS_Temperatur
 			{
 				continue;
 			}
-			if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+			if (FurnitureUnit->GetZoneType() != aZoneType)
 			{
 				continue;
 			}
@@ -303,7 +253,7 @@ void UMS_ItemManager::GetShelfItems(TMap<int32, int32>& OutItems, EMS_Temperatur
 	}
 }
 
-int32 UMS_ItemManager::GetShelfItemCount(int32 aItemId) const
+int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId) const
 {
 	int32 ItemCount = 0;
 
@@ -316,7 +266,7 @@ int32 UMS_ItemManager::GetShelfItemCount(int32 aItemId) const
 		{
 			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
 			{
-				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Shelf)
+				if (FurnitureUnit->GetZoneType() != aZoneType)
 				{
 					continue;
 				}
@@ -333,53 +283,21 @@ int32 UMS_ItemManager::GetShelfItemCount(int32 aItemId) const
 				}
 			}
 		}
+	}
+
+	return ItemCount;
+}
+
+bool UMS_ItemManager::CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_ZoneType aZoneType) const
+{
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
+	if (ItemData == nullptr)
+	{
+		MS_ENSURE(false);
+		return false;
 	}
 	
-	return ItemCount;
-}
-
-void UMS_ItemManager::GetPalletItems(TMap<int32, int32>& OutItems) const
-{
-	OutItems.Empty();
-
-	if (const TObjectPtr UnitManager = gUnitMng)
-	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
-
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
-		{
-			const UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get());
-			if (!FurnitureUnit)
-			{
-				continue;
-			}
-			
-			if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
-			{
-				continue;
-			}
-				
-			TArray<FMS_SlotData> FurnitureSlotDatas;
-			FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
-
-			for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
-			{
-				if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
-				{
-					continue;
-				}
-					
-				int32& Count = OutItems.FindOrAdd(SlotData.CurrentItemTableId);
-				Count += SlotData.CurrentItemCount;
-			}
-		}
-	}
-}
-
-int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
-{
-	int32 ItemCount = 0;
+	int32 EmptyCount = 0;
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
@@ -390,7 +308,7 @@ int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
 		{
 			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
 			{
-				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+				if (FurnitureUnit->GetZoneType() != aZoneType)
 				{
 					continue;
 				}
@@ -400,16 +318,24 @@ int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
 
 				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
 				{
-					if (SlotData.CurrentItemTableId == aItemId)
+					if (SlotData.RequestItemTableId == aItemId)
 					{
-						ItemCount += SlotData.CurrentItemCount; 
+						if (SlotData.CurrentItemTableId == aItemId)
+						{
+							EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
+						}
+
+						else if (SlotData.CurrentItemCount == 0)
+						{
+							EmptyCount = EmptyCount + ItemData->BoxMaxCount;
+						}
 					}
 				}
 			}
 		}
 	}
 
-	return ItemCount;
+	return EmptyCount >= aReturnCount;
 }
 
 void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
@@ -419,7 +345,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Staff
 	TMap<int32, int32> StaffItems;
-	GetDisplayItems(StaffItems);
+	GetStorageItems(EMS_ZoneType::Display, StaffItems);
 
 	for (const auto& StaffItem : StaffItems)
 	{
@@ -429,7 +355,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Customer
 	TMap<int32, int32> CustomerItems;
-	GetDisplayItems(CustomerItems);
+	GetStorageItems(EMS_ZoneType::Display, CustomerItems);
 
 	for (const auto& CustomerItem : CustomerItems)
 	{
@@ -439,7 +365,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 	
 	// Display
 	TMap<int32, int32> DisplayItems;
-	GetDisplayItems(DisplayItems);
+	GetStorageItems(EMS_ZoneType::Display, DisplayItems);
 
 	for (const auto& DisplayItem : DisplayItems)
 	{
@@ -449,7 +375,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Shelf
 	TMap<int32, int32> ShelfItems;
-	GetShelfItems(ShelfItems);
+	GetStorageItems(EMS_ZoneType::Shelf, ShelfItems);
 
 	for (const auto& ShelfItem : ShelfItems)
 	{
@@ -459,7 +385,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Pallet
 	TMap<int32, int32> PalletItems;
-	GetShelfItems(PalletItems);
+	GetStorageItems(EMS_ZoneType::Pallet, PalletItems);
 
 	for (const auto& PalletItem : PalletItems)
 	{
@@ -472,7 +398,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 int32 UMS_ItemManager::GetNotPlacedItemCount(int32 aItemId) const
 {
-	return GetRemainItemCount(aItemId) - GetDisplayItemCount(aItemId) - GetShelfItemCount(aItemId) - GetPalletItemCount(aItemId);
+	return GetRemainItemCount(aItemId) - GetStorageItemCount(EMS_ZoneType::Display, aItemId) - GetStorageItemCount(EMS_ZoneType::Shelf, aItemId) - GetStorageItemCount(EMS_ZoneType::Pallet, aItemId);
 }
 
 void UMS_ItemManager::GetCacheNotPlacedItems(TMap<int32, int32>& OutItems) const

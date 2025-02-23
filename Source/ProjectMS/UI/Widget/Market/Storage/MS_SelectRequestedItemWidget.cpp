@@ -26,11 +26,11 @@ void UMS_SelectRequestedItemWidget::SetTileView(EMS_TemperatureType aTemperature
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
-		gItemMng.GetShelfItems(RequestableItems, aTemperatureType);
+		gItemMng.GetStorageItems(EMS_ZoneType::Shelf, RequestableItems, aTemperatureType);
 	}
 	else if (OwnerZoneType == EMS_ZoneType::Shelf)
 	{
-		gItemMng.GetPalletItems(RequestableItems);
+		gItemMng.GetStorageItems(EMS_ZoneType::Pallet, RequestableItems);
 	}
 	else
 	{
