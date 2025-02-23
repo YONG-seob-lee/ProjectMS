@@ -59,11 +59,6 @@ int32 UMS_FurnitureUnit::GetBlueprintPathId() const
 	return FurnitureData->PathFile;
 }
 
-EMS_ZoneType UMS_FurnitureUnit::GetZoneType() const
-{
-	return static_cast<EMS_ZoneType>(FurnitureData->ZoneType);
-}
-
 FIntVector2 UMS_FurnitureUnit::GetGridPosition() const
 {
 	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
@@ -79,11 +74,6 @@ TArray<UMS_PropSpaceComponent*> UMS_FurnitureUnit::GetPropPurposeSpaceComponents
 	MS_ENSURE(IsValid(Furniture));
 
 	return Furniture->GetPropPurposeSpaceComponents(aPropPurposeSpace);
-}
-
-int32 UMS_FurnitureUnit::GetSlotCount() const
-{
-	return FurnitureData->SlotCount;
 }
 
 FMS_SlotData UMS_FurnitureUnit::GetSlotData(int32 aSlotId) const

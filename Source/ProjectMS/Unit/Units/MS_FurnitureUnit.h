@@ -25,10 +25,10 @@ public:
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 	
-	FORCEINLINE virtual int32 GetBlueprintPathId() const override;
+	virtual int32 GetBlueprintPathId() const override;
 
 	// Property :: Getter
-	FORCEINLINE EMS_ZoneType GetZoneType() const;
+	FORCEINLINE EMS_ZoneType GetZoneType() const { return static_cast<EMS_ZoneType>(FurnitureData->ZoneType); }
 	FORCEINLINE EMS_TemperatureType GetTemperatureType() const { return static_cast<EMS_TemperatureType>(FurnitureData->TemperatureType); }
 	
 	FIntVector2 GetGridPosition() const;
@@ -37,9 +37,9 @@ public:
 
 	
 	// Slot Datas
-	FORCEINLINE int32 GetSlotCount() const;
+	FORCEINLINE int32 GetSlotCount() const { 	return FurnitureData->SlotCount; }
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
-	FORCEINLINE FMS_SlotData GetSlotData(int32 aSlotId) const;
+	FMS_SlotData GetSlotData(int32 aSlotId) const;
 	
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 

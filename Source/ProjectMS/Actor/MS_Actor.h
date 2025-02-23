@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Define.h"
+#include "MS_UnitBase.h"
 
 #include "MS_Actor.generated.h"
 
@@ -24,7 +25,7 @@ public:
 	void Initialize();
 	void Finalize();
 	
-	FORCEINLINE void SetOwnerUnitBase(class UMS_UnitBase* aOwnerUnit);
+	FORCEINLINE void SetOwnerUnitBase(class UMS_UnitBase* aOwnerUnit) { OwnerUnit = aOwnerUnit; }
 	FORCEINLINE TWeakObjectPtr<class UMS_UnitBase> GetOwnerUnitBase() const { return OwnerUnit; }
 	
 	virtual bool HasInteractionComponent() { return false; }

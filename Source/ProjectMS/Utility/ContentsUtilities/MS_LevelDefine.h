@@ -157,14 +157,14 @@ public:
 	}
 	
 	UPROPERTY()
-	int32 FurnitureTableId;
+	int32 FurnitureTableId = 0;
 
 	UPROPERTY()
-	FIntVector2 GridPosition;
+	FIntVector2 GridPosition = FIntVector2::NoneValue;
 	
 	UPROPERTY()
-	EMS_Rotation Rotation;
+	EMS_Rotation Rotation = EMS_Rotation::Rot0;
 
 	UPROPERTY()
-	TArray<FMS_SlotData> SlotDatas;
+	TArray<FMS_SlotData> SlotDatas = {};
 };

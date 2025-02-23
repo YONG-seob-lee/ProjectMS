@@ -171,7 +171,7 @@ void AMS_PlayerState::InitPlayerData()
 	OpenedZoneIds = TestDB->OpenedZoneIds;
 
 	GridPositionToMarketFurnitureDatas.Empty();
-	for (const FMS_FurniturePositionData MarketFurnitureData : TestDB->MarketFurnitureDatas)
+	for (const auto& MarketFurnitureData : TestDB->MarketFurnitureDatas)
 	{
 		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurnitureData.GridPosition))
 		{

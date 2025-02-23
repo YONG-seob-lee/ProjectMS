@@ -25,13 +25,13 @@ public:
 	virtual void DestroyUnitActor() override;
 
 	// Getter
-	FORCEINLINE class AMS_Gate* GetGateActor() const;
+	class AMS_Gate* GetGateActor() const;
 	
-	FORCEINLINE EMS_ZoneType GetGateZoneType() const;
-	FORCEINLINE EMS_ZoneType GetLinkedZoneType() const;
+	EMS_ZoneType GetGateZoneType() const;
+	EMS_ZoneType GetLinkedZoneType() const;
 	
-	FORCEINLINE TWeakObjectPtr<AMS_Gate> GetLinkedGateActor() const;
+	TWeakObjectPtr<AMS_Gate> GetLinkedGateActor() const;
 
-	FORCEINLINE FIntVector2 GetGridPosition() const;
-	FORCEINLINE FIntVector2 GetLinkedGridPosition() const;
+	FIntVector2 GetGridPosition() const;
+	FIntVector2 GetLinkedGridPosition() const;
 };

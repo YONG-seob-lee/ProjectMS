@@ -8,30 +8,30 @@ USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ItemType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ItemName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TemperatureType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Slot100x100MaxCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BoxMaxCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TakeMinCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TakeMaxCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 PriceMin;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 PriceMax;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 PathFile;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BoxMeshPath;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 SlotPath100x100;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ImagePath;
+	UPROPERTY(EditAnywhere)
+	int32 ItemType = 0;
+	UPROPERTY(EditAnywhere)
+	FName ItemName = FName();
+	UPROPERTY(EditAnywhere)
+	int32 TemperatureType = 0;
+	UPROPERTY(EditAnywhere)
+	int32 Slot100x100MaxCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 BoxMaxCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 TakeMinCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 TakeMaxCount = 0;
+	UPROPERTY(EditAnywhere)
+	int32 PriceMin = 0;
+	UPROPERTY(EditAnywhere)
+	int32 PriceMax = 0;
+	UPROPERTY(EditAnywhere)
+	int32 PathFile = 0;
+	UPROPERTY(EditAnywhere)
+	int32 BoxMeshPath = 0;
+	UPROPERTY(EditAnywhere)
+	int32 SlotPath100x100 = 0;
+	UPROPERTY(EditAnywhere)
+	int32 ImagePath = 0;
 };

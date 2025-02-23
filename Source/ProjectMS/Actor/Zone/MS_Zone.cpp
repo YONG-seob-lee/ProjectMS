@@ -248,16 +248,19 @@ void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObject
 		}
 		else
 		{
+#if WITH_EDITOR
 			MS_LOG_VERBOSITY(Error, TEXT("Floor data alreay exists [%s - X : %d, Y : %d]"),
 				*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-
+#endif
 			MS_ENSURE(false);
 		}
 	}
 	else
 	{
+#if WITH_EDITOR
 		MS_LOG_VERBOSITY(Error, TEXT("Floor's GridPosition is not vaild [%s - X : %d, Y : %d]"),
 			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
+#endif
 
 		MS_ENSURE(false);
 	}
@@ -275,9 +278,10 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 		}
 		else
 		{
+#if WITH_EDITOR
 			MS_LOG_VERBOSITY(Error, TEXT("Object data alreay exists [%s - X : %d, Y : %d]"),
 				*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-
+#endif
 			MS_ENSURE(false);
 		}
 
@@ -295,9 +299,10 @@ void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjec
 	}
 	else
 	{
+#if WITH_EDITOR
 		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [%s - X : %d, Y : %d]"),
 			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-
+#endif
 		MS_ENSURE(false);
 	}
 }
@@ -313,9 +318,10 @@ void AMS_Zone::UnregisterObjectToGrid(const FIntVector2& aGridPosition)
 	}
 	else
 	{
+#if WITH_EDITOR
 		MS_LOG_VERBOSITY(Error, TEXT("Object's GridPosition is not vaild [%s - X : %d, Y : %d]"),
 			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-
+#endif
 		MS_ENSURE(false);
 	}
 }
