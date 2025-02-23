@@ -361,10 +361,10 @@ bool UMS_ModeState_RunMarketBase::UnregisterIssueTicket(TWeakObjectPtr<UMS_Issue
 	return false;
 }
 
-void UMS_ModeState_RunMarketBase::UpdateStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
+void UMS_ModeState_RunMarketBase::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
 {
 	if (IssueTicketContainer)
 	{
-		IssueTicketContainer->UpdateStorageIssueTicketsEnabled(aZoneType);
+		IssueTicketContainer->UpdateAllZoneStorageIssueTicketsEnabled(aZoneType);
 	}
 }

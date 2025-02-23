@@ -51,7 +51,7 @@ public:
 	TWeakObjectPtr<class UMS_IssueTicket> RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_FurnitureUnit> aRequestFurnitureUnit = nullptr, int32 aSlotId = INDEX_NONE);
 	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
 
-	void UpdateStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
+	void UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
 
 	
 private:

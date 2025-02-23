@@ -86,7 +86,7 @@ public:
 
 	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
-	void UpdateStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
+	void UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
 
 	
 private:

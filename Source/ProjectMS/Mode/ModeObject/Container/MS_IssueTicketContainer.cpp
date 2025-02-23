@@ -103,8 +103,8 @@ void UMS_IssueTicket::UpdateEnabled()
 	{
 		FMS_SlotData SlotData = GetRequestFurnitureSlot();
 		
-		int32 ShelfItemCount = gItemMng.GetStorageItemCount(EMS_ZoneType::Pallet, SlotData.RequestItemTableId);
-		SetIsEnabled(ShelfItemCount > 0);
+		int32 PalletItemCount = gItemMng.GetStorageItemCount(EMS_ZoneType::Pallet, SlotData.RequestItemTableId);
+		SetIsEnabled(PalletItemCount > 0);
 	}
 	else
 	{
@@ -394,7 +394,7 @@ void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_Issue
 	aTargetTicket->SetStaffUnit(aStaffUnit);
 }
 
-void UMS_IssueTicketContainer::UpdateStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
+void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
 {
 	if (aZoneType == EMS_ZoneType::Display)
 	{

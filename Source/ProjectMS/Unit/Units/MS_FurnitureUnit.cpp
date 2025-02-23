@@ -330,6 +330,7 @@ void UMS_FurnitureUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 
 void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
 {
+	// 이 가구의 이슈 업데이트
 	if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display)
 	|| FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
 	{
@@ -339,17 +340,34 @@ void UMS_FurnitureUnit::OnChangeRequestSlotDatas()
 	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
 	MS_ENSURE(IsValid(Furniture));
 
+	// MS_Furniture
 	Furniture->OnChangeRequestSlotDatas(SlotDatas);
 }
 
 void UMS_FurnitureUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= true*/)
 {
+	// 이 가구의 이슈 업데이트
 	if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display)
 	|| FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
 	{
 		UpdateStorageSlotIssueTickets();
 	}
 
+	// 이 가구의 아이템슬롯이 변경 되어 다른 가구의 이슈들이 해결 가능, 불가능해졌는지 업데이트
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Pallet))
+		{
+			RunMarketMode->UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType::Shelf);
+		}
+		else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
+		{
+			RunMarketMode->UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType::Display);
+		}
+	}
+
+	// Not Placed Item이 옮겨질 수 있는 지 업데이트
 	if (bUpdateNotPlacedItems)
 	{
 		if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Pallet))
@@ -357,7 +375,8 @@ void UMS_FurnitureUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= 
 			gItemMng.UpdateNotPlacedItemsToPalletItems(this);
 		}
 	}
-	
+
+	// MS_Furniture
 	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
 	MS_ENSURE(IsValid(Furniture));
 
