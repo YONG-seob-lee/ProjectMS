@@ -68,7 +68,7 @@ void AMS_Market::LaunchEvent()
 	CREATE_SCENE_COMMAND(Command);
 	Command->SetLevelType(EMS_LevelType::MarketLevel);
 	// TODO : All : 언로드해야할 스테이지를 판별해야함.
-	Command->SetPreviousLevelType(EMS_LevelType::LobbyLevel);
+	Command->SetPreviousLevelType(EMS_LevelType::LobbyLevel, GetWorld());
 	Command->SetFadeOutTransitionType(EMS_TransitionStyle::GradationOut);
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
