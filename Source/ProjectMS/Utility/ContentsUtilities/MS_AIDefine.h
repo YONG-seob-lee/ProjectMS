@@ -28,38 +28,76 @@ enum class EMS_StaffIssueType : uint8
 	AddItemsToShelf = 5,
 };
 
+UENUM()
+enum class EMS_StaffIssueProcess : uint8
+{
+	None = 0,
+	GoToRequestUnit = 1,
+	GoToTakeInTargets = 2,
+	GoToTakeOutTargets = 3,
+	Act = 4
+};
+
 USTRUCT()
-struct FMS_StaffData
+struct FMS_PlayerStaffData
 {
 	GENERATED_BODY()
 
 public:
-	FMS_StaffData()
+	FMS_PlayerStaffData()
 		: StaffId(INDEX_NONE)
 	{
 		WorkingDays.Empty();
+
+		// ToDo : Test를 위해 임시 배치
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
 	}
 
-	FMS_StaffData(int32 aStaffId)
+	FMS_PlayerStaffData(int32 aStaffId)
 		: StaffId(aStaffId), FirstDateOfWork(FMS_GameDate(1, 1, 1))
 	{
 		WorkingDays.Empty();
+
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
 	}
 
-	FMS_StaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork)
+	FMS_PlayerStaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork)
 		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork)
 	{
 		WorkingDays.Empty();
+
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
 	}
 
-	FMS_StaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork, int32 aWorkDay)
-		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork), ExpirationDate(FMS_GameDate(aFirstDateOfWork, aWorkDay)), WorkDay(aWorkDay) {}
+	FMS_PlayerStaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork, int32 aWorkDay)
+		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork), ExpirationDate(FMS_GameDate(aFirstDateOfWork, aWorkDay)), WorkDay(aWorkDay)
+	{
+		
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
+		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
+	}
+
 	
 	UPROPERTY()
 	int32 StaffId;
 
 	UPROPERTY()
-	TArray<EMS_StaffIssueType> PriorityOfWoks;
+	TArray<EMS_StaffIssueType> PriorityOfWorks;
 	
 	UPROPERTY()
 	FMS_GameDate FirstDateOfWork;
@@ -87,6 +125,7 @@ namespace OutsideBoardKeyName
 namespace StaffBoardKeyName
 {
 	const FName SelectedStaffAction = TEXT("SelectedStaffAction");
+	const FName CurrentIssueProcess = TEXT("CurrentIssueProcess");
 }
 
 namespace SocketName

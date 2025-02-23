@@ -7,6 +7,7 @@ bool UMS_StaffAction::HasStaffActionTarget(EMS_StaffActionType aStaffActionType)
 {
 	switch (aStaffActionType)
 	{
+	case EMS_StaffActionType::Issue :
 	case EMS_StaffActionType::ChangeClothes :
 		{
 			return true;

@@ -39,7 +39,8 @@ public:
 	void RequestSpawnCharacterInMarket(int32 aStaffId);
 #endif
 	
-	bool SpawnCharacter(int32 StaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator);
+	bool SpawnCharacter(int32 aStaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator);
+	bool SpawnCharacter(FMS_PlayerStaffData* aPlayerStaffData, const FVector& SpawnLocation, const FRotator& SpawnRotator);
 	void RemoveAllCharacter();
 
 	
@@ -48,7 +49,7 @@ private:
 	
 	TWeakObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
 
-	TArray<FMS_StaffData> StaffDatas;
+	TArray<FMS_PlayerStaffData> PlayerStaffDatas;
 	TMap<int32, int32> NeedToSpawnStaffDataIndexToSpawnMinute;
 
 	TArray<TWeakObjectPtr<UMS_StaffAIUnit>> StaffAIUnits;

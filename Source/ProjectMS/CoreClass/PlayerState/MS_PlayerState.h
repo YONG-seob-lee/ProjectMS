@@ -52,7 +52,7 @@ public:
 	
 	// Staff
 	void RegisterStaff(int32 StaffId, int32 WorkDay);
-	const TArray<FMS_StaffData>& GetStaffDatas() const { return StaffDatas; }
+	const TArray<FMS_PlayerStaffData>& GetStaffDatas() const { return StaffDatas; }
 
 	
 	void InitDefaultPlayerData();
@@ -91,5 +91,5 @@ private:
 	
 	//Staff
 	UPROPERTY()
-	TArray<FMS_StaffData> StaffDatas;
+	TArray<FMS_PlayerStaffData> StaffDatas;
 };

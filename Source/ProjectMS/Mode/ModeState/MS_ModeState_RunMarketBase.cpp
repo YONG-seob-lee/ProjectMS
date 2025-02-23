@@ -257,6 +257,88 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 		{
 			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions);
 		}
+
+		// ===== ToDo : 더 보편적인 코드로 수정 ===== //
+		else if ((StartZoneType == EMS_ZoneType::Display && TargetZoneType == EMS_ZoneType::Pallet)
+			|| (StartZoneType == EMS_ZoneType::Pallet && TargetZoneType == EMS_ZoneType::Display))
+		{
+			// Start에서 First Gate까지
+			TArray<FIntVector2> PathToFirstGate = {};
+			
+			TArray<TWeakObjectPtr<UMS_GateUnit>> FirstGateUnits;
+			LevelScriptActor->GetGateUnitsInLevel(FirstGateUnits, StartZoneType, EMS_ZoneType::Shelf);
+
+			TArray<FIntVector2> GatePositions = {};
+			for (TWeakObjectPtr<UMS_GateUnit> GateUnit : FirstGateUnits)
+			{
+				if (GateUnit != nullptr)
+				{
+					GatePositions.Emplace(GateUnit->GetGridPosition());
+				}
+			}
+			
+			GridBFS_2x2->Search(PathToFirstGate, StartZoneType, aStartPosition, GatePositions);
+
+			// Linked First Gate에서 Second Gate까지
+			TArray<FIntVector2> PathToSecondGate = {};
+			if (PathToFirstGate.Num() != 0)
+			{
+				TWeakObjectPtr<UMS_GateUnit> FirstGateUnit;
+				for (TWeakObjectPtr<UMS_GateUnit> GateUnit : FirstGateUnits)
+				{
+					if (GateUnit != nullptr)
+					{
+						if (GateUnit->GetGridPosition() == PathToFirstGate.Last())
+						{
+							FirstGateUnit = GateUnit;
+						}
+					}
+				}
+
+				TArray<TWeakObjectPtr<UMS_GateUnit>> SecondGateUnits;
+				LevelScriptActor->GetGateUnitsInLevel(SecondGateUnits, EMS_ZoneType::Shelf, TargetZoneType);
+
+				TArray<FIntVector2> SecondGatePositions = {};
+				for (TWeakObjectPtr<UMS_GateUnit> GateUnit : SecondGateUnits)
+				{
+					if (GateUnit != nullptr)
+					{
+						SecondGatePositions.Emplace(GateUnit->GetGridPosition());
+					}
+				}
+
+				GridBFS_2x2->Search(PathToSecondGate, EMS_ZoneType::Shelf, FirstGateUnit->GetLinkedGridPosition(), SecondGatePositions);
+			
+				// Linked Second Gate에서 타겟까지
+				if (PathToSecondGate.Num() != 0)
+				{
+					TArray<FIntVector2> PathToTarget;
+			
+					TWeakObjectPtr<UMS_GateUnit> SecondGateUnit;
+					for (TWeakObjectPtr<UMS_GateUnit> GateUnit : SecondGateUnits)
+					{
+						if (GateUnit != nullptr)
+						{
+							if (GateUnit->GetGridPosition() == PathToSecondGate.Last())
+							{
+								SecondGateUnit = GateUnit;
+							}
+						}
+					}
+
+					GridBFS_2x2->Search(PathToTarget, TargetZoneType, SecondGateUnit->GetLinkedGridPosition(), aTargetPositions);
+
+					if (PathToTarget.Num() != 0)
+					{
+						aOutPath.Append(PathToFirstGate);
+						aOutPath.Append(PathToSecondGate);
+						aOutPath.Append(PathToTarget);
+					}
+				}
+			}
+		}
+		// ======================================= //
+		
 		else
 		{
 			// Start에서 Gate까지
@@ -366,5 +448,33 @@ void UMS_ModeState_RunMarketBase::UpdateAllZoneStorageIssueTicketsEnabled(EMS_Zo
 	if (IssueTicketContainer)
 	{
 		IssueTicketContainer->UpdateAllZoneStorageIssueTicketsEnabled(aZoneType);
+	}
+}
+
+TWeakObjectPtr<UMS_IssueTicket> UMS_ModeState_RunMarketBase::SearchStaffIssueTicket(
+	TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
+{
+	if (IssueTicketContainer)
+	{
+		return IssueTicketContainer->SearchStaffIssueTicket(aStaffUnit);
+	}
+
+	return nullptr;
+}
+
+void UMS_ModeState_RunMarketBase::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
+	TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
+{
+	if (IssueTicketContainer)
+	{
+		IssueTicketContainer->RegisterIssueTicketStaff(aTargetTicket, aStaffUnit);
+	}
+}
+
+void UMS_ModeState_RunMarketBase:: UnregisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket)
+{
+	if (IssueTicketContainer)
+	{
+		IssueTicketContainer->UnregisterIssueTicketStaff(aTargetTicket);
 	}
 }

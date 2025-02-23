@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_SpawnPoint.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_StaffDuckSpawnPoint.generated.h"
 
 UCLASS()
@@ -14,12 +15,12 @@ class PROJECTMS_API AMS_StaffDuckSpawnPoint : public AMS_SpawnPoint
 public:
 	AMS_StaffDuckSpawnPoint(const FObjectInitializer& ObjectInitializer);
 
-	void UpdateSpawnData(int32 _UnitId, int32 _SpawnMinute);
+	void UpdateSpawnData(FMS_PlayerStaffData* aPlayerStaffData, int32 aSpawnMinute);
 	
 	virtual FVector GetSpawnLocation() override;
 	virtual FRotator GetSpawnRotation() override;
 
-	bool IsSpawnThisMinute(int32 aCurrentMinute, TArray<int32>& aStaffId);
+	bool IsSpawnThisMinute(int32 aCurrentMinute, TArray<FMS_PlayerStaffData*>& aStaffData);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -29,5 +30,5 @@ public:
 
 private:
 	// Key : UnitId, Value : SpawnMinute
-	TMap<int32, int32> SpawnDatas = {};
+	TMap<FMS_PlayerStaffData*, int32> SpawnDatas = {};
 };

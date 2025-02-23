@@ -288,8 +288,10 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 	return ItemCount;
 }
 
-bool UMS_ItemManager::CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_ZoneType aZoneType) const
+bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTakeInTargetFurnitrues) const
 {
+	aOutTakeInTargetFurnitrues.Empty();
+	
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
 	if (ItemData == nullptr)
 	{
@@ -323,11 +325,13 @@ bool UMS_ItemManager::CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_
 						if (SlotData.CurrentItemTableId == aItemId)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
+							aOutTakeInTargetFurnitrues.AddUnique(FurnitureUnit);
 						}
 
 						else if (SlotData.CurrentItemCount == 0)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount;
+							aOutTakeInTargetFurnitrues.AddUnique(FurnitureUnit);
 						}
 					}
 				}
@@ -335,7 +339,50 @@ bool UMS_ItemManager::CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_
 		}
 	}
 
-	return EmptyCount >= aReturnCount;
+	return EmptyCount >= aTakeInCount;
+}
+
+bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneType,
+	TArray<TWeakObjectPtr<UMS_FurnitureUnit>>& aOutTakeOutTargetFurnitrues) const
+{
+	aOutTakeOutTargetFurnitrues.Empty();
+	
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
+	if (ItemData == nullptr)
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != aZoneType)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == aItemId && SlotData.CurrentItemCount != 0)
+					{
+						aOutTakeOutTargetFurnitrues.AddUnique(FurnitureUnit);
+					}
+				}
+			}
+		}
+	}
+
+	return !aOutTakeOutTargetFurnitrues.IsEmpty();
 }
 
 void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
@@ -713,7 +760,7 @@ void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProf
 	aProfileDatas = StaffProfileDatas;
 }
 
-void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_StaffData>& aStaffDatas)
+void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDatas)
 {
 	StaffPropertys.Empty();
 	for(const auto& StaffData : aStaffDatas)

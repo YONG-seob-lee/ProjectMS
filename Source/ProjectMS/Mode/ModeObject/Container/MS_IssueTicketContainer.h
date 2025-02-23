@@ -26,7 +26,7 @@ public:
 
 	FORCEINLINE EMS_StaffIssueType GetIssueType() const { return IssueType; }
 	FORCEINLINE TWeakObjectPtr<class UMS_FurnitureUnit> GetRequestFurnitureUnit() const { return RequestFurnitureUnit; }
-	FORCEINLINE int32 GetRequestSlot() const { return RequestSlot; }
+	FORCEINLINE int32 GetRequestSlotId() const { return RequestSlotId; }
 	FORCEINLINE TWeakObjectPtr<class UMS_StaffAIUnit> GetStaffUnit() const { return StaffUnit; }
 	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
@@ -50,7 +50,7 @@ private:
 	TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit;
 
 	UPROPERTY()
-	int32 RequestSlot;
+	int32 RequestSlotId;
 
 	UPROPERTY()
 	TWeakObjectPtr<class UMS_StaffAIUnit> StaffUnit;
@@ -79,13 +79,15 @@ public:
 	void UnregisterUnitSlotIssueTickets(TWeakObjectPtr<class UMS_FurnitureUnit> aFurnitureUnit, int32 aSlotId);
 	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
 
-	void GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_StaffIssueType aIssueType);
-	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle);
-	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle, int32 aSlotId);
+	void GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_StaffIssueType aIssueType, bool NoneStaffOnly = false, bool bEnableOnly = false);
+	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle, bool NoneStaffOnly = false, bool bEnableOnly = false);
+	void GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, MS_Handle aUnitHandle, int32 aSlotId, bool NoneStaffOnly = false, bool bEnableOnly = false);
 	void GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aSlotId);
 
+	TWeakObjectPtr<class UMS_IssueTicket> SearchStaffIssueTicket(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
-
+	void UnregisterIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aTargetTicket);
+	
 	void UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
 
 	

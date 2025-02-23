@@ -48,9 +48,9 @@ AMS_StaffDuckSpawnPoint::AMS_StaffDuckSpawnPoint(const FObjectInitializer& Objec
 #endif
 }
 
-void AMS_StaffDuckSpawnPoint::UpdateSpawnData(int32 _UnitId, int32 _SpawnMinute)
+void AMS_StaffDuckSpawnPoint::UpdateSpawnData(FMS_PlayerStaffData* aPlayerStaffData, int32 aSpawnMinute)
 {
-	SpawnDatas.Emplace(_UnitId, _SpawnMinute);
+	SpawnDatas.Emplace(aPlayerStaffData, aSpawnMinute);
 }
 
 FVector AMS_StaffDuckSpawnPoint::GetSpawnLocation()
@@ -63,19 +63,19 @@ FRotator AMS_StaffDuckSpawnPoint::GetSpawnRotation()
 	return GetActorRotation();
 }
 
-bool AMS_StaffDuckSpawnPoint::IsSpawnThisMinute(int32 aCurrentMinute, TArray<int32>& aStaffId)
+bool AMS_StaffDuckSpawnPoint::IsSpawnThisMinute(int32 aCurrentMinute, TArray<FMS_PlayerStaffData*>& aStaffData)
 {
-	aStaffId.Empty();
+	aStaffData.Empty();
 	for(const auto& SpawnData : SpawnDatas)
 	{
 		if(SpawnData.Value >= aCurrentMinute - 1 && SpawnData.Value <= aCurrentMinute + 1)
 		{
-			aStaffId.Emplace(SpawnData.Key);
+			aStaffData.Emplace(SpawnData.Key);
 		}
 	}
 
 	
-	return aStaffId.IsEmpty() == false;
+	return aStaffData.IsEmpty() == false;
 }
 
 void AMS_StaffDuckSpawnPoint::BeginPlay()

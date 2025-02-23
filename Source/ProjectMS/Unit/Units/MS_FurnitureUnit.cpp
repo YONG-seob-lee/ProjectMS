@@ -473,7 +473,7 @@ void UMS_FurnitureUnit::UpdateStorageSlotIssueTickets()
 		// 기존 이슈에 슬롯 번호가 겹치는 것 정리
 		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
 		{
-			int32 SlotId = IssueTickets[i]->GetRequestSlot();
+			int32 SlotId = IssueTickets[i]->GetRequestSlotId();
 			if (SlotId == INDEX_NONE)
 			{
 				continue;

@@ -52,8 +52,98 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		return EBTNodeResult::Type::Failed;
 	}
 
-	if (SelectedStaffAction == EMS_StaffActionType::ChangeClothes)
+	// Issue
+	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
+		EMS_StaffIssueProcess CurrentIssueProcess = static_cast<EMS_StaffIssueProcess>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentIssueProcess));
+		if (CurrentIssueProcess == EMS_StaffIssueProcess::None)
+		{
+			return EBTNodeResult::Type::Failed;
+		}
+
+		// GoToRequestUnit
+		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToRequestUnit)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = AIUnit->GetIssueTicketRequestFurnitrueUnit();
+
+			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+				RequestUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+			if (PropPurposeSpaceComponents.Num() != 0)
+			{
+				for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+				{
+					TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+				}
+
+				AIUnit->SetTargetPositions(TargetPositions);
+				return EBTNodeResult::Type::Succeeded;
+			}
+			return EBTNodeResult::Type::Failed;
+		}
+
+		// GoToTakeOutTargets
+		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToTakeOutTargets)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TArray<TWeakObjectPtr<UMS_FurnitureUnit>> TakeOutTargetUnits = {};
+			if (AIUnit->GetIssueTicketTakeOutTargetUnits(TakeOutTargetUnits))
+			{
+				for (const TWeakObjectPtr<UMS_FurnitureUnit>& TargetUnit : TakeOutTargetUnits)
+				{
+					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+					if (PropPurposeSpaceComponents.Num() != 0)
+					{
+						for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+						{
+							TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+						}
+					}
+				}
+			}
+
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+		}
+
+		// GoToTakeOutTargets
+		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToTakeInTargets)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TArray<TWeakObjectPtr<UMS_FurnitureUnit>> TakeInTargetUnits = {};
+			if (AIUnit->GetIssueTicketTakeInTargetUnits(TakeInTargetUnits))
+			{
+				for (const TWeakObjectPtr<UMS_FurnitureUnit>& TargetUnit : TakeInTargetUnits)
+				{
+					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+					if (PropPurposeSpaceComponents.Num() != 0)
+					{
+						for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+						{
+							TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+						}
+					}
+				}
+			}
+
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+		}
+	}
+
+	// Change Clothes
+	else if (SelectedStaffAction == EMS_StaffActionType::ChangeClothes)
+	{
+		TArray<FIntVector2> TargetPositions = {};
+		
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
 		gUnitMng.GetUnits(EMS_UnitType::Furniture,Units);
 
@@ -63,7 +153,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			if (!IsValid(FurnitureUnit))
 			{
 				MS_ENSURE(false);
-				return EBTNodeResult::Type::Failed;
+				continue;
 			}
 			
 			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
@@ -71,19 +161,17 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 
 			if (PropPurposeSpaceComponents.Num() == 0)
 			{
-				MS_ERROR(TEXT("[%s] Prop purpose space for use wardrobe don't exist"), *MS_FUNC_STRING);
-				return EBTNodeResult::Type::Failed;
+				continue;
 			}
-
-			TArray<FIntVector2> TargetPositions;
+			
 			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
 			{
 				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
 			}
-
-			AIUnit->SetTargetPositions(TargetPositions);
-			return EBTNodeResult::Type::Succeeded;
 		}
+
+		AIUnit->SetTargetPositions(TargetPositions);
+		return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 	}
 
 	return EBTNodeResult::Type::Failed;

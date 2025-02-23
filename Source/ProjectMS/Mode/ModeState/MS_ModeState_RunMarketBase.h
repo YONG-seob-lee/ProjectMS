@@ -53,6 +53,10 @@ public:
 
 	void UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
 
+	TWeakObjectPtr<class UMS_IssueTicket> SearchStaffIssueTicket(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
+	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
+	void UnregisterIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aTargetTicket);
+
 	
 private:
 	FTimerHandle DelayTimerHandle;

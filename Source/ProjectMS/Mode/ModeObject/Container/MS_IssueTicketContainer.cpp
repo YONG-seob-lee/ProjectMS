@@ -9,7 +9,7 @@
 
 
 UMS_IssueTicket::UMS_IssueTicket()
-	: IssueType(EMS_StaffIssueType::None), RequestFurnitureUnit(nullptr), RequestSlot(INDEX_NONE)
+	: IssueType(EMS_StaffIssueType::None), RequestFurnitureUnit(nullptr), RequestSlotId(INDEX_NONE)
 {
 }
 
@@ -18,7 +18,7 @@ void UMS_IssueTicket::Initialize(EMS_StaffIssueType aIssueType,
 {
 	IssueType = aIssueType;
 	RequestFurnitureUnit = aRequestFurnitureUnit;
-	RequestSlot = aRequestSlot;
+	RequestSlotId = aRequestSlot;
 
 	UpdateEnabled();
 }
@@ -38,14 +38,14 @@ void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 
 FMS_SlotData UMS_IssueTicket::GetRequestFurnitureSlot() const
 {
-	return RequestFurnitureUnit->GetSlotData(RequestSlot);
+	return RequestFurnitureUnit->GetSlotData(RequestSlotId);
 }
 
 bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
 {
 	return IssueType == aIssueType
 	&& RequestFurnitureUnit->GetUnitHandle() == aUnitHandle
-	&& RequestSlot == aRequestSlot;
+	&& RequestSlotId == aRequestSlot;
 }
 
 bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_FurnitureUnit> aRequestUnit,
@@ -53,7 +53,7 @@ bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<
 {
 	return IssueType == aIssueType
 		&& RequestFurnitureUnit == aRequestUnit
-		&& RequestSlot == aRequestSlot;
+		&& RequestSlotId == aRequestSlot;
 }
 
 bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) const
@@ -66,7 +66,7 @@ bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) 
 
 	return IssueType == aOther->IssueType
 		&& RequestFurnitureUnit == aOther->RequestFurnitureUnit
-		&& RequestSlot == aOther->RequestSlot;
+		&& RequestSlotId == aOther->RequestSlotId;
 }
 
 bool UMS_IssueTicket::AllowSameIssue(EMS_StaffIssueType aIssueType)
@@ -80,8 +80,9 @@ void UMS_IssueTicket::UpdateEnabled()
 	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 	{
 		FMS_SlotData SlotData = GetRequestFurnitureSlot();
-			
-		SetIsEnabled(gItemMng.CanReturnToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf));
+
+		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
@@ -95,8 +96,9 @@ void UMS_IssueTicket::UpdateEnabled()
 	else if (IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
 		FMS_SlotData SlotData = GetRequestFurnitureSlot();
-			
-		SetIsEnabled(gItemMng.CanReturnToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet));
+
+		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
@@ -221,7 +223,7 @@ void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(MS_Handle aUnitHan
 		if (IsValid(IssueTickets[i]))
 		{
 			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
-			int32 RequestSlot = IssueTickets[i]->GetRequestSlot();
+			int32 RequestSlot = IssueTickets[i]->GetRequestSlotId();
 			
 			if (RequestUnit == nullptr)
 			{
@@ -245,7 +247,7 @@ void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(TWeakObjectPtr<UMS
 		if (IsValid(IssueTickets[i]))
 		{
 			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
-			int32 RequestSlot = IssueTickets[i]->GetRequestSlot();
+			int32 RequestSlot = IssueTickets[i]->GetRequestSlotId();
 			
 			if (RequestUnit == nullptr)
 			{
@@ -283,7 +285,7 @@ bool UMS_IssueTicketContainer::UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTic
 }
 
 void UMS_IssueTicketContainer::GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,
-	EMS_StaffIssueType aIssueType)
+	EMS_StaffIssueType aIssueType, bool NoneStaffOnly /*= false*/, bool bEnableOnly /*= false*/)
 {
 	aOutTickets.Empty();
 
@@ -291,18 +293,28 @@ void UMS_IssueTicketContainer::GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 	{
 		if (IsValid(IssueTicket))
 		{
-			EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
-		
-			if (IssueType == aIssueType)
+			if (IssueTicket->GetIssueType() != aIssueType)
 			{
-				aOutTickets.Emplace(IssueTicket);
+				continue;
 			}
+
+			if (NoneStaffOnly && IssueTicket->GetStaffUnit() != nullptr)
+			{
+				continue;
+			}
+
+			if (bEnableOnly && IssueTicket->IsEnabled() == false)
+			{
+				continue;
+			}
+			
+			aOutTickets.Emplace(IssueTicket);
 		}
 	}
 }
 
 void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,
-                                                   MS_Handle aUnitHandle)
+	MS_Handle aUnitHandle, bool NoneStaffOnly /*= false*/, bool bEnableOnly /*= false*/)
 {
 	aOutTickets.Empty();
 
@@ -314,19 +326,31 @@ void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 		
 			if (RequestUnit == nullptr)
 			{
-				return;
+				continue;
 			}
 		
-			if (RequestUnit->GetUnitHandle() == aUnitHandle)
+			if (RequestUnit->GetUnitHandle() != aUnitHandle)
 			{
-				aOutTickets.Emplace(IssueTicket);
+				continue;
 			}
+
+			if (NoneStaffOnly && IssueTicket->GetStaffUnit() != nullptr)
+			{
+				continue;
+			}
+
+			if (bEnableOnly && IssueTicket->IsEnabled() == false)
+			{
+				continue;
+			}
+
+			aOutTickets.Emplace(IssueTicket);
 		}
 	}
 }
 
 void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets,
-	MS_Handle aUnitHandle, int32 aSlotId)
+	MS_Handle aUnitHandle, int32 aSlotId, bool NoneStaffOnly /*= false*/, bool bEnableOnly /*= false*/)
 {
 	aOutTickets.Empty();
 
@@ -335,17 +359,29 @@ void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 		if (IsValid(IssueTicket))
 		{
 			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTicket->GetRequestFurnitureUnit();
-			int32 RequestSlot = IssueTicket->GetRequestSlot();
+			int32 RequestSlot = IssueTicket->GetRequestSlotId();
 			
 			if (RequestUnit == nullptr)
 			{
-				return;
+				continue;
+			}
+
+			if (RequestUnit->GetUnitHandle() != aUnitHandle || RequestSlot != aSlotId)
+			{
+				continue;
 			}
 			
-			if (RequestUnit->GetUnitHandle() == aUnitHandle && RequestSlot == aSlotId)
+			if (NoneStaffOnly && IssueTicket->GetStaffUnit() != nullptr)
 			{
-				aOutTickets.Emplace(IssueTicket);
+				continue;
 			}
+
+			if (bEnableOnly && IssueTicket->IsEnabled() == false)
+			{
+				continue;
+			}
+			
+			aOutTickets.Emplace(IssueTicket);
 		}
 	}
 }
@@ -363,19 +399,61 @@ void UMS_IssueTicketContainer::GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTi
 		
 			if (IssueTicket->IsSameIssue(aIssueType, aUnitHandle, aSlotId))
 			{
-				return;
-			}
-		
-			if (RequestUnit->GetUnitHandle() == aUnitHandle)
-			{
 				aOutTickets.Emplace(IssueTicket);
 			}
 		}
 	}
 }
 
-void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
+TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket(
 	TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
+{
+	const FMS_PlayerStaffData& PlayerStaffData = aStaffUnit->GetPlayerStaffData();
+
+	for (EMS_StaffIssueType PriorityType : PlayerStaffData.PriorityOfWorks)
+	{
+		TArray<TWeakObjectPtr<UMS_IssueTicket>> TypeTickets;
+		GetTypeIssueTickets(TypeTickets, PriorityType, true, true);
+
+		FIntVector2 StaffGridPosition = aStaffUnit->GetActorGridPosition();
+
+		int32 MinGridPositionDistance = INT32_MAX;
+		TWeakObjectPtr<UMS_IssueTicket> MinGridPositionTicket = nullptr;
+		
+		for (auto& TypeTicket : TypeTickets)
+		{
+			if (TypeTicket == nullptr)
+			{
+				continue;
+			}
+			
+			TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit = TypeTicket->GetRequestFurnitureUnit();
+			if (RequestFurnitureUnit == nullptr)
+			{
+				continue;
+			}
+			
+			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - RequestFurnitureUnit->GetGridPosition();
+			int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
+
+			if (GridPositionDistance < MinGridPositionDistance)
+			{
+				MinGridPositionDistance = GridPositionDistance;
+				MinGridPositionTicket = TypeTicket;
+			}
+		}
+
+		if (MinGridPositionTicket != nullptr)
+		{
+			return MinGridPositionTicket;
+		}
+	}
+	
+	return nullptr;
+}
+
+void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
+                                                        TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
 	MS_ENSURE (aTargetTicket != nullptr);
 
@@ -394,6 +472,20 @@ void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_Issue
 	aTargetTicket->SetStaffUnit(aStaffUnit);
 }
 
+void UMS_IssueTicketContainer::UnregisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket)
+{
+	MS_ENSURE (aTargetTicket != nullptr);
+
+	TWeakObjectPtr<UMS_StaffAIUnit> StaffUnit = aTargetTicket->GetStaffUnit();
+	
+	if (StaffUnit != nullptr)
+	{
+		StaffUnit->OnUnregisteredAsIssueTicketStaff();
+	}
+
+	aTargetTicket->SetStaffUnit(nullptr);
+}
+
 void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType)
 {
 	if (aZoneType == EMS_ZoneType::Display)
@@ -405,8 +497,9 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
-			
-			Ticket->SetIsEnabled(gItemMng.CanReturnToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf));
+
+			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
 		}
 		
 		// Add Items Tickets
@@ -435,8 +528,9 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
-			
-			Ticket->SetIsEnabled(gItemMng.CanReturnToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet));
+
+			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
 		}
 		
 		// Add Items Tickets

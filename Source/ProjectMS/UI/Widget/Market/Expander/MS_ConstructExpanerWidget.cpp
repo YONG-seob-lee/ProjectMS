@@ -49,7 +49,7 @@ void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneTyp
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at Shelf Furniture. Check Save Data.")
 			, *MS_FUNC_STRING);
-			MS_ENSURE(false);
+			// MS_ENSURE(false);
 			continue;
 		}
 		if(NotDeployFurniture.Value == 0)

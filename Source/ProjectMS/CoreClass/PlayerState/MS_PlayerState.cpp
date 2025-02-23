@@ -111,7 +111,7 @@ void AMS_PlayerState::RegisterStaff(int32 StaffId, int32 WorkDay)
 	// Save ( 직원은 다음날 출근하기에 + 1일 )
 	FMS_GameDate FirstDateOfWork = GameDate;
 	FirstDateOfWork.Day += 1;
-	StaffDatas.Emplace(FMS_StaffData(StaffId, FirstDateOfWork, WorkDay));
+	StaffDatas.Emplace(FMS_PlayerStaffData(StaffId, FirstDateOfWork, WorkDay));
 	SavePlayerData();
 	
 	// 아이템으로 재등록

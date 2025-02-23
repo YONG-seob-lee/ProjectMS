@@ -27,20 +27,37 @@ protected:
 
 	
 public:
-	int32 GetStaffActionNum() const { return StaffActions.Num(); }
-	EMS_StaffActionType GetFirstStaffAction() const;
+	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
+	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
 	
+	FORCEINLINE int32 GetStaffActionNum() const { return NoneIssueStaffActions.Num(); }
+	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);
 	
-	void RegisterStaffAction(EMS_StaffActionType aStaffActionType);
-	void UnregisterStaffAction(EMS_StaffActionType aStaffActionType);
+	void RegisterNoneIssueStaffAction(EMS_StaffActionType aStaffActionType);
+	void UnregisterNoneIssueStaffAction(EMS_StaffActionType aStaffActionType);
+
+	void SearchAndRegisterIssueTicket();
+	
+private:
+	TWeakObjectPtr<class UMS_IssueTicket> SearchIssueTicket();
+	void RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket);
+
+public:
+	void UnregisterAsIssueTicketStaff();
 	
 	void OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
 	void OnUnregisteredAsIssueTicketStaff();
 
+	TWeakObjectPtr<class UMS_FurnitureUnit> GetIssueTicketRequestFurnitrueUnit() const;
+	bool GetIssueTicketTakeOutTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
+	bool GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
+
+	
 private:
 	struct FMS_Staff* StaffTableData = nullptr;
-
-	TArray<EMS_StaffActionType> StaffActions = {};
+	FMS_PlayerStaffData PlayerStaffData;
+	
+	TArray<EMS_StaffActionType> NoneIssueStaffActions = {};
 	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
 
 	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함

@@ -45,5 +45,5 @@ public:
 	TMap<int32, int32> OrderFurnitures;
 	
 	UPROPERTY()
-	TArray<FMS_StaffData> StaffDatas;
+	TArray<FMS_PlayerStaffData> StaffDatas;
 };

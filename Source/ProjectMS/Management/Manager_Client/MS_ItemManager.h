@@ -50,7 +50,8 @@ public:
 	void GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
 	int32 GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId) const;
 	
-	bool CanReturnToStorage(int32 aItemId, int32 aReturnCount, EMS_ZoneType aZoneType) const;
+	bool CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTakeInTargetFurnitrues) const;
+	bool CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTakeOutTargetFurnitrues) const;
 
 	void GetNotPlacedItems(TMap<int32, int32>& OutItems);
 	int32 GetNotPlacedItemCount(int32 aItemId) const;
@@ -86,7 +87,7 @@ public:
 	
 	// Staff
 	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
-	void UpdateStaffProperty(TArray<FMS_StaffData>& aStaffDatas);
+	void UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDatas);
 	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
 private:
