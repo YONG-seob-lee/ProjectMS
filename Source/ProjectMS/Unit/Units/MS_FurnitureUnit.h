@@ -30,20 +30,20 @@ public:
 	// Property :: Getter
 	FORCEINLINE EMS_ZoneType GetZoneType() const;
 	FORCEINLINE EMS_TemperatureType GetTemperatureType() const { return static_cast<EMS_TemperatureType>(FurnitureData->TemperatureType); }
-
-	FORCEINLINE int32 GetSlotCount() const;
-	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
-
+	
 	FIntVector2 GetGridPosition() const;
 
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
 
 	
 	// Slot Datas
+	FORCEINLINE int32 GetSlotCount() const;
+	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+	
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 
-	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
-	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
+	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
+	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
 
 	UFUNCTION()
 	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
@@ -53,7 +53,7 @@ public:
 	
 private:
 	void OnChangeRequestSlotDatas();
-	void OnChangeCurrentSlotDatas();
+	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = true);
 
 public:
 	// IssueTickets

@@ -6,6 +6,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Prop/MS_Prop.h"
@@ -31,6 +32,9 @@ void UMS_ModeState_Normal::Tick(float aDeltaTime)
 
 void UMS_ModeState_Normal::Begin()
 {
+	// Item Manager
+	gItemMng.UpdateNotPlacedItemsToPalletItems();
+	
 	// Delegate
 	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnSelectActor);
 	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Normal::OnUnselectActor);

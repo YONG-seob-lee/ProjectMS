@@ -8,6 +8,7 @@
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Manager_Client/MS_ModeManager.h"
@@ -99,7 +100,8 @@ void UMS_ModeState_RunMarketBase::Begin()
 	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &UMS_ModeState_RunMarketBase::UpdateMinute);
 	gScheduleMng.OnUpdateScheduleEventDelegate.AddUObject(this, &UMS_ModeState_RunMarketBase::UpdateScheduleEvent);
 	gScheduleMng.OnEndSchedule.AddUObject(this, &UMS_ModeState_RunMarketBase::EndSchedule);
-	
+
+	// Mode Objects
 	if (IsValid(StaffSupervisor))
 	{
 		StaffSupervisor->Begin();
@@ -115,13 +117,22 @@ void UMS_ModeState_RunMarketBase::Begin()
 		GridBFS_2x2->CollectAllZoneTypeMovingPoints();
 	}
 
+	// Item Manager
+	gItemMng.UpdateNotPlacedItemsToPalletItems();
+
+	// Issue Tickets
 	UpdateAllFurnitureIssueTickets();
 }
 
 void UMS_ModeState_RunMarketBase::Exit()
 {
+	// Issue Tickets
 	ClearIssueTickets();
-	
+
+	// Item Manager
+	gItemMng.UpdateNotPlacedItemsToPalletItems();
+
+	// Mode Objects
 	if (IsValid(CustomerSupervisor))
 	{
 		CustomerSupervisor->Finalize();

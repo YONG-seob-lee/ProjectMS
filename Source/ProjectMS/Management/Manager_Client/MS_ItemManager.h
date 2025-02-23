@@ -39,7 +39,7 @@ public:
 	
 	// Items
 	void GetRemainItems(TMap<int32, int32>& OutItems) const;
-	int32 GetRemainItemCount(int32 aItemId);
+	int32 GetRemainItemCount(int32 aItemId) const;
 
 	void GetStaffItems(TMap<int32, int32>& OutItems) const;
 	int32 GetStaffItemCount(int32 aItemId) const;
@@ -54,10 +54,15 @@ public:
 	int32 GetShelfItemCount(int32 aItemId) const;
 
 	void GetPalletItems(TMap<int32, int32>& OutItems) const;
-	int32 GetPalletItemCount(int32 aItemId);
+	int32 GetPalletItemCount(int32 aItemId) const;
 
-	void GetNotPlacedItems(TMap<int32, int32>& OutItems) const;
-	int32 GetNotPlacedItemCount(int32 aItemId);
+	void GetNotPlacedItems(TMap<int32, int32>& OutItems);
+	int32 GetNotPlacedItemCount(int32 aItemId) const;
+	void GetCacheNotPlacedItems(TMap<int32, int32>& OutItems) const;
+	int32 GetCacheNotPlacedItemCount(int32 aItemId) const;
+
+	void UpdateNotPlacedItemsToPalletItems();
+	void UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<class UMS_FurnitureUnit> aFurnitureUnit);
 
 	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
 	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }
@@ -93,6 +98,7 @@ private:
 	TMap<int32, int32> Items = {};
 	TMap<int32, int32> OrderItems = {};
 	TMap<int32, int32> SoldItems = {};
+	TMap<int32, int32> CacheNotPlacedItems = {};
 
 
 	// Furniture

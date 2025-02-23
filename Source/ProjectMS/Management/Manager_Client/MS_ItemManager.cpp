@@ -96,7 +96,7 @@ void UMS_ItemManager::GetRemainItems(TMap<int32, int32>& OutItems) const
 	}
 }
 
-int32 UMS_ItemManager::GetRemainItemCount(int32 aItemId)
+int32 UMS_ItemManager::GetRemainItemCount(int32 aItemId) const
 {
 	const int32* pItemCount = Items.Find(aItemId);
 	if(!pItemCount)
@@ -377,14 +377,45 @@ void UMS_ItemManager::GetPalletItems(TMap<int32, int32>& OutItems) const
 	}
 }
 
-int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId)
+int32 UMS_ItemManager::GetPalletItemCount(int32 aItemId) const
 {
-	return GetRemainItemCount(aItemId) - GetDisplayItemCount(aItemId) - GetShelfItemCount(aItemId);
+	int32 ItemCount = 0;
+
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			{
+				if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+				{
+					continue;
+				}
+				
+				TArray<FMS_SlotData> FurnitureSlotDatas;
+				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				{
+					if (SlotData.CurrentItemTableId == aItemId)
+					{
+						ItemCount += SlotData.CurrentItemCount; 
+					}
+				}
+			}
+		}
+	}
+
+	return ItemCount;
 }
 
-void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
+void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 {
-	GetRemainItems(OutItems);
+	CacheNotPlacedItems.Empty();
+	GetRemainItems(CacheNotPlacedItems);
 
 	// Staff
 	TMap<int32, int32> StaffItems;
@@ -392,7 +423,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& StaffItem : StaffItems)
 	{
-		int32& Count = OutItems.FindOrAdd(StaffItem.Key);
+		int32& Count = CacheNotPlacedItems.FindOrAdd(StaffItem.Key);
 		Count -= StaffItem.Value;
 	}
 
@@ -402,7 +433,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& CustomerItem : CustomerItems)
 	{
-		int32& Count = OutItems.FindOrAdd(CustomerItem.Key);
+		int32& Count = CacheNotPlacedItems.FindOrAdd(CustomerItem.Key);
 		Count -= CustomerItem.Value;
 	}
 	
@@ -412,7 +443,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& DisplayItem : DisplayItems)
 	{
-		int32& Count = OutItems.FindOrAdd(DisplayItem.Key);
+		int32& Count = CacheNotPlacedItems.FindOrAdd(DisplayItem.Key);
 		Count -= DisplayItem.Value;
 	}
 
@@ -422,7 +453,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& ShelfItem : ShelfItems)
 	{
-		int32& Count = OutItems.FindOrAdd(ShelfItem.Key);
+		int32& Count = CacheNotPlacedItems.FindOrAdd(ShelfItem.Key);
 		Count -= ShelfItem.Value;
 	}
 
@@ -432,14 +463,224 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems) const
 
 	for (const auto& PalletItem : PalletItems)
 	{
-		int32& Count = OutItems.FindOrAdd(PalletItem.Key);
+		int32& Count = CacheNotPlacedItems.FindOrAdd(PalletItem.Key);
 		Count -= PalletItem.Value;
 	}
+
+	OutItems = CacheNotPlacedItems;
 }
 
-int32 UMS_ItemManager::GetNotPlacedItemCount(int32 aItemId)
+int32 UMS_ItemManager::GetNotPlacedItemCount(int32 aItemId) const
 {
 	return GetRemainItemCount(aItemId) - GetDisplayItemCount(aItemId) - GetShelfItemCount(aItemId) - GetPalletItemCount(aItemId);
+}
+
+void UMS_ItemManager::GetCacheNotPlacedItems(TMap<int32, int32>& OutItems) const
+{
+	OutItems = CacheNotPlacedItems;
+}
+
+int32 UMS_ItemManager::GetCacheNotPlacedItemCount(int32 aItemId) const
+{
+	if (CacheNotPlacedItems.Contains(aItemId))
+	{
+		return *CacheNotPlacedItems.Find(aItemId);
+	}
+
+	return 0;
+}
+
+void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
+{
+	TMap<int32, int32> NotPlacedItems = {};
+	GetNotPlacedItems(NotPlacedItems);
+
+	if (NotPlacedItems.IsEmpty())
+	{
+		return;
+	}
+	
+	if (const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+
+		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		{
+			UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get());
+			if (!FurnitureUnit)
+			{
+				continue;
+			}
+			
+			if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+			{
+				continue;
+			}
+				
+			TArray<FMS_SlotData> FurnitureSlotDatas;
+			FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+			for (int32 i = 0; i < FurnitureSlotDatas.Num(); ++i)
+			{
+				if (NotPlacedItems.IsEmpty())
+				{
+					return;
+				}
+				
+				// 슬롯이 비었을 때
+				if (FurnitureSlotDatas[i].CurrentItemTableId == INDEX_NONE || FurnitureSlotDatas[i].CurrentItemTableId == 0)
+				{
+					FMS_ItemData* NotPlacedItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, NotPlacedItems.begin().Key());
+					if (NotPlacedItemData == nullptr)
+					{
+						MS_ENSURE(false);
+						NotPlacedItems.Remove(NotPlacedItems.begin().Key());
+						--i;
+						continue;
+					}
+
+					if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
+					{
+						FurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+
+						NotPlacedItems.Remove(NotPlacedItems.begin().Key());
+					}
+					else
+					{
+						FurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+
+						NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
+					}
+					continue;
+				}
+
+				// 슬롯의 아이템이 다 안 찼을때
+				FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, FurnitureSlotDatas[i].CurrentItemTableId);
+				if (PalletSlotItemData == nullptr)
+				{
+					MS_ENSURE(false);
+					continue;
+				}
+				
+				if (FurnitureSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
+				{
+					if (!NotPlacedItems.Contains(FurnitureSlotDatas[i].CurrentItemTableId))
+					{
+						continue;
+					}
+
+					int32& NotPlacedItemCount = *NotPlacedItems.Find(FurnitureSlotDatas[i].CurrentItemTableId);
+
+					int32 EmptyCount = PalletSlotItemData->BoxMaxCount - FurnitureSlotDatas[i].CurrentItemCount;
+
+					if (NotPlacedItemCount < EmptyCount)
+					{
+						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+
+						NotPlacedItems.Remove(FurnitureSlotDatas[i].CurrentItemTableId);
+					}
+					else
+					{
+						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+
+						NotPlacedItemCount -= EmptyCount;
+					}
+				}
+			}
+		}
+	}
+
+	CacheNotPlacedItems = NotPlacedItems;
+}
+
+void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_FurnitureUnit> aFurnitureUnit)
+{
+	TMap<int32, int32> NotPlacedItems = {};
+	GetNotPlacedItems(NotPlacedItems);
+
+	if (NotPlacedItems.IsEmpty())
+	{
+		return;
+	}
+	
+	if (aFurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+	{
+		return;
+	}
+		
+	TArray<FMS_SlotData> FurnitureSlotDatas;
+	aFurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+
+	for (int32 i = 0; i < FurnitureSlotDatas.Num(); ++i)
+	{
+		if (NotPlacedItems.IsEmpty())
+		{
+			return;
+		}
+		
+		// 슬롯이 비었을 때
+		if (FurnitureSlotDatas[i].CurrentItemTableId == INDEX_NONE || FurnitureSlotDatas[i].CurrentItemTableId == 0)
+		{
+			FMS_ItemData* NotPlacedItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, NotPlacedItems.begin().Key());
+			if (NotPlacedItemData == nullptr)
+			{
+				MS_ENSURE(false);
+				NotPlacedItems.Remove(NotPlacedItems.begin().Key());
+				--i;
+				continue;
+			}
+
+			if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
+			{
+				aFurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+
+				NotPlacedItems.Remove(NotPlacedItems.begin().Key());
+			}
+			else
+			{
+				aFurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+
+				NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
+			}
+			continue;
+		}
+
+		// 슬롯의 아이템이 다 안 찼을때
+		FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, FurnitureSlotDatas[i].CurrentItemTableId);
+		if (PalletSlotItemData == nullptr)
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		
+		if (FurnitureSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
+		{
+			if (!NotPlacedItems.Contains(FurnitureSlotDatas[i].CurrentItemTableId))
+			{
+				continue;
+			}
+
+			int32& NotPlacedItemCount = *NotPlacedItems.Find(FurnitureSlotDatas[i].CurrentItemTableId);
+
+			int32 EmptyCount = PalletSlotItemData->BoxMaxCount - FurnitureSlotDatas[i].CurrentItemCount;
+
+			if (NotPlacedItemCount < EmptyCount)
+			{
+				aFurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+
+				NotPlacedItems.Remove(FurnitureSlotDatas[i].CurrentItemTableId);
+			}
+			else
+			{
+				aFurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+
+				NotPlacedItemCount -= EmptyCount;
+			}
+		}
+	}
+
+	CacheNotPlacedItems = NotPlacedItems;
 }
 
 bool UMS_ItemManager::IsAvailablePurchase() const
