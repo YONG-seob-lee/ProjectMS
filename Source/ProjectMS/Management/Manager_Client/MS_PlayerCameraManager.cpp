@@ -369,9 +369,17 @@ void AMS_PlayerCameraManager::DollyAndTruck(FVector2D aPointerGlidePosition, FVe
 		return;
 	}
 
-	if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::LobbyLevel)
+	if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::Stage01)
 	{
 		MoveDensity = 3.f;
+	}
+	else if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::Stage02)
+	{
+		MoveDensity = 5.f;
+	}
+	else if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::Stage03)
+	{
+		MoveDensity = 7.f;
 	}
 	else if(gSceneMng.GetCurrentLevelType() == EMS_LevelType::MarketLevel)
 	{
