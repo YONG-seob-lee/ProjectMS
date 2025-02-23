@@ -25,6 +25,7 @@ AMS_QuarterViewCamera::AMS_QuarterViewCamera()
 		if(UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/Environment/CameraBlock/CameraDummySphere.CameraDummySphere"))))
 		{
 			StaticMeshComponent->SetStaticMesh(Mesh);
+			StaticMeshComponent->SetCollisionProfileName(TEXT("CameraBlock"));
 		}
 	}
 	SetHidden(true);
