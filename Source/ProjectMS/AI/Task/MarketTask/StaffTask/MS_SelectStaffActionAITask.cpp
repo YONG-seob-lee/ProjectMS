@@ -59,11 +59,11 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 
 		if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay || IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::GoToRequestUnitForTakeOut));
+			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::SearchRequestUnitForTakeOut));
 		}
 		else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay || IssueType == EMS_StaffIssueType::AddItemsToShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::GoToTakeOutTargets));
+			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::SearchTakeOutTargets));
 		}
 	}
 	else

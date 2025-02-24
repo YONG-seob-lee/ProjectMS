@@ -32,16 +32,21 @@ UENUM(BlueprintType)
 enum class EMS_StaffActionProcess : uint8
 {
 	None = 0,
+
+	SearchRequestUnitForTakeIn = 1,
+	SearchRequestUnitForTakeOut = 2,
+	SearchTakeInTargets = 3,
+	SearchTakeOutTargets = 4,
 	
-	GoToRequestUnitForTakeIn = 1,
-	GoToRequestUnitForTakeOut = 2,
-	GoToTakeInTargets = 3,
-	GoToTakeOutTargets = 4,
+	GoToRequestUnitForTakeIn = 5,
+	GoToRequestUnitForTakeOut = 6,
+	GoToTakeInTargets = 7,
+	GoToTakeOutTargets = 8,
 	
-	RequestUnitTakeIn = 5,
-	RequestUnitTakeOut = 6,
-	TargetUnitTakeIn = 7,
-	TargetUnitTakeOut = 8,
+	RequestUnitTakeIn = 9,
+	RequestUnitTakeOut = 10,
+	TargetUnitTakeIn = 11,
+	TargetUnitTakeOut = 12,
 };
 
 USTRUCT()

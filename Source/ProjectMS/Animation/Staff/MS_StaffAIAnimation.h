@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/MS_AIAnimInstance.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_StaffAIAnimation.generated.h"
 
 /**
@@ -13,4 +14,12 @@ UCLASS()
 class PROJECTMS_API UMS_StaffAIAnimation : public UMS_AIAnimInstance
 {
 	GENERATED_BODY()
+
+public:
+	FORCEINLINE void SetActionProcess(EMS_StaffActionProcess aActionProcess) { ActionProcess = aActionProcess; }
+	FORCEINLINE EMS_StaffActionProcess GetActionProcess() const { return ActionProcess; }
+	
+protected:
+	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	EMS_StaffActionProcess ActionProcess = EMS_StaffActionProcess::None;
 };

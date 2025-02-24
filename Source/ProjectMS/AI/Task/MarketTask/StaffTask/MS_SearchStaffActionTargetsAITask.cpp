@@ -61,8 +61,8 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return EBTNodeResult::Type::Failed;
 		}
 
-		// GoToRequestUnit
-		if (ActionProcess == EMS_StaffActionProcess::GoToRequestUnitForTakeIn || ActionProcess == EMS_StaffActionProcess::GoToRequestUnitForTakeOut)
+		// SearchRequestUnit
+		if (ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForTakeIn || ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForTakeOut)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -84,8 +84,8 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return EBTNodeResult::Type::Failed;
 		}
 
-		// GoToTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::GoToTakeOutTargets)
+		// SearchTakeOutTargets
+		if (ActionProcess == EMS_StaffActionProcess::SearchTakeOutTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -111,8 +111,8 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
 
-		// GoToTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::GoToTakeInTargets)
+		// SearchTakeOutTargets
+		if (ActionProcess == EMS_StaffActionProcess::SearchTakeInTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
