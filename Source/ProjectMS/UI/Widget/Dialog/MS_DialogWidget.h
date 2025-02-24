@@ -29,6 +29,9 @@ public:
 
 	FORCEINLINE void SetDialogType(EMS_DialogType aType) { DialogType = aType; }
 	FORCEINLINE EMS_DialogType GetDialogType() const { return DialogType; }
+
+	FORCEINLINE void SetIsLeft(bool _bIsLeft) { bIsLeft = _bIsLeft; }
+	FORCEINLINE bool IsLeft() const { return bIsLeft; }
 	
 	FORCEINLINE bool IsTypingEnd() const { return ProcessNumber >= TotalTypeNumber; }
 	
@@ -36,7 +39,8 @@ public:
 
 private:
 	EMS_DialogType DialogType = EMS_DialogType::Undefined;
-	
+
+	bool bIsLeft = true;
 	FString TypeText = FString();
 	float TypeSpeed = 1.f;
 	int32 TotalTypeNumber = 0;
@@ -71,6 +75,9 @@ private:
 	void ProcessTyping();
 	void FinishedTyping();
 
+	void PlayPortrait(bool bIsLeft) const;
+	void FinishedPortrait(bool bIsLeft) const;
+	
 	void OnClickedSkipButton();
 
 	int32 ProcessingDialogNumber = INDEX_NONE;
@@ -85,4 +92,10 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_SkipPanel = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_DialogPortraitWidget> CPP_LeftPortraitWidget = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_DialogPortraitWidget> CPP_RightPortraitWidget = nullptr;
 };

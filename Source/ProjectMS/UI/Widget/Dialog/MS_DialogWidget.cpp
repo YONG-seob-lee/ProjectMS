@@ -4,6 +4,7 @@
 #include "MS_DialogWidget.h"
 
 #include "MS_Define.h"
+#include "MS_DialogPortraitWidget.h"
 #include "Button/MS_Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
@@ -83,6 +84,14 @@ void UMS_DialogWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogP
 	SetVisibility(ESlateVisibility::Visible);
 	DialogParameters = aDialogParameters;
 	ProcessingDialogNumber = 0;
+
+	for(int32 i = 0 ; i < DialogParameters.Num(); i++)
+	{
+		if(DialogParameters.IsValidIndex(i))
+		{
+			DialogParameters[i].SetIsLeft(i % 2 == 0);
+		}
+	}
 	
 	if(DialogParameters.IsValidIndex(ProcessingDialogNumber))
 	{
@@ -98,6 +107,7 @@ void UMS_DialogWidget::PlayTyping()
 		MS_LOG(TEXT("Start Dialog Typing."));
 		DialogParameters[ProcessingDialogNumber].SetDialogType(EMS_DialogType::Process);
 		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
+		PlayPortrait(DialogParameters[ProcessingDialogNumber].IsLeft());
 		ProcessTyping();
 	}
 }
@@ -124,10 +134,39 @@ void UMS_DialogWidget::ProcessTyping()
 
 void UMS_DialogWidget::FinishedTyping()
 {
-	DialogParameters[ProcessingDialogNumber].SetDialogType(EMS_DialogType::Finished);
-	GetWorld()->GetTimerManager().ClearTimer(DialogTextTimerHandler);
-	CPP_SkipPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	PlayAnimationByName(DialogAnimation::SkipAnimation, 0.f, 999999);
+	if(DialogParameters.IsValidIndex(ProcessingDialogNumber))
+	{
+		DialogParameters[ProcessingDialogNumber].SetDialogType(EMS_DialogType::Finished);
+		GetWorld()->GetTimerManager().ClearTimer(DialogTextTimerHandler);
+		CPP_SkipPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		PlayAnimationByName(DialogAnimation::SkipAnimation, 0.f, 999999);
+
+		FinishedPortrait(DialogParameters[ProcessingDialogNumber].IsLeft());
+	}
+}
+
+void UMS_DialogWidget::PlayPortrait(bool bIsLeft) const
+{
+	if(bIsLeft)
+	{
+		CPP_LeftPortraitWidget->PlayMouse();
+	}
+	else
+	{
+		CPP_RightPortraitWidget->PlayMouse();
+	}
+}
+
+void UMS_DialogWidget::FinishedPortrait(bool bIsLeft) const
+{
+	if(bIsLeft)
+	{
+		CPP_LeftPortraitWidget->StopMouse();
+	}
+	else
+	{
+		CPP_RightPortraitWidget->StopMouse();
+	}
 }
 
 void UMS_DialogWidget::OnClickedSkipButton()
