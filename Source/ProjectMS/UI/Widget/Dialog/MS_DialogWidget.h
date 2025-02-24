@@ -85,7 +85,4 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_SkipPanel = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_DescriptionWidget> CPP_Test = nullptr;
 };
