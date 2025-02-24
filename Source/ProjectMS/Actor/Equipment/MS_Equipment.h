@@ -18,14 +18,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE bool IsEquipped() const { return bIsEquipped; }
-	
-	virtual void Equip();
-	virtual void Unequip();
+	void ShowEquipment(bool bShow);
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMeshComponent> MeshComponent = nullptr;
-
-	bool bIsEquipped = false;
 };

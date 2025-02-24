@@ -153,6 +153,41 @@ bool UMS_FurnitureUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 
 	return false;
 }
 
+int32 UMS_FurnitureUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData,
+	bool bUpdateNotPlacedItems)
+{
+	int32 RemainAddCount = aCount;
+
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
+	if (ItemData == nullptr)
+	{
+		MS_ENSURE(false);
+		return false;
+	}
+
+	int32 MaxSlotCount = GetZoneType() == EMS_ZoneType::Display ? ItemData->Slot100x100MaxCount : ItemData->BoxMaxCount;
+	
+	for (int32 i = 0; i < SlotDatas.Num(); ++i)
+	{
+		if (RemainAddCount <= 0)
+		{
+			break;
+		}
+		
+		if (SlotDatas[i].RequestItemTableId == aItemId && SlotDatas[i].CurrentItemCount > 0)
+		{
+			int32 AddCount = FMath::Min(RemainAddCount, MaxSlotCount - SlotDatas[i].CurrentItemCount);
+
+			if (AddCurrentItemCount(i, aItemId, AddCount, bSavePlayerData, bUpdateNotPlacedItems))
+			{
+				RemainAddCount -= AddCount;
+			}
+		}
+	}
+
+	return aCount - RemainAddCount;
+}
+
 bool UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/, bool bUpdateNotPlacedItems /*= true*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
@@ -194,6 +229,32 @@ bool UMS_FurnitureUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, i
 	}
 
 	return false;
+}
+
+int32 UMS_FurnitureUnit::SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData,
+	bool bUpdateNotPlacedItems)
+{
+	int32 RemainSubtractCount = aCount;
+	
+	for (int32 i = 0; i < SlotDatas.Num(); ++i)
+	{
+		if (RemainSubtractCount <= 0)
+		{
+			break;
+		}
+		
+		if (SlotDatas[i].CurrentItemTableId == aItemId && SlotDatas[i].CurrentItemCount > 0)
+		{
+			int32 SubtractCount = FMath::Min(RemainSubtractCount, SlotDatas[i].CurrentItemCount);
+
+			if (SubtractCurrentItemCount(i, aItemId, SubtractCount, bSavePlayerData, bUpdateNotPlacedItems))
+			{
+				RemainSubtractCount -= SubtractCount;
+			}
+		}
+	}
+
+	return aCount - RemainSubtractCount;
 }
 
 void UMS_FurnitureUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData)

@@ -46,6 +46,11 @@ public:
 	void Equip(const FName& aEquipmentName);
 	void Unequip();
 
+	UFUNCTION()
+	void OnChangeAnimationInAction(bool bInAction);
+	
+	void UpdateShowEquipment();
+
 	
 protected:
 	// Component
@@ -78,6 +83,12 @@ protected:
 
 	UPROPERTY()
 	TMap<FName, TObjectPtr<class AMS_Equipment>> Equipments;
+	
+	UPROPERTY()
+	FName CurrentEquipmentName = {};
+
+	UPROPERTY()
+	bool bShowEquipment = false;
 	
 public:
 	// Walking Progress

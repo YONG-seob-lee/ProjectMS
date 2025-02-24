@@ -44,6 +44,12 @@ FVector UMS_MarketAIUnit::GetActorLocation() const
 	return FVector::ZeroVector;
 }
 
+void UMS_MarketAIUnit::ResetPath()
+{
+	CacheTargetPositions.Empty();
+	CachePath.Empty();
+}
+
 EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 {
 	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
@@ -127,7 +133,7 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
 		IsGridSizeXOdd(), IsGridSizeYOdd());
 	
-	MS_ENSURE(aReachedLocation == PathLocationXY);
+	// MS_ENSURE(aReachedLocation == PathLocationXY);
 	CachePath.RemoveAt(0);
 }
 

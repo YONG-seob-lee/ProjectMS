@@ -52,6 +52,12 @@ public:
 	bool GetIssueTicketTakeOutTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
 	bool GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
 
+	void TakeInItems();
+	void TakeOutRequestItems();
+	void TakeOutCurrentItems();
+
+	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
+
 	
 private:
 	struct FMS_Staff* StaffTableData = nullptr;

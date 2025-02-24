@@ -36,7 +36,7 @@ void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 	StaffUnit = aStaffUnit;
 }
 
-FMS_SlotData UMS_IssueTicket::GetRequestFurnitureSlot() const
+FMS_SlotData UMS_IssueTicket::GetRequestSlotData() const
 {
 	return RequestFurnitureUnit->GetSlotData(RequestSlotId);
 }
@@ -79,7 +79,7 @@ void UMS_IssueTicket::UpdateEnabled()
 {
 	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 	{
-		FMS_SlotData SlotData = GetRequestFurnitureSlot();
+		FMS_SlotData SlotData = GetRequestSlotData();
 
 		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
 		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
@@ -87,7 +87,7 @@ void UMS_IssueTicket::UpdateEnabled()
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
 	{
-		FMS_SlotData SlotData = GetRequestFurnitureSlot();
+		FMS_SlotData SlotData = GetRequestSlotData();
 		
 		int32 ShelfItemCount = gItemMng.GetStorageItemCount(EMS_ZoneType::Shelf, SlotData.RequestItemTableId);
 		SetIsEnabled(ShelfItemCount > 0);
@@ -95,7 +95,7 @@ void UMS_IssueTicket::UpdateEnabled()
 	
 	else if (IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
-		FMS_SlotData SlotData = GetRequestFurnitureSlot();
+		FMS_SlotData SlotData = GetRequestSlotData();
 
 		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
 		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
@@ -103,7 +103,7 @@ void UMS_IssueTicket::UpdateEnabled()
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
 	{
-		FMS_SlotData SlotData = GetRequestFurnitureSlot();
+		FMS_SlotData SlotData = GetRequestSlotData();
 		
 		int32 PalletItemCount = gItemMng.GetStorageItemCount(EMS_ZoneType::Pallet, SlotData.RequestItemTableId);
 		SetIsEnabled(PalletItemCount > 0);
@@ -496,7 +496,7 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
-			FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
+			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
 			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
 			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
@@ -513,7 +513,7 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 
 			for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
 			{
-				FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
+				FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 				
 				Ticket->SetIsEnabled(ShelfItems.Contains(SlotData.RequestItemTableId));
 			}
@@ -527,7 +527,7 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
-			FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
+			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
 			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
 			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
@@ -544,7 +544,7 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 
 			for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
 			{
-				FMS_SlotData SlotData = Ticket->GetRequestFurnitureSlot();
+				FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 				
 				Ticket->SetIsEnabled(PalletItems.Contains(SlotData.RequestItemTableId));
 			}

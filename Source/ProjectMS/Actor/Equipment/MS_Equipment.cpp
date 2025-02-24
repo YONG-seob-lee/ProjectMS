@@ -12,6 +12,7 @@ AMS_Equipment::AMS_Equipment(const FObjectInitializer& aObjectInitializer) : Sup
 	if(MeshComponent)
 	{
 		MeshComponent->SetupAttachment(SceneRootComponent);
+		MeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 	}
 }
 
@@ -20,18 +21,7 @@ void AMS_Equipment::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_Equipment::Equip()
+void AMS_Equipment::ShowEquipment(bool bShow)
 {
-	bIsEquipped = true;
-	
-	SetActorHiddenInGame(false);
-	SetActorEnableCollision(true);
-}
-
-void AMS_Equipment::Unequip()
-{
-	bIsEquipped = false;
-	
-	SetActorHiddenInGame(true);
-	SetActorEnableCollision(false);
+	SetActorHiddenInGame(!bShow);
 }

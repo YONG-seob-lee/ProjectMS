@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "Actor/Equipment/MS_Equipment.h"
+#include "Animation/Market/MS_MarketAIAnimInstance.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Engine/SkeletalMeshSocket.h"
 
@@ -86,6 +87,12 @@ void AMS_MarketAICharacter::PostInitializeComponents()
 
 	// Equipment
 	SpawnAllEquipment();	// 비용 절감을 미리 스폰
+	
+	const TObjectPtr<UMS_MarketAIAnimInstance> MarketAIAnimInstance = Cast<UMS_MarketAIAnimInstance>(GetAIAnimInstance());
+	if(MarketAIAnimInstance)
+	{
+		MarketAIAnimInstance->OnChangeInActionDelegate.AddUObject(this, &AMS_MarketAICharacter::OnChangeAnimationInAction);
+	}
 }
 
 void AMS_MarketAICharacter::BeginPlay()
@@ -281,8 +288,7 @@ void AMS_MarketAICharacter::SpawnAllEquipment()
 			{
 				MS_ENSURE(false);
 			}
-
-			SpawnEquipment->Unequip();
+			
 			Equipments.Emplace(EquipmentClass.Key, SpawnEquipment);
 		}
 		else
@@ -290,6 +296,8 @@ void AMS_MarketAICharacter::SpawnAllEquipment()
 			MS_ENSURE(false);
 		}
 	}
+
+	UpdateShowEquipment();
 }
 
 void AMS_MarketAICharacter::Equip(const FName& aEquipmentName)
@@ -300,32 +308,26 @@ void AMS_MarketAICharacter::Equip(const FName& aEquipmentName)
 		return;
 	}
 
-	for (auto& Equipment : Equipments)
-	{
-		if (!IsValid(Equipment.Value))
-		{
-			MS_ENSURE(false);
-			continue;
-		}
-		
-		if (Equipment.Key == aEquipmentName)
-		{
-			if (!Equipment.Value->IsEquipped())
-			{
-				Equipment.Value->Equip();
-			}
-		}
-		else
-		{
-			if (Equipment.Value->IsEquipped())
-			{
-				Equipment.Value->Unequip();
-			}
-		}
-	}
+	CurrentEquipmentName = aEquipmentName;
+
+	UpdateShowEquipment();
 }
 
 void AMS_MarketAICharacter::Unequip()
+{
+	CurrentEquipmentName = FName();
+	
+	UpdateShowEquipment();
+}
+
+void AMS_MarketAICharacter::OnChangeAnimationInAction(bool bInAction)
+{
+	bShowEquipment = !bInAction;
+
+	UpdateShowEquipment();
+}
+
+void AMS_MarketAICharacter::UpdateShowEquipment()
 {
 	for (auto& Equipment : Equipments)
 	{
@@ -335,9 +337,13 @@ void AMS_MarketAICharacter::Unequip()
 			continue;
 		}
 		
-		if (Equipment.Value->IsEquipped())
+		if (bShowEquipment && Equipment.Key == CurrentEquipmentName)
 		{
-			Equipment.Value->Unequip();
+			Equipment.Value->ShowEquipment(true);
+		}
+		else
+		{
+			Equipment.Value->ShowEquipment(false);
 		}
 	}
 }

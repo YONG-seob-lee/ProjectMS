@@ -69,6 +69,7 @@ void UMS_MoveToTargetAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	EBTNodeResult::Type Result = AIUnit->UpdateActorLocationByPath();
 	if (Result != EBTNodeResult::Type::InProgress)
 	{
+		AIUnit->ResetPath();
 		FinishLatentTask(OwnerComp, Result);
 	}
 }

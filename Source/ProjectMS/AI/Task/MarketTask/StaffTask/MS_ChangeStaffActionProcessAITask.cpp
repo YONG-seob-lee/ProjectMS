@@ -1,7 +1,7 @@
 ﻿#include "MS_ChangeStaffActionProcessAITask.h"
 
 #include "AI/AIController/MS_AIController.h"
-#include "Animation/Staff/MS_StaffAIAnimation.h"
+#include "Animation/Market/Staff/MS_StaffAIAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 
@@ -29,7 +29,7 @@ EBTNodeResult::Type UMS_ChangeStaffActionProcessAITask::ExecuteTask(UBehaviorTre
 		return EBTNodeResult::Type::Failed;
 	}
 		
-	const TObjectPtr<UMS_StaffAIAnimation> AIAnimInstance = Cast<UMS_StaffAIAnimation>(AICharacter->GetAIAnimInstance());
+	const TObjectPtr<UMS_StaffAIAnimInstance> AIAnimInstance = Cast<UMS_StaffAIAnimInstance>(AICharacter->GetAIAnimInstance());
 	if(!AIAnimInstance)
 	{
 		return EBTNodeResult::Type::Failed;

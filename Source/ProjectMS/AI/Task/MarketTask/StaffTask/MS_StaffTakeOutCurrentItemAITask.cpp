@@ -1,4 +1,4 @@
-﻿#include "MS_StaffTakeInAITask.h"
+﻿#include "MS_StaffTakeOutCurrentItemAITask.h"
 
 #include "AI/AIController/MS_AIController.h"
 #include "Animation/Market/MS_MarketAIAnimInstance.h"
@@ -6,13 +6,13 @@
 #include "Units/MS_StaffAIUnit.h"
 
 
-UMS_StaffTakeInAITask::UMS_StaffTakeInAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMS_StaffTakeOutCurrentItemAITask::UMS_StaffTakeOutCurrentItemAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Staff Take In";
+	NodeName = "Staff Take Out Current Item";
 	bNotifyTick = true;
 }
 
-EBTNodeResult::Type UMS_StaffTakeInAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UMS_StaffTakeOutCurrentItemAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const TObjectPtr<AMS_AIController> AIController = Cast<AMS_AIController>(OwnerComp.GetAIOwner());
 	if(!AIController)
@@ -32,12 +32,12 @@ EBTNodeResult::Type UMS_StaffTakeInAITask::ExecuteTask(UBehaviorTreeComponent& O
 		return EBTNodeResult::Type::Failed;
 	}
 
-	AIUnit->TakeInItems();
+	AIUnit->TakeOutCurrentItems();
 	
 	return EBTNodeResult::Type::InProgress;
 }
 
-void UMS_StaffTakeInAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UMS_StaffTakeOutCurrentItemAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	

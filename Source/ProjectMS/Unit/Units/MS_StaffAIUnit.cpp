@@ -3,6 +3,7 @@
 
 #include "MS_StaffAIUnit.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_FurnitureUnit.h"
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
@@ -10,9 +11,12 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
+#include "Prop/Furniture/MS_Furniture.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_Staff.h"
 
 
@@ -179,7 +183,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 {
 	aOutTargetUnits.Empty();
 
-	FMS_SlotData SlotData = IssueTicket->GetRequestFurnitureSlot();
+	FMS_SlotData SlotData = IssueTicket->GetRequestSlotData();
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 
 	if (IssueType != EMS_StaffIssueType::AddItemsToDisplay
@@ -215,7 +219,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 {
 	aOutTargetUnits.Empty();
 
-	FMS_SlotData SlotData = IssueTicket->GetRequestFurnitureSlot();
+	FMS_SlotData SlotData = IssueTicket->GetRequestSlotData();
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 
 	if (IssueType != EMS_StaffIssueType::ReturnItemsFromDisplay
@@ -245,4 +249,167 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 	}
 
 	return false;
+}
+
+void UMS_StaffAIUnit::TakeInItems()
+{
+	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
+	
+	if (IssueType != EMS_StaffIssueType::ReturnItemsFromDisplay
+	&& IssueType != EMS_StaffIssueType::ReturnItemsFromShelf
+	&& IssueType != EMS_StaffIssueType::AddItemsToDisplay
+	&& IssueType != EMS_StaffIssueType::AddItemsToShelf)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	
+	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemTableId == INDEX_NONE || SlotDatas[0].CurrentItemCount == 0)	// 직원이 아이템을 들고 있는지
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	
+	// Take In
+	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
+	if (FurnitureUnit == nullptr)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay
+		|| IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
+	{
+		int32 MoveCount = FurnitureUnit->AddAnySlotCurrentItemCount(SlotDatas[0].CurrentItemTableId, SlotDatas[0].CurrentItemCount);
+		SubtractCurrentItemCount(0, SlotDatas[0].CurrentItemTableId, MoveCount);
+	}
+
+	else
+	{
+		FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
+		
+		if (RequestSlotData.RequestItemTableId == SlotDatas[0].CurrentItemTableId)
+		{
+			FMS_ItemData* RequestItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, RequestSlotData.RequestItemTableId);
+			if (RequestItemData == nullptr)
+			{
+				MS_ENSURE(false);
+				return;
+			}
+			
+			int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
+			int32 TakeInCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
+			
+			if (FurnitureUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, TakeInCount))
+			{
+				SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, TakeInCount);
+			}
+		}
+	}
+}
+
+void UMS_StaffAIUnit::TakeOutRequestItems()	// Add할 아이템 꺼내기
+{
+	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
+	
+	if (IssueType != EMS_StaffIssueType::AddItemsToDisplay
+	&& IssueType != EMS_StaffIssueType::AddItemsToShelf)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	
+	FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
+
+	if (RequestSlotData.RequestItemTableId != RequestSlotData.CurrentItemTableId)
+	{
+		if (RequestSlotData.CurrentItemCount != 0)	// Request Item과 CurrentItem이 다르면 아이템이 없어야 Add 가능
+		{
+			MS_ENSURE(false);
+			return;
+		}
+	}
+	
+	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemCount != 0)	// 직원 슬롯에 공간이 남았는지
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	FMS_ItemData* RequestItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, RequestSlotData.RequestItemTableId);
+	if (RequestItemData == nullptr)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	// Request Count
+	int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
+	int32 RequestCount = SlotMaxCount - RequestSlotData.CurrentItemCount;
+
+	// Take Out
+	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
+	if (FurnitureUnit == nullptr)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	int32 MoveCount = FurnitureUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.RequestItemTableId, RequestCount);
+	AddCurrentItemCount(0, RequestSlotData.RequestItemTableId, MoveCount);
+}
+
+void UMS_StaffAIUnit::TakeOutCurrentItems()	// Reture하기 위해 아이템 빼기
+{
+	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
+	
+	if (IssueType != EMS_StaffIssueType::ReturnItemsFromDisplay
+	&& IssueType != EMS_StaffIssueType::ReturnItemsFromShelf)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	
+	FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
+
+	if (RequestSlotData.RequestItemTableId == RequestSlotData.CurrentItemTableId)	// 뺄 필요가 없음
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemCount != 0)	// 직원 슬롯에 공간이 남았는지
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
+	if (FurnitureUnit == nullptr)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	int32 MoveCount = FurnitureUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.CurrentItemTableId, RequestSlotData.CurrentItemCount);
+	AddCurrentItemCount(0, RequestSlotData.CurrentItemTableId, MoveCount);
+}
+
+TWeakObjectPtr<UMS_FurnitureUnit> UMS_StaffAIUnit::GetInteractableFurnitureUnit()
+{
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		TWeakObjectPtr<AActor> Actor = LevelScriptActor->GetGridObject(GetActorGridPosition());
+
+		if (Actor != nullptr)
+		{
+			if (AMS_Furniture* FurnitureActor = Cast<AMS_Furniture>(Actor.Get()))
+			{
+				return Cast<UMS_FurnitureUnit>(FurnitureActor->GetOwnerUnitBase());
+			}
+		}
+	}
+	
+	return nullptr;
 }

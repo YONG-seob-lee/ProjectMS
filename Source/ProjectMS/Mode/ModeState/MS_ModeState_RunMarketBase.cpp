@@ -376,7 +376,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					}
 				}
 
-				GridBFS_2x2->Search(PathToTarget, TargetGateUnit->GetLinkedZoneType(), TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
+				GridBFS_2x2->Search(PathToTarget, TargetZoneType, TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
 
 				if (PathToTarget.Num() != 0)
 				{

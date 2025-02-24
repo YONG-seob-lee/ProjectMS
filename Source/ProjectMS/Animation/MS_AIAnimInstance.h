@@ -21,8 +21,9 @@ public:
 
 	FORCEINLINE void SetIsActFinished(bool _bActFinished) { bActFinished = _bActFinished; }
 	FORCEINLINE bool IsActFinished() const { return bActFinished; }
-private:
 
+	
+private:
 	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bActWalking = true;
 

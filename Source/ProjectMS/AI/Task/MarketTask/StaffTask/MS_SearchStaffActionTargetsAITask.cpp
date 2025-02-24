@@ -62,7 +62,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// SearchRequestUnit
-		if (ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForTakeIn || ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForTakeOut)
+		if (ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForAdd2_TakeIn || ActionProcess == EMS_StaffActionProcess::SearchRequestUnitForReturn1_TakeOut)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -85,7 +85,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::SearchTakeOutTargets)
+		if (ActionProcess == EMS_StaffActionProcess::SearchTargetsForAdd1_TakeOut)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -112,7 +112,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::SearchTakeInTargets)
+		if (ActionProcess == EMS_StaffActionProcess::SearchTargetsForReturn2_TakeIn)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			

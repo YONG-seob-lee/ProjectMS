@@ -1,23 +1,23 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/MS_AIAnimInstance.h"
-#include "ContentsUtilities/MS_AIDefine.h"
-#include "MS_StaffAIAnimation.generated.h"
+#include "Animation/Market/MS_MarketAIAnimInstance.h"
+#include "MS_StaffAIAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_StaffAIAnimation : public UMS_AIAnimInstance
+class PROJECTMS_API UMS_StaffAIAnimInstance : public UMS_MarketAIAnimInstance
 {
 	GENERATED_BODY()
 
 public:
 	FORCEINLINE void SetActionProcess(EMS_StaffActionProcess aActionProcess) { ActionProcess = aActionProcess; }
 	FORCEINLINE EMS_StaffActionProcess GetActionProcess() const { return ActionProcess; }
+
 	
 protected:
 	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

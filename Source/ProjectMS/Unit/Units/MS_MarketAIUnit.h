@@ -28,6 +28,8 @@ public:
 	const TArray<FIntVector2>& GetPath() const { return CachePath; }
 	void SetPath(const TArray<FIntVector2>& aCachePath) { CachePath = aCachePath; }
 
+	void ResetPath();
+
 	// Location
 	bool IsGridSizeXOdd() const { return false; }
 	bool IsGridSizeYOdd() const { return false; }
