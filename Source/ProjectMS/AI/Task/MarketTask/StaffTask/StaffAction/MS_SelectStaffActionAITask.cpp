@@ -55,15 +55,21 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
 		EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueType, static_cast<uint8>(IssueType));
 
 		if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay || IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueProcess, static_cast<uint8>(EMS_StaffIssueProcess::GoToRequestUnit));
+			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::GoToRequestUnitForTakeOut));
 		}
 		else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay || IssueType == EMS_StaffIssueType::AddItemsToShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueProcess, static_cast<uint8>(EMS_StaffIssueProcess::GoToTakeOutTargets));	
+			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::GoToTakeOutTargets));
 		}
+	}
+	else
+	{
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueType, static_cast<uint8>(EMS_StaffIssueType::None));
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionProcess::None));	
 	}
 	
 	return EBTNodeResult::Type::Succeeded;

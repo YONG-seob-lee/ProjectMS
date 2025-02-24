@@ -7,7 +7,7 @@
 #include "MS_AIDefine.generated.h"
 
 
-UENUM()
+UENUM(BlueprintType)
 enum class EMS_StaffActionType : uint8
 {
 	None = 0,
@@ -17,7 +17,7 @@ enum class EMS_StaffActionType : uint8
 	ChangeClothes = 4,
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EMS_StaffIssueType : uint8
 {
 	None = 0,
@@ -28,14 +28,20 @@ enum class EMS_StaffIssueType : uint8
 	AddItemsToShelf = 5,
 };
 
-UENUM()
-enum class EMS_StaffIssueProcess : uint8
+UENUM(BlueprintType)
+enum class EMS_StaffActionProcess : uint8
 {
 	None = 0,
-	GoToRequestUnit = 1,
-	GoToTakeInTargets = 2,
-	GoToTakeOutTargets = 3,
-	Act = 4
+	
+	GoToRequestUnitForTakeIn = 1,
+	GoToRequestUnitForTakeOut = 2,
+	GoToTakeInTargets = 3,
+	GoToTakeOutTargets = 4,
+	
+	RequestUnitTakeIn = 5,
+	RequestUnitTakeOut = 6,
+	TargetUnitTakeIn = 7,
+	TargetUnitTakeOut = 8,
 };
 
 USTRUCT()
@@ -125,7 +131,8 @@ namespace OutsideBoardKeyName
 namespace StaffBoardKeyName
 {
 	const FName SelectedStaffAction = TEXT("SelectedStaffAction");
-	const FName CurrentIssueProcess = TEXT("CurrentIssueProcess");
+	const FName CurrentIssueType = TEXT("CurrentIssueType");
+	const FName CurrentActionProcess = TEXT("CurrentActionProcess");
 }
 
 namespace SocketName

@@ -61,6 +61,21 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
+bool UMS_StaffAIUnit::HasStaffAction() const
+{
+	if (!NoneIssueStaffActions.IsEmpty())
+	{
+		return true;
+	}
+
+	if (IssueTicket != nullptr)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction(TWeakObjectPtr<UMS_IssueTicket>& OutIssueTicket)
 {
 	if (NoneIssueStaffActions.IsValidIndex(0))

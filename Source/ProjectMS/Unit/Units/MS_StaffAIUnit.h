@@ -30,7 +30,7 @@ public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
 	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData) { PlayerStaffData = aPlayerStaffData; }
 	
-	FORCEINLINE int32 GetStaffActionNum() const { return NoneIssueStaffActions.Num(); }
+	bool HasStaffAction() const;
 	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);
 	
 	void RegisterNoneIssueStaffAction(EMS_StaffActionType aStaffActionType);

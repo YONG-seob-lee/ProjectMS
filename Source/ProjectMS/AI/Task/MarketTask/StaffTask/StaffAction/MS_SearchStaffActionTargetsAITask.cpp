@@ -55,14 +55,14 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	// Issue
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
-		EMS_StaffIssueProcess CurrentIssueProcess = static_cast<EMS_StaffIssueProcess>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentIssueProcess));
-		if (CurrentIssueProcess == EMS_StaffIssueProcess::None)
+		EMS_StaffActionProcess ActionProcess = static_cast<EMS_StaffActionProcess>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentActionProcess));
+		if (ActionProcess == EMS_StaffActionProcess::None)
 		{
 			return EBTNodeResult::Type::Failed;
 		}
 
 		// GoToRequestUnit
-		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToRequestUnit)
+		if (ActionProcess == EMS_StaffActionProcess::GoToRequestUnitForTakeIn || ActionProcess == EMS_StaffActionProcess::GoToRequestUnitForTakeOut)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -85,7 +85,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// GoToTakeOutTargets
-		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToTakeOutTargets)
+		if (ActionProcess == EMS_StaffActionProcess::GoToTakeOutTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -112,7 +112,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// GoToTakeOutTargets
-		if (CurrentIssueProcess == EMS_StaffIssueProcess::GoToTakeInTargets)
+		if (ActionProcess == EMS_StaffActionProcess::GoToTakeInTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
