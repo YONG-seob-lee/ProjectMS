@@ -26,6 +26,7 @@ public:
 
 
 	EMS_Direction GetWalkingDirection() const { return WalkingDirection; }
+	const FVector2D& GetPathLocation() const { return PathLocation; }
 	
 	void SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection, FVector2D aPathLocation, bool aStopInPathLocation);
 
@@ -35,6 +36,7 @@ private:
 	void UpdateLocation(float aDeltaTime);
 	void UpdateRotation(float aDeltaTime);
 
+	bool IsRotationComplete() const;
 
 public:
 	// Slot Datas

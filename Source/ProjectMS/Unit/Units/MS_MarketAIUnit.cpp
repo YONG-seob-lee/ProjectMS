@@ -87,10 +87,16 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
 			IsGridSizeXOdd(), IsGridSizeYOdd());
-
+		
+		const FVector2D& CurrentPathLocation = MarketAICharacter->GetPathLocation();
+		if (CurrentPathLocation == PathLocationXY)
+		{
+			return EBTNodeResult::InProgress;
+		}
+		
 		FVector2D NextPathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[1],
-	IsGridSizeXOdd(), IsGridSizeYOdd());
-
+			IsGridSizeXOdd(), IsGridSizeYOdd());
+		
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		EMS_Direction NextDirection = UMS_MathUtility::GetDirection(PathLocationXY, NextPathLocationXY);
 		

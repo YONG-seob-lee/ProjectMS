@@ -5,6 +5,9 @@
 #include "MS_Define.h"
 #include "MS_MathUtility.generated.h"
 
+
+#define MS_ERROR_TOLERANCE 1.f
+
 UENUM()
 enum class EMS_InterpolationType
 {

@@ -116,7 +116,7 @@ void AMS_MarketAICharacter::Tick(float aDeltaTime)
 void AMS_MarketAICharacter::SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection,
 	FVector2D aPathLocation, bool aStopInPathLocation)
 {
-	if (PreviousPathLocation != PathLocation)
+	if (PathLocation != aPathLocation)
 	{
 		PreviousPathLocation = PathLocation;
 	}
@@ -146,63 +146,103 @@ void AMS_MarketAICharacter::UpdateLocation(float aDeltaTime)
 
 	// 프레임 드랍으로 경로를 벗어났을때 위치 이동
 	// ToDo : 보완 및 버그로 인해 PathLocation이 유효하지 않을 때 검사 필요
-	if (FMath::Abs((PathLocation - FVector2D(NewLocation.X, NewLocation.Y)).Length()) > FMath::Abs((PathLocation - PreviousPathLocation).Length()))
+	if (FMath::Abs((PathLocation - FVector2D(NewLocation.X, NewLocation.Y)).Length()) >
+		FMath::Max(MS_GridSize.X, FMath::Abs((PathLocation - PreviousPathLocation).Length())) * 2.f)
 	{
+
 		SetActorLocation(FVector(PathLocation.X, PathLocation.Y, NewLocation.Z));
 		bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
 		return;
 	}
-		
-	if (bStopInPathLocation)
+	
+	switch (WalkingDirection)
 	{
-		switch (WalkingDirection)
+		/* IsRotationComplete() : 로케이션이 완료 되어야 도착 판정.
+		 * 로케이션이 완료되지 않으면 완료될 때까지 매 틱 이곳에서 IsRocationComplete를 호출.
+		 * 따라서 UpdateRocation 쪽에서 따로 Location Complete를 검증할 필요는 없다.
+		 */
+	case EMS_Direction::Front :
 		{
-		case EMS_Direction::Front :
+			if (NewLocation.Y >= PathLocation.Y)
 			{
-				if (NewLocation.Y <= PathLocation.Y)
+				if (bStopInPathLocation)
 				{
 					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
-					bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
 				}
-				break;
-			}
 
-		case EMS_Direction::Back :
-			{
-				if (NewLocation.Y >= PathLocation.Y)
+				if (!IsRotationComplete())
 				{
-					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
-					bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
+					return;
 				}
-				break;
-			}
-				
-		case EMS_Direction::Right :
-			{
-				if (NewLocation.X >= PathLocation.X)
-				{
-					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
-					bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
-				}
-				break;
-			}
 
-		case EMS_Direction::Left :
+				bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
+			}
+			break;
+		}
+
+	case EMS_Direction::Back :
+		{
+			if (NewLocation.Y <= PathLocation.Y)
 			{
-				if (NewLocation.X <= PathLocation.X)
+				if (bStopInPathLocation)
 				{
 					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
-					bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
 				}
-				break;
-			}
 
-		default:
-			{
-				break;
+				if (!IsRotationComplete())
+				{
+					return;
+				}
+
+				bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
 			}
+			break;
+		}
+			
+	case EMS_Direction::Right :
+		{
+			if (NewLocation.X >= PathLocation.X)
+			{
+				if (bStopInPathLocation)
+				{
+					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
+				}
+
+				if (!IsRotationComplete())
+				{
+					return;
+				}
+
+				bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
+			}
+			break;
+		}
+
+	case EMS_Direction::Left :
+		{
+			if (NewLocation.X <= PathLocation.X)
+			{
+				if (bStopInPathLocation)
+				{
+					NewLocation = FVector(PathLocation.X, PathLocation.Y, NewLocation.Z);
+				}
+
+				if (!IsRotationComplete())
+				{
+					return;
+				}
+
+				bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
+			}
+			break;
+		}
+
+	default:
+		{
+			break;
 		}
 	}
+	
 		
 	SetActorLocation(NewLocation);
 }
@@ -264,6 +304,18 @@ void AMS_MarketAICharacter::UpdateRotation(float aDeltaTime)
 			
 		SetActorRotation(FRotator(0.f, NewRotatorYaw, 0.f));
 	}
+}
+
+bool AMS_MarketAICharacter::IsRotationComplete() const
+{
+	float DirectionRotatorYaw = UMS_MathUtility::ConvertDirectionToRotator(WalkingDirection).Yaw;
+	float CurrentRotatorYaw = GetActorRotation().Yaw;
+	if (CurrentRotatorYaw < 0.f)
+	{
+		CurrentRotatorYaw += 360.f;
+	}
+	
+	return FMath::IsNearlyEqual(DirectionRotatorYaw, CurrentRotatorYaw, MS_ERROR_TOLERANCE);
 }
 
 void AMS_MarketAICharacter::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)

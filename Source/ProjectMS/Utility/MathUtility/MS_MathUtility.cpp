@@ -2,19 +2,19 @@
 
 EMS_Rotation UMS_MathUtility::ConvertRotation(float aValue)
 {
-	if (FMath::IsNearlyEqual(aValue, 0.f))
+	if (FMath::IsNearlyEqual(aValue, 0.f, MS_ERROR_TOLERANCE))
 	{
 		return EMS_Rotation::Rot0;
 	}
-	if (FMath::IsNearlyEqual(aValue, 90.f) || FMath::IsNearlyEqual(aValue, -270.f))
+	if (FMath::IsNearlyEqual(aValue, 90.f, MS_ERROR_TOLERANCE) || FMath::IsNearlyEqual(aValue, -270.f, MS_ERROR_TOLERANCE))
 	{
 		return EMS_Rotation::Rot90;
 	}
-	if (FMath::IsNearlyEqual(aValue, 180.f) || FMath::IsNearlyEqual(aValue, -180.f))
+	if (FMath::IsNearlyEqual(aValue, 180.f, MS_ERROR_TOLERANCE) || FMath::IsNearlyEqual(aValue, -180.f, MS_ERROR_TOLERANCE))
 	{
 		return EMS_Rotation::Rot180;
 	}
-	if (FMath::IsNearlyEqual(aValue, 270.f) || FMath::IsNearlyEqual(aValue, -90.f))
+	if (FMath::IsNearlyEqual(aValue, 270.f, MS_ERROR_TOLERANCE) || FMath::IsNearlyEqual(aValue, -90.f, MS_ERROR_TOLERANCE))
 	{
 		return EMS_Rotation::Rot270;
 	}
@@ -64,9 +64,9 @@ FVector UMS_MathUtility::ConvertDirectionToVector(EMS_Direction aDirection)
 	switch (aDirection)
 	{
 	case EMS_Direction::Front :
-		return FVector(0.f, -1.f, 0.f);
-	case EMS_Direction::Back :
 		return FVector(0.f, 1.f, 0.f);
+	case EMS_Direction::Back :
+		return FVector(0.f, -1.f, 0.f);
 	case EMS_Direction::Right :
 		return FVector(1.f, 0.f, 0.f);
 	case EMS_Direction::Left :
@@ -86,9 +86,9 @@ EMS_Rotation UMS_MathUtility::ConvertDirectionToRotation(EMS_Direction aDirectio
 	case EMS_Direction::Back :
 		return EMS_Rotation::Rot180;
 	case EMS_Direction::Right :
-		return EMS_Rotation::Rot90;
-	case EMS_Direction::Left :
 		return EMS_Rotation::Rot270;
+	case EMS_Direction::Left :
+		return EMS_Rotation::Rot90;
 	}
 
 	MS_ENSURE(false);
@@ -106,7 +106,7 @@ EMS_Direction UMS_MathUtility::GetDirection(FVector2D LocationXY, FVector2D Next
 	float DiffX = NextLocationXY.X - LocationXY.X;
 	float DiffY = NextLocationXY.Y - LocationXY.Y;
 
-	if (FMath::IsNearlyEqual(DiffX, 0.f) && FMath::IsNearlyEqual(DiffY, 0.f))
+	if (FMath::IsNearlyEqual(DiffX, 0.f, MS_ERROR_TOLERANCE) && FMath::IsNearlyEqual(DiffY, 0.f, MS_ERROR_TOLERANCE))
 	{
 		return EMS_Direction::None;
 	}
@@ -115,11 +115,11 @@ EMS_Direction UMS_MathUtility::GetDirection(FVector2D LocationXY, FVector2D Next
 	{
 		if (DiffY < 0.f)
 		{
-			return EMS_Direction::Front;
+			return EMS_Direction::Back;
 		}
 		else
 		{
-			return EMS_Direction::Back;
+			return EMS_Direction::Front;
 		}
 	}
 	else
