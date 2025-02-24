@@ -55,14 +55,14 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	// Issue
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
-		EMS_StaffActionProcess ActionProcess = static_cast<EMS_StaffActionProcess>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentActionProcess));
-		if (ActionProcess == EMS_StaffActionProcess::None)
+		EMS_StaffActionState ActionProcess = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentActionProcess));
+		if (ActionProcess == EMS_StaffActionState::None)
 		{
 			return EBTNodeResult::Type::Failed;
 		}
 
 		// SearchRequestUnit
-		if (ActionProcess == EMS_StaffActionProcess::Add_Delivery_SearchRequestUnit || ActionProcess == EMS_StaffActionProcess::Return_PickUp_SearchRequestUnit)
+		if (ActionProcess == EMS_StaffActionState::Add_Delivery_SearchRequestUnit || ActionProcess == EMS_StaffActionState::Return_PickUp_SearchRequestUnit)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -85,7 +85,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::Add_PickUp_SearchTargets)
+		if (ActionProcess == EMS_StaffActionState::Add_PickUp_SearchTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -112,7 +112,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		}
 
 		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionProcess::Return_Delivery_SearchTargets)
+		if (ActionProcess == EMS_StaffActionState::Return_Delivery_SearchTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			

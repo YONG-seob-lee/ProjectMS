@@ -11,7 +11,7 @@ UMS_ChangeStaffActionProcessAITask::UMS_ChangeStaffActionProcessAITask(const FOb
 	NodeName = "Change Staff Action Process";
 	bNotifyTick = false;
 
-	ActionProcess = EMS_StaffActionProcess::None;
+	ActionProcess = EMS_StaffActionState::None;
 }
 
 EBTNodeResult::Type UMS_ChangeStaffActionProcessAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,

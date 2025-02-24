@@ -29,11 +29,12 @@ enum class EMS_StaffIssueType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EMS_StaffActionProcess : uint8
+enum class EMS_StaffActionState : uint8
 {
 	None = 0,
 	Deactive = 1,
 
+	// 물건 빼기
 	Return_PickUp_SearchRequestUnit = 3,
 	Return_PickUp_GoToRequestUnit = 4,
 	Return_PickUp_InteractRequestUnit = 5,
@@ -42,6 +43,7 @@ enum class EMS_StaffActionProcess : uint8
 	Return_Delivery_GoToTargetUnit = 7,
 	Return_Delivery_InteractTargetUnit = 8,
 
+	// 물건 채우기
 	Add_PickUp_SearchTargets = 9,
 	Add_PickUp_GoToTargetUnit = 10,
 	Add_PickUp_InteractTargetUnit = 11,
@@ -49,6 +51,22 @@ enum class EMS_StaffActionProcess : uint8
 	Add_Delivery_SearchRequestUnit = 12,
 	Add_Delivery_GoToRequestUnit = 13,
 	Add_Delivery_InteractRequestUnit = 14,
+
+	// Storage 외의 타겟이 있는 행동
+	NoStorage_SearchRequestUnit = 15,
+	NoStorage_GoToRequestUnit = 16,
+	NoStorage_InteractRequestUnit = 17,
+	
+	// Random Point로 이동
+	None_SearchRandomPoint = 18,
+	None_GoToRandomPoint = 19,
+
+	// Idle
+	None_Idle = 20,
+	None_IdleAction = 21,
+
+	// Spline으로 이동
+	MoveUsingSpline = 22
 };
 
 USTRUCT()

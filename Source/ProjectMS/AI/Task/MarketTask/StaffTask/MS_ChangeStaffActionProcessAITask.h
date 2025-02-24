@@ -22,5 +22,5 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	EMS_StaffActionProcess ActionProcess;
+	EMS_StaffActionState ActionProcess;
 };
