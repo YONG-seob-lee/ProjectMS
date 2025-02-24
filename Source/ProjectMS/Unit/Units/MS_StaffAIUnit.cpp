@@ -61,11 +61,6 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
-void UMS_StaffAIUnit::SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData)
-{
-	PlayerStaffData = aPlayerStaffData;
-}
-
 EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction(TWeakObjectPtr<UMS_IssueTicket>& OutIssueTicket)
 {
 	if (NoneIssueStaffActions.IsValidIndex(0))

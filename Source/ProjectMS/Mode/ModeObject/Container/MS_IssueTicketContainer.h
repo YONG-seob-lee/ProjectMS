@@ -30,7 +30,7 @@ public:
 	FORCEINLINE TWeakObjectPtr<class UMS_StaffAIUnit> GetStaffUnit() const { return StaffUnit; }
 	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
-	FORCEINLINE FMS_SlotData GetRequestFurnitureSlot() const;
+	FMS_SlotData GetRequestFurnitureSlot() const;
 	
 	bool IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const;
 	bool IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_FurnitureUnit> aRequestUnit, int32 aRequestSlot) const;

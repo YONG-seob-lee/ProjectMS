@@ -28,7 +28,7 @@ protected:
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
-	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
+	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData) { PlayerStaffData = aPlayerStaffData; }
 	
 	FORCEINLINE int32 GetStaffActionNum() const { return NoneIssueStaffActions.Num(); }
 	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);
