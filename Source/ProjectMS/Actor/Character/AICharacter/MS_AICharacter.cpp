@@ -41,15 +41,6 @@ AMS_AICharacter::AMS_AICharacter()
 void AMS_AICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	const USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
-	if(!SkeletalMeshComponent)
-	{
-		MS_LOG_VERBOSITY(Error, TEXT("Please Check [%s] BP Instance and Check AnimInstance."), *MS_FUNC_STRING);
-		return;
-	}
-	
-	AIAnimInstance = Cast<UMS_AIAnimInstance>(SkeletalMeshComponent->GetAnimInstance());
 }
 
 void AMS_AICharacter::BeginPlay()
@@ -64,9 +55,10 @@ void AMS_AICharacter::Tick(float aDeltaTime)
 
 TObjectPtr<UMS_AIAnimInstance> AMS_AICharacter::GetAIAnimInstance() const
 {
-	if(AIAnimInstance.IsValid())
+	const USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
+	if(SkeletalMeshComponent)
 	{
-		return AIAnimInstance.Get();
+		return Cast<UMS_AIAnimInstance>(SkeletalMeshComponent->GetAnimInstance());
 	}
 	
 	return nullptr;

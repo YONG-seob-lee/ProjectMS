@@ -18,6 +18,7 @@ class PROJECTMS_API UMS_MarketAIUnit : public UMS_AIUnit
 
 public:
 	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
+	virtual bool SetUnitCharacter(TObjectPtr<class AMS_CharacterBase> aUnitCharacter, bool bForced = false);
 	
 	FIntVector2 GetActorGridPosition() const;
 	FVector GetActorLocation() const;

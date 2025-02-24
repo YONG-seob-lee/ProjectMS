@@ -20,6 +20,8 @@ public:
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
+
+	virtual void DestroyUnitActor() override;
 	
 protected:
 	virtual int32 GetBlueprintPathId() const override;

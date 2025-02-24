@@ -29,4 +29,6 @@ public:
 	int32 PortraitPath = 0;
 	UPROPERTY(EditAnywhere)
 	int32 PathFile = 0;
+	UPROPERTY(EditAnywhere)
+	bool PreSpawned = false;
 };

@@ -154,6 +154,9 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	Items.Emplace(5, 30);
 	Items.Emplace(16, 20);
 	Items.Emplace(17, 10);
+
+	// Staff
+	StaffDatas.Emplace(FMS_PlayerStaffData(1, FMS_GameDate(1, 1, 1)));
 }
 
 void AMS_PlayerState::InitPlayerData()

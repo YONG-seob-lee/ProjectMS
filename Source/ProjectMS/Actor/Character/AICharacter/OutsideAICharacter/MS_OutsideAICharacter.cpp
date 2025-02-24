@@ -52,7 +52,7 @@ void AMS_OutsideAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if(AIAnimInstance.IsValid())
+	if(UMS_AIAnimInstance* AIAnimInstance = GetAIAnimInstance())
 	{
 		if(AIAnimInstance->IsActWalking() == false || AIAnimInstance->IsActFinished() == true)
 		return;

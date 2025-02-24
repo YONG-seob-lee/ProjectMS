@@ -38,22 +38,37 @@ void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 
 FMS_SlotData UMS_IssueTicket::GetRequestSlotData() const
 {
-	return RequestFurnitureUnit->GetSlotData(RequestSlotId);
+	if (RequestFurnitureUnit != nullptr)
+	{
+		return RequestFurnitureUnit->GetSlotData(RequestSlotId);
+	}
+
+	return FMS_SlotData();
 }
 
 bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
 {
-	return IssueType == aIssueType
-	&& RequestFurnitureUnit->GetUnitHandle() == aUnitHandle
-	&& RequestSlotId == aRequestSlot;
+	if (RequestFurnitureUnit != nullptr)
+	{
+		return IssueType == aIssueType
+		&& RequestFurnitureUnit->GetUnitHandle() == aUnitHandle
+		&& RequestSlotId == aRequestSlot;
+	}
+
+	return false;
 }
 
 bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_FurnitureUnit> aRequestUnit,
                                   int32 aRequestSlot) const
 {
-	return IssueType == aIssueType
-		&& RequestFurnitureUnit == aRequestUnit
-		&& RequestSlotId == aRequestSlot;
+	if (RequestFurnitureUnit != nullptr)
+	{
+		return IssueType == aIssueType
+			&& RequestFurnitureUnit == aRequestUnit
+			&& RequestSlotId == aRequestSlot;
+	}
+
+	return false;
 }
 
 bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) const
@@ -64,9 +79,14 @@ bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) 
 		return false;
 	}
 
-	return IssueType == aOther->IssueType
-		&& RequestFurnitureUnit == aOther->RequestFurnitureUnit
-		&& RequestSlotId == aOther->RequestSlotId;
+	if (RequestFurnitureUnit != nullptr)
+	{
+		return IssueType == aOther->IssueType
+			&& RequestFurnitureUnit == aOther->RequestFurnitureUnit
+			&& RequestSlotId == aOther->RequestSlotId;
+	}
+
+	return false;
 }
 
 bool UMS_IssueTicket::AllowSameIssue(EMS_StaffIssueType aIssueType)
@@ -433,7 +453,7 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket
 				continue;
 			}
 			
-			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - RequestFurnitureUnit->GetGridPosition();
+			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - StaffGridPosition;
 			int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
 
 			if (GridPositionDistance < MinGridPositionDistance)

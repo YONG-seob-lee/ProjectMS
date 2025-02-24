@@ -14,6 +14,7 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "Mode/ModeState/MS_ModeState_RunMarket.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -40,7 +41,7 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 		FMS_SequencePlayParameter Parameter;
 		Parameter.OnFinishedSequenceCallback = []()
 		{
-			if(const UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(gModeMng.GetCurrentModeState()))
+			if(const UMS_ModeState_RunMarket* RunMarketMode = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
 			{
 				TMap<int32, int32> ScheduleEvent = {};
 				RunMarketMode->GetScheduleEvent(ScheduleEvent);
@@ -48,14 +49,18 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 
 				if (AMS_MarketLevelScriptActor* LevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 				{
-					AActor* UglyDuck = LevelScriptActor->GetLevelSpecificActor(LevelSpecificActorName::UglyDuck);
+					TWeakObjectPtr<AActor> UglyDuck = LevelScriptActor->GetLevelSpecificActor(LevelSpecificActorName::UglyDuck);
 
 					if (AMS_StaffAICharacter* StaffUglyDuck = Cast<AMS_StaffAICharacter>(UglyDuck))
 					{
+						// Animation Mode
 						if (USkeletalMeshComponent* SkeletalMesh = StaffUglyDuck->GetMesh())
 						{
 							SkeletalMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
 						}
+
+						// Register
+						RunMarketMode->RegisterLevelSpecificActorToSupervisor(LevelSpecificActorName::UglyDuck, UglyDuck);
 					}
 				}
 			}

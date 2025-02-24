@@ -3,11 +3,13 @@
 
 #include "MS_ModeState_RunMarket.h"
 
+#include "Character/MS_CharacterBase.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Prop/MS_Prop.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
 
@@ -243,5 +245,20 @@ void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
 	{
 		SelectedProp->OnUnselectProp(EMS_ModeState::RunMarket);
+	}
+}
+
+void UMS_ModeState_RunMarket::RegisterLevelSpecificActorToSupervisor(const FName& aName, TWeakObjectPtr<AActor> aActor) const
+{
+	if (aName == LevelSpecificActorName::UglyDuck)
+	{
+		if (StaffSupervisor)
+		{
+			TWeakObjectPtr<AMS_CharacterBase> UglyDuckCharacter = Cast<AMS_CharacterBase>(aActor);
+			if (UglyDuckCharacter != nullptr)
+			{
+				StaffSupervisor->RegisterPreSpawnedCharacter(1, UglyDuckCharacter);
+			}
+		}
 	}
 }

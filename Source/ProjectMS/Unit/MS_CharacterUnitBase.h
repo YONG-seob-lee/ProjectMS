@@ -32,7 +32,7 @@ protected:
 public:
 	FORCEINLINE TObjectPtr<class AMS_CharacterBase> GetCharacter() const { return Character; }
 	
-private:
+protected:
 	UPROPERTY()
 	TObjectPtr<class AMS_CharacterBase> Character = nullptr;
 };

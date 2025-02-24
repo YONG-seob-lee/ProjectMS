@@ -60,4 +60,8 @@ public:
 
 	UFUNCTION()
 	void OnUnselectActor(AActor* aUnselectedActor);
+
+	
+	// Level Specific Character
+	void RegisterLevelSpecificActorToSupervisor(const FName& aName, TWeakObjectPtr<AActor> aActor) const;
 };

@@ -49,6 +49,28 @@ void UMS_StaffAIUnit::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+void UMS_StaffAIUnit::DestroyUnitActor()
+{
+	// ToDo: 근본적인 문제 해결 필요
+	/* GetWorld()->DestroyActor(Character)를 실행하면 게임 강제 종료 시 FidRef() 함수에서 크래시 발생
+	 * 아래와 같이 처리 시 레벨 이동할 때 정상적으로 삭제되는 점은 확인했다.
+	 */
+	if (StaffTableData->PreSpawned == false)
+	{
+		Super::DestroyUnitActor();
+	}
+	else
+	{
+		if(IsValid(Character))
+		{
+			Character->Destroy();
+			Character->SetHidden(true);
+			// GetWorld()->DestroyActor(Character);
+			Character = nullptr;
+		}
+	}
+}
+
 int32 UMS_StaffAIUnit::GetBlueprintPathId() const
 {
 	return StaffTableData->PathFile;

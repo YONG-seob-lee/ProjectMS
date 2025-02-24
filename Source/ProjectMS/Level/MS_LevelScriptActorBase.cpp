@@ -99,7 +99,7 @@ void AMS_LevelScriptActorBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-AActor* AMS_LevelScriptActorBase::GetLevelSpecificActor(const FName& aKey) const
+TWeakObjectPtr<AActor> AMS_LevelScriptActorBase::GetLevelSpecificActor(const FName& aKey) const
 {
 	if (LevelSpecificActors.Contains(aKey))
 	{
@@ -196,7 +196,8 @@ TObjectPtr<UMS_UnitBase> AMS_LevelScriptActorBase::CreatePlayer(const TObjectPtr
 	const TObjectPtr<UMS_BasePlayerUnit> Player = Cast<UMS_BasePlayerUnit>(gUnitMng.CreateUnit(EMS_UnitType::BasePlayer, 1, true, aSpawnPoint->GetActorLocation(), aSpawnPoint->GetActorRotation()));
 	MS_CHECK(Player);
 
-	if(const TObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacter())
+	TWeakObjectPtr<AMS_CharacterBase> CharacterBase = Player->GetCharacter();
+	if (CharacterBase != nullptr)
 	{
 		CharacterBase->GetCharacterRootComponent()->ComponentTags.Emplace(FName("Title"));
 	}

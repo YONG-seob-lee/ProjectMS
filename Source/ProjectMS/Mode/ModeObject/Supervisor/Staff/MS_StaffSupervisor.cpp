@@ -147,6 +147,52 @@ void UMS_StaffSupervisor::RemoveAllCharacter()
 	StaffAIUnits.Empty();
 }
 
+void UMS_StaffSupervisor::RegisterPreSpawnedCharacter(int32 aStaffId, TWeakObjectPtr<AMS_CharacterBase> aCharacter)
+{
+	if (aCharacter == nullptr)
+	{
+		return;
+	}
+	
+	TObjectPtr<UMS_StaffAIUnit> StaffUnit = Cast<UMS_StaffAIUnit>(gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aStaffId, false));
+	if (IsValid(StaffUnit))
+	{
+		if (!StaffUnit->SetUnitCharacter(aCharacter.Get()))
+		{
+			MS_ERROR(TEXT("[%s] Set Unit Character Fail"), *MS_FUNC_STRING);
+			MS_ENSURE(false);
+		}
+		else
+		{
+			StaffAIUnits.Emplace(StaffUnit);
+
+			bool bFlag = false;
+			for (const auto& PlayerStaffData : PlayerStaffDatas)
+			{
+				if (PlayerStaffData.StaffId == aStaffId)
+				{
+					StaffUnit->SetPlayerStaffData(PlayerStaffData);
+					bFlag = true;
+					break;
+				}
+			}
+			if (bFlag == false)
+			{
+				StaffUnit->SetPlayerStaffData(FMS_PlayerStaffData(aStaffId));
+				MS_ERROR(TEXT("[%s] No Prespawned Character's Player Staff Data"), *MS_FUNC_STRING);
+				MS_ERROR(TEXT("[%s] 세이브 데이터를 지워!!!!!"), *MS_FUNC_STRING);
+				MS_ENSURE(false);
+			}
+
+		}
+	}
+	else
+	{
+		MS_ERROR(TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+		MS_ENSURE(false);
+	}
+}
+
 void UMS_StaffSupervisor::InitStaffSpawnPoint()
 {
 	StaffSpawnPoints.Empty();

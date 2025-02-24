@@ -22,6 +22,21 @@ bool UMS_MarketAIUnit::CreateUnitActor(const FVector& aPosition, const FRotator&
 	return false;
 }
 
+bool UMS_MarketAIUnit::SetUnitCharacter(TObjectPtr<AMS_CharacterBase> aUnitCharacter, bool bForced)
+{
+	if (Super::SetUnitCharacter(aUnitCharacter, bForced))
+	{
+		AMS_MarketAICharacter* AICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
+		MS_ENSURE(AICharacter);
+
+		AICharacter->OnReachPathLocationDelegate.BindUObject(this, &UMS_MarketAIUnit::OnReachPathLocation);
+
+		return true;
+	}
+	
+	return false;
+}
+
 FIntVector2 UMS_MarketAIUnit::GetActorGridPosition() const
 {
 	if (GetCharacter())

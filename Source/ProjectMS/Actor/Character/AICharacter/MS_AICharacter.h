@@ -18,7 +18,4 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	
 	TObjectPtr<class UMS_AIAnimInstance> GetAIAnimInstance() const;
-
-protected:
-	TWeakObjectPtr<class UMS_AIAnimInstance> AIAnimInstance = nullptr;
 };
