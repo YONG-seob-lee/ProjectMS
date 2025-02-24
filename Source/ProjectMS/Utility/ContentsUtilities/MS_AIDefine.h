@@ -34,20 +34,21 @@ enum class EMS_StaffActionProcess : uint8
 	None = 0,
 	Deactive = 1,
 
-	SearchRequestUnitForAdd2_TakeIn = 2,
-	SearchRequestUnitForReturn1_TakeOut = 3,
-	SearchTargetsForReturn2_TakeIn = 4,
-	SearchTargetsForAdd1_TakeOut = 5,
-	
-	GoToRequestUnitForAdd2_TakeIn = 6,
-	GoToRequestUnitForReturn1_TakeOut = 7,
-	GoToTargetsForReturn2_TakeIn = 8,
-	GoToTargetsForAdd1_TakeOut = 9,
-	
-	InteractRequestUnitForAdd2_TakeIn = 10,
-	InteractRequestUnitForReturn1_TakeOut = 11,
-	InteractTargetUnitForReturn2_TakeIn = 12,
-	InteractTargetUnitForAdd1_TakeOut = 13,
+	Return_PickUp_SearchRequestUnit = 3,
+	Return_PickUp_GoToRequestUnit = 4,
+	Return_PickUp_InteractRequestUnit = 5,
+
+	Return_Delivery_SearchTargets = 6,
+	Return_Delivery_GoToTargetUnit = 7,
+	Return_Delivery_InteractTargetUnit = 8,
+
+	Add_PickUp_SearchTargets = 9,
+	Add_PickUp_GoToTargetUnit = 10,
+	Add_PickUp_InteractTargetUnit = 11,
+
+	Add_Delivery_SearchRequestUnit = 12,
+	Add_Delivery_GoToRequestUnit = 13,
+	Add_Delivery_InteractRequestUnit = 14,
 };
 
 USTRUCT()
