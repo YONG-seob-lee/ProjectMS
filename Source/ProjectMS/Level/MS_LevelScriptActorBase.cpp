@@ -99,6 +99,16 @@ void AMS_LevelScriptActorBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+AActor* AMS_LevelScriptActorBase::GetLevelSpecificActor(const FName& aKey) const
+{
+	if (LevelSpecificActors.Contains(aKey))
+	{
+		return *LevelSpecificActors.Find(aKey);
+	}
+
+	return nullptr;
+}
+
 #if WITH_EDITOR
 void AMS_LevelScriptActorBase::OnBaseLayerLevelCollectionSwitchClick()
 {

@@ -26,6 +26,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	AActor* GetLevelSpecificActor(const FName& aKey) const;
 	
 #if WITH_EDITOR
 	UFUNCTION(BlueprintCallable, CallInEditor) void OnBaseLayerLevelCollectionSwitchClick();
@@ -42,4 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) bool BaseLayerLevelCollectionSwitch = false;
 
 	TArray<TObjectPtr<AActor>> Actors;
+
+	UPROPERTY(EditAnywhere)
+	TMap<FName, TObjectPtr<AActor>> LevelSpecificActors;
 };

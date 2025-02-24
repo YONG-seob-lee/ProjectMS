@@ -168,3 +168,8 @@ public:
 	UPROPERTY()
 	TArray<FMS_SlotData> SlotDatas = {};
 };
+
+namespace LevelSpecificActorName
+{
+	const FName UglyDuck = TEXT("UglyDuck");
+}

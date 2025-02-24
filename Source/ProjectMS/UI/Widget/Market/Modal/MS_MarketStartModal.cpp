@@ -3,12 +3,17 @@
 
 #include "MS_MarketStartModal.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
 #include "Button/MS_Button.h"
+#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
+#include "ContentsUtilities/MS_LevelDefine.h"
 
 void UMS_MarketStartModal::NativeConstruct()
 {
@@ -40,6 +45,19 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 				TMap<int32, int32> ScheduleEvent = {};
 				RunMarketMode->GetScheduleEvent(ScheduleEvent);
 				gScheduleMng.RunSchedule(ScheduleDefault::GamePlayMinute, ScheduleEvent);
+
+				if (AMS_MarketLevelScriptActor* LevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
+				{
+					AActor* UglyDuck = LevelScriptActor->GetLevelSpecificActor(LevelSpecificActorName::UglyDuck);
+
+					if (AMS_StaffAICharacter* StaffUglyDuck = Cast<AMS_StaffAICharacter>(UglyDuck))
+					{
+						if (USkeletalMeshComponent* SkeletalMesh = StaffUglyDuck->GetMesh())
+						{
+							SkeletalMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
+						}
+					}
+				}
 			}
 		};
 		gSequenceMng.PlaySequence(EMS_SequenceType::Entrance, Parameter);
