@@ -69,6 +69,17 @@ enum class EMS_StaffActionState : uint8
 	MoveUsingSpline = 22
 };
 
+
+UENUM(BlueprintType)
+enum class EMS_CustomerActionState : uint8
+{
+	None = 0,
+	DeActive = 1,
+
+	// Spline으로 이동 (마켓 이동 및 회귀용)
+	MoveUsingSpline = 2,
+};
+
 USTRUCT()
 struct FMS_PlayerStaffData
 {

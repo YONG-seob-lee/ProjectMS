@@ -7,17 +7,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
-#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "SpawnPoint/MS_OutsideDuckSpawnPoint.h"
 #include "Units/MS_SplineUnit.h"
-#include "Actor/Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "Components/LightComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/NightProp/MS_NightProp.h"
+#include "Prop/Spline/MS_DuckSplineActor.h"
+#include "Prop/Spline/MS_VehicleSplineActor.h"
 #include "Vehicle/MS_VehicleCharacter.h"
-#include "Vehicle/MS_VehicleSplineActor.h"
 
 
 // Sets default values

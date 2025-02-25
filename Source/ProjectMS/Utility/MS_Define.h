@@ -100,10 +100,11 @@ enum class EMS_UnitType : int32
  Vehicle = 4,
  CarSpline = 5,
  DuckSpline = 6,
- Gate = 7,
- OutsideAI = 8,
- StaffAI = 9,
- CustomerAI = 10,
+ CustomerSpline = 7,
+ Gate = 8,
+ OutsideAI = 9,
+ StaffAI = 10,
+ CustomerAI = 11,
 };
 
 // Widget

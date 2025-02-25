@@ -8,6 +8,7 @@
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathDirectory.h"
 #include "ProjectMS/Utility/MS_Define.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Table/Caches/MS_CustomerCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_LevelCacheTable.h"
 #include "Table/Caches/MS_MenuElementCacheTable.h"
@@ -272,6 +273,7 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::Storage, TEXT("/Game/TableData/Storage.Storage"), UMS_StorageCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::Staff, TEXT("/Game/TableData/Staff.Staff"), UMS_StaffCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::StaffAbility, TEXT("/Game/TableData/StaffAbility.StaffAbility"), UMS_StaffAbilityCacheTable::StaticClass());
+	CreateTableData(EMS_TableDataType::Customer, TEXT("/Game/TableData/Customer.Customer"), UMS_CustomerCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::MenuElement, TEXT("/Game/TableData/MenuElement.MenuElement"), UMS_MenuElementCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::Tutorial, TEXT("/Game/TableData/Tutorial.Tutorial"), UMS_TutorialCacheTable::StaticClass());
 }

@@ -23,12 +23,13 @@ enum class EMS_TableDataType : uint8
 	PlayerStatus = 6					UMETA(DisplayName = "PlayerStatus"),
 	Staff = 7							UMETA(DisplayName = "Staff"),
 	StaffAbility = 8					UMETA(DisplayName = "StaffAbility"),
+	Customer = 9						UMETA(DisplayName = "Customer"),
 	
-	ItemData = 9						UMETA(DisplayName = "ItemData"),
-	Furniture = 10						UMETA(DisplayName = "Furniture"),
-	Storage = 11						UMETA(DisplayName = "Storage"),
-	MenuElement = 12					UMETA(DisplayName = "MenuElement"),
-	Tutorial = 13						UMETA(DisplayName = "Tutorial"),
+	ItemData = 10						UMETA(DisplayName = "ItemData"),
+	Furniture = 11						UMETA(DisplayName = "Furniture"),
+	Storage = 12						UMETA(DisplayName = "Storage"),
+	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
+	Tutorial = 14						UMETA(DisplayName = "Tutorial"),
 };
 
 namespace MS_LocalizedTableId

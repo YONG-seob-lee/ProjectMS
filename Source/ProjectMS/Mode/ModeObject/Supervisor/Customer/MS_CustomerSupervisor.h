@@ -4,8 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Mode/ModeObject/Supervisor/MS_AISupervisor.h"
+#include "Table/Caches/MS_CustomerCacheTable.h"
 #include "MS_CustomerSupervisor.generated.h"
 
+namespace Customer
+{
+	constexpr int32 SpawnMaxUnitCount = 3;
+	constexpr int32 SpawnMaxTime = 30.f;
+}
 /**
  * 
  */
@@ -28,4 +34,22 @@ public:
 	
 	virtual void UpdateMinute(int32 aCurrentMinute) override;
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
+
+	bool SpawnCustomer();
+	
+protected:
+	void StartCustomerSpawn();
+	void StopCustomerSpawn();
+	
+	void GetRandomSpawnPoint(FVector& SpawnLocation, FRotator& SpawnRotator);
+	
+private:
+	void InitCustomerSpawnPoint();
+	void CashingDuckSplineActors() const;
+	
+	bool bStartCustomerSpawn = false;
+	float SpawnIntervalDelayTime = 0.f; 
+
+	TArray<TWeakObjectPtr<class UMS_CustomerAIUnit>> CustomerAIUnits;
+	TArray<TWeakObjectPtr<class AMS_CustomerSpawnPoint>> CustomerSpawnPoints;
 };

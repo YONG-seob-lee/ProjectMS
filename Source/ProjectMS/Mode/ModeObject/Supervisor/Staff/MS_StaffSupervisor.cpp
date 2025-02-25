@@ -4,12 +4,12 @@
 #include "MS_StaffSupervisor.h"
 
 #include "Character/MS_CharacterBase.h"
-#include "Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "Controller/MS_PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
+#include "Prop/Spline/MS_DuckSplineActor.h"
 #include "SpawnPoint/MS_StaffDuckSpawnPoint.h"
 #include "Units/MS_SplineUnit.h"
 #include "Units/MS_StaffAIUnit.h"
@@ -234,7 +234,7 @@ void UMS_StaffSupervisor::CashingDuckSplineActors() const
 	
 	for (AActor* Spline : SplineActors)
 	{
-		AMS_DuckSplineActor* SplineActor = Cast<AMS_DuckSplineActor>(Spline);
+		TObjectPtr<AMS_Actor> SplineActor = Cast<AMS_DuckSplineActor>(Spline);
 		if(!SplineActor)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));

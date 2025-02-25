@@ -4,13 +4,13 @@
 #include "MS_OutsideAICharacter.h"
 
 #include "MS_ActorUnitBase.h"
-#include "MS_DuckSplineActor.h"
 #include "MS_MarketFrontActor.h"
 #include "MS_UnitBase.h"
 #include "AI/AIController/OutsideAIController/MS_OutsideAIController.h"
 #include "Animation/MS_AIAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Prop/Spline/MS_DuckSplineActor.h"
 #include "Units/MS_AIUnit.h"
 
 

@@ -7,7 +7,6 @@
 #include "MS_FurnitureUnit.h"
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
-#include "Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -17,6 +16,7 @@
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
 #include "Prop/Furniture/MS_Furniture.h"
+#include "Prop/Spline/MS_DuckSplineActor.h"
 #include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_Staff.h"
 
@@ -129,8 +129,8 @@ bool UMS_StaffAIUnit::ReachSplineEndPoint() const
 	{
 		return false;
 	}
-	FVector ActorLocation = GetActorLocation();
-	FVector SplineEndPoint = DuckSplineActor->GetEndPoint();
+	const FVector ActorLocation = GetActorLocation();
+	const FVector SplineEndPoint = DuckSplineActor->GetEndPoint();
 	if(FVector::Distance(ActorLocation, SplineEndPoint) < 10.f)
 	{
 		return true;
