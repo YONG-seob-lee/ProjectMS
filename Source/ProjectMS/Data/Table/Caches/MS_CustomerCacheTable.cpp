@@ -5,10 +5,10 @@
 
 #include "MS_ItemCacheTable.h"
 
-FMS_CustomerData::FMS_CustomerData(int32 aDuckColor, int32 aMaxItemKind, int32 aMaxItemCount)
+FMS_CustomerData::FMS_CustomerData(int32 aDuckColor, int32 aCharacterBPPathFile, int32 aMaxItemKind, int32 aMaxItemCount)
 {
 	DuckColor = aDuckColor;
-	
+	CharacterBPPathFile = aCharacterBPPathFile;
 	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
 	MS_ENSURE(ItemTable);
 
@@ -39,6 +39,6 @@ void UMS_CustomerCacheTable::MakeNewCustomerData(FMS_CustomerData& NewCustomerDa
 {
 	if(FMS_Customer** Customer = CustomerDatas.Find(FMath::RandRange(0, CustomerDatas.Num() - 1)))
 	{
-		NewCustomerData = FMS_CustomerData((*Customer)->ColorType, (*Customer)->MaxItemKind, (*Customer)->MaxItemCount);
+		NewCustomerData = FMS_CustomerData((*Customer)->ColorType, (*Customer)->PathFile, (*Customer)->MaxItemKind, (*Customer)->MaxItemCount);
 	}
 }

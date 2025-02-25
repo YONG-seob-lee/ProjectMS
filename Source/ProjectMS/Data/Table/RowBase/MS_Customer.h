@@ -19,4 +19,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 MaxItemCount = 0;
+
+	UPROPERTY(EditAnywhere)
+	int32 PathFile = 0;
 };

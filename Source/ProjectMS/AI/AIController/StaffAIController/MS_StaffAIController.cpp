@@ -3,7 +3,6 @@
 #include "MS_Define.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "AI/Blackboard/MS_StaffBlackboardComponent.h"
-#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 
 AMS_StaffAIController::AMS_StaffAIController()

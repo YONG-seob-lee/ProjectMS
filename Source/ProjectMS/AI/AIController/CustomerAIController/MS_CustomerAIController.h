@@ -13,9 +13,19 @@ class PROJECTMS_API AMS_CustomerAIController : public AMS_AIController
 public:
 	AMS_CustomerAIController();
 
+	virtual void Initialize() override;
 	virtual void PostInitializeComponents() override;
 	virtual void OnPossess(APawn* aInPawn) override;
 	virtual void OnUnPossess() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type aEndPlayReason) override;
+	
+	void ReadyToMarket() const;
+	
+private:	
+	UPROPERTY()
+	TObjectPtr<class UBehaviorTree> CustomerBehaviorTree = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<class UBlackboardData> CustomerBlackboardData = nullptr;
 };

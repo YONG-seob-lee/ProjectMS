@@ -4,6 +4,7 @@
 #include "MS_CustomerAIUnit.h"
 
 #include "MS_ActorUnitBase.h"
+#include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Prop/Spline/MS_CustomerSplineActor.h"
@@ -100,4 +101,20 @@ void UMS_CustomerAIUnit::GoingToMarket() const
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
+}
+
+int32 UMS_CustomerAIUnit::GetBlueprintPathId() const
+{
+	return CustomerData.GetCharacterBPPathFile();
+}
+
+UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
+{
+	int32 BPPathId = GetBlueprintPathId();
+	if (BPPathId == INDEX_NONE)
+	{
+		return nullptr;
+	}
+
+	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }

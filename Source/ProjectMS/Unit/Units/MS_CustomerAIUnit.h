@@ -25,6 +25,10 @@ public:
 	bool ReachSplineEndPoint() const;
 	void GoingToMarket() const;
 
+protected:
+	virtual int32 GetBlueprintPathId() const override;
+	virtual UClass* GetBlueprintClass() const override;
+	
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();
 	

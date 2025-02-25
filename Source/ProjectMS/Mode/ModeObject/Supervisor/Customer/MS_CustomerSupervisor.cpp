@@ -71,8 +71,8 @@ void UMS_CustomerSupervisor::UpdateScheduleEvent(int32 aScheduleEvent)
 {
 	Super::UpdateScheduleEvent(aScheduleEvent);
 
-	// OpenMarket ~ DeadLine
-	if(EMS_MarketScheduleEvent::OpenMarket == static_cast<EMS_MarketScheduleEvent>(aScheduleEvent))
+	// OpenMarket ~ DeadLine 8시에 고객 소환
+	if(EMS_MarketScheduleEvent::CustomerStart == static_cast<EMS_MarketScheduleEvent>(aScheduleEvent))
 	{
 		StartCustomerSpawn();
 	}
@@ -101,7 +101,9 @@ bool UMS_CustomerSupervisor::SpawnCustomer()
 
 void UMS_CustomerSupervisor::StartCustomerSpawn()
 {
+	SpawnIntervalDelayTime = 0.f;
 	bStartCustomerSpawn = true;
+	SpawnCustomer();
 }
 
 void UMS_CustomerSupervisor::StopCustomerSpawn()
@@ -156,7 +158,7 @@ void UMS_CustomerSupervisor::CashingDuckSplineActors() const
 			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));
 			return;
 		}
-		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::DuckSpline, INDEX_NONE, false));
+		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::CustomerSpline, INDEX_NONE, false));
 		if (IsValid(SplineUnit))
 		{
 			// Set Unit Actor
