@@ -30,7 +30,7 @@ protected:
 public:
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
-	void GoingToWork();
+	void GoingToWork() const;
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }

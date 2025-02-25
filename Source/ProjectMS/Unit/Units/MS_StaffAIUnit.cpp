@@ -6,7 +6,6 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_FurnitureUnit.h"
 #include "UtilityFunctions.h"
-#include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "ContentsUtilities/MS_AIDefine.h"
@@ -94,15 +93,30 @@ bool UMS_StaffAIUnit::FindNearestSpline()
 	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DuckSplineUnits);
 
-	const int32 TargetSpline = FMath::RandRange(0, DuckSplineUnits.Num() - 1);
-	if(DuckSplineUnits.IsValidIndex(TargetSpline) == false)
+	float DistanceMin = 0.f;
+	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
+	
+	for(const auto& SplineUnit : DuckSplineUnits)
+	{
+		if(const TObjectPtr<UMS_ActorUnitBase> SplineActorUnit = Cast<UMS_ActorUnitBase>(SplineUnit))
+		{
+			const float Distance = FVector::Distance(GetActorLocation(), SplineActorUnit->GetUnitPosition());
+			if(DistanceMin == 0.f || DistanceMin > Distance)
+			{
+				DistanceMin = Distance;
+				NearestSplineUnit = SplineActorUnit;
+			}
+		}
+	}
+
+	if(!NearestSplineUnit)
 	{
 		return false;
 	}
 
-	if(const TObjectPtr<UMS_ActorUnitBase> VehicleUnit = Cast<UMS_ActorUnitBase>(DuckSplineUnits[TargetSpline]))
+	if(const TObjectPtr<AMS_DuckSplineActor> SplineActor = Cast<AMS_DuckSplineActor>(NearestSplineUnit->GetActor()))
 	{
-		DuckSplineActor = Cast<AMS_DuckSplineActor>(VehicleUnit->GetActor());
+		DuckSplineActor = SplineActor;
 		return true;
 	}
 
@@ -115,8 +129,9 @@ bool UMS_StaffAIUnit::ReachSplineEndPoint() const
 	{
 		return false;
 	}
-
-	if(GetActorLocation() == DuckSplineActor->GetEndPoint())
+	FVector ActorLocation = GetActorLocation();
+	FVector SplineEndPoint = DuckSplineActor->GetEndPoint();
+	if(FVector::Distance(ActorLocation, SplineEndPoint) < 10.f)
 	{
 		return true;
 	}
@@ -124,19 +139,19 @@ bool UMS_StaffAIUnit::ReachSplineEndPoint() const
 	return false;
 }
 
-void UMS_StaffAIUnit::GoingToWork()
+void UMS_StaffAIUnit::GoingToWork() const
 {
 	if(DuckSplineActor.IsValid())
 	{
 		const FVector CurrentVehicleLocation = GetActorLocation();
 		const FVector TangentLocation = DuckSplineActor->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
-		const FRotator MoveNextRotation = TangentLocation.Rotation();
+		FRotator MoveNextRotation = TangentLocation.Rotation();
+		MoveNextRotation.Yaw -= 90.f;
 		const FVector ClosetLocation = DuckSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
-
 		if(const TObjectPtr<AMS_CharacterBase> StaffCharacter = GetCharacter())
 		{
-			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 3.f);
-			StaffCharacter->SetActorRotation(MoveNextRotation);	
+			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			StaffCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
 }

@@ -85,9 +85,16 @@ void UMS_GotoWorkAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 		return;
 	}
 
+	const TObjectPtr<UMS_StaffAIAnimInstance> StaffAIAnimInstance = Cast<UMS_StaffAIAnimInstance>(AICharacter->GetAIAnimInstance());
+	if(!StaffAIAnimInstance)
+	{
+		return;
+	}
+	
 	if(AIUnit->ReachSplineEndPoint())
 	{
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::Deactive));
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::None));
+		StaffAIAnimInstance->SetActionProcess(EMS_StaffActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 	else
