@@ -19,14 +19,7 @@ public:
 
 private:
 	void OnClickAccountButton();
-	void OnClickStartButton();
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_WidgetSwitcher> CPP_WidgetSwitcher = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_AccountButton> CPP_AccountButton = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_AccountStartButton> CPP_StartButton = nullptr;
 };
