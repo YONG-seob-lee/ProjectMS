@@ -22,11 +22,15 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 
 	virtual void DestroyUnitActor() override;
-	
+
 protected:
 	virtual int32 GetBlueprintPathId() const override;
 	virtual UClass* GetBlueprintClass() const override;
 
+public:
+	bool FindNearestSpline();
+	bool ReachSplineEndPoint() const;
+	void GoingToWork();
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
@@ -70,4 +74,7 @@ private:
 
 	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
 	TArray<FIntVector2> CachePath = {};
+
+	bool bGotoWork = false;
+	TWeakObjectPtr<class AMS_DuckSplineActor> DuckSplineActor = nullptr;
 };

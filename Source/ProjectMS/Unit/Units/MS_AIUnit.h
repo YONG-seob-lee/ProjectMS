@@ -22,7 +22,6 @@ protected:
 	virtual UClass* GetBlueprintClass() const override;
 	
 private:
-	
 	UPROPERTY()
 	TObjectPtr<class AMS_AIController> AIController = nullptr;
 

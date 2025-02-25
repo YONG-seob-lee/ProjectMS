@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ModeStateBase.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_ModeState_RunMarketBase.generated.h"
 

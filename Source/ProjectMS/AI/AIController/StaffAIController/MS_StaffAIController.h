@@ -19,6 +19,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type aEndPlayReason) override;
 	
+	void ReadyToWork() const;
+
 private:	
 	UPROPERTY()
 	TObjectPtr<class UBehaviorTree> StaffBehaviorTree = nullptr;

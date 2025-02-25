@@ -43,10 +43,10 @@ public:
 	void RemoveAllCharacter();
 
 	void RegisterPreSpawnedCharacter(int32 aStaffId, TWeakObjectPtr<class AMS_CharacterBase> aCharacter);
-
 	
 private:
 	void InitStaffSpawnPoint();
+	void CashingDuckSplineActors() const;
 	
 	TWeakObjectPtr<class UMS_IssueTicketContainer> IssueTicketContainer;
 

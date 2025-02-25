@@ -106,6 +106,6 @@ TObjectPtr<AMS_DuckSplineActor> AMS_OutsideAICharacter::FindNearestSpline() cons
 		return nullptr;
 	}
 
-	TObjectPtr<AMS_DuckSplineActor> VehicleSplineActor = Cast<AMS_DuckSplineActor>(NearestSplineUnit->GetActor());
-	return VehicleSplineActor;
+	TObjectPtr<AMS_DuckSplineActor> DuckSplineActor = Cast<AMS_DuckSplineActor>(NearestSplineUnit->GetActor());
+	return DuckSplineActor;
 }

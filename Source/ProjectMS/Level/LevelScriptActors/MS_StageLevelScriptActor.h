@@ -42,8 +42,8 @@ private:
 	void CashingNightPropActors();
 	void CashingNightCarActors();
 	
-	void ParsingCarSplineActors() const;
-	void ParsingDuckSplineActors() const;
+	void CashingCarSplineActors() const;
+	void CashingDuckSplineActors() const;
 	
 	void DestroySplineActors();
 	void DestroyOutsideAIUnits();
@@ -55,6 +55,7 @@ private:
 	void OnPressUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
 
 	void ProcessNightToDay(float DeltaTime);
+	
 	float DirectionalLightColorVolume = 0.f;
 	bool bStartNightToDayTrigger = false;
 	

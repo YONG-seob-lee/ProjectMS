@@ -6,7 +6,9 @@
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_FurnitureUnit.h"
 #include "UtilityFunctions.h"
+#include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "Character/MS_CharacterBase.h"
+#include "Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -87,6 +89,58 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
+bool UMS_StaffAIUnit::FindNearestSpline()
+{
+	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
+	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DuckSplineUnits);
+
+	const int32 TargetSpline = FMath::RandRange(0, DuckSplineUnits.Num() - 1);
+	if(DuckSplineUnits.IsValidIndex(TargetSpline) == false)
+	{
+		return false;
+	}
+
+	if(const TObjectPtr<UMS_ActorUnitBase> VehicleUnit = Cast<UMS_ActorUnitBase>(DuckSplineUnits[TargetSpline]))
+	{
+		DuckSplineActor = Cast<AMS_DuckSplineActor>(VehicleUnit->GetActor());
+		return true;
+	}
+
+	return false;
+}
+
+bool UMS_StaffAIUnit::ReachSplineEndPoint() const
+{
+	if(DuckSplineActor.IsValid() == false)
+	{
+		return false;
+	}
+
+	if(GetActorLocation() == DuckSplineActor->GetEndPoint())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void UMS_StaffAIUnit::GoingToWork()
+{
+	if(DuckSplineActor.IsValid())
+	{
+		const FVector CurrentVehicleLocation = GetActorLocation();
+		const FVector TangentLocation = DuckSplineActor->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
+		const FRotator MoveNextRotation = TangentLocation.Rotation();
+		const FVector ClosetLocation = DuckSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
+
+		if(const TObjectPtr<AMS_CharacterBase> StaffCharacter = GetCharacter())
+		{
+			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 3.f);
+			StaffCharacter->SetActorRotation(MoveNextRotation);	
+		}
+	}
+}
+
 bool UMS_StaffAIUnit::HasStaffAction() const
 {
 	if (!NoneIssueStaffActions.IsEmpty())
@@ -116,6 +170,11 @@ EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction(TWeakObjectPtr<UMS_Issu
 	{
 		OutIssueTicket = IssueTicket;
 		return EMS_StaffActionType::Issue;
+	}
+
+	if(bGotoWork == false)
+	{
+		return EMS_StaffActionType::GoingHome;
 	}
 
 	else

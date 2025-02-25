@@ -3,12 +3,15 @@
 
 #include "MS_StaffSupervisor.h"
 
+#include "Character/MS_CharacterBase.h"
+#include "Character/AICharacter/OutsideAICharacter/MS_DuckSplineActor.h"
 #include "Controller/MS_PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "SpawnPoint/MS_StaffDuckSpawnPoint.h"
+#include "Units/MS_SplineUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
 
@@ -57,6 +60,7 @@ void UMS_StaffSupervisor::Begin()
 	PlayerStaffDatas = PlayerState->GetStaffDatas();
 
 	InitStaffSpawnPoint();
+	CashingDuckSplineActors();
 }
 
 void UMS_StaffSupervisor::Exit()
@@ -133,7 +137,10 @@ bool UMS_StaffSupervisor::SpawnCharacter(FMS_PlayerStaffData* aPlayerStaffData, 
 	{
 		StaffAIUnits.Emplace(StaffAIUnit);
 		StaffAIUnit->SetPlayerStaffData(*aPlayerStaffData);
-		
+		if (USkeletalMeshComponent* SkeletalMesh = StaffAIUnit->GetCharacter()->GetMesh())
+		{
+			SkeletalMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
+		}
 		return true;
 	}
 		
@@ -215,6 +222,38 @@ void UMS_StaffSupervisor::InitStaffSpawnPoint()
 		if(StaffSpawnPoints.IsValidIndex(TargetSpawnIndex))
 		{
 			StaffSpawnPoints[TargetSpawnIndex]->UpdateSpawnData(&StaffData, FMath::RandRange(0, 30));
+		}
+	}
+}
+
+void UMS_StaffSupervisor::CashingDuckSplineActors() const
+{
+	TArray<AActor*> SplineActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMS_DuckSplineActor::StaticClass(), SplineActors);
+	
+	for (AActor* Spline : SplineActors)
+	{
+		AMS_DuckSplineActor* SplineActor = Cast<AMS_DuckSplineActor>(Spline);
+		if(!SplineActor)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));
+			return;
+		}
+		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::DuckSpline, INDEX_NONE, false));
+		if (IsValid(SplineUnit))
+		{
+			// Set Unit Actor
+			if (!SplineUnit->SetUnitActor(SplineActor))
+			{
+				MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+				MS_ENSURE(false);
+			}
+		}
+		else
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+			MS_ENSURE(false);
 		}
 	}
 }

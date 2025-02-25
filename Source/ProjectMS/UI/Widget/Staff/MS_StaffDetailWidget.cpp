@@ -86,6 +86,7 @@ void UMS_StaffDetailWidget::ShowButtonPanel(bool bShow) const
 
 void UMS_StaffDetailWidget::OnClickedHireButton()
 {
+	CPP_HireButton->GetOnClickedDelegate().RemoveAll(this);
 	//gTestServer.RenewStaff(StaffId);
 
 	const TObjectPtr<UWorld> World = GetWorld();

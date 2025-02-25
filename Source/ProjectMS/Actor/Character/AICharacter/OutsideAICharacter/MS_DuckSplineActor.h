@@ -21,9 +21,15 @@ public:
 
 	// aWorldLocation 에서 가장 가까운 스플라인의 곡선의 한 점을 반환해준다.
 	FVector FindLocationClosestToWorldLocation(const FVector& aWorldLocation) const;
+
+	FORCEINLINE FVector GetStartPoint() const { return StartPoint; }
+	FORCEINLINE FVector GetEndPoint() const { return EndPoint; }
+	
 protected:
 	virtual void BeginPlay() override;
 
+	FVector StartPoint = FVector::ZeroVector;
+	FVector EndPoint = FVector::ZeroVector;
 private:
 	
 	UPROPERTY(EditAnywhere)

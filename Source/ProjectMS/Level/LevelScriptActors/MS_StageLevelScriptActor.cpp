@@ -35,8 +35,8 @@ void AMS_StageLevelScriptActor::PostInitializeComponents()
 	CashingNightPropActors();
 	CashingNightCarActors();
 	
-	ParsingCarSplineActors();
-	ParsingDuckSplineActors();
+	CashingCarSplineActors();
+	CashingDuckSplineActors();
 
 	CollectOutsideDuckSpawnPoint();
 }
@@ -236,7 +236,7 @@ void AMS_StageLevelScriptActor::CashingNightCarActors()
 	}
 }
 
-void AMS_StageLevelScriptActor::ParsingCarSplineActors() const
+void AMS_StageLevelScriptActor::CashingCarSplineActors() const
 {
 	TArray<AActor*> SplineActors;
 
@@ -268,7 +268,7 @@ void AMS_StageLevelScriptActor::ParsingCarSplineActors() const
 	}
 }
 
-void AMS_StageLevelScriptActor::ParsingDuckSplineActors() const
+void AMS_StageLevelScriptActor::CashingDuckSplineActors() const
 {
 	TArray<AActor*> SplineActors;
 

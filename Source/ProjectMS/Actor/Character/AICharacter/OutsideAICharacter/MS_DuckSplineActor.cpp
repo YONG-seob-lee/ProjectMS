@@ -46,4 +46,7 @@ void AMS_DuckSplineActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	const int32 SplinePoints = SplineComponent->GetNumberOfSplinePoints();
+	StartPoint = SplineComponent->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::Type::World);
+	EndPoint = SplineComponent->GetLocationAtSplinePoint(SplinePoints-1, ESplineCoordinateSpace::Type::World);
 }

@@ -190,7 +190,10 @@ void UMS_WidgetManager::HideAllWidget(bool bHide) const
 {
 	for(const auto& Widget : ManagedWidgets)
 	{
-		Widget.Value->SetVisibility(bHide ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+		if(Widget.Value.IsValid())
+		{
+			Widget.Value->SetVisibility(bHide ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+		}
 	}
 	
 	if(RootWidget)
