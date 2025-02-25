@@ -62,6 +62,11 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 						// Register
 						RunMarketMode->RegisterLevelSpecificActorToSupervisor(LevelSpecificActorName::UglyDuck, UglyDuck);
 					}
+					else
+					{
+						MS_ERROR(TEXT("LevelSpecificActor의 값이 지워진 것 같다. 다시 설정하자."))
+						MS_ENSURE(false);
+					}
 				}
 			}
 		};
