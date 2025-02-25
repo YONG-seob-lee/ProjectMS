@@ -151,12 +151,12 @@ void UMS_StaffAIUnit::SearchAndRegisterIssueTicket()
 	}
 }
 
-TWeakObjectPtr<class UMS_IssueTicket> UMS_StaffAIUnit::SearchIssueTicket()
+TWeakObjectPtr<class UMS_IssueTicket> UMS_StaffAIUnit::SearchIssueTicket() const
 {
 	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
-	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	if (const UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
 	{
-		return RunMarketMode->SearchStaffIssueTicket(this);
+		return RunMarketMode->SearchStaffIssueTicket(GetPlayerStaffData(), GetActorGridPosition());
 	}
 
 	return nullptr;

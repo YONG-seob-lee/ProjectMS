@@ -41,7 +41,7 @@ public:
 	void SearchAndRegisterIssueTicket();
 	
 private:
-	TWeakObjectPtr<class UMS_IssueTicket> SearchIssueTicket();
+	TWeakObjectPtr<class UMS_IssueTicket> SearchIssueTicket() const;
 	void RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket);
 
 public:

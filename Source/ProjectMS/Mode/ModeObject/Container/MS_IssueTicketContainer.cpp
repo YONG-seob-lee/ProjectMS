@@ -472,8 +472,50 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket
 	return nullptr;
 }
 
+TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket(const FMS_PlayerStaffData& aPlayerStaffData, const FIntVector2& aStaffGridPosition)
+{
+	for (EMS_StaffIssueType PriorityType : aPlayerStaffData.PriorityOfWorks)
+	{
+		TArray<TWeakObjectPtr<UMS_IssueTicket>> TypeTickets;
+		GetTypeIssueTickets(TypeTickets, PriorityType, true, true);
+		
+		int32 MinGridPositionDistance = INT32_MAX;
+		TWeakObjectPtr<UMS_IssueTicket> MinGridPositionTicket = nullptr;
+		
+		for (auto& TypeTicket : TypeTickets)
+		{
+			if (TypeTicket == nullptr)
+			{
+				continue;
+			}
+			
+			TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit = TypeTicket->GetRequestFurnitureUnit();
+			if (RequestFurnitureUnit == nullptr)
+			{
+				continue;
+			}
+			
+			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - aStaffGridPosition;
+			int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
+
+			if (GridPositionDistance < MinGridPositionDistance)
+			{
+				MinGridPositionDistance = GridPositionDistance;
+				MinGridPositionTicket = TypeTicket;
+			}
+		}
+
+		if (MinGridPositionTicket != nullptr)
+		{
+			return MinGridPositionTicket;
+		}
+	}
+	
+	return nullptr;
+}
+
 void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
-                                                        TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
+														TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
 	MS_ENSURE (aTargetTicket != nullptr);
 

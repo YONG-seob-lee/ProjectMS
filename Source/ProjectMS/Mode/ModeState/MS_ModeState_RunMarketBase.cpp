@@ -452,11 +452,11 @@ void UMS_ModeState_RunMarketBase::UpdateAllZoneStorageIssueTicketsEnabled(EMS_Zo
 }
 
 TWeakObjectPtr<UMS_IssueTicket> UMS_ModeState_RunMarketBase::SearchStaffIssueTicket(
-	TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
+	const FMS_PlayerStaffData& aPlayerStaffData, const FIntVector2& aStaffGridPosition) const
 {
 	if (IssueTicketContainer)
 	{
-		return IssueTicketContainer->SearchStaffIssueTicket(aStaffUnit);
+		return IssueTicketContainer->SearchStaffIssueTicket(aPlayerStaffData, aStaffGridPosition);
 	}
 
 	return nullptr;
