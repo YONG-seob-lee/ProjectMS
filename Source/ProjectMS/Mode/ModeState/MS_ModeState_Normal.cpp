@@ -62,19 +62,19 @@ void UMS_ModeState_Normal::Exit()
 	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnSelectActor);
 }
 
-void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
+	Super::OnInputPointerDownEvent(aPointerDownPosition, aHitActor);
 	
-	if (AActor* InteractActor = aInteractableHitResult.GetActor())
+	if (aHitActor)
 	{
-		CachePressDownActor = InteractActor;
+		CachePressDownActor = aHitActor;
 	}
 }
 
-void UMS_ModeState_Normal::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_Normal::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
 }
 
 void UMS_ModeState_Normal::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,

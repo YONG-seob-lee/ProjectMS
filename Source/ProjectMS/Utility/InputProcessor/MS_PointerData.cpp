@@ -92,13 +92,13 @@ void FMS_PointerData::HandlePointerLongTouch() const
 	gInputMng.OnPointerLongTouchDelegate.Broadcast(ElapsedHoldTime, PointerHoldPosition, InteractableHitResult);
 }
 
-void FMS_PointerData::HandlePointerClick()
+void FMS_PointerData::HandlePointerClick(const FVector2D& AbsoluteScreenPosition)
 {
 	if (PointerDownUpIntervalTime < PointerClickDelay)
 	{
 		PointerClickIntervalTime = (FDateTime::UtcNow().GetTicks() - PointerClickTimestamp) / IntervalTimeValue::Separation;
 		PointerClickTimestamp = FDateTime::UtcNow().GetTicks();
-		PointerClickPosition = gInputMng.AcquirePointerPositionOnViewport();
+		PointerClickPosition = AbsoluteScreenPosition;
 		
 		FHitResult InteractableHitResult = {};
 		gInputMng.GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
@@ -150,7 +150,7 @@ void FMS_PointerData::HandlePointerGlide()
 			{
 				CurrentModeState->OnInputPointerGlide(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 			}
-			
+
 			gInputMng.OnPointerGlideDelegate.Broadcast(PointerGlidePosition, PointerGlidePositionDelta, PointerGlidePositionDeltaTrend);
 		}
 
@@ -178,10 +178,10 @@ void FMS_PointerData::HandlePinchAction()
 {
 }
 
-void FMS_PointerData::UpdatePointerMovePosition()
+void FMS_PointerData::UpdatePointerMovePosition(const FVector2D& AbsoluteScreenPosition)
 {
 	const FVector2D PrevPointerMovePosition = PointerMovePosition;
-	PointerMovePosition = gInputMng.AcquirePointerPositionOnViewport();
+	PointerMovePosition = AbsoluteScreenPosition;
 
 	if(PrevPointerMovePosition.Equals(PointerParameter::DefaultVector))
 	{

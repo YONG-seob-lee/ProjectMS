@@ -44,6 +44,7 @@ public:
 	UFUNCTION() void HandleMouseRightButtonUp(const FInputActionValue& aValue);
 
 	bool GetHitResultUnderPointerPosition(ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
+	bool GetHitResultUnderPointerPosition(const FVector2D& ScreenPosition, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const;
 	
 	FORCEINLINE void SetAllowInteractActor(bool bAllowInteract) { bAllowInteractActor = bAllowInteract; }
 	FORCEINLINE	bool IsAllowInteractActor() const { return bAllowInteractActor;}

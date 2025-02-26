@@ -38,13 +38,12 @@ public:
 
 	bool IsPointerPressed() const;
 
-	
 private:
 	FMS_PointerData* CreatePointer(const FPointerEvent& aMouseEvent);
 	void DestroyPointer(FMS_PointerData* aPointerData);
 	FMS_PointerData* GetPointerData(uint32 aPointerIndex);
 	
-	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType, bool bIsGliding);
+	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType);
 
 	int32 FingerCount = 0;
 

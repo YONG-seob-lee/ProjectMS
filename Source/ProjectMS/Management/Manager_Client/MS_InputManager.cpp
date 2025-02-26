@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "MS_Define.h"
 #include "MS_ModeManager.h"
+#include "MS_WidgetManager.h"
 #include "Controller/MS_PlayerController.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 
@@ -151,11 +152,22 @@ bool UMS_InputManager::GetHitResultUnderPointerPosition(ECollisionChannel TraceC
 	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
 	MS_CHECK(PlayerController);
 	
-#if PLATFORM_WINDOWS || PLATFORM_MAC
-	return PlayerController->GetHitResultUnderCursor(TraceChannel, bTraceComplex, HitResult);
-#else
+#if PLATFORM_ANDROID_X86 || PLATFORM_ANDROID_X64 || PLATFORM_ANDROID_ARM || PLATFORM_ANDROID_ARM64 || PLATFORM_ANDROID
 	return PlayerController->GetHitResultUnderFinger(ETouchIndex::Type::Touch1, TraceChannel, bTraceComplex, HitResult);
+#else
+	return PlayerController->GetHitResultUnderCursor(TraceChannel, bTraceComplex, HitResult);
 #endif
+}
+
+bool UMS_InputManager::GetHitResultUnderPointerPosition(const FVector2D& ScreenPosition, ECollisionChannel TraceChannel, bool bTraceComplex, FHitResult& HitResult) const
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+
+	return PlayerController->GetHitResultAtScreenPosition(ScreenPosition, TraceChannel, bTraceComplex, HitResult);
 }
 
 bool UMS_InputManager::IsPointerPressed() const

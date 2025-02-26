@@ -3,7 +3,6 @@
 
 #include "IMS_TouchInputProcessor.h"
 
-#include "MS_Define.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
@@ -48,15 +47,10 @@ bool IMS_TouchInputProcessor::HandleMouseButtonDownEvent(FSlateApplication& aSla
 {
 	FMS_PointerData* NewPointerData = CreatePointer(aMouseEvent);
 	NewPointerData->Initialize();
-	
-	CachedSlate = aSlateApp.GetUserFocusedWidget(0);
-	if(CachedSlate)
-	{
-		ShootLineTrace(NewPointerData->GetPointerDownPosition(), EMS_TouchActionType::Down, NewPointerData->IsGliding());
-	}
 
-	NewPointerData->PlayParticle();
-	
+	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	const FVector2D AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
+	ShootLineTrace(AbsoluteScreenPosition, EMS_TouchActionType::Down);
 	FingerCount++;
 
 	return false;
@@ -74,8 +68,10 @@ bool IMS_TouchInputProcessor::HandleMouseMoveEvent(FSlateApplication& aSlateApp,
 	{
 		return false;
 	}
-	
-	TargetPointerData->UpdatePointerMovePosition();
+
+	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	const FVector2D AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
+	TargetPointerData->UpdatePointerMovePosition(AbsoluteScreenPosition);
 
 	return IInputProcessor::HandleMouseMoveEvent(aSlateApp, aMouseEvent);
 }
@@ -90,17 +86,17 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	
 	TargetPointerData->SetPointerPressFlag(false);
 	TargetPointerData->SetPointerUpTimestamp(FDateTime::UtcNow().GetTicks());
-	TargetPointerData->SetPointerUpPosition(gInputMng.AcquirePointerPositionOnViewport());
 
-	const TSharedPtr<SWidget> UpCachedSlate = aSlateApp.GetUserFocusedWidget(0);
-	if(UpCachedSlate == nullptr || UpCachedSlate->GetType() != L"SCommonButton")
-	{
-		ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up, TargetPointerData->IsGliding());
-	}
+	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
+	TargetPointerData->SetPointerUpPosition(AbsoluteScreenPosition);
+
+	ShootLineTrace(TargetPointerData->GetPointerUpPosition(), EMS_TouchActionType::Up);
 
 	TargetPointerData->ResetElapsedHoldTime();
 	TargetPointerData->CalculateIntervalTime();
-	TargetPointerData->HandlePointerClick();
+	TargetPointerData->HandlePointerClick(AbsoluteScreenPosition);
+	TargetPointerData->PlayParticle();
 	
 	DestroyPointer(TargetPointerData);
 	FingerCount--;
@@ -111,10 +107,10 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 bool IMS_TouchInputProcessor::HandleMouseButtonDoubleClickEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent)
 {
 	FingerCount++; // 손가락 카운트 오류 방지용.
-
+	
 	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
 	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
-	ShootLineTrace(AbsoluteScreenPosition, EMS_TouchActionType::Double, false);
+	ShootLineTrace(AbsoluteScreenPosition, EMS_TouchActionType::Double);
 	
 	return IInputProcessor::HandleMouseButtonDoubleClickEvent(aSlateApp, aMouseEvent);
 }
@@ -170,7 +166,10 @@ FMS_PointerData* IMS_TouchInputProcessor::CreatePointer(const FPointerEvent& aMo
 	PointerData->SetPointerIndex(aMouseEvent.GetPointerIndex());
 	PointerData->SetPointerPressFlag(true);
 	PointerData->SetPointerDownTimestamp(FDateTime::UtcNow().GetTicks());
-	PointerData->SetPointerDownPosition(gInputMng.AcquirePointerPositionOnViewport());
+
+	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
+	PointerData->SetPointerDownPosition(AbsoluteScreenPosition);
 
 	return PointerData;
 }
@@ -210,7 +209,7 @@ FMS_PointerData* IMS_TouchInputProcessor::GetPointerData(uint32 aPointerIndex)
 	return nullptr;
 }
 
-void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType, bool bIsGliding)
+void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType)
 {
 	if(gInputMng.IsAllowInteractActor() == false)
 	{
@@ -219,35 +218,33 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	
 	FHitResult InteractableHitResult;
 	
-	gInputMng.GetHitResultUnderPointerPosition(ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
+	gInputMng.GetHitResultUnderPointerPosition(aPointerDownPosition, ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
+
+	AActor* HitActor = InteractableHitResult.GetActor();
+
+	if(!HitActor)
+	{
+		return;
+	}
 	
 	if(aType == EMS_TouchActionType::Down)
 	{
 		if (IsValid(CurrentModeState))
 		{
-			CurrentModeState->OnInputPointerDownEvent(aPointerDownPosition, InteractableHitResult);
+			CurrentModeState->OnInputPointerDownEvent(aPointerDownPosition, HitActor);
 		}
 		gInputMng.OnPointerDownDelegate.Broadcast(aPointerDownPosition, InteractableHitResult);
 	}
 	else if(aType == EMS_TouchActionType::Up)
 	{
-		if (!bIsGliding)
+		if (IsValid(CurrentModeState))
 		{
-			if (IsValid(CurrentModeState))
-			{
-				CurrentModeState->OnInputPointerUpEvent(aPointerDownPosition, InteractableHitResult);
-			}
-			gInputMng.OnPointerUpDelegate.Broadcast(aPointerDownPosition, InteractableHitResult);
+			CurrentModeState->OnInputPointerUpEvent(aPointerDownPosition, HitActor);
 		}
-		else
-		{
-			if (IsValid(CurrentModeState))
-			{
-				CurrentModeState->OnInputPointerGlidingUpEvent(aPointerDownPosition, InteractableHitResult);
-			}
-		}
+		
+		gInputMng.OnPointerUpDelegate.Broadcast(aPointerDownPosition, InteractableHitResult);
 	}
 	else if(aType == EMS_TouchActionType::Double)
 	{

@@ -28,16 +28,11 @@ void UMS_ModeStateBase::Exit()
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeStateBase::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
 {
 }
 
-void UMS_ModeStateBase::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
-{
-}
-
-void UMS_ModeStateBase::OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition,
-	const FHitResult& aInteractableHitResult)
+void UMS_ModeStateBase::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
 }
 

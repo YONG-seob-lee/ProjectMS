@@ -28,13 +28,10 @@ protected:
 
 public:
 	UFUNCTION()
-	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor);
 	
 	UFUNCTION()
-	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
-
-	UFUNCTION()
-	virtual void OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult);
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor);
 	
 	UFUNCTION()
 	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend);

@@ -28,8 +28,6 @@ public:
 	
 	FORCEINLINE void SetPointerPressFlag(bool bIsPressed) { IsPointerPressFlag = bIsPressed; }
 	FORCEINLINE bool IsPointerPressed() const { return IsPointerPressFlag; }
-
-	FORCEINLINE bool IsGliding() const { return PointerGlidePosition != PointerParameter::DefaultVector; }
 	
 	FORCEINLINE void SetMouseRightButtonPressFlag(bool bIsRightPressed) { IsMouseRightButtonPressFlag = bIsRightPressed; }
 	
@@ -46,12 +44,12 @@ public:
 
 	void HandlePointerHold();
 	void HandlePointerLongTouch() const;
-	void HandlePointerClick();
+	void HandlePointerClick(const FVector2D& AbsoluteScreenPosition);
 	void HandlePointerGlide();
 	void HandlePinchAction();
 	
 	FORCEINLINE FVector2D GetPointerMovePosition() const { return PointerMovePosition; }
-	void UpdatePointerMovePosition();
+	void UpdatePointerMovePosition(const FVector2D& AbsoluteScreenPosition);
 
 	void PlayParticle() const;
 
@@ -78,7 +76,7 @@ private:
 	FVector2D PointerMovePositionDelta = PointerParameter::DefaultVector;
 	TArray<FVector2D> PointerMovePositionDeltaArray = {};
 	FVector2D PointerMovePositionDeltaTrend = PointerParameter::DefaultVector;
-
+	
 	FVector2D PointerGlidePosition = PointerParameter::DefaultVector;
 	FVector2D PointerGlidePositionDelta = PointerParameter::DefaultVector;
 	TArray<FVector2D> PointerGlidePositionDeltaArray = {};

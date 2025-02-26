@@ -121,14 +121,14 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 	}
 }
 
-void UMS_ModeState_RunMarket::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarket::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
+	Super::OnInputPointerDownEvent(aPointerDownPosition, aHitActor);
 }
 
-void UMS_ModeState_RunMarket::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarket::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
 	
 	if(gSequenceMng.IsPlayingSequence())
 	{

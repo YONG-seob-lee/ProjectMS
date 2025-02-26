@@ -10,6 +10,7 @@
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
@@ -101,36 +102,38 @@ void UMS_ModeState_Construct::Exit()
 	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 }
 
-void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerDownEvent(aPointerDownPosition, aInteractableHitResult);
+	Super::OnInputPointerDownEvent(aPointerDownPosition, aHitActor);
 
-	AActor* InteractableActor = aInteractableHitResult.GetActor();
 	
-	if (IsValid(InteractableActor))
+	if (aHitActor)
 	{
-		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(InteractableActor))
+		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(aHitActor))
 		{
 			if (InteractableProp->GetPropType() == EMS_PropType::Floor || InteractableProp->GetPropType() == EMS_PropType::Wall)
 			{
 				return;
 			}
 			
-			SelectProp(InteractableActor);
+			SelectProp(aHitActor);
 		
 			gCameraMng.RestrictCameraMovement(true);
 		}
 	}
 }
 
-void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
-	Super::OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
+	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
 
-	if (IsValid(PreviewProp))
+	if (PreviewProp)
 	{
 		PreviewProp->ShowArrangementWidget(true);
-		
+		if(PreviewProp)
+		{
+			gWidgetMng.ShowMessageOnScreen(PreviewProp->GetName(), true, 3.f, FColor::Red);
+		}
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(true);
@@ -145,15 +148,6 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 
 	MS_LOG(TEXT("UMS_ModeState_Construct::OnInputPointerUpEvent"));
 	gCameraMng.RestrictCameraMovement(false);
-}
-
-void UMS_ModeState_Construct::OnInputPointerGlidingUpEvent(FVector2D aPointerUpPosition,
-	const FHitResult& aInteractableHitResult)
-{
-	Super::OnInputPointerGlidingUpEvent(aPointerUpPosition, aInteractableHitResult);
-
-	// Construct Mode에서는 Gliding 중 Up 했을 때도 Up이벤트가 일어나도록
-	OnInputPointerUpEvent(aPointerUpPosition, aInteractableHitResult);
 }
 
 void UMS_ModeState_Construct::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -422,7 +416,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 	}
 	
 	aSelectedProp->SetActorHiddenInGame(true);
-		
+	gWidgetMng.ShowMessageOnScreen(TEXT("CreateLinkedPreviewProp"));
 	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 5.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
 	PreviewProp = World->SpawnActor<AMS_Prop>(aSelectedProp->GetClass(), Location, Rotator);

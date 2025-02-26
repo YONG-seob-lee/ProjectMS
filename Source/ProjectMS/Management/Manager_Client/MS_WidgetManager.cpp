@@ -209,7 +209,7 @@ void UMS_WidgetManager::ActivatePreventionCover(bool bActivate) const
 
 void UMS_WidgetManager::ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop, float aElapsedTime, FColor aDisplayColor)
 {
-	GEngine->AddOnScreenDebugMessage(-1, aElapsedTime, aDisplayColor, aMessage);
+	GEngine->AddOnScreenDebugMessage(-1, aElapsedTime, aDisplayColor, aMessage, bNewerOnTop);
 }
 
 void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
