@@ -12,8 +12,8 @@ enum class EMS_StaffActionType : uint8
 {
 	None = 0,
 	Issue = 1,
-	GoingWork = 2,
-	GoingHome = 3,
+	GoToWork = 2,
+	GoHome = 3,
 	ChangeClothes = 4,
 };
 
@@ -66,7 +66,8 @@ enum class EMS_StaffActionState : uint8
 	None_IdleAction = 21,
 
 	// Spline으로 이동
-	MoveUsingSpline = 22
+	GoToWork = 22,
+	GoHome = 23,
 };
 
 
@@ -166,9 +167,9 @@ namespace OutsideBoardKeyName
 
 namespace StaffBoardKeyName
 {
-	const FName SelectedStaffAction = TEXT("SelectedStaffAction");
-	const FName CurrentIssueType = TEXT("CurrentIssueType");
-	const FName CurrentActionProcess = TEXT("CurrentActionProcess");
+	const FName StaffAction = TEXT("StaffAction");
+	const FName StaffIssueType = TEXT("StaffIssueType");
+	const FName StaffActionState = TEXT("StaffActionState");
 }
 
 namespace SocketName

@@ -137,10 +137,13 @@ bool UMS_StaffSupervisor::SpawnCharacter(FMS_PlayerStaffData* aPlayerStaffData, 
 	{
 		StaffAIUnits.Emplace(StaffAIUnit);
 		StaffAIUnit->SetPlayerStaffData(*aPlayerStaffData);
+		
 		if (USkeletalMeshComponent* SkeletalMesh = StaffAIUnit->GetCharacter()->GetMesh())
 		{
 			SkeletalMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
 		}
+
+		StaffAIUnit->RegisterNoneIssueStaffAction(EMS_StaffActionType::GoToWork);
 		return true;
 	}
 		

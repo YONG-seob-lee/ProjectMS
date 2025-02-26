@@ -189,7 +189,7 @@ EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction(TWeakObjectPtr<UMS_Issu
 
 	if(bGotoWork == false)
 	{
-		return EMS_StaffActionType::GoingHome;
+		return EMS_StaffActionType::GoHome;
 	}
 
 	else

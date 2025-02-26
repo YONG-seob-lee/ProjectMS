@@ -41,7 +41,7 @@ EBTNodeResult::Type UMS_ChangeStaffActionProcessAITask::ExecuteTask(UBehaviorTre
 		return EBTNodeResult::Type::Failed;
 	}
 
-	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(ActionProcess));
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(ActionProcess));
 
 	AIAnimInstance->SetActionProcess(ActionProcess);
 	

@@ -46,7 +46,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		return EBTNodeResult::Type::Failed;
 	}
 
-	EMS_StaffActionType SelectedStaffAction = static_cast<EMS_StaffActionType>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::SelectedStaffAction));
+	EMS_StaffActionType SelectedStaffAction = static_cast<EMS_StaffActionType>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffAction));
 	if (SelectedStaffAction == EMS_StaffActionType::None)
 	{
 		return EBTNodeResult::Type::Failed;
@@ -55,7 +55,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	// Issue
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
-		EMS_StaffActionState ActionProcess = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentActionProcess));
+		EMS_StaffActionState ActionProcess = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
 		if (ActionProcess == EMS_StaffActionState::None)
 		{
 			return EBTNodeResult::Type::Failed;

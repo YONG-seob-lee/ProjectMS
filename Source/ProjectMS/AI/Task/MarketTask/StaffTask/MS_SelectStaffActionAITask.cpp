@@ -6,6 +6,7 @@
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "Animation/Market/Staff/MS_StaffAIAnimInstance.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Units/MS_StaffAIUnit.h"
 
@@ -35,42 +36,57 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 	{
 		return EBTNodeResult::Type::Failed;
 	}
+
+	const TObjectPtr<UMS_StaffAIAnimInstance> AIAnimInstance = Cast<UMS_StaffAIAnimInstance>(AICharacter->GetAIAnimInstance());
+	if(!AIAnimInstance)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
 	
 	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
 	if(!BlackboardComp)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
-
-	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
-	EMS_StaffActionType SelectedStaffAction =  AIUnit->GetFirstStaffAction(IssueTicket);
 	
-	if (SelectedStaffAction == EMS_StaffActionType::None)
+	// Staff Action
+	TWeakObjectPtr<UMS_IssueTicket> IssueTicket;
+	EMS_StaffActionType StaffAction =  AIUnit->GetFirstStaffAction(IssueTicket);
+
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffAction, static_cast<uint8>(StaffAction));
+
+	if (StaffAction == EMS_StaffActionType::None)
 	{
 		return EBTNodeResult::Type::Failed;
 	}
+
+	// Issue Type, Action State
+	EMS_StaffIssueType IssueType = EMS_StaffIssueType::None;
+	EMS_StaffActionState ActionState = EMS_StaffActionState::None;
 	
-	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::SelectedStaffAction, static_cast<uint8>(SelectedStaffAction));
-
-	if (SelectedStaffAction == EMS_StaffActionType::Issue)
+	if (StaffAction == EMS_StaffActionType::GoToWork)
 	{
-		EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueType, static_cast<uint8>(IssueType));
-
+		ActionState = EMS_StaffActionState::GoToWork;
+	}
+	
+	else if (StaffAction == EMS_StaffActionType::Issue)
+	{
+		IssueType = IssueTicket->GetIssueType();
+		
 		if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay || IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::Return_PickUp_SearchRequestUnit));
+			ActionState = EMS_StaffActionState::Return_PickUp_SearchRequestUnit;
 		}
 		else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay || IssueType == EMS_StaffIssueType::AddItemsToShelf)
 		{
-			BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::Add_PickUp_SearchTargets));
+			ActionState = EMS_StaffActionState::Add_PickUp_SearchTargets;
 		}
 	}
-	else
-	{
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentIssueType, static_cast<uint8>(EMS_StaffIssueType::None));
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::None));	
-	}
+	
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(IssueType));
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(ActionState));
+
+	AIAnimInstance->SetActionProcess(ActionState);
 	
 	return EBTNodeResult::Type::Succeeded;
 }

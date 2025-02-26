@@ -20,6 +20,6 @@ bool UMS_IsCustomerActionProcessBTDecorator::CalculateRawConditionValue(UBehavio
 		return EBTNodeResult::Type::Failed;
 	}
 
-	const EMS_CustomerActionState CurrentActionProcess = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::CurrentActionProcess));
+	const EMS_CustomerActionState CurrentActionProcess = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
 	return ActionProcesses.Contains(CurrentActionProcess);
 }

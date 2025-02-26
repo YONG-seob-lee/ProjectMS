@@ -32,8 +32,6 @@ void AMS_StaffAIController::Initialize()
 			UseBlackboard(StaffBlackboardData, BlackboardComponent);
 		}
 	}
-
-	ReadyToWork();
 }
 
 void AMS_StaffAIController::PostInitializeComponents()
@@ -69,9 +67,4 @@ void AMS_StaffAIController::BeginPlay()
 void AMS_StaffAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)
 {
 	Super::EndPlay(aEndPlayReason);
-}
-
-void AMS_StaffAIController::ReadyToWork() const
-{
-	Blackboard->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::MoveUsingSpline));
 }

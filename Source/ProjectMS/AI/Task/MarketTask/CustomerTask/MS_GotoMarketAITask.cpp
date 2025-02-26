@@ -93,7 +93,7 @@ void UMS_GotoMarketAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 	
 	if(AIUnit->ReachSplineEndPoint())
 	{
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_CustomerActionState::None));
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_CustomerActionState::None));
 		CustomerAIAnimInstance->SetActionProcess(EMS_CustomerActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}

@@ -52,8 +52,6 @@ EBTNodeResult::Type UMS_GotoWorkAITask::ExecuteTask(UBehaviorTreeComponent& Owne
 		return EBTNodeResult::Type::Failed;
 	}
 	
-	StaffAIAnimInstance->SetActionProcess(EMS_StaffActionState::MoveUsingSpline);
-	
 	return EBTNodeResult::Type::InProgress;
 }
 
@@ -93,7 +91,7 @@ void UMS_GotoWorkAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	
 	if(AIUnit->ReachSplineEndPoint())
 	{
-		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::CurrentActionProcess, static_cast<uint8>(EMS_StaffActionState::None));
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_StaffActionState::None));
 		StaffAIAnimInstance->SetActionProcess(EMS_StaffActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
