@@ -19,6 +19,7 @@ void UMS_LobbyWidget::NativeConstruct()
 	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]()
 	{
 		CPP_StartButton->SetVisibility(ESlateVisibility::Visible);
+		gCameraMng.RestrictCameraMovement(true);
 	});
 	
 	CPP_StartButton->GetOnClickedDelegate().AddUObject(this, &UMS_LobbyWidget::OnClickedStartButton);

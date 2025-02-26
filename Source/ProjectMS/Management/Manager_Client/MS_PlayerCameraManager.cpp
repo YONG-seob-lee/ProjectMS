@@ -151,6 +151,11 @@ void AMS_PlayerCameraManager::SwitchViewCamera(EMS_ViewCameraType aViewCameraTyp
 			}
 		}, aTransitionParam.BlendTime, false);
 	}
+
+	if (CurrentCamera.IsValid() == true)
+	{
+		CurrentCamera->Activate();
+	}
 	
 	SetViewTarget(CurrentCamera.Get(), aTransitionParam);
 }

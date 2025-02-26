@@ -28,9 +28,11 @@ void AMS_SideViewCamera::AdjustPostProcessEffect(UMS_CameraPostProcessEffect* aC
 void AMS_SideViewCamera::Activate()
 {
 	Super::Activate();
+	gCameraMng.RestrictCameraMovement(true);
 }
 
 void AMS_SideViewCamera::Deactivate()
 {
 	Super::Deactivate();
+	gCameraMng.RestrictCameraMovement(false);
 }

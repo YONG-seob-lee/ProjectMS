@@ -211,6 +211,9 @@ void UMS_SceneManager::EndFade()
 			RootWidget->ShowGeneralWidget(true);
 			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 
+			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
+			gCameraMng.RestrictCameraMovement(false);
+			
 			if(OnFadeFinishedEventDelegate.IsBound())
 			{
 				OnFadeFinishedEventDelegate.Broadcast();
@@ -221,9 +224,6 @@ void UMS_SceneManager::EndFade()
 				NewCommand->OnFadeInFinishedCallback();
 				NewCommand->OnFadeInFinishedCallback = nullptr;
 			}
-			
-			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
-			gCameraMng.RestrictCameraMovement(false);
 			
 			LevelChangeStep = EMS_FadeStep::Finished;
 			MS_DeleteObject(NewCommand);

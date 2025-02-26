@@ -45,7 +45,7 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 	case EMS_GeneralWidgetType::Lobby:
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
-			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
+			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			RightButtonType = EMS_GeneralButtonType::Setting;
 			CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
@@ -53,8 +53,8 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 		}
 	case EMS_GeneralWidgetType::Town:
 		{
-			CPP_LeftPanel->SetVisibility(ESlateVisibility::Visible);
-			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
+			CPP_LeftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Schedule);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
 			LeftButtonType = EMS_GeneralButtonType::Schedule;
@@ -80,8 +80,8 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 		}
 	case EMS_GeneralWidgetType::Market:
 		{
-			CPP_LeftPanel->SetVisibility(ESlateVisibility::Visible);
-			CPP_RightPanel->SetVisibility(ESlateVisibility::Visible);
+			CPP_LeftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
 			LeftButtonType = EMS_GeneralButtonType::Manage;
