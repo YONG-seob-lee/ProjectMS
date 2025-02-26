@@ -5,6 +5,7 @@
 
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
+#include "Manager_Client/MS_ItemManager.h"
 
 
 bool UMS_MarketAIUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
@@ -158,6 +159,16 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	CachePath.RemoveAt(0);
 }
 
+void UMS_MarketAIUnit::ResetSlotDatas()
+{
+	for (FMS_SlotData& SlotData : SlotDatas)
+	{
+		SlotData = FMS_SlotData();
+	}
+	
+	OnChangeCurrentSlotDatas(true);
+}
+
 bool UMS_MarketAIUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount)
 {
 	if (!SlotDatas.IsValidIndex(aSlotId))
@@ -216,10 +227,17 @@ bool UMS_MarketAIUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, in
 	return true;
 }
 
-void UMS_MarketAIUnit::OnChangeCurrentSlotDatas()
+void UMS_MarketAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= false*/)
 {
 	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
 	MS_ENSURE (IsValid(MarketAICharacter));
 	
 	MarketAICharacter->OnChangeCurrentSlotDatas(SlotDatas);
+
+	// Not Placed Item이 옮겨질 수 있는 지 업데이트
+	if (bUpdateNotPlacedItems)
+	{
+		TMap<int32, int32> Temp;
+		gItemMng.GetNotPlacedItems(Temp);
+	}
 }

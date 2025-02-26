@@ -226,11 +226,6 @@ EMS_StaffActionType UMS_StaffAIUnit::GetFirstStaffAction(TWeakObjectPtr<UMS_Issu
 		return EMS_StaffActionType::Issue;
 	}
 
-	if(bGotoWork == false)
-	{
-		return EMS_StaffActionType::GoHome;
-	}
-
 	else
 	{
 		SearchAndRegisterIssueTicket();
@@ -286,11 +281,21 @@ void UMS_StaffAIUnit::RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>
 
 void UMS_StaffAIUnit::UnregisterAsIssueTicketStaff()
 {
+	// Staff 등록만 취소하고 티켓 삭제는 가구쪽에서 담당
+	
+	if (IssueTicket == nullptr)
+	{
+		return;
+	}
+	
 	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
 	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
 	{
 		RunMarketMode->UnregisterIssueTicketStaff(IssueTicket);
 	}
+
+	// Slot에 아이템이 남았다면 NotPlaced로 이동
+	ResetSlotDatas();
 }
 
 void UMS_StaffAIUnit::OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)

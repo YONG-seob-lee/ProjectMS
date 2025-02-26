@@ -42,12 +42,13 @@ public:
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
 
 	FORCEINLINE virtual int32 GetSlotCount() const { return 0; }
-	
+
+	void ResetSlotDatas();
 	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
 	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
 	
 private:
-	void OnChangeCurrentSlotDatas();
+	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false);
 
 	
 private:

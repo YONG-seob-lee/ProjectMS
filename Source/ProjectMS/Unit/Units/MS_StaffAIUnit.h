@@ -74,7 +74,6 @@ private:
 
 	TArray<FIntVector2> CacheTargetPositions = {};	// Blackboard에 Array형을 지원 안함
 	TArray<FIntVector2> CachePath = {};
-
-	bool bGotoWork = false;
+	
 	TWeakObjectPtr<class AMS_DuckSplineActor> DuckSplineActor = nullptr;
 };
