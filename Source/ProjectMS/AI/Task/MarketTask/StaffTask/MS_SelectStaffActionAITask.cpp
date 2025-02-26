@@ -66,7 +66,7 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 	
 	if (StaffAction == EMS_StaffActionType::GoToWork)
 	{
-		ActionState = EMS_StaffActionState::GoToWork;
+		ActionState = EMS_StaffActionState::Spline_GoToWork;
 	}
 	
 	else if (StaffAction == EMS_StaffActionType::Issue)

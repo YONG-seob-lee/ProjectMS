@@ -7,6 +7,7 @@
 #include "MS_FurnitureUnit.h"
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
+#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -153,6 +154,44 @@ void UMS_StaffAIUnit::GoingToWork() const
 			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
 			StaffCharacter->SetActorRotation(MoveNextRotation);
 		}
+	}
+}
+
+void UMS_StaffAIUnit::SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData)
+{
+	PlayerStaffData = aPlayerStaffData;
+	
+	AMS_StaffAICharacter* AICharacter = Cast<AMS_StaffAICharacter>(GetCharacter());
+	MS_ENSURE(AICharacter);
+	
+	if (PlayerStaffData.PriorityOfWorks.IsValidIndex(0))
+	{
+		FName CapName = {};
+		FName TopName = {};
+		
+		EMS_StaffIssueType PriorityIssueType = PlayerStaffData.PriorityOfWorks[0];
+
+		if (PriorityIssueType == EMS_StaffIssueType::AddItemsToDisplay ||
+			PriorityIssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
+		{
+			CapName = EquipmentName::StaffSkinB;
+			TopName = EquipmentName::StaffSkinB;
+		}
+
+		else if (PriorityIssueType == EMS_StaffIssueType::AddItemsToShelf ||
+			PriorityIssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
+		{
+			CapName = EquipmentName::StaffSkinC;
+			TopName = EquipmentName::StaffSkinC;
+		}
+
+		else
+		{
+			CapName = EquipmentName::StaffSkinA;
+			TopName = EquipmentName::StaffSkinA;
+		}
+
+		AICharacter->SetSkin(CapName, TopName);
 	}
 }
 

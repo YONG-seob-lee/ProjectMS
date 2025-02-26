@@ -78,6 +78,9 @@ namespace EquipmentName
 {
 	const FName BigBox = TEXT("BIGBOX");
 	const FName SmallBox = TEXT("SMALLBOX");
+	const FName StaffSkinA = TEXT("StaffSkinA");
+	const FName StaffSkinB = TEXT("StaffSkinB");
+	const FName StaffSkinC = TEXT("StaffSkinC");
 }
 
 namespace CommonItemTableKeyName

@@ -53,12 +53,27 @@ public:
 	
 	void UpdateShowEquipment();
 
+	// Skin
+	void SetSkin(const FName& aCapName, const FName& aTopName);
 	
 protected:
 	// Component
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USkeletalMeshComponent> SkinCapMesh;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USkeletalMeshComponent> SkinTopMesh;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMS_MovingBoxComponent*> MovingBoxComponents;
 
+	// Skin
+	UPROPERTY(EditAnywhere)
+	TMap<FName, TObjectPtr<class USkeletalMesh>> SkinCaps;
+
+	UPROPERTY(EditAnywhere)
+	TMap<FName, TObjectPtr<class USkeletalMesh>> SkinTops;
+	
 	// Property
 	UPROPERTY(EditAnywhere)
 	float DuckVelocity = 100.f;

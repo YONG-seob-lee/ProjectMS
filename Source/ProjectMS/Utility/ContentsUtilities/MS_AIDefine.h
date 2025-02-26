@@ -66,8 +66,8 @@ enum class EMS_StaffActionState : uint8
 	None_IdleAction = 21,
 
 	// Spline으로 이동
-	GoToWork = 22,
-	GoHome = 23,
+	Spline_GoToWork = 22,
+	Spline_GoHome = 23,
 };
 
 

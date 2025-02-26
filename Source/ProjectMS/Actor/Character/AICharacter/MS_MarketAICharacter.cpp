@@ -32,6 +32,18 @@ AMS_MarketAICharacter::AMS_MarketAICharacter()
 	{
 		CharacterMovementComponent->GravityScale = 0.f;
 	}
+
+	SkinCapMesh = CreateDefaultSubobject<USkeletalMeshComponent>("SkinCapMesh");
+	if(SkinCapMesh)
+	{
+		SkinCapMesh->SetupAttachment(GetMesh());
+	}
+
+	SkinTopMesh = CreateDefaultSubobject<USkeletalMeshComponent>("SkinTopMesh");
+	if(SkinTopMesh)
+	{
+		SkinTopMesh->SetupAttachment(GetMesh());
+	}
 }
 
 void AMS_MarketAICharacter::PreInitializeComponents()
@@ -397,5 +409,34 @@ void AMS_MarketAICharacter::UpdateShowEquipment()
 		{
 			Equipment.Value->ShowEquipment(false);
 		}
+	}
+}
+
+void AMS_MarketAICharacter::SetSkin(const FName& aCapName, const FName& aTopName)
+{
+	TObjectPtr<USkeletalMesh>* CapMesh = SkinCaps.Find(aCapName);
+	if (CapMesh != nullptr && *CapMesh != nullptr)
+	{
+		SkinCapMesh->SetSkeletalMesh(*CapMesh);
+		SkinCapMesh->SetVisibility(true);
+		SkinCapMesh->SetLeaderPoseComponent(GetMesh());
+	}
+	else
+	{
+		SkinCapMesh->SetSkeletalMesh(nullptr);
+		SkinCapMesh->SetVisibility(false);
+	}
+
+	TObjectPtr<USkeletalMesh>* TopMesh = SkinTops.Find(aTopName);
+	if (TopMesh != nullptr && *TopMesh != nullptr)
+	{
+		SkinTopMesh->SetSkeletalMesh(*TopMesh);
+		SkinTopMesh->SetVisibility(true);
+		SkinTopMesh->SetLeaderPoseComponent(GetMesh());
+	}
+	else
+	{
+		SkinTopMesh->SetSkeletalMesh(nullptr);
+		SkinTopMesh->SetVisibility(false);
 	}
 }

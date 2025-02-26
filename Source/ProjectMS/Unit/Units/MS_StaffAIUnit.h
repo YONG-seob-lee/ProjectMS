@@ -20,7 +20,7 @@ public:
 	virtual void Finalize() override;
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
-
+	
 	virtual void DestroyUnitActor() override;
 
 protected:
@@ -34,7 +34,7 @@ public:
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
-	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData) { PlayerStaffData = aPlayerStaffData; }
+	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
 	
 	bool HasStaffAction() const;
 	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);
