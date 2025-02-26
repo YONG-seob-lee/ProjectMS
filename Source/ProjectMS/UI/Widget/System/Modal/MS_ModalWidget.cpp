@@ -14,14 +14,6 @@ void UMS_ModalWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	FillDefaultAnimations();
-	if(CPP_BlurButton)
-	{
-		CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
-		{
-			CPP_BlurButton->GetOnClickedDelegate().RemoveAll(this);
-			gWidgetMng.CloseModalWidget();
-		});
-	}
 }
 
 void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
@@ -48,6 +40,12 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 
 void UMS_ModalWidget::SetModal(const FMS_ModalParameter& aModalParameter)
 {
+	CPP_BlurButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
+	{
+		CPP_BlurButton->GetOnClickedDelegate().RemoveAll(this);
+		gWidgetMng.CloseModalWidget();
+	});
+	
 	SetModalInternal(aModalParameter.InModalWidget);
 	bPlayCloseAnimation = aModalParameter.bPlayCloseAnimation;
 
