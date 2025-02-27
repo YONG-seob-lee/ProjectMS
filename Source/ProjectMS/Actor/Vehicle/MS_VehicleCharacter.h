@@ -38,9 +38,5 @@ private:
 	TArray<class USpotLightComponent*> SpotLightComponents = {};
 	
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UCharacterMovementComponent> MovementComponent = nullptr;
-	
+	TObjectPtr<UStaticMeshComponent> VehicleMeshComponent = nullptr;
 };

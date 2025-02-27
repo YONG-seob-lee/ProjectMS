@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "DrawDebugHelpers.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SpotLightComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Prop/Spline/MS_VehicleSplineActor.h"
@@ -17,16 +18,16 @@ AMS_VehicleCharacter::AMS_VehicleCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
-	if(StaticMeshComponent)
+	VehicleMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("VehicleMeshComponent");
+	if(VehicleMeshComponent)
 	{
-		StaticMeshComponent->SetupAttachment(GetRootComponent());
+		VehicleMeshComponent->SetupAttachment(GetCapsuleComponent());
 	}
-	MovementComponent = CreateDefaultSubobject<UCharacterMovementComponent>("MovementComponent");
+	
+	UCharacterMovementComponent* MovementComponent = GetCharacterMovement();
 	if(MovementComponent)
 	{
 		MovementComponent->bRunPhysicsWithNoController = true;
-		MovementComponent->SetIsReplicated(true);
 		MovementComponent->RotationRate = FRotator(0.f, 360.f, 0.f);
 		MovementComponent->bUseControllerDesiredRotation = true;
 		MovementComponent->bOrientRotationToMovement = true;
@@ -51,6 +52,7 @@ void AMS_VehicleCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UCharacterMovementComponent* MovementComponent = GetCharacterMovement();
 	if(MovementComponent)
 	{
 		if (NearestSpline != nullptr)
