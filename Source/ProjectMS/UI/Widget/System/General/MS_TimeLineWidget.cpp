@@ -51,7 +51,7 @@ void UMS_TimeLineWidget::UpdateGameDate(const FMS_GameDate& aGameDate)
 	const bool bIsRunning = FMS_GameDate::IsRunningTimeZone(aGameDate.DailyTimeZone);
 	FlickerDot(bIsRunning);
 
-	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 : {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
+	CPP_Day->SetText(FText::FromString(FString::Format(TEXT("{0}년차 {1}월 {2}일"), {aGameDate.Year, aGameDate.Month, aGameDate.Day})));
 }
 
 void UMS_TimeLineWidget::UpdateTimer(int32 aMinute) const
