@@ -58,12 +58,17 @@ void AMS_Building::PostEditChangeProperty(FPropertyChangedEvent& PropertyChanged
 	SetFloor(Floor);
 }
 #endif
+
+void AMS_Building::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	UpdateFloorSize();
+	SetFloor(Floor);
+}
 void AMS_Building::PostInitProperties()
 {
 	Super::PostInitProperties();
-
-	UpdateFloorSize();
-	SetFloor(Floor);
 }
 
 bool AMS_Building::HasInteractionComponent()

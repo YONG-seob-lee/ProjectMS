@@ -20,6 +20,9 @@ public:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
+
+	virtual void BeginPlay() override;
+	
 	virtual bool HasInteractionComponent() override;
 	virtual void OnPressDownEvent() override;
 	virtual void OnPressUpEvent() override;
