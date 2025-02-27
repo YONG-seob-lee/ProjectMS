@@ -1,5 +1,7 @@
 ﻿#include "MS_ModeStateBase.h"
 
+#include "Kismet/GameplayStatics.h"
+
 
 UMS_ModeStateBase::UMS_ModeStateBase()
 {
@@ -22,6 +24,15 @@ void UMS_ModeStateBase::Tick(float aDeltaTime)
 
 void UMS_ModeStateBase::Begin()
 {
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
+	for(const auto& Actor : Actors)
+	{
+		if(UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(Actor))
+		{
+			PrimitiveComponent->SetLightingChannels(false,  true, false);
+		}
+	}
 }
 
 void UMS_ModeStateBase::Exit()
