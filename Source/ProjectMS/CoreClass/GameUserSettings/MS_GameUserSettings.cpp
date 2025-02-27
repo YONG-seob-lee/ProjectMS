@@ -4,6 +4,7 @@
 #include "MS_GameUserSettings.h"
 
 #include "MS_Define.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 UMS_GameUserSettings::UMS_GameUserSettings()
 {
@@ -18,7 +19,9 @@ void UMS_GameUserSettings::UpdateDefaultSoundVolume(EMS_SoundClassType aSoundTyp
 {
 	DefaultSoundVolume.Emplace(aSoundType, aVolume);
 	FString SoundTypeStr = ConvertEnumToString(TEXT("EMS_SoundClassType"), aSoundType);
+#if WITH_EDITOR
 	MS_LOG(TEXT("UpdateDefaultSoundVolume ( %s ) : %f"), *SoundTypeStr, aVolume);
+#endif
 }
 
 void UMS_GameUserSettings::GetDefaultSoundVolume(TMap<EMS_SoundClassType, float>& aDefaultSoundVolume) const
@@ -69,5 +72,7 @@ bool UMS_GameUserSettings::IsTutorialFinished(EMS_TutorialType aTutorialKey)
 	}
 	
 	ProcessTutorial.Emplace(aTutorialKey);
+	
+	ApplySettings(true);
 	return false;
 }

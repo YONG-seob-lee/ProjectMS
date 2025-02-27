@@ -41,7 +41,7 @@ public:
 	bool IsAllProcessTutorialFinished() const;
 	bool IsTutorialFinished(EMS_TutorialType aTutorialKey);
 
-	FORCEINLINE void SetIsPlaySequence(bool bNewPlaySequence) { bPlaySequence = bNewPlaySequence; }
+	FORCEINLINE void SetIsPlaySequence(bool bNewPlaySequence) { bPlaySequence = bNewPlaySequence; ApplySettings(true); }
 	FORCEINLINE bool IsPlaySequence() const { return bPlaySequence; }
 
 private:

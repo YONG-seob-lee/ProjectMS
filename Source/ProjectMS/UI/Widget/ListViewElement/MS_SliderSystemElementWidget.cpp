@@ -45,5 +45,6 @@ void UMS_SliderSystemElementWidget::OnValueChanged(float aValue)
 	if(const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings()))
 	{
 		GameUserSettings->UpdateDefaultSoundVolume(SoundType, aValue);
+		GameUserSettings->ApplySettings(true);
 	}
 }

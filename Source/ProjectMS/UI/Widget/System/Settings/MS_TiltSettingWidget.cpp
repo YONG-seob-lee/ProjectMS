@@ -56,6 +56,7 @@ void UMS_TiltSettingWidget::OnCheckVVLow(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::VeryVeryLow);
+		GameUserSettings->ApplySettings(true);
 		CPP_VVLow->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::VeryVeryLow);
 	}
@@ -72,6 +73,7 @@ void UMS_TiltSettingWidget::OnCheckVeryLow(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::VeryLow);
+		GameUserSettings->ApplySettings(true);
 		CPP_VeryLow->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::VeryLow);
 	}
@@ -89,6 +91,7 @@ void UMS_TiltSettingWidget::OnCheckLow(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::Low);
+		GameUserSettings->ApplySettings(true);
 		CPP_Low->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::Low);
 	}
@@ -106,6 +109,7 @@ void UMS_TiltSettingWidget::OnCheckDefault(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::Default);
+		GameUserSettings->ApplySettings(true);
 		CPP_Default->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::Default);
 	}
@@ -123,6 +127,7 @@ void UMS_TiltSettingWidget::OnCheckHigh(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::High);
+		GameUserSettings->ApplySettings(true);
 		CPP_High->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::High);
 	}
@@ -140,6 +145,7 @@ void UMS_TiltSettingWidget::OnCheckVeryHigh(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::VeryHigh);
+		GameUserSettings->ApplySettings(true);
 		CPP_VeryHigh->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::VeryHigh);
 	}
@@ -157,6 +163,7 @@ void UMS_TiltSettingWidget::OnCheckVVHigh(bool bIsChecked)
 			return;
 		}
 		GameUserSettings->UpdateTiltType(EMS_TiltType::VeryVeryHigh);
+		GameUserSettings->ApplySettings(true);
 		CPP_VVHigh->SetIsChecked(true);
 		gCameraMng.SetQuarterViewTilt(EMS_TiltType::VeryVeryHigh);
 	}
