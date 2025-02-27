@@ -9,6 +9,7 @@
 #include "Components/Image.h"
 #include "Dialog/MS_DialogWidget.h"
 #include "Loading/MS_DefaultLoadingWidget.h"
+#include "Lobby/MS_LobbyWidget.h"
 #include "System/MS_ToastWidget.h"
 #include "System/Modal/MS_ModalWidget.h"
 #include "System/Rotate/MS_RotateWidget.h"
@@ -243,21 +244,24 @@ void UMS_RootWidget::Test(int32 t) const
 
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 {
-	if(aLevelType < EMS_LevelType::LobbyLevel)
+	if(aLevelType <= EMS_LevelType::LobbyLevel)
 	{
 		// 위젯 애니메이션에 입혀놓은 사운드웨이브가 Collapsed 또는 Hidden 일 때 일시정지하면서 이중창 삼중창으로 오버랩되는 현상 개선 목적으로 일단 주석처리.
 		CPP_GeneralWidget->SetRenderOpacity(0.001f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
 	}
-	else if(aLevelType == EMS_LevelType::LobbyLevel)
-	{
-		CPP_GeneralWidget->SetRenderOpacity(1.f);
-		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
-	}
 	else if(aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
 	{
-		CPP_GeneralWidget->SetRenderOpacity(1.f);
-		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);
+		if(Cast<UMS_LobbyWidget>(CPP_ContentFrameCanvasPanel->GetChildAt(0)))
+		{
+			CPP_GeneralWidget->SetRenderOpacity(1.f);
+			CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Lobby);
+		}
+		else
+		{
+			CPP_GeneralWidget->SetRenderOpacity(1.f);
+			CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::Town);	
+		}
 	}
 	else if(aLevelType == EMS_LevelType::MarketLevel)
 	{

@@ -226,6 +226,7 @@ void UMS_GeneralWidget::OnClickedExpanderButton()
 	FMS_ModalParameter Parameter;
 	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_SettingModalWidget::GetWidgetName());
 	gWidgetMng.ShowModalWidget(Parameter);
+	CPP_MenuExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UMS_GeneralWidget::OnClickedOrderItemButton()
