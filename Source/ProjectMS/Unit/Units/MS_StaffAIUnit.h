@@ -34,7 +34,7 @@ public:
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
-	FORCEINLINE void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
+	void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
 	
 	bool HasStaffAction() const;
 	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);
