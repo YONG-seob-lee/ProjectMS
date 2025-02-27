@@ -18,8 +18,22 @@ void UMS_ItemElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 
 	ItemName = ItemData->GetElementName();
 	ItemImage = ItemData->GetImage();
+	CPP_ItemName->SetText(FText::FromString(ItemName));
+	CPP_ItemImage->SetBrushFromTexture(ItemImage);
 
-	InitializeItem(ItemName, ItemImage);
+	if(ItemData->IsShowItemName() == false)
+	{
+		CPP_ItemName->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if(ItemData->IsShowItemCount() == false)
+	{
+		CPP_CountText->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else
+	{
+		CPP_CountText->SetText(FText::FromString(FString::FromInt(ItemData->GetItemCount())));
+	}
 }
 
 void UMS_ItemElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)

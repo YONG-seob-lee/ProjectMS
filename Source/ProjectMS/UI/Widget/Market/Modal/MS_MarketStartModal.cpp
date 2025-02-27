@@ -21,14 +21,6 @@ void UMS_MarketStartModal::NativeConstruct()
 	Super::NativeConstruct();
 
 	CPP_OpeningPlayButton->GetOnClickedDelegate().AddUObject(this, &UMS_MarketStartModal::OnClickedOpeningPlayButton);
-
-	CPP_FastButton->GetOnClickedDelegate().AddWeakLambda(this, [this]()
-	{
-		gModeMng.ChangeState(EMS_ModeState::RunMarket);
-		gWidgetMng.CloseModalWidget();
-	});
-
-	
 }
 
 void UMS_MarketStartModal::OnClickedOpeningPlayButton()

@@ -22,8 +22,11 @@ private:
 	void OnClickedOpeningPlayButton();
 	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_OpeningPlayButton = nullptr;
-
+	TObjectPtr<class UMS_WorkStaffListWidget> CPP_WorkStaffListWidget = nullptr;
+	
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_FastButton = nullptr;
+	TObjectPtr<class UMS_OrderStatusWidget> CPP_OrderStatusWidget = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_OpeningPlayButton = nullptr;
 };

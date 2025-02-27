@@ -35,6 +35,7 @@ void UMS_ModalWidget::OnAnimFinished(const FName& aAnimName)
 		}
 		gWidgetMng.DestroyWidget(InWidget);
 		SetModalInternal(gWidgetMng.Create_Widget_NotManaging(DefaultModal::InModalWidgetPath));
+		SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
@@ -52,6 +53,7 @@ void UMS_ModalWidget::SetModal(const FMS_ModalParameter& aModalParameter)
 	OnCloseModalWidgetCallback = aModalParameter.OnCloseWidgetCallback;
 	if(aModalParameter.bPlayOpenAnimation)
 	{
+		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		PlayAnimationByName(ModalWidgetAnimation::Open);
 	}
 }

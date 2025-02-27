@@ -7,6 +7,7 @@
 #include "Button/MS_AccountButton.h"
 #include "Button/MS_AccountStartButton.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 
 void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
@@ -22,6 +23,7 @@ void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool b
 void UMS_AccountWidget::OnClickAccountButton()
 {
 	CPP_AccountButton->GetOnClickedDelegate().RemoveAll(this);
+	CPP_AccountButton->SetVisibility(ESlateVisibility::Collapsed);
 	CREATE_SCENE_COMMAND(Command);
 	// TODO : all : 서버 데이터에서 클리어한 위치를 찾아서 레벨 타입 적용.
 	Command->SetLevelType(EMS_LevelType::LobbyLevel, GetWorld());

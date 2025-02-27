@@ -53,7 +53,6 @@ void UMS_ItemCacheTable::GetItemElementDatas(TArray<TObjectPtr<UMS_ItemElementDa
 	for(const auto& ItemData : ItemDatas)
 	{
 		TObjectPtr<UMS_ItemElementData> ItemElementData = MS_NewObject<UMS_ItemElementData>();
-		MS_CHECK(ItemElementData);
 
 		ItemElementData->SetElementName(ItemData.Value->ItemName.ToString());
 		const FString ItemImagePath = gTableMng.GetPath(EMS_TableDataType::BasePathImgFile, ItemData.Value->ImagePath);

@@ -33,6 +33,9 @@ private:
 	TObjectPtr<class UImage> CPP_ItemImage = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_CountText = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_ItemName = nullptr;
 
 	FString ItemName = FString();

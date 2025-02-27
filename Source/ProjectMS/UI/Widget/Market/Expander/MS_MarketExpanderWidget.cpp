@@ -54,13 +54,12 @@ void UMS_MarketExpanderWidget::NativeDestruct()
 
 void UMS_MarketExpanderWidget::OpenExpander()
 {
-	// TODO 용섭 : 나중에 모드 완성되면 추가 작업
 	if(bOpen && bOpenExpander)
 	{
 		return;
 	}
 	
-	PlayAnimationByName(ArrowAnimation::OpenItemList);
+	PlayAnimationByName(ArrowAnimation::Open);
 	bOpen = true;
 	bOpenExpander = true;
 }
