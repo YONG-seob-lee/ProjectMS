@@ -34,7 +34,7 @@ public:
 	virtual bool HandleMouseWheelOrGestureEvent(FSlateApplication& SlateApp, const FPointerEvent& InWheelEvent, const FPointerEvent* InGestureEvent) override;
 
 	// Hold, LongTouch, Click, Glide, Pinch 등의 액션은 Data 구조체 내에서 관리.
-	void HandleRotate();
+	void HandleZoomIn();
 
 	bool IsPointerPressed() const;
 
@@ -46,7 +46,8 @@ private:
 	void ShootLineTrace(const FVector2D& aPointerDownPosition, EMS_TouchActionType aType);
 
 	int32 FingerCount = 0;
-
+	float TwoFingersDistance = 0.f;
+	
 	TMap<int32, FMS_PointerData*> PointerDatas;
 	
 	TQueue<int32> TouchEffectQueue;

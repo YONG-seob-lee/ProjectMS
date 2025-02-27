@@ -5,6 +5,7 @@
 
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Slate/SceneViewport.h"
@@ -61,7 +62,7 @@ bool IMS_TouchInputProcessor::HandleMouseMoveEvent(FSlateApplication& aSlateApp,
 {
 	if(FingerCount == 2)
 	{
-		HandleRotate();
+		HandleZoomIn();
 	}
 
 	FMS_PointerData* TargetPointerData = GetPointerData(aMouseEvent.GetPointerIndex());
@@ -122,7 +123,7 @@ bool IMS_TouchInputProcessor::HandleMouseWheelOrGestureEvent(FSlateApplication& 
 	return IInputProcessor::HandleMouseWheelOrGestureEvent(SlateApp, InWheelEvent, InGestureEvent);
 }
 
-void IMS_TouchInputProcessor::HandleRotate()
+void IMS_TouchInputProcessor::HandleZoomIn()
 {
 	const FMS_PointerData* FirstFinger = nullptr;
 	const FMS_PointerData* SecondFinger = nullptr;
@@ -141,8 +142,22 @@ void IMS_TouchInputProcessor::HandleRotate()
 			}
 		}
 	}
+	if(FirstFinger == nullptr || SecondFinger == nullptr)
+	{
+		return;
+	}
 
-	//FVector2D Pivot = FirstFinger->GetPointerDownPosition() - SecondFinger->GetPointerDownPosition();
+	const float NewDistance = FVector2D::Distance(FirstFinger->GetPointerMovePosition(), SecondFinger->GetPointerMovePosition());
+	if(TwoFingersDistance > NewDistance)
+	{
+		gCameraMng.ZoomCamera(-1.f);
+	}
+	else if(TwoFingersDistance < NewDistance)
+	{
+		gCameraMng.ZoomCamera(1.f);
+	}
+
+	TwoFingersDistance = NewDistance;
 }
 
 bool IMS_TouchInputProcessor::IsPointerPressed() const
