@@ -7,10 +7,10 @@
 
 namespace ImagePath
 {
-	const FString Setting = TEXT("/Game/UI/Image/Icon/SettingIcon.SettingIcon");
+	const FString Setting = TEXT("/Game/UI/Image/Icon/Common/SettingIcon.SettingIcon");
 	const FString Menu = TEXT("/Game/UI/Image/Icon/MenuIcon.MenuIcon");
 	const FString Schedule = TEXT("/Game/UI/Image/Icon/BoardIcon.BoardIcon");
-	const FString Manage = TEXT("/Game/UI/Image/Icon/ManageIcon.ManageIcon");
+	const FString Manage = TEXT("/Game/UI/Image/Icon/Common/MenuIcon.MenuIcon");
 	const FString OrderItem = TEXT("/Game/UI/Image/Icon/BuyItem.BuyItem");
 	const FString CheckOrderItem = TEXT("/Game/UI/Image/Icon/CheckOrderItem.CheckOrderItem");
 	const FString BuyFurniture = TEXT("/Game/UI/Image/Icon/BuyFurniture.BuyFurniture");
