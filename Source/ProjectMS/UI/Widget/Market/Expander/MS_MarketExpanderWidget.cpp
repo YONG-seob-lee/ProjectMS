@@ -59,7 +59,7 @@ void UMS_MarketExpanderWidget::OpenExpander()
 		return;
 	}
 	
-	PlayAnimationByName(ArrowAnimation::Open);
+	PlayAnimationByName(ArrowAnimation::OpenItemList);
 	bOpen = true;
 	bOpenExpander = true;
 }
