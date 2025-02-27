@@ -5,6 +5,7 @@
 
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Slate/SceneViewport.h"
 
@@ -107,7 +108,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 bool IMS_TouchInputProcessor::HandleMouseButtonDoubleClickEvent(FSlateApplication& aSlateApp, const FPointerEvent& aMouseEvent)
 {
 	FingerCount++; // 손가락 카운트 오류 방지용.
-	
+	gWidgetMng.ShowMessageOnScreen(TEXT("Double"));
 	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
 	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(aMouseEvent.GetScreenSpacePosition());
 	ShootLineTrace(AbsoluteScreenPosition, EMS_TouchActionType::Double);

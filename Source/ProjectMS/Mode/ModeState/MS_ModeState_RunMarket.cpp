@@ -164,6 +164,16 @@ void UMS_ModeState_RunMarket::OnInputPointerLongTouch(float aElapsedTime, const 
 	const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerLongTouch(aElapsedTime, aPosition, aInteractableHitResult);
+	
+	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
+	{
+		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
+		{
+			SelectActor(InteractActor);
+			
+			PropActor->OpenStatusWidget(aPosition);
+		}
+	}
 }
 
 void UMS_ModeState_RunMarket::OnInputPointerClick(const FVector2D& aPosition,
@@ -183,16 +193,6 @@ void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition
 	const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
-
-	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
-	{
-		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
-		{
-			SelectActor(InteractActor);
-			
-			PropActor->OpenStatusWidget(aPosition);
-		}
-	}
 }
 
 void UMS_ModeState_RunMarket::OnPinchAction(float aPinchValue)

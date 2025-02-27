@@ -27,7 +27,8 @@ public:
 protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
-	
+
+	virtual void OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult) override;
 	virtual void OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult) override;
 	
 private:

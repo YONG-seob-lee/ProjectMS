@@ -103,21 +103,13 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 {
 	Super::OnInputPointerLongTouch(aElapsedTime, aPosition, aInteractableHitResult);
 
-	if (AActor* InteractActor = aInteractableHitResult.GetActor())
+	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
-		if (CachePressDownActor != nullptr && CachePressDownActor == InteractActor)
+		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
-			if (AMS_Prop* PropActor = Cast<AMS_Prop>(InteractActor))
-			{
-				if (PropActor->GetPropType() == EMS_PropType::Furniture)
-				{
-					gCameraMng.RestrictCameraMovement(true);
+			SelectActor(InteractActor);
 			
-					gInteractionMng.SelectActor(InteractActor);
-				
-					gModeMng.ChangeState(EMS_ModeState::Construct);
-				}
-			}
+			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
 }
@@ -137,16 +129,6 @@ void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const
 void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
-
-	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
-	{
-		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
-		{
-			SelectActor(InteractActor);
-			
-			PropActor->OpenStatusWidget(aPosition);
-		}
-	}
 }
 
 void UMS_ModeState_Normal::OnPinchAction(float aPinchValue)

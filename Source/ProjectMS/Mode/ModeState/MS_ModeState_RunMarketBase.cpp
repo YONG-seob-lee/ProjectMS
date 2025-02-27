@@ -146,10 +146,10 @@ void UMS_ModeState_RunMarketBase::Exit()
 	Super::Exit();
 }
 
-void UMS_ModeState_RunMarketBase::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+void UMS_ModeState_RunMarketBase::OnInputPointerLongTouch(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
-	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
-
+	Super::OnInputPointerLongTouch(aElapsedTime, aPosition, aInteractableHitResult);
+	
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
 		if(const TObjectPtr<AMS_StaffAICharacter> StaffDuck = Cast<AMS_StaffAICharacter>(InteractActor))
@@ -157,6 +157,11 @@ void UMS_ModeState_RunMarketBase::OnInputPointerDoubleClickEvent(FVector2D aPosi
 			StaffDuck->ShowStaffStatusWidget(aPosition);
 		}
 	}
+}
+
+void UMS_ModeState_RunMarketBase::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
+{
+	Super::OnInputPointerDoubleClickEvent(aPosition, aInteractableHitResult);
 }
 
 void UMS_ModeState_RunMarketBase::EndSchedule()
