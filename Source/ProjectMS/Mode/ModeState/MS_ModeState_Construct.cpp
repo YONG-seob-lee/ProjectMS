@@ -624,7 +624,7 @@ bool UMS_ModeState_Construct::CheckGridDatas(const TArray<FMS_GridDataForPropSpa
 
 			if (AMS_Zone* GridOwnerZone = Cast<AMS_Zone>(GridData->GetOwnerZone()))
 			{
-				if (GridOwnerZone->GetZoneType() == aTargetProp->GetConstructableZoneType())
+				if (GridOwnerZone->GetZoneType() != aTargetProp->GetConstructableZoneType())
 				{
 					return false;
 				}
