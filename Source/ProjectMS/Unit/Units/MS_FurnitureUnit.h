@@ -43,7 +43,7 @@ protected:
 	
 	
 protected:
-	struct FMS_StorageData* FurnitureData = nullptr;
+	struct FMS_FurnitureData* FurnitureData = nullptr;
 	
 	UPROPERTY()
 	TArray<TWeakObjectPtr<class UMS_IssueTicket>> IssueTickets;

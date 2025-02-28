@@ -13,7 +13,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_GateUnit.h"
 #include "Zone/MS_Zone.h"
@@ -568,21 +568,33 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 
 }
 
-TWeakObjectPtr<UMS_StorageUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
+TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
 	const EMS_Rotation aRotation)
 {
 	// ToDo : 다양한 Prop 타입에 대응
 	MS_CHECK(aPropType == EMS_PropType::Furniture);
-	
-	FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableIndex);
-	MS_ENSURE(FurnitureData != nullptr);
 
-	FVector2D CenterLocationOffset = FVector2D(FurnitureData->ArrangementOffsetX, FurnitureData->ArrangementOffsetY);
+	// Data
+	FMS_FurnitureData* FurnitureTableData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aTableIndex);
+	MS_ENSURE(FurnitureTableData != nullptr);
+
+	EMS_FurnitureType FurnitureType = static_cast<EMS_FurnitureType>(FurnitureTableData->FurnitureType);
+
+	if (!FurnitureUnitMap::FurnitureUnitTypeMap.Contains(FurnitureType))
+	{
+		MS_ERROR(TEXT("[%s] FurnitureType can't registered in FurnitureUnitTypeMap [Id : %d]"), *MS_FUNC_STRING, FurnitureTableData->FurnitureType)
+		MS_ENSURE(false);
+	}
+	EMS_UnitType FurnitureUnitType = *FurnitureUnitMap::FurnitureUnitTypeMap.Find(static_cast<EMS_FurnitureType>(FurnitureType));
+	
+	// Calc Location
+	FVector2D CenterLocationOffset = FVector2D(FurnitureTableData->ArrangementOffsetX, FurnitureTableData->ArrangementOffsetY);
 	FVector2D LocationXY = FMS_GridData::ConvertGridPositionToLocation(aGridPosition) + CenterLocationOffset;
 	FVector Location = FVector(LocationXY.X, LocationXY.Y, 0.f);
 	FRotator Rotator = FRotator(0.f, UMS_MathUtility::ConvertRotation(aRotation), 0.f);
-	
-	const TObjectPtr<UMS_StorageUnit> NewUnit = Cast<UMS_StorageUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, aTableIndex, true, Location, Rotator));
+
+	// CreateUnit
+	const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(FurnitureUnitType, aTableIndex, true, Location, Rotator));
 	if (!IsValid(NewUnit))
 	{
 		MS_ENSURE(false);
@@ -623,7 +635,7 @@ bool AMS_ConstructibleLevelScriptActorBase::MoveAndRotateProp(TWeakObjectPtr<AMS
 		// ToDo : 다양한 Prop 타입에 대응
 		MS_CHECK(aProp->GetPropType() == EMS_PropType::Furniture);
 		
-		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aProp->GetTableIndex());
+		FMS_FurnitureData* FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aProp->GetTableIndex());
 		MS_ENSURE(FurnitureData != nullptr);
 	
 		// Unregister Old Datas

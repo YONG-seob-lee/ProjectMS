@@ -22,8 +22,17 @@ protected:
 
 
 public:
+	// Slot Datas
 	virtual void OpenStatusWidget(const FVector2D& aClickPosition) override;
 	
-	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
-	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* ItemSlotAttachedComponent;
+
+	UPROPERTY()
+	TMap<int32, TObjectPtr<class UMS_ItemSlotChildActorComponent>> ItemSlotIdToSlotComponents;
 };

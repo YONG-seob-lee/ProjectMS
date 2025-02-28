@@ -400,7 +400,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 void UMS_ModeState_RunMarketBase::UpdateAllFurnitureIssueTickets()
 {
 	TArray<TObjectPtr<UMS_UnitBase>> Units;
-	gUnitMng.GetUnits(EMS_UnitType::Furniture, Units);
+	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
 	for (TObjectPtr<UMS_UnitBase> Unit : Units)
 	{
@@ -416,7 +416,7 @@ void UMS_ModeState_RunMarketBase::ClearIssueTickets()
 	IssueTicketContainer->UnregisterAllIssueTickets();
 	
 	TArray<TObjectPtr<UMS_UnitBase>> Units;
-	gUnitMng.GetUnits(EMS_UnitType::Furniture, Units);
+	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
 	for (TObjectPtr<UMS_UnitBase> Unit : Units)
 	{

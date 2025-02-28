@@ -6,7 +6,7 @@
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 #include "Units/MS_StorageUnit.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
@@ -158,7 +158,7 @@ EMS_ZoneType AMS_Prop::GetConstructableZoneType() const
 {
 	if (PropType == EMS_PropType::Furniture)
 	{
-		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, TableIndex);
+		FMS_FurnitureData* FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, TableIndex);
 		MS_ENSURE(FurnitureData != nullptr);
 
 		return static_cast<EMS_ZoneType>(FurnitureData->ZoneType);

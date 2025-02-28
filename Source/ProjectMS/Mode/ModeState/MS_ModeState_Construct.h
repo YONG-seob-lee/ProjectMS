@@ -72,7 +72,7 @@ public:
 	void OnUnselectProp(AActor* aUnselectedActor);
 
 private:
-	void CreateNoLinkedPreviewProp(struct FMS_StorageData* aStorageData);
+	void CreateNoLinkedPreviewProp(struct FMS_FurnitureData* aStorageData);
 	void CreateLinkedPreviewProp(class AMS_Prop* aSelectedProp);
 	
 	void MovePreviewProp(const FVector& aNewLocation);

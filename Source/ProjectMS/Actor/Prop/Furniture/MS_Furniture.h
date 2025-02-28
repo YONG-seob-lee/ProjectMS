@@ -28,16 +28,7 @@ public:
 	virtual void OnSelectProp(EMS_ModeState aModeState) override;
 	virtual void OnUnselectProp(EMS_ModeState aModeState) override;
 
-	
-	// Slot Datas
-	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
-	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
-
-	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* ItemSlotAttachedComponent;
-
-	UPROPERTY()
-	TMap<int32, TObjectPtr<class UMS_ItemSlotChildActorComponent>> ItemSlotIdToSlotComponents;
+	UPROPERTY(EditDefaultsOnly)
+	EMS_FurnitureType FurnitureType;
 };

@@ -6,15 +6,11 @@
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Client/MS_ItemManager.h"
-#include "Manager_Client/MS_SceneManager.h"
-#include "Manager_Client/MS_ScheduleManager.h"
-#include "Manager_Client/MS_WidgetManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitChattingCollectComponent.h"
 #include "ScriptActorComponent/MS_UnitPurchaseCollectComponent.h"
 #include "Units/MS_StorageUnit.h"
-#include "Widget/Market/Modal/MS_MarketStartModal.h"
 
 
 AMS_MarketLevelScriptActor::AMS_MarketLevelScriptActor()
@@ -208,7 +204,11 @@ void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
 	{
 		FMS_FurniturePositionData FurnitureData = It.Value;
 		
-		TWeakObjectPtr<UMS_StorageUnit> NewUnit = CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
-		NewUnit->SetSlotDatas(FurnitureData.SlotDatas);
+		TWeakObjectPtr<UMS_FurnitureUnit> NewUnit = CreateProp(EMS_PropType::Furniture, FurnitureData.FurnitureTableId, FurnitureData.GridPosition, FurnitureData.Rotation);
+
+		if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(NewUnit))
+		{
+			StorageUnit->SetSlotDatas(FurnitureData.SlotDatas);
+		}
 	}
 }

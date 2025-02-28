@@ -12,11 +12,10 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
-#include "Units/MS_StorageUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "MathUtility/MS_MathUtility.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -171,8 +170,6 @@ void UMS_ModeState_Construct::OnMouseRightButtonGlide(const FVector2D& aPosition
 void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
-
-	AActor* InteractableActor = aInteractableHitResult.GetActor();
 	
 	if (PreviewProp == nullptr)
 	{
@@ -237,7 +234,7 @@ void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aIt
 {
 	if (aItemType == static_cast<int32>(EMS_ItemType::Storage))
 	{
-		FMS_StorageData* StorageData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aStorageId);
+		FMS_FurnitureData* StorageData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aStorageId);
 		if(StorageData == nullptr)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("Storage Data is invalid"));
@@ -361,7 +358,7 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	}
 }
 
-void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_StorageData* aStorageData)
+void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_FurnitureData* aStorageData)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	if (!IsValid(World))
@@ -437,7 +434,7 @@ void UMS_ModeState_Construct::MovePreviewProp(const FVector& aNewLocation)
 
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
-		FMS_StorageData* FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, PreviewProp->GetTableIndex());
+		FMS_FurnitureData* FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, PreviewProp->GetTableIndex());
 		MS_ENSURE(FurnitureData != nullptr);
 		
 		FIntVector2 OldCenterGridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());

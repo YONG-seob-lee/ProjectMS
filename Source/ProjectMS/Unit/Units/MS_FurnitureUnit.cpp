@@ -8,14 +8,14 @@
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
 #include "Prop/Furniture/MS_Furniture.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 
 
 void UMS_FurnitureUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
 {
 	Super::Initialize(aUnitHandle, aUnitType, aTableId);
 
-	FurnitureData = gTableMng.GetTableRowData<FMS_StorageData>(EMS_TableDataType::Storage, aTableId);
+	FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aTableId);
 	MS_ENSURE(FurnitureData != nullptr);
 }
 

@@ -35,6 +35,14 @@ enum class EMS_PropType : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMS_FurnitureType : uint8
+{
+	None = 0,
+	Counter = 1,
+	Storage = 2,
+};
+
+UENUM(BlueprintType)
 enum class EMS_PropSpaceType : uint8
 {
 	None = 0,
@@ -172,4 +180,11 @@ public:
 namespace LevelSpecificActorName
 {
 	const FName UglyDuck = TEXT("UglyDuck");
+}
+
+namespace FurnitureUnitMap
+{
+	const TMap<EMS_FurnitureType, EMS_UnitType> FurnitureUnitTypeMap =
+		{{EMS_FurnitureType::Counter, EMS_UnitType::Counter}
+		, {EMS_FurnitureType::Storage, EMS_UnitType::Storage}};
 }

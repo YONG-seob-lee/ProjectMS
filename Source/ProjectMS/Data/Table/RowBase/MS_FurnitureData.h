@@ -3,16 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_StorageData.generated.h"
+#include "MS_FurnitureData.generated.h"
 
 /**
  * 
  */
 USTRUCT()
-struct FMS_StorageData : public FTableRowBase
+struct FMS_FurnitureData : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY(EditAnywhere)
+	int32 FurnitureType = 0;
 	UPROPERTY(EditAnywhere)
 	int32 ZoneType = 0;
 	UPROPERTY(EditAnywhere)

@@ -10,7 +10,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Table/Caches/MS_StorageCacheTable.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
 
@@ -38,7 +38,7 @@ void UMS_BuyFurnitureWidget::NativeDestruct()
 
 void UMS_BuyFurnitureWidget::InitializeBuyFurnitureWidget()
 {
-	const TObjectPtr<UMS_StorageCacheTable> ItemTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	const TObjectPtr<UMS_FurnitureCacheTable> ItemTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
 	MS_ENSURE(ItemTable);
 
 	ItemTable->GetOrderFurnitureElementDatas(OrderFurnitureElementDatas);

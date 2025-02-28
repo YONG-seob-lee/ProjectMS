@@ -4,8 +4,8 @@
 #include "MS_ConstructExpanerWidget.h"
 
 #include "Button/MS_Button.h"
-#include "Table/Caches/MS_StorageCacheTable.h"
-#include "Widget/ListViewElement/MS_ConstructCategoryElementWidget.h"
+#include "Manager_Client/MS_ItemManager.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_ListView.h"
@@ -27,9 +27,9 @@ void UMS_ConstructExpanerWidget::NativeConstruct()
 
 void UMS_ConstructExpanerWidget::InitCategory() const
 {
-	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
 	TArray<TObjectPtr<UMS_ConstructCategoryElementData>> CategoryArray;
-	StorageTable->GetStorageCategoryData(CategoryArray);
+	FurnitureTable->GetFurnitureCategoryData(CategoryArray);
 	
 	CPP_ExpanderCategoryListView->SetListItems(TArray<TObjectPtr<UObject>>(CategoryArray));
 	CPP_ExpanderCategoryListView->ClearSelection();
@@ -40,8 +40,8 @@ void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneTyp
 	TMap<int32, int32> NotDeployFurnitures;
 	gItemMng.GetNotDeployFurniture(NotDeployFurnitures);
 
-	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
-	MS_CHECK(StorageTable);
+	const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
+	MS_CHECK(FurnitureTable);
 	TArray<TObjectPtr<UMS_ConstructItemElement>> FurnitureItems;
 	for(const auto& NotDeployFurniture : NotDeployFurnitures)
 	{
@@ -58,7 +58,7 @@ void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneTyp
 			continue;
 		}
 		
-		const FMS_StorageData* StorageData = StorageTable->GetStorageData(NotDeployFurniture.Key);
+		const FMS_FurnitureData* StorageData = FurnitureTable->GetFurnitureData(NotDeployFurniture.Key);
 		
 		if(StorageData->ZoneType != static_cast<int32>(aZoneType))
 		{

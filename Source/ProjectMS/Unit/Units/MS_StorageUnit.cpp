@@ -10,9 +10,9 @@
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeState/MS_ModeState_RunMarket.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Prop/Furniture/MS_Furniture.h"
+#include "Prop/Furniture/Storage/MS_Storage.h"
 #include "Table/RowBase/MS_ItemData.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 
 
 void UMS_StorageUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aTableId)
@@ -302,7 +302,7 @@ void UMS_StorageUnit::TakeItemsImmediately(int32 aSlotId, int32 aItemId,
 			if (const TObjectPtr UnitManager = gUnitMng)
 			{
 				TArray<TObjectPtr<UMS_UnitBase>> Units;
-				UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+				UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 				for (TObjectPtr<UMS_UnitBase> Unit : Units)
 				{
@@ -361,12 +361,11 @@ void UMS_StorageUnit::OnChangeRequestSlotDatas()
 	{
 		UpdateStorageSlotIssueTickets();
 	}
-	
-	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
-	MS_ENSURE(IsValid(Furniture));
 
-	// MS_Furniture
-	Furniture->OnChangeRequestSlotDatas(SlotDatas);
+	AMS_Storage* Storage = GetActor<AMS_Storage>();
+	MS_ENSURE(IsValid(Storage));
+	
+	Storage->OnChangeRequestSlotDatas(SlotDatas);
 }
 
 void UMS_StorageUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= true*/)
@@ -400,12 +399,11 @@ void UMS_StorageUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= tr
 			gItemMng.UpdateNotPlacedItemsToPalletItems(this);
 		}
 	}
+	
+	AMS_Storage* Storage = GetActor<AMS_Storage>();
+	MS_ENSURE(IsValid(Storage));
 
-	// MS_Furniture
-	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
-	MS_ENSURE(IsValid(Furniture));
-
-	Furniture->OnChangeCurrentSlotDatas(SlotDatas);
+	Storage->OnChangeCurrentSlotDatas(SlotDatas);
 }
 
 void UMS_StorageUnit::UpdateIssueTickets()
@@ -422,120 +420,115 @@ void UMS_StorageUnit::ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer)
 
 void UMS_StorageUnit::UpdateStorageSlotIssueTickets()
 {
-	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
-	
-	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	if (FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Display)
+		&& FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Shelf))
 	{
-		if (FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Display)
-			&& FurnitureData->ZoneType != static_cast<int32>(EMS_ZoneType::Shelf))
-		{
-			return;
-		}
+		return;
+	}
 
-		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	{
+		if (IssueTickets[i] == nullptr)
 		{
-			if (IssueTickets[i] == nullptr)
-			{
-				IssueTickets.RemoveAt(i);
-			}
+			IssueTickets.RemoveAt(i);
 		}
-		
-		// 필요한 이슈 정리
-		TMap<int32, EMS_StaffIssueType> SlotIdToStaffIssueTypes = {};
-		for (int32 i = 0;  i < SlotDatas.Num(); ++i)
+	}
+	
+	// 필요한 이슈 정리
+	TMap<int32, EMS_StaffIssueType> SlotIdToStaffIssueTypes = {};
+	for (int32 i = 0;  i < SlotDatas.Num(); ++i)
+	{
+		// 요구 아이템과 현재 아이템이 다를 때
+		if (SlotDatas[i].RequestItemTableId != SlotDatas[i].CurrentItemTableId)
 		{
-			// 요구 아이템과 현재 아이템이 다를 때
-			if (SlotDatas[i].RequestItemTableId != SlotDatas[i].CurrentItemTableId)
+			// 아이템 빼기
+			if (SlotDatas[i].CurrentItemCount > 0)
 			{
-				// 아이템 빼기
-				if (SlotDatas[i].CurrentItemCount > 0)
+				if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
 				{
-					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
-					{
-						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromDisplay);
-					}
-					else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
-					{
-						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromShelf);
-					}
+					SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromDisplay);
 				}
-			
-				// 아이템 채우기
+				else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
+				{
+					SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::ReturnItemsFromShelf);
+				}
+			}
+		
+			// 아이템 채우기
+			else
+			{
+				if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+				{
+					SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToDisplay);
+				}
 				else
 				{
-					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+					SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToShelf);
+				}
+			}
+		}
+		// 요구 아이템과 현재 아이템이 같을 때
+		else
+		{
+			FMS_ItemData* CurrentItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotDatas[i].CurrentItemTableId);
+			if (CurrentItemData != nullptr)
+			{
+				if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
+				{
+					int32 RequestAddNum = FMath::Floor(CurrentItemData->Slot100x100MaxCount * AddPercentage);
+					if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
 					{
 						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToDisplay);
 					}
-					else
+				}
+				else
+				{
+					int32 RequestAddNum = FMath::Floor(CurrentItemData->BoxMaxCount * AddPercentage);
+					if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
 					{
 						SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToShelf);
 					}
 				}
 			}
-			// 요구 아이템과 현재 아이템이 같을 때
-			else
-			{
-				FMS_ItemData* CurrentItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, SlotDatas[i].CurrentItemTableId);
-				if (CurrentItemData != nullptr)
-				{
-					if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display))
-					{
-						int32 RequestAddNum = FMath::Floor(CurrentItemData->Slot100x100MaxCount * AddPercentage);
-						if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
-						{
-							SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToDisplay);
-						}
-					}
-					else
-					{
-						int32 RequestAddNum = FMath::Floor(CurrentItemData->BoxMaxCount * AddPercentage);
-						if (SlotDatas[i].CurrentItemCount <= RequestAddNum)
-						{
-							SlotIdToStaffIssueTypes.Emplace(i, EMS_StaffIssueType::AddItemsToShelf);
-						}
-					}
-				}
-			}
 		}
+	}
 	
-		// 기존 이슈에 슬롯 번호가 겹치는 것 정리
-		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	// 기존 이슈에 슬롯 번호가 겹치는 것 정리
+	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
+	{
+		int32 SlotId = IssueTickets[i]->GetRequestSlotId();
+		if (SlotId == INDEX_NONE)
 		{
-			int32 SlotId = IssueTickets[i]->GetRequestSlotId();
-			if (SlotId == INDEX_NONE)
-			{
-				continue;
-			}
-			if (!SlotDatas.IsValidIndex(SlotId))
-			{
-				MS_ENSURE(false);
-				continue;
-			}
+			continue;
+		}
+		if (!SlotDatas.IsValidIndex(SlotId))
+		{
+			MS_ENSURE(false);
+			continue;
+		}
 
-			// 현재 슬롯 이슈와 필요한 슬롯 이슈가 다를 때
-			if (SlotIdToStaffIssueTypes.Contains(SlotId))
-			{
-				EMS_StaffIssueType SlotIssueType = *SlotIdToStaffIssueTypes.Find(SlotId);
-				if (SlotIssueType != IssueTickets[i]->GetIssueType())
-				{
-					UnregisterIssueTicket(IssueTickets[i]);
-					RegisterIssueTicket(SlotIssueType, SlotId);
-
-					SlotIdToStaffIssueTypes.Remove(SlotId);
-				}
-			}
-			// 현재 슬롯 이슈가 필요하지 않을 때
-			else
+		// 현재 슬롯 이슈와 필요한 슬롯 이슈가 다를 때
+		if (SlotIdToStaffIssueTypes.Contains(SlotId))
+		{
+			EMS_StaffIssueType SlotIssueType = *SlotIdToStaffIssueTypes.Find(SlotId);
+			if (SlotIssueType != IssueTickets[i]->GetIssueType())
 			{
 				UnregisterIssueTicket(IssueTickets[i]);
+				RegisterIssueTicket(SlotIssueType, SlotId);
+
+				SlotIdToStaffIssueTypes.Remove(SlotId);
 			}
 		}
-
-		// 기존 이슈에 슬롯 번호가 없는 것 추가
-		for (auto& It : SlotIdToStaffIssueTypes)
+		// 현재 슬롯 이슈가 필요하지 않을 때
+		else
 		{
-			RegisterIssueTicket(It.Value, It.Key);
+			UnregisterIssueTicket(IssueTickets[i]);
 		}
+	}
+
+	// 기존 이슈에 슬롯 번호가 없는 것 추가
+	for (auto& It : SlotIdToStaffIssueTypes)
+	{
+		RegisterIssueTicket(It.Value, It.Key);
 	}
 }

@@ -27,7 +27,7 @@ enum class EMS_TableDataType : uint8
 	
 	ItemData = 10						UMETA(DisplayName = "ItemData"),
 	Furniture = 11						UMETA(DisplayName = "Furniture"),
-	Storage = 12						UMETA(DisplayName = "Storage"),
+	// 12
 	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
 	Tutorial = 14						UMETA(DisplayName = "Tutorial"),
 };

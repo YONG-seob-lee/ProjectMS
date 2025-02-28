@@ -211,7 +211,7 @@ void UMS_ItemManager::GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
@@ -260,7 +260,7 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
@@ -304,7 +304,7 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
@@ -357,7 +357,7 @@ bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneTyp
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
@@ -476,7 +476,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
 		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Furniture, Units);
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{

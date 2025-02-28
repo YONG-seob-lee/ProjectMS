@@ -4,8 +4,8 @@
 #include "MS_ModeSelectWidget.h"
 
 #include "Button/MS_Button.h"
-#include "Table/Caches/MS_StorageCacheTable.h"
-#include "Widget/ListViewElement/MS_ConstructCategoryElementWidget.h"
+#include "Manager_Client/MS_ItemManager.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_ListView.h"
@@ -27,9 +27,9 @@ void UMS_ModeSelectWidget::NativeConstruct()
 
 void UMS_ModeSelectWidget::InitCategory() const
 {
-	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	const TObjectPtr<UMS_FurnitureCacheTable> StorageTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
 	TArray<TObjectPtr<UMS_ConstructCategoryElementData>> CategoryArray;
-	StorageTable->GetStorageCategoryData(CategoryArray);
+	StorageTable->GetFurnitureCategoryData(CategoryArray);
 	
 	CPP_ConstructCategoryListView->SetListItems(TArray<TObjectPtr<UObject>>(CategoryArray));
 	CPP_ConstructCategoryListView->ClearSelection();
@@ -37,11 +37,11 @@ void UMS_ModeSelectWidget::InitCategory() const
 
 void UMS_ModeSelectWidget::RefreshConstructListItems(EMS_ZoneType aZoneType)
 {
-	const TObjectPtr<UMS_StorageCacheTable> StorageTable = Cast<UMS_StorageCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Storage));
+	const TObjectPtr<UMS_FurnitureCacheTable> StorageTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
 	MS_CHECK(StorageTable);
 	
 	TArray<TObjectPtr<UMS_ConstructItemElement>> Items;
-	StorageTable->GetStorageData(aZoneType, Items);
+	StorageTable->GetFurnitureData(aZoneType, Items);
 	
 	CPP_ConstructItemListView->SetListItems(Items);
 }

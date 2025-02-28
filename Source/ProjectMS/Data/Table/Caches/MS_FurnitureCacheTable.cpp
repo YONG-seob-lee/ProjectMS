@@ -1,29 +1,29 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_StorageCacheTable.h"
+#include "MS_FurnitureCacheTable.h"
 
 #include "Widget/ListViewElement/ElementData/MS_ConstructCategoryElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/ListViewElement/ElementData/MS_OrderItemElementData.h"
 
-void UMS_StorageCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
+void UMS_FurnitureCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)
 {
 	Super::Initialize(aMng);
 
-	BuildTable(aMng, EMS_TableDataType::Storage, StorageDatas);
+	BuildTable(aMng, EMS_TableDataType::Furniture, FurnitureDatas);
 }
 
-void UMS_StorageCacheTable::Finalize()
+void UMS_FurnitureCacheTable::Finalize()
 {
 	Super::Finalize();
 }
 
-void UMS_StorageCacheTable::GetStorageData(EMS_ZoneType aZoneType, TArray<TObjectPtr<UMS_ConstructItemElement>>& aConstructArray)
+void UMS_FurnitureCacheTable::GetFurnitureData(EMS_ZoneType aZoneType, TArray<TObjectPtr<UMS_ConstructItemElement>>& aConstructArray)
 {
 	aConstructArray.Empty();
 
-	for(const auto& StorageData : StorageDatas)
+	for(const auto& StorageData : FurnitureDatas)
 	{
 		if(StorageData.Value->ZoneType != static_cast<int32>(aZoneType))
 		{
@@ -42,18 +42,18 @@ void UMS_StorageCacheTable::GetStorageData(EMS_ZoneType aZoneType, TArray<TObjec
 	}
 }
 
-FMS_StorageData* UMS_StorageCacheTable::GetStorageData(int32 aStorageId) const
+FMS_FurnitureData* UMS_FurnitureCacheTable::GetFurnitureData(int32 aFurnitureId) const
 {
-	if(StorageDatas.Contains(aStorageId))
+	if(FurnitureDatas.Contains(aFurnitureId))
 	{
-		FMS_StorageData* StorageData = *StorageDatas.Find(aStorageId);
+		FMS_FurnitureData* StorageData = *FurnitureDatas.Find(aFurnitureId);
 		return StorageData;
 	}
 
 	return nullptr;
 }
 
-void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_ConstructCategoryElementData>>& aCategoryArray)
+void UMS_FurnitureCacheTable::GetFurnitureCategoryData(TArray<TObjectPtr<UMS_ConstructCategoryElementData>>& aCategoryArray)
 {
 	aCategoryArray.Empty();
 
@@ -65,11 +65,11 @@ void UMS_StorageCacheTable::GetStorageCategoryData(TArray<TObjectPtr<UMS_Constru
 	}
 }
 
-void UMS_StorageCacheTable::GetOrderFurnitureElementDatas(TArray<TObjectPtr<UMS_OrderItemElementData>>& aOrderFurnitureElementDatas)
+void UMS_FurnitureCacheTable::GetOrderFurnitureElementDatas(TArray<TObjectPtr<UMS_OrderItemElementData>>& aOrderFurnitureElementDatas)
 {
 	aOrderFurnitureElementDatas.Empty();
 	
-	for(const auto& StorageData : StorageDatas)
+	for(const auto& StorageData : FurnitureDatas)
 	{
 		TObjectPtr<UMS_OrderItemElementData> OrderItemElementData = MS_NewObject<UMS_OrderItemElementData>();
 		MS_CHECK(OrderItemElementData);

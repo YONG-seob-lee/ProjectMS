@@ -96,7 +96,7 @@ enum class EMS_UnitType : int32
 {
  Default = 0,
  BasePlayer = 1,
- Furniture = 3,
+ Storage = 3,
  Vehicle = 4,
  CarSpline = 5,
  DuckSpline = 6,
@@ -105,6 +105,7 @@ enum class EMS_UnitType : int32
  OutsideAI = 9,
  StaffAI = 10,
  CustomerAI = 11,
+ Counter = 12
 };
 
 // Widget

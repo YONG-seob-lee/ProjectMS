@@ -5,16 +5,39 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Units/MS_StorageUnit.h"
 #include "Widget/Market/Storage/MS_StorageStatusWidget.h"
+#include "Component/Actor/Item/MS_ItemSlotChildActorComponent.h"
 
 
 AMS_Storage::AMS_Storage(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
+	FurnitureType = EMS_FurnitureType::Storage;
+
+	
+	ItemSlotAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SlotAttachedComponent"));
+	if (ItemSlotAttachedComponent)
+	{
+		ItemSlotAttachedComponent->SetupAttachment(SceneRootComponent);
+	}
 }
 
 void AMS_Storage::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	TArray<UMS_ItemSlotChildActorComponent*> SlotComponents;
+	GetComponents<UMS_ItemSlotChildActorComponent>(SlotComponents);
+
+	for (UMS_ItemSlotChildActorComponent* SlotComponent : SlotComponents)
+	{
+		if (SlotComponent->GetSlotId() == INDEX_NONE)
+		{
+			MS_LOG_VERBOSITY(Error, TEXT("[%s] Please set slot components order"), *MS_FUNC_STRING);
+			MS_ENSURE(false);
+		}
+		
+		ItemSlotIdToSlotComponents.Emplace(SlotComponent->GetSlotId(), SlotComponent);
+	}
 }
 
 void AMS_Storage::BeginPlay()
@@ -60,7 +83,17 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 
 void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	Super::OnChangeRequestSlotDatas(aSlotDatas);
+	for (auto& It : ItemSlotIdToSlotComponents)
+	{
+		if (aSlotDatas.IsValidIndex(It.Key))
+		{
+			It.Value->OnChangeRequestSlotData(aSlotDatas[It.Key]);
+		}
+		else
+		{
+			It.Value->OnChangeRequestSlotData(FMS_SlotData());
+		}
+	}
 
 	if (StatusWidget != nullptr)
 	{
@@ -73,8 +106,18 @@ void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotData
 
 void AMS_Storage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
-	Super::OnChangeCurrentSlotDatas(aSlotDatas);
-
+	for (auto& It : ItemSlotIdToSlotComponents)
+	{
+		if (aSlotDatas.IsValidIndex(It.Key))
+		{
+			It.Value->OnChangeCurrentSlotData(aSlotDatas[It.Key]);
+		}
+		else
+		{
+			It.Value->OnChangeCurrentSlotData(FMS_SlotData());
+		}
+	}
+	
 	if (StatusWidget != nullptr)
 	{
 		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))

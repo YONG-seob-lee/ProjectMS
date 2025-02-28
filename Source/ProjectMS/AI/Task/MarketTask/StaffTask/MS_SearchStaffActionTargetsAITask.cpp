@@ -140,6 +140,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	}
 
 	// Change Clothes
+	/*
 	else if (SelectedStaffAction == EMS_StaffActionType::ChangeClothes)
 	{
 		TArray<FIntVector2> TargetPositions = {};
@@ -172,7 +173,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 
 		AIUnit->SetTargetPositions(TargetPositions);
 		return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
-	}
+	}*/
 
 	return EBTNodeResult::Type::Failed;
 }

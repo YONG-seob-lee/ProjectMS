@@ -6,7 +6,7 @@
 #include "MS_FurnitureUnit.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "Table/RowBase/MS_FurnitureData.h"
 #include "MS_StorageUnit.generated.h"
 
 enum class EMS_StaffIssueType : uint8;
