@@ -25,7 +25,6 @@ AMS_AICharacter::AMS_AICharacter()
 	if (SkeletalMeshComponent)
 	{
 		SkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-		SkeletalMeshComponent->SetRenderCustomDepth(true);
 	}
 
 	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
