@@ -55,8 +55,8 @@ public:
 	void OnUnregisteredAsIssueTicketStaff();
 
 	TWeakObjectPtr<class UMS_FurnitureUnit> GetIssueTicketRequestFurnitrueUnit() const;
-	bool GetIssueTicketTakeOutTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
-	bool GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTargetUnits) const;
+	bool GetIssueTicketTakeOutTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits) const;
+	bool GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits) const;
 
 	void TakeInItems();
 	void TakeOutRequestItems();

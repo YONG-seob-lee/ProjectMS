@@ -4,7 +4,7 @@
 #include "MS_IssueTicketContainer.h"
 
 #include "Manager_Client/MS_ItemManager.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
 
@@ -14,7 +14,7 @@ UMS_IssueTicket::UMS_IssueTicket()
 }
 
 void UMS_IssueTicket::Initialize(EMS_StaffIssueType aIssueType,
-	TWeakObjectPtr<::UMS_FurnitureUnit> aRequestFurnitureUnit, int32 aRequestSlot)
+	TWeakObjectPtr<UMS_FurnitureUnit> aRequestFurnitureUnit, int32 aRequestSlot)
 {
 	IssueType = aIssueType;
 	RequestFurnitureUnit = aRequestFurnitureUnit;
@@ -40,7 +40,10 @@ FMS_SlotData UMS_IssueTicket::GetRequestSlotData() const
 {
 	if (RequestFurnitureUnit != nullptr)
 	{
-		return RequestFurnitureUnit->GetSlotData(RequestSlotId);
+		if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(RequestFurnitureUnit))
+		{
+			return StorageUnit->GetSlotData(RequestSlotId);
+		}
 	}
 
 	return FMS_SlotData();
@@ -101,8 +104,8 @@ void UMS_IssueTicket::UpdateEnabled()
 	{
 		FMS_SlotData SlotData = GetRequestSlotData();
 
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
-		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeInTargetStorages;
+		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetStorages));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
@@ -117,8 +120,8 @@ void UMS_IssueTicket::UpdateEnabled()
 	{
 		FMS_SlotData SlotData = GetRequestSlotData();
 
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
-		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
+		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetStorages));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
@@ -415,8 +418,6 @@ void UMS_IssueTicketContainer::GetIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTi
 	{
 		if (IsValid(IssueTicket))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTicket->GetRequestFurnitureUnit();
-		
 			if (IssueTicket->IsSameIssue(aIssueType, aUnitHandle, aSlotId))
 			{
 				aOutTickets.Emplace(IssueTicket);
@@ -560,8 +561,8 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
-			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
-			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues));
+			TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
+			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetStorages));
 		}
 		
 		// Add Items Tickets
@@ -591,8 +592,8 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
-			TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
-			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues));
+			TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
+			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetStorages));
 		}
 		
 		// Add Items Tickets

@@ -6,11 +6,9 @@
 #include "MS_ActorUnitBase.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
-#include "Table/RowBase/MS_StorageData.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_FurnitureUnit.generated.h"
 
-enum class EMS_StaffIssueType : uint8;
-class UMS_IssueTicket;
 /**
  * 
  */
@@ -28,58 +26,25 @@ public:
 	virtual int32 GetBlueprintPathId() const override;
 
 	// Property :: Getter
-	FORCEINLINE EMS_ZoneType GetZoneType() const { return static_cast<EMS_ZoneType>(FurnitureData->ZoneType); }
-	FORCEINLINE EMS_TemperatureType GetTemperatureType() const { return static_cast<EMS_TemperatureType>(FurnitureData->TemperatureType); }
+	EMS_ZoneType GetZoneType() const;
+	EMS_TemperatureType GetTemperatureType() const;
 	
 	FIntVector2 GetGridPosition() const;
 
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
-
 	
-	// Slot Datas
-	FORCEINLINE int32 GetSlotCount() const { 	return FurnitureData->SlotCount; }
-	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
-	FMS_SlotData GetSlotData(int32 aSlotId) const;
-	
-	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
-
-	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-	int32 AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-
-	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-	int32 SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-
-	UFUNCTION()
-	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
-
-	UFUNCTION()
-	virtual void TakeItemsImmediately(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
-	
-private:
-	void OnChangeRequestSlotDatas();
-	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = true);
-
-public:
 	// IssueTickets
-	void UpdateIssueTickets();
-	void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer);
+	virtual void UpdateIssueTickets();
+	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer);
 
-private:
-	void UpdateStorageSlotIssueTickets();
-	
-	bool RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId = INDEX_NONE);
-	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
+protected:
+	virtual bool RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId = INDEX_NONE);
+	virtual bool UnregisterIssueTicket(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
 	
 	
-private:
+protected:
 	struct FMS_StorageData* FurnitureData = nullptr;
-
-	// Property
-	UPROPERTY()
-	TArray<FMS_SlotData> SlotDatas;
 	
 	UPROPERTY()
 	TArray<TWeakObjectPtr<class UMS_IssueTicket>> IssueTickets;
-
-	float AddPercentage = 1.f;
 };

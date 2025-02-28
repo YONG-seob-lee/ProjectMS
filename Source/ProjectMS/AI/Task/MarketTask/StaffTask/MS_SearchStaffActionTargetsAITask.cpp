@@ -8,7 +8,7 @@
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Manager_Both/MS_UnitManager.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
 
@@ -89,10 +89,10 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
-			TArray<TWeakObjectPtr<UMS_FurnitureUnit>> TakeOutTargetUnits = {};
+			TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeOutTargetUnits = {};
 			if (AIUnit->GetIssueTicketTakeOutTargetUnits(TakeOutTargetUnits))
 			{
-				for (const TWeakObjectPtr<UMS_FurnitureUnit>& TargetUnit : TakeOutTargetUnits)
+				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : TakeOutTargetUnits)
 				{
 					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
 						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
@@ -116,10 +116,10 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
-			TArray<TWeakObjectPtr<UMS_FurnitureUnit>> TakeInTargetUnits = {};
+			TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeInTargetUnits = {};
 			if (AIUnit->GetIssueTicketTakeInTargetUnits(TakeInTargetUnits))
 			{
-				for (const TWeakObjectPtr<UMS_FurnitureUnit>& TargetUnit : TakeInTargetUnits)
+				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : TakeInTargetUnits)
 				{
 					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
 						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
@@ -149,7 +149,7 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 
 		for (const TObjectPtr<UMS_UnitBase>& Unit : Units)
 		{
-			UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit);
+			UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit);
 			if (!IsValid(FurnitureUnit))
 			{
 				MS_ENSURE(false);

@@ -12,7 +12,7 @@
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "MathUtility/MS_MathUtility.h"
 #include "PlayerState/MS_PlayerState.h"

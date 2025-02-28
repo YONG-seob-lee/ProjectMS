@@ -7,7 +7,7 @@
 #include "Components/WidgetComponent.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/RowBase/MS_StorageData.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
 #include "Zone/MS_Zone.h"

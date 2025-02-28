@@ -60,7 +60,7 @@ public:
 
 	
 	// Prop
-	TWeakObjectPtr<class UMS_FurnitureUnit> CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition, const EMS_Rotation aRotation);
+	TWeakObjectPtr<class UMS_StorageUnit> CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition, const EMS_Rotation aRotation);
 	
 	bool DestroyProp(TWeakObjectPtr<class AMS_Prop> aProp);
 	

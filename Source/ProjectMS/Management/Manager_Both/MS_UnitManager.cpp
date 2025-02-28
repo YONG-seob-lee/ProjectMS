@@ -7,7 +7,7 @@
 #include "Units/MS_AIUnit.h"
 #include "Units/MS_BasePlayerUnit.h"
 #include "Units/MS_CustomerAIUnit.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_GateUnit.h"
 #include "Units/MS_SplineUnit.h"
 #include "Units/MS_StaffAIUnit.h"
@@ -19,7 +19,7 @@ UMS_UnitManager::UMS_UnitManager()
 	UnitManager = this;
 	
 	UnitTypeClasses.Emplace(EMS_UnitType::BasePlayer, UMS_BasePlayerUnit::StaticClass());
-	UnitTypeClasses.Emplace(EMS_UnitType::Furniture, UMS_FurnitureUnit::StaticClass());
+	UnitTypeClasses.Emplace(EMS_UnitType::Furniture, UMS_StorageUnit::StaticClass());
 }
 
 void UMS_UnitManager::Finalize()
@@ -146,7 +146,7 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 		}
 	case EMS_UnitType::Furniture:
 		{
-			return UMS_FurnitureUnit::StaticClass();
+			return UMS_StorageUnit::StaticClass();
 		}
 	case EMS_UnitType::Vehicle:
 		{

@@ -12,7 +12,7 @@
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_CustomerAIUnit.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
@@ -215,7 +215,7 @@ void UMS_ItemManager::GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			const UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get());
+			const UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get());
 			if (!FurnitureUnit)
 			{
 				continue;
@@ -264,7 +264,7 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
 				if (FurnitureUnit->GetZoneType() != aZoneType)
 				{
@@ -288,9 +288,9 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 	return ItemCount;
 }
 
-bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_FurnitureUnit>>& aOutTakeInTargetFurnitrues) const
+bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTakeInTargetStrage) const
 {
-	aOutTakeInTargetFurnitrues.Empty();
+	aOutTakeInTargetStrage.Empty();
 	
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
 	if (ItemData == nullptr)
@@ -308,7 +308,7 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
 				if (FurnitureUnit->GetZoneType() != aZoneType)
 				{
@@ -325,13 +325,13 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 						if (SlotData.CurrentItemTableId == aItemId)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
-							aOutTakeInTargetFurnitrues.AddUnique(FurnitureUnit);
+							aOutTakeInTargetStrage.AddUnique(FurnitureUnit);
 						}
 
 						else if (SlotData.CurrentItemCount == 0)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount;
-							aOutTakeInTargetFurnitrues.AddUnique(FurnitureUnit);
+							aOutTakeInTargetStrage.AddUnique(FurnitureUnit);
 						}
 					}
 				}
@@ -343,7 +343,7 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 }
 
 bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneType,
-	TArray<TWeakObjectPtr<UMS_FurnitureUnit>>& aOutTakeOutTargetFurnitrues) const
+	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTakeOutTargetFurnitrues) const
 {
 	aOutTakeOutTargetFurnitrues.Empty();
 	
@@ -361,7 +361,7 @@ bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneTyp
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get()))
+			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
 				if (FurnitureUnit->GetZoneType() != aZoneType)
 				{
@@ -480,7 +480,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit.Get());
+			UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get());
 			if (!FurnitureUnit)
 			{
 				continue;
@@ -567,7 +567,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 	CacheNotPlacedItems = NotPlacedItems;
 }
 
-void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_FurnitureUnit> aFurnitureUnit)
+void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_StorageUnit> aFurnitureUnit)
 {
 	TMap<int32, int32> NotPlacedItems = {};
 	GetNotPlacedItems(NotPlacedItems);

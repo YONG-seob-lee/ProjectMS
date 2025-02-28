@@ -3,7 +3,7 @@
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 
 
@@ -34,7 +34,7 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 		{
 			MS_ENSURE(OwnerUnit != nullptr);
 			
-			if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(OwnerUnit))
+			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(OwnerUnit))
 			{
 				StorageStatusWidget->InitializeStorageDatas(FurnitureUnit->GetZoneType(), FurnitureUnit->GetTemperatureType(), FurnitureUnit->GetSlotCount());
 				

@@ -4,7 +4,7 @@
 #include "MS_StaffAIUnit.h"
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
-#include "MS_FurnitureUnit.h"
+#include "MS_StorageUnit.h"
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
@@ -166,32 +166,30 @@ void UMS_StaffAIUnit::SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaff
 	
 	if (PlayerStaffData.PriorityOfWorks.IsValidIndex(0))
 	{
-		FName CapName = {};
-		FName TopName = {};
-		
 		EMS_StaffIssueType PriorityIssueType = PlayerStaffData.PriorityOfWorks[0];
 
 		if (PriorityIssueType == EMS_StaffIssueType::AddItemsToDisplay ||
 			PriorityIssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 		{
-			CapName = EquipmentName::StaffSkinB;
-			TopName = EquipmentName::StaffSkinB;
+			FName CapName = EquipmentName::StaffSkinB;
+			FName TopName = EquipmentName::StaffSkinB;
+			AICharacter->SetSkin(CapName, TopName);
 		}
 
 		else if (PriorityIssueType == EMS_StaffIssueType::AddItemsToShelf ||
 			PriorityIssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 		{
-			CapName = EquipmentName::StaffSkinC;
-			TopName = EquipmentName::StaffSkinC;
+			FName CapName = EquipmentName::StaffSkinC;
+			FName TopName = EquipmentName::StaffSkinC;
+			AICharacter->SetSkin(CapName, TopName);
 		}
 
 		else
 		{
-			CapName = EquipmentName::StaffSkinA;
-			TopName = EquipmentName::StaffSkinA;
+			FName CapName = EquipmentName::StaffSkinA;
+			FName TopName = EquipmentName::StaffSkinA;
+			AICharacter->SetSkin(CapName, TopName);
 		}
-
-		AICharacter->SetSkin(CapName, TopName);
 	}
 }
 
@@ -247,7 +245,7 @@ void UMS_StaffAIUnit::RegisterNoneIssueStaffAction(EMS_StaffActionType aStaffAct
 
 void UMS_StaffAIUnit::UnregisterNoneIssueStaffAction(EMS_StaffActionType aStaffActionType)
 {
-	int32 RemoveNum = NoneIssueStaffActions.RemoveSingle(aStaffActionType);
+	NoneIssueStaffActions.RemoveSingle(aStaffActionType);
 }
 
 void UMS_StaffAIUnit::SearchAndRegisterIssueTicket()
@@ -319,7 +317,7 @@ TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFu
 }
 
 bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
-	TArray<TWeakObjectPtr<UMS_FurnitureUnit>>& aOutTargetUnits) const
+	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
 {
 	aOutTargetUnits.Empty();
 
@@ -334,7 +332,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 	
 	if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeOutTargetFurnitrues;
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeOutTargetFurnitrues;
 		if (gItemMng.CanTakeOutFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Shelf, TakeOutTargetFurnitrues))
 		{
 			aOutTargetUnits = TakeOutTargetFurnitrues;
@@ -344,7 +342,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeOutTargetFurnitrues;
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeOutTargetFurnitrues;
 		if (gItemMng.CanTakeOutFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Pallet, TakeOutTargetFurnitrues))
 		{
 			aOutTargetUnits = TakeOutTargetFurnitrues;
@@ -355,7 +353,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 	return false;
 }
 
-bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_FurnitureUnit>>& aOutTargetUnits) const
+bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
 {
 	aOutTargetUnits.Empty();
 
@@ -370,7 +368,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 	
 	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetFurnitrues;
 		if (gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues))
 		{
 			aOutTargetUnits = TakeInTargetFurnitrues;
@@ -380,7 +378,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 
 	else if (IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_FurnitureUnit>> TakeInTargetFurnitrues;
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetFurnitrues;
 		if (gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues))
 		{
 			aOutTargetUnits = TakeInTargetFurnitrues;
@@ -412,40 +410,41 @@ void UMS_StaffAIUnit::TakeInItems()
 	
 	// Take In
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
-	if (FurnitureUnit == nullptr)
+	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
 	{
-		MS_ENSURE(false);
-		return;
-	}
-
-	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay
+		if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay
 		|| IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
-	{
-		int32 MoveCount = FurnitureUnit->AddAnySlotCurrentItemCount(SlotDatas[0].CurrentItemTableId, SlotDatas[0].CurrentItemCount);
-		SubtractCurrentItemCount(0, SlotDatas[0].CurrentItemTableId, MoveCount);
-	}
-
-	else
-	{
-		FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
-		
-		if (RequestSlotData.RequestItemTableId == SlotDatas[0].CurrentItemTableId)
 		{
-			FMS_ItemData* RequestItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, RequestSlotData.RequestItemTableId);
-			if (RequestItemData == nullptr)
+			int32 MoveCount = StorageUnit->AddAnySlotCurrentItemCount(SlotDatas[0].CurrentItemTableId, SlotDatas[0].CurrentItemCount);
+			SubtractCurrentItemCount(0, SlotDatas[0].CurrentItemTableId, MoveCount);
+		}
+
+		else
+		{
+			FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
+		
+			if (RequestSlotData.RequestItemTableId == SlotDatas[0].CurrentItemTableId)
 			{
-				MS_ENSURE(false);
-				return;
-			}
+				FMS_ItemData* RequestItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, RequestSlotData.RequestItemTableId);
+				if (RequestItemData == nullptr)
+				{
+					MS_ENSURE(false);
+					return;
+				}
 			
-			int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
-			int32 TakeInCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
+				int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
+				int32 TakeInCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
 			
-			if (FurnitureUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, TakeInCount))
-			{
-				SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, TakeInCount);
+				if (StorageUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, TakeInCount))
+				{
+					SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, TakeInCount);
+				}
 			}
 		}
+	}
+	else
+	{
+		MS_ENSURE(false);
 	}
 }
 
@@ -490,14 +489,15 @@ void UMS_StaffAIUnit::TakeOutRequestItems()	// Add할 아이템 꺼내기
 
 	// Take Out
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
-	if (FurnitureUnit == nullptr)
+	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
+	{
+		int32 MoveCount = StorageUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.RequestItemTableId, RequestCount);
+		AddCurrentItemCount(0, RequestSlotData.RequestItemTableId, MoveCount);
+	}
+	else
 	{
 		MS_ENSURE(false);
-		return;
 	}
-
-	int32 MoveCount = FurnitureUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.RequestItemTableId, RequestCount);
-	AddCurrentItemCount(0, RequestSlotData.RequestItemTableId, MoveCount);
 }
 
 void UMS_StaffAIUnit::TakeOutCurrentItems()	// Reture하기 위해 아이템 빼기
@@ -526,14 +526,15 @@ void UMS_StaffAIUnit::TakeOutCurrentItems()	// Reture하기 위해 아이템 빼
 	}
 
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
-	if (FurnitureUnit == nullptr)
+	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
+	{
+		int32 MoveCount = StorageUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.CurrentItemTableId, RequestSlotData.CurrentItemCount);
+		AddCurrentItemCount(0, RequestSlotData.CurrentItemTableId, MoveCount);
+	}
+	else
 	{
 		MS_ENSURE(false);
-		return;
 	}
-
-	int32 MoveCount = FurnitureUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.CurrentItemTableId, RequestSlotData.CurrentItemCount);
-	AddCurrentItemCount(0, RequestSlotData.CurrentItemTableId, MoveCount);
 }
 
 TWeakObjectPtr<UMS_FurnitureUnit> UMS_StaffAIUnit::GetInteractableFurnitureUnit()

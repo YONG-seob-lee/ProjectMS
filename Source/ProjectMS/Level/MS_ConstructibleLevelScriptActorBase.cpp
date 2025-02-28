@@ -14,7 +14,7 @@
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Table/RowBase/MS_StorageData.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_GateUnit.h"
 #include "Zone/MS_Zone.h"
 
@@ -568,7 +568,7 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 
 }
 
-TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
+TWeakObjectPtr<UMS_StorageUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,
 	const EMS_Rotation aRotation)
 {
 	// ToDo : 다양한 Prop 타입에 대응
@@ -582,7 +582,7 @@ TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateP
 	FVector Location = FVector(LocationXY.X, LocationXY.Y, 0.f);
 	FRotator Rotator = FRotator(0.f, UMS_MathUtility::ConvertRotation(aRotation), 0.f);
 	
-	const TObjectPtr<UMS_FurnitureUnit> NewUnit = Cast<UMS_FurnitureUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, aTableIndex, true, Location, Rotator));
+	const TObjectPtr<UMS_StorageUnit> NewUnit = Cast<UMS_StorageUnit>(gUnitMng.CreateUnit(EMS_UnitType::Furniture, aTableIndex, true, Location, Rotator));
 	if (!IsValid(NewUnit))
 	{
 		MS_ENSURE(false);

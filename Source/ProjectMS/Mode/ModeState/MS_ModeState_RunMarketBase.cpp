@@ -18,7 +18,7 @@
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Units/MS_FurnitureUnit.h"
+#include "Units/MS_StorageUnit.h"
 #include "Units/MS_GateUnit.h"
 
 
@@ -404,7 +404,7 @@ void UMS_ModeState_RunMarketBase::UpdateAllFurnitureIssueTickets()
 
 	for (TObjectPtr<UMS_UnitBase> Unit : Units)
 	{
-		if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit))
+		if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit))
 		{
 			FurnitureUnit->UpdateIssueTickets();
 		}
@@ -420,7 +420,7 @@ void UMS_ModeState_RunMarketBase::ClearIssueTickets()
 
 	for (TObjectPtr<UMS_UnitBase> Unit : Units)
 	{
-		if (UMS_FurnitureUnit* FurnitureUnit = Cast<UMS_FurnitureUnit>(Unit))
+		if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit))
 		{
 			FurnitureUnit->ClearIssueTickets(false);
 		}
