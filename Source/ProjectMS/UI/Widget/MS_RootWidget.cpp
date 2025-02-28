@@ -52,6 +52,7 @@ void UMS_RootWidget::OnRuntimeInitialize()
 	Super::OnRuntimeInitialize();
 	
 	CutoutFrameSize = CPP_CutoutFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
+	CPP_CutoutFrameCanvasPanel->SetVisibility(ESlateVisibility::Collapsed);
 	ContentFrameSize = CPP_ContentFrameCanvasPanel->GetCachedGeometry().GetLocalSize();
 }
 
