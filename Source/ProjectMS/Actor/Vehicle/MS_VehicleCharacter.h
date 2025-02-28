@@ -29,7 +29,7 @@ private:
 	TWeakObjectPtr<AMS_VehicleSplineActor> NearestSpline = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	float VehicleVelocity = 5.f;
+	float VehicleVelocity = 2.5f;
 
 	UPROPERTY(EditAnywhere)
 	float FrontLightDistance = 140.f;
