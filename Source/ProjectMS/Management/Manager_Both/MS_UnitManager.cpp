@@ -18,6 +18,8 @@
 UMS_UnitManager::UMS_UnitManager()
 {
 	UnitManager = this;
+
+	CacheUnitTypeToUnits.Empty();
 	
 	UnitTypeClasses.Emplace(EMS_UnitType::BasePlayer, UMS_BasePlayerUnit::StaticClass());
 	UnitTypeClasses.Emplace(EMS_UnitType::Storage, UMS_StorageUnit::StaticClass());
@@ -82,20 +84,49 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int
 
 	// Add To Map
 	Units.Add(NewUnitHandle, Unit);
+	CacheUnitTypeToUnits.Add(aUnitType, Unit);
 	
 	return Unit;
 }
 
 void UMS_UnitManager::DestroyUnit(MS_Handle aHandle)
 {
-	if (const TObjectPtr<UMS_UnitBase> UnitBase = GetUnit(aHandle))
+	if (const TObjectPtr<UMS_UnitBase> Unit = GetUnit(aHandle))
 	{
-		DestroyUnit_Internal(UnitBase);
-	}
+		EMS_UnitType UnitType = Unit->GetUnitType();
+		
+		DestroyUnit_Internal(Unit);
 
+		if (CacheUnitTypeToUnits.Contains(UnitType))
+		{
+			CacheUnitTypeToUnits.RemoveSingle(UnitType, Unit);
+		}
+	}
+	
 	if (Units.Contains(aHandle))
 	{
 		Units.Remove(aHandle);
+	}
+}
+
+void UMS_UnitManager::DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit)
+{
+	if (aUnit)
+	{
+		int32 UnitHandle = aUnit->GetUnitHandle();
+		EMS_UnitType UnitType = aUnit->GetUnitType();
+		
+		DestroyUnit_Internal(aUnit);
+
+		if (CacheUnitTypeToUnits.Contains(UnitType))
+		{
+			CacheUnitTypeToUnits.RemoveSingle(UnitType, aUnit);
+		}
+	
+		if (Units.Contains(UnitHandle))
+		{
+			Units.Remove(UnitHandle);
+		}
 	}
 }
 
@@ -103,12 +134,7 @@ void UMS_UnitManager::DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
 {
 	for(const auto& Unit : aUnits)
 	{
-		DestroyUnit_Internal(Unit);
-
-		if(const uint32* Key = Units.FindKey(Unit))
-		{
-			Units.Remove(*Key);
-		}
+		DestroyUnit(Unit);
 	}
 }
 
@@ -121,6 +147,8 @@ void UMS_UnitManager::DestroyAllUnits(EMS_UnitType aUnitType)
 	{
 		DestroyUnit_Internal(TargetUnit);
 
+		CacheUnitTypeToUnits.Empty();
+		
 		if(const uint32* Key = Units.FindKey(TargetUnit))
 		{
 			Units.Remove(*Key);

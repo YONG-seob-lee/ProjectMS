@@ -4,6 +4,7 @@
 #include "MS_NormalModeWidget.h"
 
 #include "Button/MS_Button.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
@@ -69,6 +70,7 @@ void UMS_NormalModeWidget::OnClickedTownButton()
 		Param.BlendTime = 0.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
 		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
+		gUnitMng.DestroyAllUnits();
 		gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 	});
 	gSceneMng.RequestChangeScene(Command);
@@ -107,6 +109,7 @@ void UMS_NormalModeWidget::OnClickedCloseMarketButton()
 			Param.BlendTime = 0.f;
 			gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
 			gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
+			gUnitMng.DestroyAllUnits();
 			gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 		});
 		gSceneMng.RequestChangeScene(Command);

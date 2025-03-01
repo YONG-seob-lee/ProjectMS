@@ -7,6 +7,7 @@
 #include "Component/Actor/MS_InteractionComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/TriggerBox.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
@@ -73,8 +74,14 @@ void AMS_Market::LaunchEvent()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-
+	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
+		{
+			gUnitMng.DestroyAllUnits();
+			gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
+		});
 	gSceneMng.RequestChangeScene(Command);
+
+	gUnitMng.DestroyAllUnits();
 }
 
 void AMS_Market::OnAutoDoorTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult)

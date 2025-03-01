@@ -33,6 +33,7 @@ public:
 
 	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);
+	void DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit);
 	void DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
 	void DestroyAllUnits(EMS_UnitType aUnitType);
 
@@ -51,6 +52,8 @@ private:
 private:
 	UPROPERTY()
 	TMap<uint32, TObjectPtr<UMS_UnitBase>> Units;
+	
+	TMultiMap<EMS_UnitType, TWeakObjectPtr<UMS_UnitBase>> CacheUnitTypeToUnits;
 
 	uint32 LastUnitHandle = InvalidUnitHandle;
 
