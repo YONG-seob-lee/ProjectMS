@@ -4,6 +4,7 @@
 #include "MS_MarketStartModal.h"
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
+#include "Animation/Market/MS_MarketAIAnimInstance.h"
 #include "Button/MS_Button.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
@@ -49,6 +50,12 @@ void UMS_MarketStartModal::OnClickedOpeningPlayButton()
 						if (USkeletalMeshComponent* SkeletalMesh = StaffUglyDuck->GetMesh())
 						{
 							SkeletalMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
+							
+							const TObjectPtr<UMS_MarketAIAnimInstance> MarketAIAnimInstance = Cast<UMS_MarketAIAnimInstance>(StaffUglyDuck->GetAIAnimInstance());
+							if(MarketAIAnimInstance)
+							{
+								MarketAIAnimInstance->OnChangeInActionDelegate.AddUObject(StaffUglyDuck, &AMS_MarketAICharacter::OnChangeAnimationInAction);
+							}
 						}
 
 						// Register
