@@ -145,15 +145,21 @@ void UMS_UnitManager::DestroyAllUnits(EMS_UnitType aUnitType)
 	
 	for(const auto& TargetUnit : TargetUnits)
 	{
-		DestroyUnit_Internal(TargetUnit);
-
-		CacheUnitTypeToUnits.Empty();
-		
-		if(const uint32* Key = Units.FindKey(TargetUnit))
-		{
-			Units.Remove(*Key);
-		}
+		DestroyUnit(TargetUnit);
 	}
+}
+
+void UMS_UnitManager::DestroyAllUnits()
+{
+	for(auto& Unit : Units)
+	{
+		DestroyUnit_Internal(Unit.Value);
+	}
+
+	CacheUnitTypeToUnits.Empty();
+	Units.Empty();
+
+	LastUnitHandle = InvalidUnitHandle;
 }
 
 void UMS_UnitManager::DestroyUnit_Internal(TObjectPtr<UMS_UnitBase> aUnitBase)
@@ -213,16 +219,6 @@ TSubclassOf<UMS_UnitBase> UMS_UnitManager::GetUnitTypeClass(EMS_UnitType aUnitTy
 			return nullptr;
 		}
 	}
-}
-
-void UMS_UnitManager::DestroyAllUnits()
-{
-	for(auto& Unit : Units)
-	{
-		DestroyUnit_Internal(Unit.Value);
-	}
-
-	Units.Empty();
 }
 
 MS_Handle UMS_UnitManager::MakeUnitHandle()

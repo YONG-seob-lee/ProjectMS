@@ -25,9 +25,6 @@ public:
 	UMS_UnitManager();
 	virtual void Finalize() override;
 
-	
-	void DestroyAllUnits();
-
 	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
 	void GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aOutUnits);
 
@@ -36,6 +33,7 @@ public:
 	void DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit);
 	void DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
 	void DestroyAllUnits(EMS_UnitType aUnitType);
+	void DestroyAllUnits();
 
 	FOnUpdateChattingDelegate OnChattingDelegate;
 	FOnUpdateBehaviorDelegate OnBehaviorDelegate;

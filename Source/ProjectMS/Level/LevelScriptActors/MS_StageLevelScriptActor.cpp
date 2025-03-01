@@ -63,9 +63,6 @@ void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason
 {
 	gInputMng.OnPointerDownDelegate.RemoveAll(this);
 	gInputMng.OnPointerUpDelegate.RemoveAll(this);
-
-	DestroySplineActors();
-	DestroyOutsideAIUnits();
 	
 	Super::EndPlay(EndPlayReason);
 }
@@ -297,22 +294,6 @@ void AMS_StageLevelScriptActor::CashingDuckSplineActors() const
 			MS_ENSURE(false);
 		}
 	}
-}
-
-void AMS_StageLevelScriptActor::DestroySplineActors()
-{
-	TArray<TObjectPtr<UMS_UnitBase>> DestroyUnits;
-	gUnitMng.GetUnits(EMS_UnitType::CarSpline, DestroyUnits);
-	gUnitMng.DestroyUnits(DestroyUnits);
-
-	DestroyUnits.Empty();
-	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DestroyUnits);
-	gUnitMng.DestroyUnits(DestroyUnits);
-}
-
-void AMS_StageLevelScriptActor::DestroyOutsideAIUnits()
-{
-	gUnitMng.DestroyAllUnits(EMS_UnitType::OutsideAI);
 }
 
 void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult)

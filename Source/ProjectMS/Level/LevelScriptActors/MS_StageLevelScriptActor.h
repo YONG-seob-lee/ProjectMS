@@ -45,8 +45,6 @@ private:
 	void CashingCarSplineActors() const;
 	void CashingDuckSplineActors() const;
 	
-	void DestroySplineActors();
-	void DestroyOutsideAIUnits();
 	
 	UFUNCTION()
 	void OnPressDownEvent(FVector2D aPointerDownPosition, const FHitResult& aInteractableHitResult);
