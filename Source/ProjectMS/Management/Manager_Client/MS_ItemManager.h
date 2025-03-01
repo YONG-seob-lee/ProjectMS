@@ -34,7 +34,7 @@ public:
 	virtual auto BeginPlay() -> void override;
 	virtual void Tick(float aDeltaTime) override;
 
-	FMS_OnClickedItem OnClickedItemDelegate;
+	FMS_OnClickedItem OnClickWidgetConstructItemDelegate;
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 	
 	// Items

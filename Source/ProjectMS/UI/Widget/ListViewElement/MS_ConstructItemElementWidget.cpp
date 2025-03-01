@@ -27,5 +27,5 @@ void UMS_ConstructItemElementWidget::NativeOnItemSelectionChanged(bool bIsSelect
 	{
 		StorageSlotElementData->OnClickConstructItem.Broadcast();
 	}
-	gItemMng.OnClickedItemDelegate.Broadcast(ItemId, static_cast<int32>(EMS_ItemType::Storage));
+	gItemMng.OnClickWidgetConstructItemDelegate.Broadcast(ItemId, static_cast<int32>(EMS_ItemType::Furniture));
 }

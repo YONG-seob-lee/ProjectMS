@@ -20,7 +20,7 @@ enum class EMS_ItemType : uint8
 	Frozen,
 	Snack,
 	FrozenSnack,
-	Storage
+	Furniture
 };
 
 UENUM()

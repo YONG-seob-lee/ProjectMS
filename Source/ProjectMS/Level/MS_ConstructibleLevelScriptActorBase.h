@@ -53,7 +53,7 @@ public:
 	UFUNCTION()
 	void OnZoneOpened(AMS_Zone* aZone);
 
-	void SetZoneOpenableView(EMS_ModeState aModeState);
+	void SetZoneOpenableView(bool bZoneOpenableMode);
 	void SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced = false);
 	
 	void UpdateUnconstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected);

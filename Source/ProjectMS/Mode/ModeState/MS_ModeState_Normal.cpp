@@ -3,13 +3,11 @@
 
 #include "MS_ModeState_Normal.h"
 
-#include "Components/CanvasPanelSlot.h"
-#include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
-#include "Manager_Client/MS_PlayerCameraManager.h"
 #include "Prop/MS_Prop.h"
+
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
 {
@@ -50,12 +48,7 @@ void UMS_ModeState_Normal::Begin()
 
 void UMS_ModeState_Normal::Exit()
 {
-	TWeakObjectPtr<AMS_Prop> SelectedProp =  gInteractionMng.GetSelectedActor<AMS_Prop>();
-	
-	if (SelectedProp != nullptr)
-	{
-		OnUnselectActor(SelectedProp.Get());
-	}
+	UnselectActor();
 	
 	// Delegate
 	gInteractionMng.OnUnselectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Normal::OnUnselectActor);

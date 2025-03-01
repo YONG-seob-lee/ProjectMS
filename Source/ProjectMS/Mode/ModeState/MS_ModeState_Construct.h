@@ -49,7 +49,7 @@ public:
 	
 	// UI Input
 	UFUNCTION()
-	void OnClickedStorageButton(int32 aStorageId, int32 aItemType);
+	void OnClickWidgetConstructItem(int32 aFurnitureId, int32 aItemType);
 
 	UFUNCTION()
 	void OnClickApplyArrangementWidget(class UMS_ArrangementWidget* aArrangementWidget);
@@ -72,7 +72,7 @@ public:
 	void OnUnselectProp(AActor* aUnselectedActor);
 
 private:
-	void CreateNoLinkedPreviewProp(struct FMS_FurnitureData* aStorageData);
+	void CreateNoLinkedPreviewProp(struct FMS_FurnitureData* aFurnitureData);
 	void CreateLinkedPreviewProp(class AMS_Prop* aSelectedProp);
 	
 	void MovePreviewProp(const FVector& aNewLocation);
@@ -99,5 +99,5 @@ private:
 	TObjectPtr<class UMS_GridBasedMoveHelper> GridBasedMoveHelper;
 
 	// Delegate
-	FDelegateHandle OnClickedItemButtonHandle;
+	FDelegateHandle OnClickWidgetConstructItemHandle;
 };

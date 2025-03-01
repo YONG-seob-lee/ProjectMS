@@ -14,7 +14,7 @@
 #include "PlayerState/MS_PlayerState.h"
 #include "Prop/Floor/MS_Floor.h"
 #include "Table/RowBase/MS_FurnitureData.h"
-#include "Units/MS_StorageUnit.h"
+#include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
 #include "Zone/MS_Zone.h"
 
@@ -455,14 +455,12 @@ void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)
 			Zone.Value->OnAnyZoneOpened(this);
 		}
 		
-		SetZoneOpenableView(gModeMng.GetCurrentModeStateId());
+		SetZoneOpenableView(gModeMng.GetCurrentModeStateId() == EMS_ModeState::Construct);
 	}
 }
 
-void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenableView(EMS_ModeState aModeState)
+void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenableView(bool bZoneOpenableMode)
 {
-	bool bZoneOpenableMode = aModeState == EMS_ModeState::Construct;
-
 	for (auto& Zone : Zones)
 	{
 		Zone.Value->SetZoneOpenMeshVisibility(bZoneOpenableMode);

@@ -48,12 +48,6 @@ void UMS_ModeState_Construct::Tick(float aDeltaTime)
 
 void UMS_ModeState_Construct::Begin()
 {
-	// Pressed Actor만 선택된 상태로 시작할 수 있도록
-	if (!gInputMng.IsPointerPressed())
-	{
-		UnselectProp();
-	}
-	
 	// Delegate
 	gInteractionMng.OnSelectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 	gInteractionMng.OnUnselectActorDelegate.AddDynamic(this, &UMS_ModeState_Construct::OnUnselectProp);
@@ -64,7 +58,7 @@ void UMS_ModeState_Construct::Begin()
 		LevelScriptActor->UpdateUnconstructableGridView(true, nullptr, false);
 
 		// Zone Openable
-		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Construct);
+		LevelScriptActor->SetZoneOpenableView(true);
 	}
 
 	// SelectProp
@@ -76,13 +70,13 @@ void UMS_ModeState_Construct::Begin()
 	}
 
 	// Delegate
-	OnClickedItemButtonHandle = gItemMng.OnClickedItemDelegate.AddUObject(this, &UMS_ModeState_Construct::OnClickedStorageButton);
+	OnClickWidgetConstructItemHandle = gItemMng.OnClickWidgetConstructItemDelegate.AddUObject(this, &UMS_ModeState_Construct::OnClickWidgetConstructItem);
 }
 
 void UMS_ModeState_Construct::Exit()
 {
 	// Delegate
-	gItemMng.OnClickedItemDelegate.Remove(OnClickedItemButtonHandle);
+	gItemMng.OnClickWidgetConstructItemDelegate.Remove(OnClickWidgetConstructItemHandle);
 	
 	// SelectProp
 	UnselectProp();
@@ -90,7 +84,7 @@ void UMS_ModeState_Construct::Exit()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		// Zone Openable
-		LevelScriptActor->SetZoneOpenableView(EMS_ModeState::Normal);
+		LevelScriptActor->SetZoneOpenableView(false);
 		
 		// ShowUnconstructableGrid
 		LevelScriptActor->UpdateUnconstructableGridView(false, nullptr, false);
@@ -133,6 +127,7 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 		{
 			gWidgetMng.ShowMessageOnScreen(PreviewProp->GetName(), true, 3.f, FColor::Red);
 		}
+		
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(true);
@@ -230,18 +225,18 @@ void UMS_ModeState_Construct::OnPinchAction(float aPinchValue)
 	Super::OnPinchAction(aPinchValue);
 }
 
-void UMS_ModeState_Construct::OnClickedStorageButton(int32 aStorageId, int32 aItemType)
+void UMS_ModeState_Construct::OnClickWidgetConstructItem(int32 aFurnitureId, int32 aItemType)
 {
-	if (aItemType == static_cast<int32>(EMS_ItemType::Storage))
+	if (aItemType == static_cast<int32>(EMS_ItemType::Furniture))
 	{
-		FMS_FurnitureData* StorageData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aStorageId);
-		if(StorageData == nullptr)
+		FMS_FurnitureData* FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aFurnitureId);
+		if(FurnitureData == nullptr)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Storage Data is invalid"));
+			MS_LOG_VERBOSITY(Error, TEXT("Furniture Data is invalid"));
 			return;
 		}
 		
-		CreateNoLinkedPreviewProp(StorageData);
+		CreateNoLinkedPreviewProp(FurnitureData);
 	}
 }
 
@@ -358,7 +353,7 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	}
 }
 
-void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_FurnitureData* aStorageData)
+void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_FurnitureData* aFurnitureData)
 {
 	const TObjectPtr<UWorld> World = GetWorld();
 	if (!IsValid(World))
@@ -383,7 +378,7 @@ void UMS_ModeState_Construct::CreateNoLinkedPreviewProp(FMS_FurnitureData* aStor
 			MS_LOG_VERBOSITY(VeryVerbose, TEXT("WorldCenterLocation : %f, %f, %f"), WorldCenterLocation.X, WorldCenterLocation.Y, WorldCenterLocation.Z);
 			FRotator Rotator = FRotator(0.f, 90.f, 0.f);
 
-			UClass* Class = UUtilityFunctions::GetClassByTablePathId(aStorageData->PathFile);
+			UClass* Class = UUtilityFunctions::GetClassByTablePathId(aFurnitureData->PathFile);
 		
 			PreviewProp = World->SpawnActor<AMS_Prop>(Class, WorldCenterLocation, Rotator);
 		

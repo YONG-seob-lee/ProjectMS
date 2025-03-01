@@ -29,6 +29,6 @@ public:
 	virtual void OnUnselectProp(EMS_ModeState aModeState) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	EMS_FurnitureType FurnitureType;
 };
