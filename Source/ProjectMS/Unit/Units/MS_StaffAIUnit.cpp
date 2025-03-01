@@ -316,7 +316,7 @@ TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFu
 	return nullptr;
 }
 
-bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
+bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
 	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
 {
 	aOutTargetUnits.Empty();
@@ -332,20 +332,20 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 	
 	if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeOutTargetFurnitrues;
-		if (gItemMng.CanTakeOutFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Shelf, TakeOutTargetFurnitrues))
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> PickUpTargetStorages;
+		if (gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Shelf, PickUpTargetStorages))
 		{
-			aOutTargetUnits = TakeOutTargetFurnitrues;
+			aOutTargetUnits = PickUpTargetStorages;
 			return true;
 		}
 	}
 
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeOutTargetFurnitrues;
-		if (gItemMng.CanTakeOutFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Pallet, TakeOutTargetFurnitrues))
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> PickUpTargetStorages;
+		if (gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Pallet, PickUpTargetStorages))
 		{
-			aOutTargetUnits = TakeOutTargetFurnitrues;
+			aOutTargetUnits = PickUpTargetStorages;
 			return true;
 		}
 	}
@@ -353,7 +353,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeOutTargetUnits(
 	return false;
 }
 
-bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
+bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
 {
 	aOutTargetUnits.Empty();
 
@@ -368,20 +368,20 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 	
 	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetFurnitrues;
-		if (gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetFurnitrues))
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+		if (gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, DeliveryTargetStorages))
 		{
-			aOutTargetUnits = TakeInTargetFurnitrues;
+			aOutTargetUnits = DeliveryTargetStorages;
 			return true;
 		}
 	}
 
 	else if (IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetFurnitrues;
-		if (gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetFurnitrues))
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+		if (gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, DeliveryTargetStorages))
 		{
-			aOutTargetUnits = TakeInTargetFurnitrues;
+			aOutTargetUnits = DeliveryTargetStorages;
 			return true;
 		}
 	}
@@ -389,7 +389,7 @@ bool UMS_StaffAIUnit::GetIssueTicketTakeInTargetUnits(TArray<TWeakObjectPtr<UMS_
 	return false;
 }
 
-void UMS_StaffAIUnit::TakeInItems()
+void UMS_StaffAIUnit::DeliveryItems()
 {
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	
@@ -433,11 +433,11 @@ void UMS_StaffAIUnit::TakeInItems()
 				}
 			
 				int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
-				int32 TakeInCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
+				int32 DeliveryCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
 			
-				if (StorageUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, TakeInCount))
+				if (StorageUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, DeliveryCount))
 				{
-					SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, TakeInCount);
+					SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, DeliveryCount);
 				}
 			}
 		}
@@ -448,7 +448,7 @@ void UMS_StaffAIUnit::TakeInItems()
 	}
 }
 
-void UMS_StaffAIUnit::TakeOutRequestItems()	// Add할 아이템 꺼내기
+void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 {
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	
@@ -500,7 +500,7 @@ void UMS_StaffAIUnit::TakeOutRequestItems()	// Add할 아이템 꺼내기
 	}
 }
 
-void UMS_StaffAIUnit::TakeOutCurrentItems()	// Reture하기 위해 아이템 빼기
+void UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼기
 {
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	

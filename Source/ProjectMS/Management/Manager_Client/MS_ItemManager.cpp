@@ -215,20 +215,20 @@ void UMS_ItemManager::GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			const UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get());
-			if (!FurnitureUnit)
+			const UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get());
+			if (!StorageUnit)
 			{
 				continue;
 			}
-			if (FurnitureUnit->GetZoneType() != aZoneType)
+			if (StorageUnit->GetZoneType() != aZoneType)
 			{
 				continue;
 			}
 				
-			TArray<FMS_SlotData> FurnitureSlotDatas;
-			FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+			TArray<FMS_SlotData> StorageSlotDatas;
+			StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-			for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+			for (const FMS_SlotData& SlotData: StorageSlotDatas)
 			{
 				if (SlotData.CurrentItemTableId == INDEX_NONE || SlotData.CurrentItemTableId == 0)
 				{
@@ -264,17 +264,17 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
+			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
-				if (FurnitureUnit->GetZoneType() != aZoneType)
+				if (StorageUnit->GetZoneType() != aZoneType)
 				{
 					continue;
 				}
 				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+				TArray<FMS_SlotData> StorageSlotDatas;
+				StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				for (const FMS_SlotData& SlotData: StorageSlotDatas)
 				{
 					if (SlotData.CurrentItemTableId == aItemId)
 					{
@@ -288,9 +288,9 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 	return ItemCount;
 }
 
-bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTakeInTargetStrage) const
+bool UMS_ItemManager::CanDeliveryToStorage(int32 aItemId, int32 aDeliveryCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutDeliveryTargetStrage) const
 {
-	aOutTakeInTargetStrage.Empty();
+	aOutDeliveryTargetStrage.Empty();
 	
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
 	if (ItemData == nullptr)
@@ -308,30 +308,30 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
+			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
-				if (FurnitureUnit->GetZoneType() != aZoneType)
+				if (StorageUnit->GetZoneType() != aZoneType)
 				{
 					continue;
 				}
 				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+				TArray<FMS_SlotData> StorageSlotDatas;
+				StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				for (const FMS_SlotData& SlotData: StorageSlotDatas)
 				{
 					if (SlotData.RequestItemTableId == aItemId)
 					{
 						if (SlotData.CurrentItemTableId == aItemId)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
-							aOutTakeInTargetStrage.AddUnique(FurnitureUnit);
+							aOutDeliveryTargetStrage.AddUnique(StorageUnit);
 						}
 
 						else if (SlotData.CurrentItemCount == 0)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount;
-							aOutTakeInTargetStrage.AddUnique(FurnitureUnit);
+							aOutDeliveryTargetStrage.AddUnique(StorageUnit);
 						}
 					}
 				}
@@ -339,13 +339,13 @@ bool UMS_ItemManager::CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_
 		}
 	}
 
-	return EmptyCount >= aTakeInCount;
+	return EmptyCount >= aDeliveryCount;
 }
 
-bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneType,
-	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTakeOutTargetFurnitrues) const
+bool UMS_ItemManager::CanPickUpFromStorage(int32 aItemId, EMS_ZoneType aZoneType,
+	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutPickUpTargetStorages) const
 {
-	aOutTakeOutTargetFurnitrues.Empty();
+	aOutPickUpTargetStorages.Empty();
 	
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aItemId);
 	if (ItemData == nullptr)
@@ -361,28 +361,28 @@ bool UMS_ItemManager::CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneTyp
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get()))
+			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
-				if (FurnitureUnit->GetZoneType() != aZoneType)
+				if (StorageUnit->GetZoneType() != aZoneType)
 				{
 					continue;
 				}
 				
-				TArray<FMS_SlotData> FurnitureSlotDatas;
-				FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+				TArray<FMS_SlotData> StorageSlotDatas;
+				StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-				for (const FMS_SlotData& SlotData: FurnitureSlotDatas)
+				for (const FMS_SlotData& SlotData: StorageSlotDatas)
 				{
 					if (SlotData.CurrentItemTableId == aItemId && SlotData.CurrentItemCount != 0)
 					{
-						aOutTakeOutTargetFurnitrues.AddUnique(FurnitureUnit);
+						aOutPickUpTargetStorages.AddUnique(StorageUnit);
 					}
 				}
 			}
 		}
 	}
 
-	return !aOutTakeOutTargetFurnitrues.IsEmpty();
+	return !aOutPickUpTargetStorages.IsEmpty();
 }
 
 void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
@@ -480,21 +480,21 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 		for (TObjectPtr<UMS_UnitBase> Unit : Units)
 		{
-			UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit.Get());
-			if (!FurnitureUnit)
+			UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get());
+			if (!StorageUnit)
 			{
 				continue;
 			}
 			
-			if (FurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+			if (StorageUnit->GetZoneType() != EMS_ZoneType::Pallet)
 			{
 				continue;
 			}
 				
-			TArray<FMS_SlotData> FurnitureSlotDatas;
-			FurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+			TArray<FMS_SlotData> StorageSlotDatas;
+			StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-			for (int32 i = 0; i < FurnitureSlotDatas.Num(); ++i)
+			for (int32 i = 0; i < StorageSlotDatas.Num(); ++i)
 			{
 				if (NotPlacedItems.IsEmpty())
 				{
@@ -502,7 +502,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 				}
 				
 				// 슬롯이 비었을 때
-				if (FurnitureSlotDatas[i].CurrentItemTableId == INDEX_NONE || FurnitureSlotDatas[i].CurrentItemTableId == 0)
+				if (StorageSlotDatas[i].CurrentItemTableId == INDEX_NONE || StorageSlotDatas[i].CurrentItemTableId == 0)
 				{
 					FMS_ItemData* NotPlacedItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, NotPlacedItems.begin().Key());
 					if (NotPlacedItemData == nullptr)
@@ -515,13 +515,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 					if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
 					{
-						FurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
 
 						NotPlacedItems.Remove(NotPlacedItems.begin().Key());
 					}
 					else
 					{
-						FurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
 
 						NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
 					}
@@ -529,33 +529,33 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 				}
 
 				// 슬롯의 아이템이 다 안 찼을때
-				FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, FurnitureSlotDatas[i].CurrentItemTableId);
+				FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, StorageSlotDatas[i].CurrentItemTableId);
 				if (PalletSlotItemData == nullptr)
 				{
 					MS_ENSURE(false);
 					continue;
 				}
 				
-				if (FurnitureSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
+				if (StorageSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
 				{
-					if (!NotPlacedItems.Contains(FurnitureSlotDatas[i].CurrentItemTableId))
+					if (!NotPlacedItems.Contains(StorageSlotDatas[i].CurrentItemTableId))
 					{
 						continue;
 					}
 
-					int32& NotPlacedItemCount = *NotPlacedItems.Find(FurnitureSlotDatas[i].CurrentItemTableId);
+					int32& NotPlacedItemCount = *NotPlacedItems.Find(StorageSlotDatas[i].CurrentItemTableId);
 
-					int32 EmptyCount = PalletSlotItemData->BoxMaxCount - FurnitureSlotDatas[i].CurrentItemCount;
+					int32 EmptyCount = PalletSlotItemData->BoxMaxCount - StorageSlotDatas[i].CurrentItemCount;
 
 					if (NotPlacedItemCount < EmptyCount)
 					{
-						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
 
-						NotPlacedItems.Remove(FurnitureSlotDatas[i].CurrentItemTableId);
+						NotPlacedItems.Remove(StorageSlotDatas[i].CurrentItemTableId);
 					}
 					else
 					{
-						FurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
 
 						NotPlacedItemCount -= EmptyCount;
 					}
@@ -567,7 +567,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 	CacheNotPlacedItems = NotPlacedItems;
 }
 
-void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_StorageUnit> aFurnitureUnit)
+void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_StorageUnit> aStorageUnit)
 {
 	TMap<int32, int32> NotPlacedItems = {};
 	GetNotPlacedItems(NotPlacedItems);
@@ -577,15 +577,15 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 		return;
 	}
 	
-	if (aFurnitureUnit->GetZoneType() != EMS_ZoneType::Pallet)
+	if (aStorageUnit->GetZoneType() != EMS_ZoneType::Pallet)
 	{
 		return;
 	}
 		
-	TArray<FMS_SlotData> FurnitureSlotDatas;
-	aFurnitureUnit->GetSlotDatas(FurnitureSlotDatas);
+	TArray<FMS_SlotData> StorageSlotDatas;
+	aStorageUnit->GetSlotDatas(StorageSlotDatas);
 
-	for (int32 i = 0; i < FurnitureSlotDatas.Num(); ++i)
+	for (int32 i = 0; i < StorageSlotDatas.Num(); ++i)
 	{
 		if (NotPlacedItems.IsEmpty())
 		{
@@ -593,7 +593,7 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 		}
 		
 		// 슬롯이 비었을 때
-		if (FurnitureSlotDatas[i].CurrentItemTableId == INDEX_NONE || FurnitureSlotDatas[i].CurrentItemTableId == 0)
+		if (StorageSlotDatas[i].CurrentItemTableId == INDEX_NONE || StorageSlotDatas[i].CurrentItemTableId == 0)
 		{
 			FMS_ItemData* NotPlacedItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, NotPlacedItems.begin().Key());
 			if (NotPlacedItemData == nullptr)
@@ -606,13 +606,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 
 			if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
 			{
-				aFurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
 
 				NotPlacedItems.Remove(NotPlacedItems.begin().Key());
 			}
 			else
 			{
-				aFurnitureUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
 
 				NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
 			}
@@ -620,33 +620,33 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 		}
 
 		// 슬롯의 아이템이 다 안 찼을때
-		FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, FurnitureSlotDatas[i].CurrentItemTableId);
+		FMS_ItemData* PalletSlotItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, StorageSlotDatas[i].CurrentItemTableId);
 		if (PalletSlotItemData == nullptr)
 		{
 			MS_ENSURE(false);
 			continue;
 		}
 		
-		if (FurnitureSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
+		if (StorageSlotDatas[i].CurrentItemCount < PalletSlotItemData->BoxMaxCount)
 		{
-			if (!NotPlacedItems.Contains(FurnitureSlotDatas[i].CurrentItemTableId))
+			if (!NotPlacedItems.Contains(StorageSlotDatas[i].CurrentItemTableId))
 			{
 				continue;
 			}
 
-			int32& NotPlacedItemCount = *NotPlacedItems.Find(FurnitureSlotDatas[i].CurrentItemTableId);
+			int32& NotPlacedItemCount = *NotPlacedItems.Find(StorageSlotDatas[i].CurrentItemTableId);
 
-			int32 EmptyCount = PalletSlotItemData->BoxMaxCount - FurnitureSlotDatas[i].CurrentItemCount;
+			int32 EmptyCount = PalletSlotItemData->BoxMaxCount - StorageSlotDatas[i].CurrentItemCount;
 
 			if (NotPlacedItemCount < EmptyCount)
 			{
-				aFurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
 
-				NotPlacedItems.Remove(FurnitureSlotDatas[i].CurrentItemTableId);
+				NotPlacedItems.Remove(StorageSlotDatas[i].CurrentItemTableId);
 			}
 			else
 			{
-				aFurnitureUnit->AddCurrentItemCount(i, FurnitureSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
 
 				NotPlacedItemCount -= EmptyCount;
 			}

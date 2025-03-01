@@ -60,7 +60,7 @@ EBTNodeResult::Type UMS_CompleteStaffActionAITask::ExecuteTask(UBehaviorTreeComp
 	}
 	
 	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_StaffActionState::None));
-	AIAnimInstance->SetActionProcess(EMS_StaffActionState::None);
+	AIAnimInstance->SetActionState(EMS_StaffActionState::None);
 	
 	return EBTNodeResult::Type::Succeeded;
 }

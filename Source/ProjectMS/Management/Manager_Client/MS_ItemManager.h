@@ -50,8 +50,8 @@ public:
 	void GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
 	int32 GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId) const;
 	
-	bool CanTakeInToStorage(int32 aItemId, int32 aTakeInCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTakeInTargetStrage) const;
-	bool CanTakeOutFromStorage(int32 aItemId, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTakeOutTargetFurnitrues) const;
+	bool CanDeliveryToStorage(int32 aItemId, int32 aDeliveryCount, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutDeliveryTargetStrage) const;
+	bool CanPickUpFromStorage(int32 aItemId, EMS_ZoneType aZoneType, TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutPickUpTargetStorages) const;
 
 	void GetNotPlacedItems(TMap<int32, int32>& OutItems);
 	int32 GetNotPlacedItemCount(int32 aItemId) const;
@@ -59,7 +59,7 @@ public:
 	int32 GetCacheNotPlacedItemCount(int32 aItemId) const;
 
 	void UpdateNotPlacedItemsToPalletItems();
-	void UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<class UMS_StorageUnit> aFurnitureUnit);
+	void UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<class UMS_StorageUnit> aStorageUnit);
 
 	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
 	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }

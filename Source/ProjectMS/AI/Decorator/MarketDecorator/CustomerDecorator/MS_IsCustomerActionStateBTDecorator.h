@@ -23,5 +23,5 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	TArray<EMS_CustomerActionState> ActionState;
+	TArray<EMS_CustomerActionState> ActionStates;
 };

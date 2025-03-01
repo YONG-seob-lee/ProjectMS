@@ -45,6 +45,11 @@ EBTNodeResult::Type UMS_SearchPathAITask::ExecuteTask(UBehaviorTreeComponent& Ow
 	TArray<FIntVector2> Path = {};
 	ModeState->SearchPathToTarget(Path, AIUnit->GetActorGridPosition(), AIUnit->GetTargetPositions());
 
+	if (Path.IsEmpty())
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+	
 	AIUnit->SetPath(Path);
 	return EBTNodeResult::Type::Succeeded;
 }

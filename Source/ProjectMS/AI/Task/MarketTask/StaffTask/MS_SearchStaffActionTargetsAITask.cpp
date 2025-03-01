@@ -55,14 +55,14 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	// Issue
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
-		EMS_StaffActionState ActionProcess = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
-		if (ActionProcess == EMS_StaffActionState::None)
+		EMS_StaffActionState ActionState = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
+		if (ActionState == EMS_StaffActionState::None)
 		{
 			return EBTNodeResult::Type::Failed;
 		}
 
 		// SearchRequestUnit
-		if (ActionProcess == EMS_StaffActionState::Add_Delivery_SearchRequestUnit || ActionProcess == EMS_StaffActionState::Return_PickUp_SearchRequestUnit)
+		if (ActionState == EMS_StaffActionState::Add_Delivery_SearchRequestUnit || ActionState == EMS_StaffActionState::Return_PickUp_SearchRequestUnit)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
@@ -84,15 +84,15 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return EBTNodeResult::Type::Failed;
 		}
 
-		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionState::Add_PickUp_SearchTargets)
+		// SearchPickUpTargets
+		if (ActionState == EMS_StaffActionState::Add_PickUp_SearchTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
-			TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeOutTargetUnits = {};
-			if (AIUnit->GetIssueTicketTakeOutTargetUnits(TakeOutTargetUnits))
+			TArray<TWeakObjectPtr<UMS_StorageUnit>> PickUpTargetUnits = {};
+			if (AIUnit->GetIssueTicketPickUpTargetUnits(PickUpTargetUnits))
 			{
-				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : TakeOutTargetUnits)
+				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : PickUpTargetUnits)
 				{
 					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
 						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
@@ -111,15 +111,15 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
 
-		// SearchTakeOutTargets
-		if (ActionProcess == EMS_StaffActionState::Return_Delivery_SearchTargets)
+		// SearchDeliveryTargets
+		if (ActionState == EMS_StaffActionState::Return_Delivery_SearchTargets)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
-			TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeInTargetUnits = {};
-			if (AIUnit->GetIssueTicketTakeInTargetUnits(TakeInTargetUnits))
+			TArray<TWeakObjectPtr<UMS_StorageUnit>> DeliveryTargetUnits = {};
+			if (AIUnit->GetIssueTicketDeliveryTargetUnits(DeliveryTargetUnits))
 			{
-				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : TakeInTargetUnits)
+				for (const TWeakObjectPtr<UMS_StorageUnit>& TargetUnit : DeliveryTargetUnits)
 				{
 					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
 						TargetUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);

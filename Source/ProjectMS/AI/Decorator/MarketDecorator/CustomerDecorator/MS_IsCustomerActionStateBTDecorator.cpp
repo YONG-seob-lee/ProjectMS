@@ -8,7 +8,7 @@
 
 UMS_IsCustomerActionStateBTDecorator::UMS_IsCustomerActionStateBTDecorator(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	ActionState = {};
+	ActionStates = {};
 	NodeName = "Is Customer Action State";
 }
 
@@ -22,5 +22,5 @@ bool UMS_IsCustomerActionStateBTDecorator::CalculateRawConditionValue(UBehaviorT
 	}
 
 	const EMS_CustomerActionState CurrentActionState = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState));
-	return ActionState.Contains(CurrentActionState);
+	return ActionStates.Contains(CurrentActionState);
 }

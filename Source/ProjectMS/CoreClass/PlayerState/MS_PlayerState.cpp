@@ -128,7 +128,7 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	OpenedZoneIds.AddUnique(10);
 
 	//Furniture
-	FMS_FurniturePositionData Counter = FMS_FurniturePositionData(1, FIntVector2(13, 13), EMS_Rotation::Rot270);
+	FMS_FurniturePositionData Counter = FMS_FurniturePositionData(1, FIntVector2(13, 10), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Counter.GridPosition, Counter);
 
 	FMS_FurniturePositionData RoomTemperature1 = FMS_FurniturePositionData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);

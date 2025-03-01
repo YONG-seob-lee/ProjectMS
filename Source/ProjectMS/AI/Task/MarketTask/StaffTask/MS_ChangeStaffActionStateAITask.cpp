@@ -1,4 +1,4 @@
-﻿#include "MS_ChangeStaffActionProcessAITask.h"
+﻿#include "MS_ChangeStaffActionStateAITask.h"
 
 #include "AI/AIController/MS_AIController.h"
 #include "Animation/Market/Staff/MS_StaffAIAnimInstance.h"
@@ -6,15 +6,15 @@
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 
 
-UMS_ChangeStaffActionProcessAITask::UMS_ChangeStaffActionProcessAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMS_ChangeStaffActionStateAITask::UMS_ChangeStaffActionStateAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Change Staff Action Process";
+	NodeName = "Change Staff Action State";
 	bNotifyTick = false;
 
-	ActionProcess = EMS_StaffActionState::None;
+	ActionState = EMS_StaffActionState::None;
 }
 
-EBTNodeResult::Type UMS_ChangeStaffActionProcessAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
+EBTNodeResult::Type UMS_ChangeStaffActionStateAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
 	uint8* NodeMemory)
 {
 	const TObjectPtr<AMS_AIController> AIController = Cast<AMS_AIController>(OwnerComp.GetAIOwner());
@@ -41,9 +41,9 @@ EBTNodeResult::Type UMS_ChangeStaffActionProcessAITask::ExecuteTask(UBehaviorTre
 		return EBTNodeResult::Type::Failed;
 	}
 
-	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(ActionProcess));
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(ActionState));
 
-	AIAnimInstance->SetActionProcess(ActionProcess);
+	AIAnimInstance->SetActionState(ActionState);
 	
 	return EBTNodeResult::Type::Succeeded;
 }

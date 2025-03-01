@@ -104,8 +104,8 @@ void UMS_IssueTicket::UpdateEnabled()
 	{
 		FMS_SlotData SlotData = GetRequestSlotData();
 
-		TArray<TWeakObjectPtr<UMS_StorageUnit>> TakeInTargetStorages;
-		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetStorages));
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> DeliveryTargetStorages;
+		SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, DeliveryTargetStorages));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
@@ -120,8 +120,8 @@ void UMS_IssueTicket::UpdateEnabled()
 	{
 		FMS_SlotData SlotData = GetRequestSlotData();
 
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
-		SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetStorages));
+		TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+		SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, DeliveryTargetStorages));
 	}
 	
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
@@ -561,8 +561,8 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
-			TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
-			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, TakeInTargetStorages));
+			TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+			Ticket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, DeliveryTargetStorages));
 		}
 		
 		// Add Items Tickets
@@ -592,8 +592,8 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		{
 			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
 
-			TArray<TWeakObjectPtr<class UMS_StorageUnit>> TakeInTargetStorages;
-			Ticket->SetIsEnabled(gItemMng.CanTakeInToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, TakeInTargetStorages));
+			TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+			Ticket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, DeliveryTargetStorages));
 		}
 		
 		// Add Items Tickets

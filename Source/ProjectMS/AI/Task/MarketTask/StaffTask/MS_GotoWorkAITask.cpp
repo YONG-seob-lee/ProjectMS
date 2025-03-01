@@ -92,7 +92,7 @@ void UMS_GotoWorkAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 	if(AIUnit->ReachSplineEndPoint())
 	{
 		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_StaffActionState::None));
-		StaffAIAnimInstance->SetActionProcess(EMS_StaffActionState::None);
+		StaffAIAnimInstance->SetActionState(EMS_StaffActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 	else

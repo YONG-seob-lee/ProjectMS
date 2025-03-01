@@ -14,10 +14,10 @@ class PROJECTMS_API UMS_CustomerAIAnimInstance : public UMS_MarketAIAnimInstance
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetActionState(EMS_CustomerActionState aActionProcess) { ActionProcess = aActionProcess; }
-	FORCEINLINE EMS_CustomerActionState GetActionProcess() const { return ActionProcess; }
+	FORCEINLINE void SetActionState(EMS_CustomerActionState aActionState) { ActionState = aActionState; }
+	FORCEINLINE EMS_CustomerActionState GetActionProcess() const { return ActionState; }
 	
 protected:
 	UPROPERTY(Category = AIAnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	EMS_CustomerActionState ActionProcess = EMS_CustomerActionState::None;
+	EMS_CustomerActionState ActionState = EMS_CustomerActionState::None;
 };
