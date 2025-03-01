@@ -89,9 +89,10 @@ bool UMS_CustomerSupervisor::SpawnCustomer()
 	GetRandomSpawnPoint(SpawnLocation, SpawnRotator);
 	
 	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::CustomerAI, 0,true, SpawnLocation, SpawnRotator);
-	if (UMS_CustomerAIUnit* StaffAIUnit = Cast<UMS_CustomerAIUnit>(Unit))
+	if (UMS_CustomerAIUnit* CustomerAIUnit = Cast<UMS_CustomerAIUnit>(Unit))
 	{
-		CustomerAIUnits.Emplace(StaffAIUnit);
+		CustomerAIUnit->SetCustomerActionType(EMS_CustomerActionType::GoToMarket);
+		CustomerAIUnits.Emplace(CustomerAIUnit);
 		
 		return true;
 	}

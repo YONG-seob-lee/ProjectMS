@@ -9,6 +9,7 @@
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Units/MS_CustomerAIUnit.h"
 
+
 UMS_GotoMarketAITask::UMS_GotoMarketAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "Go to Market";
@@ -52,8 +53,6 @@ EBTNodeResult::Type UMS_GotoMarketAITask::ExecuteTask(UBehaviorTreeComponent& Ow
 		return EBTNodeResult::Type::Failed;
 	}
 	
-	CustomerAIAnimInstance->SetActionProcess(EMS_CustomerActionState::MoveUsingSpline);
-	
 	return EBTNodeResult::Type::InProgress;
 }
 
@@ -94,7 +93,7 @@ void UMS_GotoMarketAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 	if(AIUnit->ReachSplineEndPoint())
 	{
 		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_CustomerActionState::None));
-		CustomerAIAnimInstance->SetActionProcess(EMS_CustomerActionState::None);
+		CustomerAIAnimInstance->SetActionState(EMS_CustomerActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 	else

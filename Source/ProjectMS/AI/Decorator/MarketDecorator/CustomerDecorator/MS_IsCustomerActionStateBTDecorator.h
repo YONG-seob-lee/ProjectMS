@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "AI/Decorator/MS_BTDecorator.h"
-#include "MS_IsCustomerActionProcessBTDecorator.generated.h"
+#include "MS_IsCustomerActionStateBTDecorator.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_IsCustomerActionProcessBTDecorator : public UMS_BTDecorator
+class PROJECTMS_API UMS_IsCustomerActionStateBTDecorator : public UMS_BTDecorator
 {
 	GENERATED_BODY()
 
 public:
-	UMS_IsCustomerActionProcessBTDecorator(const FObjectInitializer& ObjectInitializer);
+	UMS_IsCustomerActionStateBTDecorator(const FObjectInitializer& ObjectInitializer);
 	
 protected:
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
@@ -23,5 +23,5 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	TArray<EMS_CustomerActionState> ActionProcesses;
+	TArray<EMS_CustomerActionState> ActionState;
 };

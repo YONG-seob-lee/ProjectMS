@@ -18,6 +18,13 @@ void UMS_CustomerAIUnit::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitTyp
 	MS_ENSURE(CustomerTable);
 
 	CustomerTable->MakeNewCustomerData(CustomerData);
+
+	// ToDo : SlotCount 설정 (테이블 기반, 장비에 따라 추가)
+	int32 SlotCount = 2;
+	for (int32 i = 0; i < SlotCount; ++i)
+	{
+		SlotDatas.Emplace(FMS_SlotData());
+	}
 }
 
 void UMS_CustomerAIUnit::Finalize()
@@ -33,6 +40,22 @@ void UMS_CustomerAIUnit::PostInitialize()
 void UMS_CustomerAIUnit::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+}
+
+int32 UMS_CustomerAIUnit::GetBlueprintPathId() const
+{
+	return CustomerData.GetCharacterBPPathFile();
+}
+
+UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
+{
+	int32 BPPathId = GetBlueprintPathId();
+	if (BPPathId == INDEX_NONE)
+	{
+		return nullptr;
+	}
+
+	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
 bool UMS_CustomerAIUnit::FindNearestSpline()
@@ -101,20 +124,4 @@ void UMS_CustomerAIUnit::GoingToMarket() const
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
-}
-
-int32 UMS_CustomerAIUnit::GetBlueprintPathId() const
-{
-	return CustomerData.GetCharacterBPPathFile();
-}
-
-UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
-{
-	int32 BPPathId = GetBlueprintPathId();
-	if (BPPathId == INDEX_NONE)
-	{
-		return nullptr;
-	}
-
-	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }

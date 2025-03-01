@@ -74,5 +74,5 @@ void AMS_CustomerAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason
 
 void AMS_CustomerAIController::ReadyToMarket() const
 {
-	Blackboard->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_CustomerActionState::MoveUsingSpline));
+	Blackboard->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_CustomerActionState::Spline_GoToMarket));
 }

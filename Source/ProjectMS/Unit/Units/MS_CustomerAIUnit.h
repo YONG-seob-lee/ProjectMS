@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_MarketAIUnit.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "Table/Caches/MS_CustomerCacheTable.h"
 #include "MS_CustomerAIUnit.generated.h"
 
@@ -21,16 +22,23 @@ public:
 	virtual void PostInitialize() override;
 	virtual void Tick(float aDeltaTime) override;
 
-	bool FindNearestSpline();
-	bool ReachSplineEndPoint() const;
-	void GoingToMarket() const;
-
 protected:
 	virtual int32 GetBlueprintPathId() const override;
 	virtual UClass* GetBlueprintClass() const override;
+
+public:
+	FORCEINLINE EMS_CustomerActionType GetCustomerActionType() const { return ActionType; }
+	FORCEINLINE void SetCustomerActionType(EMS_CustomerActionType aActionType) { ActionType = aActionType; }
+	
+	bool FindNearestSpline();
+	bool ReachSplineEndPoint() const;
+	void GoingToMarket() const;
+	
 	
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();
 	
 	TWeakObjectPtr<class AMS_CustomerSplineActor> CustomerSplineActor = nullptr;
+
+	EMS_CustomerActionType ActionType = EMS_CustomerActionType::None;
 };

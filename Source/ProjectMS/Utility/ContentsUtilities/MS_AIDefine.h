@@ -68,8 +68,21 @@ enum class EMS_StaffActionState : uint8
 	// Spline으로 이동
 	Spline_GoToWork = 22,
 	Spline_GoHome = 23,
+
+	// Payment
+	Payment_Waiting,
+	Payment_Doing,
 };
 
+UENUM(BlueprintType)
+enum class EMS_CustomerActionType : uint8
+{
+	None = 0,
+	GoToMarket = 2,
+	GoHome = 3,
+	SelectItems = 4,
+	Payment = 5,
+};
 
 UENUM(BlueprintType)
 enum class EMS_CustomerActionState : uint8
@@ -78,7 +91,20 @@ enum class EMS_CustomerActionState : uint8
 	DeActive = 1,
 
 	// Spline으로 이동 (마켓 이동 및 회귀용)
-	MoveUsingSpline = 2,
+	Spline_GoToMarket = 2,
+	Spline_GoHome = 3,
+
+	// PickUp
+	PickUp_SearchTargets = 4,
+	PickUp_GoToTargetUnit = 5,
+	PickUp_InteractTargetUnit = 6,
+
+	// Payment
+	Payment_SearchTargets = 7,
+	Payment_GoToTargetUnit = 8,
+	Payment_BeforePayment = 9,
+	Payment_MoveWithinCounter = 10,
+	Payment_AfterPayment = 11,
 };
 
 USTRUCT()
@@ -170,6 +196,12 @@ namespace StaffBoardKeyName
 	const FName StaffAction = TEXT("StaffAction");
 	const FName StaffIssueType = TEXT("StaffIssueType");
 	const FName StaffActionState = TEXT("StaffActionState");
+}
+
+namespace CustomerBoardKeyName
+{
+	const FName CustomerAction = TEXT("CustomerAction");
+	const FName CustomerActionState = TEXT("CustomerActionState");
 }
 
 namespace SocketName
