@@ -104,11 +104,6 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	{
 		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(aHitActor))
 		{
-			if (InteractableProp->GetPropType() == EMS_PropType::Wall)
-			{
-				return;
-			}
-			
 			SelectProp(aHitActor);
 		
 			gCameraMng.RestrictCameraMovement(true);
@@ -167,11 +162,6 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 	Super::OnInputPointerHold(aElapsedTime, aPosition, aInteractableHitResult);
 	
 	if (PreviewProp == nullptr)
-	{
-		return;
-	}
-	
-	if (PreviewProp->GetPropType() == EMS_PropType::Wall)
 	{
 		return;
 	}
@@ -285,11 +275,6 @@ void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		if (SelectedProp->GetPropType() == EMS_PropType::Wall)
-		{
-			return;
-		}
-		
 		if (SelectedProp->IsPreviewProp())
 		{
 			if (SelectedProp->GetLinkedProp() == nullptr)
@@ -327,11 +312,6 @@ void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)	// 기존의 
 	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		if (SelectedProp->GetPropType() == EMS_PropType::Wall)
-		{
-			return;
-		}
-		
 		// PreviewProp
 		CreateLinkedPreviewProp(SelectedProp);
 	}
@@ -343,11 +323,6 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	{
 		if (AMS_Prop* UnselectedProp = Cast<AMS_Prop>(aUnselectedActor))
 		{
-			if (UnselectedProp->GetPropType() == EMS_PropType::Wall)
-			{
-				return;
-			}
-
 			CancelPreviewProp();
 		}
 	}

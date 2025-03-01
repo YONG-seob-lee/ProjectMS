@@ -7,6 +7,7 @@
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_Zone.generated.h"
 
+
 DECLARE_DELEGATE_OneParam(FMS_RequestOpenZoneDelegate, int32);
 
 UCLASS()
@@ -47,8 +48,6 @@ public:
 	void OnZoneOpened();
 	void OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
 	
-	void SetWallVisibilities(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor);
-
 	bool CanOpenZone();
 
 	void SetZoneOpenMeshVisibility(bool bIsZoneOpenableMode);
@@ -81,7 +80,8 @@ public:
 
 	void ShowDebugZoneData();
 
-	const FName& GetGridMeshName(const FIntVector2& aGridPosition) const;
+	const FName& GetGridFloorMeshName(const FIntVector2& aGridPosition) const;
+	const FName& GetWallMeshName() const;
 	
 protected:
 	// Components
@@ -129,7 +129,7 @@ private:
 	TMap<FIntVector2, FMS_GridData> Grids;
 
 	UPROPERTY()
-	TArray<TObjectPtr<class AMS_Wall>> Walls;
+	TMap<FVector, FMS_WallData> LocationToWallDatas;
 
 	UPROPERTY()
 	TArray<TObjectPtr<class UMS_GateUnit>> GateUnits;

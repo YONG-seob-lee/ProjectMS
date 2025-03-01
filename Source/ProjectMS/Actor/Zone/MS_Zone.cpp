@@ -3,6 +3,7 @@
 
 #include "MS_Zone.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_Define.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/BoxComponent.h"
@@ -14,7 +15,6 @@
 #include "Manager_Client/MS_HISMManager.h"
 #include "Prop/MS_Prop.h"
 #include "Prop/Gate/MS_Gate.h"
-#include "Prop/Wall/MS_Wall.h"
 #include "Units/MS_GateUnit.h"
 #include "Widget/Market/MS_ZoneOpenWidget.h"
 
@@ -50,9 +50,8 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 
 		ZoneOpenWidgetComponent->SetVisibility(false);
 	}
-
-	// Cache
-	Walls.Empty();
+	
+	LocationToWallDatas.Empty();
 }
 
 void AMS_Zone::PreInitializeComponents()
@@ -130,12 +129,7 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 
 	for (AActor* AttachedActor : AttachedActors)
 	{
-		if (AMS_Wall* Wall = Cast<AMS_Wall>(AttachedActor))
-		{
-			Walls.Emplace(Wall);
-		}
-
-		else if (AMS_Gate* Gate = Cast<AMS_Gate>(AttachedActor))
+		if (AMS_Gate* Gate = Cast<AMS_Gate>(AttachedActor))
 		{
 			Gate->SetZoneData(this);
 
@@ -286,12 +280,12 @@ void AMS_Zone::OnZoneOpened()
 	{
 		if (bOpened)
 		{
-			// Mesh
+			// Floor
 			TMap<FName, TArray<FTransform>> FloorMeshNameToTransforms = {};
 			
 			for (auto& It : Grids)
 			{
-				It.Value.FloorMeshName = GetGridMeshName(It.Value.GetGridPosition());
+				It.Value.FloorMeshName = GetGridFloorMeshName(It.Value.GetGridPosition());
 				if (!It.Value.FloorMeshName.IsNone())
 				{
 					TArray<FTransform>& Transforms = FloorMeshNameToTransforms.FindOrAdd(It.Value.FloorMeshName);
@@ -301,39 +295,27 @@ void AMS_Zone::OnZoneOpened()
 
 			for (auto& It : FloorMeshNameToTransforms)
 			{
-				TArray<int32> Ids = gHISMMng.AddInstances(It.Key, It.Value);
+				gHISMMng.AddInstances(It.Key, It.Value);
+			}
 
-				for (int32 i = 0; i < It.Value.Num(); ++i)
+			// Gate
+			for(TObjectPtr<class UMS_GateUnit> GateUnit : GateUnits)
+			{
+				if (AMS_Actor* Actor = GateUnit->GetActor())
 				{
-					FMS_GridData* pGridData = Grids.Find(FMS_GridData::ConvertLocationToGridPosition(It.Value[i].GetLocation()));
-					if (pGridData == nullptr)
-					{
-						MS_ENSURE(false);
-					}
-					else
-					{
-						if (!Ids.IsValidIndex(i))
-						{
-							MS_ENSURE(false);
-						}
-						else
-						{
-							pGridData->FloorMeshIndex = Ids[i];
-						}
-					}
+					Actor->SetActorHiddenInGame(false);
 				}
 			}
 		}
-	}
-	
-	// FloorAttachedComponent->SetVisibility(true, true);
-	WallAttachedComponent->SetVisibility(true, true);
 
-	SetZoneOpenMeshVisibility(false);
+		// Zone Open Mesh
+		SetZoneOpenMeshVisibility(false);
+	}
 }
 
 void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
 {
+	// Test Open Zone
 	if (ZoneType == EMS_ZoneType::Passage)
 	{
 		if (CanOpenZone())
@@ -341,17 +323,205 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 			RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
 		}
 	}
-	
-	SetWallVisibilities(aOwnerLevelScriptActor);
-}
 
-void AMS_Zone::SetWallVisibilities(TWeakObjectPtr<AMS_ConstructibleLevelScriptActorBase> aOwnerLevelScriptActor)
-{
-	if (bOpened)
+	// Wall
+	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
 	{
-		for (auto It = Walls.CreateConstIterator(); It; ++It)
+		return;
+	}
+
+	if (!bOpened)
+	{
+		return;
+	}
+	
+	if (const TObjectPtr HISMManager = gHISMMng)
+	{
+		if (aOwnerLevelScriptActor != nullptr)
 		{
-			It->Get()->SetVisibilityByGridOpened(aOwnerLevelScriptActor);
+			// ===== Location To New Wall Datas ===== //
+			TMap<FVector, FMS_WallData> LocationToNewWallDatas;
+			LocationToNewWallDatas.Empty();
+	
+			for (int j = 0; j < ZoneGridNum.X; ++j)
+			{
+				// ===== Back ===== //
+				FIntVector2 WallGridPosition_Back = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(j, 0);
+
+				// Test
+				bool bBackGridOpened = aOwnerLevelScriptActor->IsGridOpened(WallGridPosition_Back + FIntVector2(0, -1));
+				if (bBackGridOpened)
+				{
+					continue;
+				}
+
+				const FMS_GridData* GridData_Back = GetGrid(WallGridPosition_Back);
+				if (GridData_Back)
+				{
+					TWeakObjectPtr<AActor> WallObject = GridData_Back->Object;
+					if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+					{
+						if (WallProp->GetPropType() == EMS_PropType::Gate)
+						{
+							continue;
+						}
+					}
+				}
+			
+				// Add To LocationToNewWallDatas
+				FVector2D WallLocationXY_Back = FMS_GridData::ConvertGridPositionToLocation(WallGridPosition_Back, true, false);
+				FVector WallLocation_Back = FVector(WallLocationXY_Back.X, WallLocationXY_Back.Y, ZoneLocation.Z);
+				FRotator WallRotator_Back = FRotator(0.f, 0.f, 0.f);
+				LocationToNewWallDatas.Emplace(WallLocation_Back, FMS_WallData(WallLocation_Back, WallRotator_Back));
+			}
+			
+			for (int j = 0; j < ZoneGridNum.X; ++j)
+			{
+				// ===== Front ===== //
+				FIntVector2 WallGridPosition_Front = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(j, ZoneGridNum.Y);
+
+				// Test
+				bool bFrontGridOpened = aOwnerLevelScriptActor->IsGridOpened(WallGridPosition_Front);
+				if (bFrontGridOpened)
+				{
+					continue;
+				}
+
+				const FMS_GridData* GridData_Front = GetGrid(WallGridPosition_Front - FIntVector2(0, -1));
+				if (GridData_Front)
+				{
+					TWeakObjectPtr<AActor> WallObject = GridData_Front->Object;
+					if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+					{
+						if (WallProp->GetPropType() == EMS_PropType::Gate)
+						{
+							continue;
+						}
+					}
+				}
+			
+				// Add To LocationToNewWallDatas
+				FVector2D WallLocationXY_Front = FMS_GridData::ConvertGridPositionToLocation(WallGridPosition_Front, true, false);
+				FVector WallLocation_Front = FVector(WallLocationXY_Front.X, WallLocationXY_Front.Y, ZoneLocation.Z);
+				FRotator WallRotator_Front = FRotator(0.f, 180.f, 0.f);
+				LocationToNewWallDatas.Emplace(WallLocation_Front, FMS_WallData(WallLocation_Front, WallRotator_Front));
+			}
+
+			for (int i = 0; i < ZoneGridNum.Y; ++i)
+			{
+				// ===== Left ===== //
+				FIntVector2 WallGridPosition_Left = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(0, i);
+
+				// Test
+				bool bLeftGridOpened = aOwnerLevelScriptActor->IsGridOpened(WallGridPosition_Left + FIntVector2(-1, 0));
+				if (bLeftGridOpened)
+				{
+					continue;
+				}
+
+				const FMS_GridData* GridData_Left = GetGrid(WallGridPosition_Left);
+				if (GridData_Left)
+				{
+					TWeakObjectPtr<AActor> WallObject = GridData_Left->Object;
+					if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+					{
+						if (WallProp->GetPropType() == EMS_PropType::Gate)
+						{
+							continue;
+						}
+					}
+				}
+			
+				// Add To LocationToNewWallDatas
+				FVector2D WallLocationXY_Left = FMS_GridData::ConvertGridPositionToLocation(WallGridPosition_Left, false, true);
+				FVector WallLocation_Left = FVector(WallLocationXY_Left.X, WallLocationXY_Left.Y, ZoneLocation.Z);
+				FRotator WallRotator_Left = FRotator(0.f, 270.f, 0.f);
+				LocationToNewWallDatas.Emplace(WallLocation_Left, FMS_WallData(WallLocation_Left, WallRotator_Left));
+			}
+			
+			for (int i = 0; i < ZoneGridNum.Y; ++i)
+			{
+				// ===== Right ===== //
+				FIntVector2 WallGridPosition_Right = FIntVector2(ZoneWorldGridPosition.X, ZoneWorldGridPosition.Y) + FIntVector2(ZoneGridNum.Y, i);
+
+				// Test
+				bool bRightGridOpened = aOwnerLevelScriptActor->IsGridOpened(WallGridPosition_Right);
+				if (bRightGridOpened)
+				{
+					continue;
+				}
+
+				const FMS_GridData* GridData_Right = GetGrid(WallGridPosition_Right - FIntVector2(-1, 0));
+				if (GridData_Right)
+				{
+					TWeakObjectPtr<AActor> WallObject = GridData_Right->Object;
+					if (AMS_Prop* WallProp = Cast<AMS_Prop>(WallObject))
+					{
+						if (WallProp->GetPropType() == EMS_PropType::Gate)
+						{
+							continue;
+						}
+					}
+				}
+			
+				// Add To LocationToNewWallDatas
+				FVector2D WallLocationXY_Right = FMS_GridData::ConvertGridPositionToLocation(WallGridPosition_Right, false, true);
+				FVector WallLocation_Right = FVector(WallLocationXY_Right.X, WallLocationXY_Right.Y, ZoneLocation.Z);
+				FRotator WallRotator_Right = FRotator(0.f, 90.f, 0.f);
+				LocationToNewWallDatas.Emplace(WallLocation_Right, FMS_WallData(WallLocation_Right, WallRotator_Right));
+			}
+			
+			FName WallMeshName = GetWallMeshName();
+
+			if (!WallMeshName.IsNone())
+			{
+				// ===== Remove Wall Mesh ===== //
+				TArray<FVector> RemoveLocations;
+				
+				TArray<FVector> Keys;
+				LocationToWallDatas.GetKeys(Keys);
+			
+				for (const FVector& Key : Keys)
+				{
+					if (LocationToNewWallDatas.Contains(Key))
+					{
+						LocationToNewWallDatas.Remove(Key);
+					}
+					else
+					{
+						FMS_WallData* pWallData = LocationToWallDatas.Find(Key);
+						if (pWallData != nullptr && !pWallData->WallMeshName.IsNone())
+						{
+							RemoveLocations.Emplace(Key);
+						}
+					
+						LocationToWallDatas.Remove(Key);
+					}
+				}
+
+				if (!gHISMMng.RemoveInstances(WallMeshName, RemoveLocations))
+				{
+					MS_ENSURE(false);
+				}
+			
+				// ===== Add Wall Mesh ===== //
+				TArray<FTransform> WallTransforms;
+				WallTransforms.Empty();
+		
+				for (auto& It : LocationToNewWallDatas)
+				{
+					FMS_WallData WallData = It.Value;
+					WallData.WallMeshName = WallMeshName;
+					LocationToWallDatas.Emplace(It.Key, WallData);
+					
+					FTransform Transform;
+					Transform.SetLocation(It.Value.Location);
+					Transform.SetRotation(It.Value.Rotator.Quaternion());
+					WallTransforms.Emplace(Transform);
+				}
+
+				gHISMMng.AddInstances(WallMeshName, WallTransforms);
+			}
 		}
 	}
 }
@@ -429,7 +599,6 @@ const FMS_GridData* AMS_Zone::GetGrid(const FIntVector2& aGridPosition) const
 {
 	if (!Grids.Contains(aGridPosition))
 	{
-		MS_ENSURE(false);
 		return nullptr;
 	}
 	
@@ -458,7 +627,7 @@ void AMS_Zone::ShowDebugZoneData()
 #endif
 }
 
-const FName& AMS_Zone::GetGridMeshName(const FIntVector2& aGridPosition) const
+const FName& AMS_Zone::GetGridFloorMeshName(const FIntVector2& aGridPosition) const
 {
 	if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
 	{
@@ -468,5 +637,10 @@ const FName& AMS_Zone::GetGridMeshName(const FIntVector2& aGridPosition) const
 	{
 		return MeshName::FloorB;
 	}
+}
+
+const FName& AMS_Zone::GetWallMeshName() const
+{
+	return MeshName::WallA;
 }
 

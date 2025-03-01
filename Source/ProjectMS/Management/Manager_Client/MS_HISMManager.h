@@ -34,18 +34,22 @@ protected:
 public:
 	void Initialize();
 	
-	int32 AddInstance(const FName& aMeshName, const FTransform& aTransform);
-	TArray<int32> AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms);
+	void AddInstance(const FName& aMeshName, const FTransform& aTransform);
+	void AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms);
 
-	bool RemoveInstance(const FName& aMeshName, int32 aId);
-	bool RemoveInstances(const FName& aMeshName, const TArray<int32>& aIds);
-
-	bool HideInstance(const FName& aMeshName, int32 aId);
-
+	bool RemoveInstance(const FName& aMeshName, const FVector& aLocation);
+	bool RemoveInstances(const FName& aMeshName, const TArray<FVector>& aLocations);
+	
 	void ClearInstances();
 
 private:
+	void RebuildInstanceIds(const FName& aMeshName);
+
+	
+private:
 	TMap<FName, TObjectPtr<class UHierarchicalInstancedStaticMeshComponent>> MeshNameToHISM;
+
+	TMap<FName, TMap<FVector, int32>> MeshLocationToInstanceIds;
 	
 	// Instance
 	inline static TObjectPtr<AMS_HISMManager> HISMManager = nullptr;

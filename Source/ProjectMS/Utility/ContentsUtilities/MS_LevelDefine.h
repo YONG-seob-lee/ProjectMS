@@ -27,10 +27,9 @@ UENUM(BlueprintType)
 enum class EMS_PropType : uint8
 {
 	None = 0,
-	Wall = 2,
-	Furniture = 3,
-	Structure = 4,
-	Gate = 5,
+	Furniture = 1,
+	Structure = 2,
+	Gate = 3,
 };
 
 UENUM(BlueprintType)
@@ -73,19 +72,19 @@ enum class EMS_PurposeType : uint8
 };
 
 // GridDatas
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FMS_GridData
 {
 	GENERATED_BODY()
 
 public:
 	FMS_GridData()
-	: GridPosition(FIntVector2::ZeroValue), FloorMeshName(FName()), FloorMeshIndex(INDEX_NONE)
+	: GridPosition(FIntVector2::ZeroValue), FloorMeshName(FName())
 	{
 	}
 
 	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aWorldGridPosition)
-		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition), FloorMeshName(FName()), FloorMeshIndex(INDEX_NONE)
+		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition), FloorMeshName(FName())
 	{
 	}
 	
@@ -115,9 +114,6 @@ public:
 	FName FloorMeshName;
 
 	UPROPERTY()
-	int32 FloorMeshIndex;
-
-	UPROPERTY()
 	TWeakObjectPtr<AActor> Object;
 
 	UPROPERTY()
@@ -140,6 +136,32 @@ public:
 	class UMS_PropSpaceComponent* PropSpaceComponent;
 	
 	TArray<const FMS_GridData*> GridDatas;
+};
+
+USTRUCT()
+struct FMS_WallData
+{
+	GENERATED_BODY()
+
+public:
+	FMS_WallData()
+		: Location(FVector::ZeroVector), Rotator(FRotator::ZeroRotator), WallMeshName(FName())
+	{
+	}
+	
+	FMS_WallData(const FVector& aLocation, const FRotator& aRotation)
+		: Location(aLocation), Rotator(aRotation), WallMeshName(FName())
+	{
+	}
+	
+	UPROPERTY()
+	FVector Location;
+
+	UPROPERTY()
+	FRotator Rotator;
+	
+	UPROPERTY()
+	FName WallMeshName;
 };
 
 USTRUCT()

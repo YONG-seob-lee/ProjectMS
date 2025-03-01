@@ -28,6 +28,7 @@ AMS_HISMManager::AMS_HISMManager()
 			}
 
 			MeshNameToHISM.Emplace(It.Key, Component);
+			MeshLocationToInstanceIds.Emplace(It.Key);
 		}
 	}
 }
@@ -46,82 +47,123 @@ void AMS_HISMManager::Initialize()
 {
 }
 
-int32 AMS_HISMManager::AddInstance(const FName& aMeshName, const FTransform& aTransform)
+void AMS_HISMManager::AddInstance(const FName& aMeshName, const FTransform& aTransform)
 {
 	if (!MeshNameToHISM.Contains(aMeshName))
 	{
 		MS_ENSURE(false);
+		return;
 	}
 
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
 	if (HISM)
 	{
-		return HISM->AddInstance(aTransform, true);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		if (pMap == nullptr)
+		{
+			MS_ENSURE(false);
+			return;
+		}
+		
+		int32 Id = HISM->AddInstance(aTransform, true);
+		pMap->Emplace(aTransform.GetLocation(), Id);
 	}
-
-	return INDEX_NONE;
 }
 
-TArray<int32> AMS_HISMManager::AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms)
+void AMS_HISMManager::AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms)
 {
 	if (!MeshNameToHISM.Contains(aMeshName))
 	{
 		MS_ENSURE(false);
+		return;
 	}
 
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
 	if (HISM)
 	{
-		return HISM->AddInstances(aTransforms, true, true);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		if (pMap == nullptr)
+		{
+			MS_ENSURE(false);
+			return;
+		}
+		
+		TArray<int32> Ids = HISM->AddInstances(aTransforms, true, true);
+		
+		for (int32 i = 0; i < aTransforms.Num() - 1; ++i)
+		{
+			if (Ids.IsValidIndex(i))
+			{
+				pMap->Emplace(aTransforms[i].GetLocation(), Ids[i]);
+			}
+		}
 	}
-
-	return TArray<int32>();
 }
 
-bool AMS_HISMManager::RemoveInstance(const FName& aMeshName, int32 aId)
+bool AMS_HISMManager::RemoveInstance(const FName& aMeshName, const FVector& aLocation)
 {
 	if (!MeshNameToHISM.Contains(aMeshName))
 	{
 		MS_ENSURE(false);
+		return false;
 	}
 
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
 	if (HISM)
 	{
-		return HISM->RemoveInstance(aId);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		if (pMap == nullptr)
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+		
+		if (pMap->Contains(aLocation))
+		{
+			int32 Id = *pMap->Find(aLocation);
+			if (HISM->RemoveInstance(Id))
+			{
+				RebuildInstanceIds(aMeshName);
+				return true;
+			}
+		}
 	}
 
 	return false;
 }
 
-bool AMS_HISMManager::RemoveInstances(const FName& aMeshName, const TArray<int32>& aIds)
+bool AMS_HISMManager::RemoveInstances(const FName& aMeshName, const TArray<FVector>& aLocations)
 {
 	if (!MeshNameToHISM.Contains(aMeshName))
 	{
 		MS_ENSURE(false);
+		return false;
 	}
 
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
 	if (HISM)
 	{
-		return HISM->RemoveInstances(aIds);
-	}
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		if (pMap == nullptr)
+		{
+			MS_ENSURE(false);
+			return false;
+		}
 
-	return false;
-}
-
-bool AMS_HISMManager::HideInstance(const FName& aMeshName, int32 aId)
-{
-	if (!MeshNameToHISM.Contains(aMeshName))
-	{
-		MS_ENSURE(false);
-	}
-
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
-	if (HISM)
-	{
-		static const FTransform TransformForHide = FTransform(FVector(0.f, 0.f, -9999.f));
-		return HISM->UpdateInstanceTransform(aId, TransformForHide, true, true);
+		TArray<int32> Ids;
+		for (const FVector& Location : aLocations)
+		{
+			if (pMap->Contains(Location))
+			{
+				Ids.Emplace(*pMap->Find(Location));
+			}
+		}
+		
+		if (HISM->RemoveInstances(Ids))
+		{
+			RebuildInstanceIds(aMeshName);
+			return true;
+		}
 	}
 
 	return false;
@@ -134,6 +176,40 @@ void AMS_HISMManager::ClearInstances()
 		if (It.Value)
 		{
 			It.Value->ClearInstances();
+		}
+	}
+
+	for (auto& It : MeshLocationToInstanceIds)
+	{
+		It.Value.Empty();
+	}
+}
+
+void AMS_HISMManager::RebuildInstanceIds(const FName& aMeshName)
+{
+	if (!MeshNameToHISM.Contains(aMeshName))
+	{
+		MS_ENSURE(false);
+		return;
+	}
+
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	if (HISM)
+	{
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		if (pMap == nullptr)
+		{
+			MS_ENSURE(false);
+			return;
+		}
+		
+		pMap->Empty();
+		
+		for (int32 i = 0; i < HISM->GetInstanceCount(); ++i)
+		{
+			FTransform Transform = FTransform();
+			HISM->GetInstanceTransform(i, Transform, true);
+			pMap->Emplace(Transform.GetLocation(), i);
 		}
 	}
 }

@@ -451,7 +451,10 @@ void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)
 		
 		for (auto& Zone : Zones)
 		{
-			Zone.Value->OnAnyZoneOpened(this);
+			if (Zone.Value->IsOpened())
+			{
+				Zone.Value->OnAnyZoneOpened(this);
+			}
 		}
 		
 		SetZoneOpenableView(gModeMng.GetCurrentModeStateId() == EMS_ModeState::Construct);

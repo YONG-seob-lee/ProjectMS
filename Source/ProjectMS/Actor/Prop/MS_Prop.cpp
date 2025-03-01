@@ -75,7 +75,7 @@ void AMS_Prop::BeginPlay()
 	{
 		if (const TObjectPtr HISMManager = gHISMMng)
 		{
-			MeshIndex = gHISMMng.AddInstance(MeshName, GetTransform());
+			gHISMMng.AddInstance(MeshName, GetTransform());
 		}
 	}
 }
@@ -87,7 +87,7 @@ void AMS_Prop::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		if (const TObjectPtr HISMManager = gHISMMng)
 		{
-			MeshIndex = gHISMMng.RemoveInstance(MeshName, MeshIndex);
+			MeshIndex = gHISMMng.RemoveInstance(MeshName, GetActorLocation());
 		}
 	}
 
@@ -235,7 +235,7 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 
 UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 {
-	if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
+	if (!bIsPreviewProp)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
@@ -245,7 +245,7 @@ UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 
 UMS_ArrangementWidget* AMS_Prop::GetArrangementWidget() const
 {
-	if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
+	if (!bIsPreviewProp)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
@@ -265,7 +265,7 @@ void AMS_Prop::ShowArrangementWidget(bool bShow) const
 {
 	if (bShow)
 	{
-		if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
+		if (!bIsPreviewProp)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 		}

@@ -138,11 +138,6 @@ void UMS_ModeState_Normal::SelectActor(AActor* aSelectedActor)
 	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		if (SelectedProp->GetPropType() == EMS_PropType::Wall)
-		{
-			return;
-		}
-		
 		gInteractionMng.SelectActor(aSelectedActor);
 	}
 }
