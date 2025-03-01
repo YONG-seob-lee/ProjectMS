@@ -12,7 +12,6 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "PlayerState/MS_PlayerState.h"
-#include "Prop/Floor/MS_Floor.h"
 #include "Table/RowBase/MS_FurnitureData.h"
 #include "Units/MS_FurnitureUnit.h"
 #include "Units/MS_GateUnit.h"
@@ -480,6 +479,7 @@ void AMS_ConstructibleLevelScriptActorBase::SetZoneOpenWidgetVisibility(bool bHi
 
 void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected)
 {
+	/*
 	if (bShow)
 	{
 		TWeakObjectPtr<AMS_Prop> LinkedProp = nullptr;
@@ -563,7 +563,7 @@ void AMS_ConstructibleLevelScriptActorBase::UpdateUnconstructableGridView(bool b
 			}
 		}
 	}
-
+*/
 }
 
 TWeakObjectPtr<UMS_FurnitureUnit> AMS_ConstructibleLevelScriptActorBase::CreateProp(EMS_PropType aPropType, int32 aTableIndex, const FIntVector2& aGridPosition,

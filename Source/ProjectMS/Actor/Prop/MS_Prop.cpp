@@ -5,6 +5,7 @@
 
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/RowBase/MS_FurnitureData.h"
 #include "Units/MS_StorageUnit.h"
@@ -20,6 +21,7 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 {
 	// Component
 	// Mesh Components
+	// ToDo: 모두 HISM으로 바꾸는 동안 잠깐 유지(변경된 Actor는 BP에서 Hide)
 	UMeshComponent* FirstMeshComponent = CreateDefaultSubobject<UMeshComponent>(TEXT("FirstMeshComponent"));
 	if (FirstMeshComponent)
 	{
@@ -27,7 +29,7 @@ AMS_Prop::AMS_Prop(const FObjectInitializer& aObjectInitializer)
 		FirstMeshComponent->SetupAttachment(SceneRootComponent);
 		FirstMeshComponent->SetCollisionProfileName(TEXT("ClickableShape"));
 	}
-
+	
 	// Widget Component
 	ArrangementWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ArrangementWidgetComponent"));
 	if (ArrangementWidgetComponent)
@@ -67,6 +69,29 @@ void AMS_Prop::PostInitializeComponents()
 void AMS_Prop::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Mesh
+	if (!MeshName.IsNone())
+	{
+		if (const TObjectPtr HISMManager = gHISMMng)
+		{
+			MeshIndex = gHISMMng.AddInstance(MeshName, GetTransform());
+		}
+	}
+}
+
+void AMS_Prop::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Mesh
+	if (!MeshName.IsNone())
+	{
+		if (const TObjectPtr HISMManager = gHISMMng)
+		{
+			MeshIndex = gHISMMng.RemoveInstance(MeshName, MeshIndex);
+		}
+	}
+
+	Super::EndPlay(EndPlayReason);
 }
 
 FIntVector2 AMS_Prop::GetGridPosition() const
@@ -210,7 +235,7 @@ void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
 
 UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 {
-	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
+	if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
@@ -220,7 +245,7 @@ UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 
 UMS_ArrangementWidget* AMS_Prop::GetArrangementWidget() const
 {
-	if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
+	if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
@@ -240,7 +265,7 @@ void AMS_Prop::ShowArrangementWidget(bool bShow) const
 {
 	if (bShow)
 	{
-		if (PropType != EMS_PropType::Floor && PropType != EMS_PropType::Wall && !bIsPreviewProp)
+		if (PropType != EMS_PropType::Wall && !bIsPreviewProp)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 		}

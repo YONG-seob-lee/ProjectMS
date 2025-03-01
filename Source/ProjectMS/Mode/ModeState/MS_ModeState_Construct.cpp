@@ -104,7 +104,7 @@ void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 	{
 		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(aHitActor))
 		{
-			if (InteractableProp->GetPropType() == EMS_PropType::Floor || InteractableProp->GetPropType() == EMS_PropType::Wall)
+			if (InteractableProp->GetPropType() == EMS_PropType::Wall)
 			{
 				return;
 			}
@@ -171,7 +171,7 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 		return;
 	}
 	
-	if (PreviewProp->GetPropType() == EMS_PropType::Floor || PreviewProp->GetPropType() == EMS_PropType::Wall)
+	if (PreviewProp->GetPropType() == EMS_PropType::Wall)
 	{
 		return;
 	}
@@ -285,7 +285,7 @@ void UMS_ModeState_Construct::SelectProp(AActor* aSelectedActor)
 	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
+		if (SelectedProp->GetPropType() == EMS_PropType::Wall)
 		{
 			return;
 		}
@@ -327,7 +327,7 @@ void UMS_ModeState_Construct::OnSelectProp(AActor* aSelectedActor)	// 기존의 
 	
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
-		if (SelectedProp->GetPropType() == EMS_PropType::Floor || SelectedProp->GetPropType() == EMS_PropType::Wall)
+		if (SelectedProp->GetPropType() == EMS_PropType::Wall)
 		{
 			return;
 		}
@@ -343,7 +343,7 @@ void UMS_ModeState_Construct::OnUnselectProp(AActor* aUnselectedActor)
 	{
 		if (AMS_Prop* UnselectedProp = Cast<AMS_Prop>(aUnselectedActor))
 		{
-			if (UnselectedProp->GetPropType() == EMS_PropType::Floor || UnselectedProp->GetPropType() == EMS_PropType::Wall)
+			if (UnselectedProp->GetPropType() == EMS_PropType::Wall)
 			{
 				return;
 			}

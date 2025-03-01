@@ -22,7 +22,8 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 public:
 	// Property :: Getter
 	EMS_PropType GetPropType() const { return PropType; }
@@ -77,6 +78,12 @@ public:
 
 	
 protected:
+	UPROPERTY(EditAnywhere, Category=HISM)
+	FName MeshName = {};
+
+	UPROPERTY()
+	int32 MeshIndex = 0;
+	
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class UMeshComponent*> MeshComponents;

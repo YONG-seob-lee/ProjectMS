@@ -11,8 +11,8 @@
 #include "PlayerState/MS_PlayerState.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Prop/MS_Prop.h"
-#include "Prop/Floor/MS_Floor.h"
 #include "Prop/Gate/MS_Gate.h"
 #include "Prop/Wall/MS_Wall.h"
 #include "Units/MS_GateUnit.h"
@@ -27,12 +27,6 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	if (ZoneBoxComponent)
 	{
 		ZoneBoxComponent->SetupAttachment(SceneRootComponent);
-	}
-	
-	FloorAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FloorAttachedComponent"));
-	if (FloorAttachedComponent)
-	{
-		FloorAttachedComponent->SetupAttachment(ZoneBoxComponent);
 	}
 	
 	WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("WallAttachedComponent"));
@@ -87,13 +81,9 @@ void AMS_Zone::BeginPlay()
 		}
 	}
 	
-	if (FloorAttachedComponent)
+	if (!bOpened)
 	{
-		if (!bOpened)
-		{
-			FloorAttachedComponent->SetVisibility(false, true);
-			WallAttachedComponent->SetVisibility(false, true);
-		}
+		WallAttachedComponent->SetVisibility(false, true);
 	}
 	
 	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
@@ -140,18 +130,7 @@ void AMS_Zone::RegisterDefalutAttachedProps()
 
 	for (AActor* AttachedActor : AttachedActors)
 	{
-		if (AMS_Floor* Floor = Cast<AMS_Floor>(AttachedActor))
-		{
-			// Prop Center Grid
-			FVector WorldLocation = Floor->GetActorLocation();
-			FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(WorldLocation);
-			
-			Floor->SetZoneData(this);
-
-			RegisterFloorToGrid(GridPosition, Floor);
-		}
-
-		else if (AMS_Wall* Wall = Cast<AMS_Wall>(AttachedActor))
+		if (AMS_Wall* Wall = Cast<AMS_Wall>(AttachedActor))
 		{
 			Walls.Emplace(Wall);
 		}
@@ -236,36 +215,6 @@ bool AMS_Zone::IsGridContained(const FIntVector2& aInGridPosition) const
 	return Grids.Contains(aInGridPosition);
 }
 
-void AMS_Zone::RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<AMS_Floor> aFloor)
-{
-	if (Grids.Contains(aGridPosition))
-	{
-		FMS_GridData& GridData = *Grids.Find(aGridPosition);
-
-		if (GridData.Floor == nullptr)
-		{
-			GridData.Floor = aFloor;
-		}
-		else
-		{
-#if WITH_EDITOR
-			MS_LOG_VERBOSITY(Error, TEXT("Floor data alreay exists [%s - X : %d, Y : %d]"),
-				*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-#endif
-			MS_ENSURE(false);
-		}
-	}
-	else
-	{
-#if WITH_EDITOR
-		MS_LOG_VERBOSITY(Error, TEXT("Floor's GridPosition is not vaild [%s - X : %d, Y : %d]"),
-			*GetActorLabel(), aGridPosition.X, aGridPosition.Y);
-#endif
-
-		MS_ENSURE(false);
-	}
-}
-
 void AMS_Zone::RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<UMS_PropSpaceComponent> aPropSpaceComponent)
 {
 	if (Grids.Contains(aGridPosition))
@@ -333,7 +282,51 @@ void AMS_Zone::OnClickZoneOpenWidget(UMS_ZoneOpenWidget* aZoneOpenWidget)
 
 void AMS_Zone::OnZoneOpened()
 {
-	FloorAttachedComponent->SetVisibility(true, true);
+	if (const TObjectPtr HISMManager = gHISMMng)
+	{
+		if (bOpened)
+		{
+			// Mesh
+			TMap<FName, TArray<FTransform>> FloorMeshNameToTransforms = {};
+			
+			for (auto& It : Grids)
+			{
+				It.Value.FloorMeshName = GetGridMeshName(It.Value.GetGridPosition());
+				if (!It.Value.FloorMeshName.IsNone())
+				{
+					TArray<FTransform>& Transforms = FloorMeshNameToTransforms.FindOrAdd(It.Value.FloorMeshName);
+					Transforms.Emplace(FTransform(It.Value.GetGridLocation()));
+				}
+			}
+
+			for (auto& It : FloorMeshNameToTransforms)
+			{
+				TArray<int32> Ids = gHISMMng.AddInstances(It.Key, It.Value);
+
+				for (int32 i = 0; i < It.Value.Num(); ++i)
+				{
+					FMS_GridData* pGridData = Grids.Find(FMS_GridData::ConvertLocationToGridPosition(It.Value[i].GetLocation()));
+					if (pGridData == nullptr)
+					{
+						MS_ENSURE(false);
+					}
+					else
+					{
+						if (!Ids.IsValidIndex(i))
+						{
+							MS_ENSURE(false);
+						}
+						else
+						{
+							pGridData->FloorMeshIndex = Ids[i];
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	// FloorAttachedComponent->SetVisibility(true, true);
 	WallAttachedComponent->SetVisibility(true, true);
 
 	SetZoneOpenMeshVisibility(false);
@@ -345,7 +338,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 	{
 		if (CanOpenZone())
 		{
-			bool bBound = RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
+			RequestOpenZoneDelegate.ExecuteIfBound(ZoneIndex);
 		}
 	}
 	
@@ -463,5 +456,17 @@ void AMS_Zone::ShowDebugZoneData()
 		}
 	}
 #endif
+}
+
+const FName& AMS_Zone::GetGridMeshName(const FIntVector2& aGridPosition) const
+{
+	if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
+	{
+		return MeshName::FloorA;
+	}
+	else
+	{
+		return MeshName::FloorB;
+	}
 }
 

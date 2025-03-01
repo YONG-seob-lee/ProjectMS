@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -24,6 +25,10 @@ void UMS_ManagementClient::Initialize()
 	SceneManager = MS_NewObject<UMS_SceneManager>(this);
 	MS_CHECK(SceneManager);
 	SceneManager->Initialize();
+
+	HISMManager = GetWorld()->SpawnActor<AMS_HISMManager>(AMS_HISMManager::StaticClass(), FTransform());
+	MS_CHECK(HISMManager);
+	HISMManager->Initialize();
 	
 	ModeManager = MS_NewObject<UMS_ModeManager>(this);
 	MS_CHECK(ModeManager);

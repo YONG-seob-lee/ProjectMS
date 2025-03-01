@@ -27,7 +27,6 @@ UENUM(BlueprintType)
 enum class EMS_PropType : uint8
 {
 	None = 0,
-	Floor = 1,
 	Wall = 2,
 	Furniture = 3,
 	Structure = 4,
@@ -81,12 +80,12 @@ struct FMS_GridData
 
 public:
 	FMS_GridData()
-	: GridPosition(FIntVector2::ZeroValue)
+	: GridPosition(FIntVector2::ZeroValue), FloorMeshName(FName()), FloorMeshIndex(INDEX_NONE)
 	{
 	}
 
 	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aWorldGridPosition)
-		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition)
+		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition), FloorMeshName(FName()), FloorMeshIndex(INDEX_NONE)
 	{
 	}
 	
@@ -113,7 +112,10 @@ private:
 
 public:
 	UPROPERTY()
-	TWeakObjectPtr<AActor> Floor;
+	FName FloorMeshName;
+
+	UPROPERTY()
+	int32 FloorMeshIndex;
 
 	UPROPERTY()
 	TWeakObjectPtr<AActor> Object;

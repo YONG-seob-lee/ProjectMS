@@ -28,6 +28,9 @@ private:
 	TObjectPtr<class UMS_InputManager> InputManager = nullptr;
 
 	UPROPERTY()
+	TObjectPtr<class AMS_HISMManager> HISMManager = nullptr;
+	
+	UPROPERTY()
 	TObjectPtr<class UMS_InteractionManager> InteractionManager = nullptr;
 
 	UPROPERTY()

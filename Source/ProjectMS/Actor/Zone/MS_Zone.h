@@ -34,8 +34,7 @@ private:
 public:
 	bool IsWorldLocationContained(const FVector& aInWorldLocation, FVector& aOutZoneLocation) const;
 	bool IsGridContained(const FIntVector2& aInGridPosition) const;
-
-	void RegisterFloorToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class AMS_Floor> aFloor);
+	
 	void RegisterObjectToGrid(const FIntVector2& aGridPosition, TWeakObjectPtr<class UMS_PropSpaceComponent> aPropSpaceComponent);
 	void UnregisterObjectToGrid(const FIntVector2& aGridPosition);
 
@@ -82,14 +81,12 @@ public:
 
 	void ShowDebugZoneData();
 
+	const FName& GetGridMeshName(const FIntVector2& aGridPosition) const;
 	
 protected:
 	// Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* ZoneBoxComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* FloorAttachedComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* WallAttachedComponent;
