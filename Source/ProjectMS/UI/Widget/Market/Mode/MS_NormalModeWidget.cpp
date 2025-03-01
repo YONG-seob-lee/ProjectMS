@@ -70,7 +70,6 @@ void UMS_NormalModeWidget::OnClickedTownButton()
 		Param.BlendTime = 0.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
 		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
-		gUnitMng.DestroyAllUnits();
 		gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 	});
 	gSceneMng.RequestChangeScene(Command);
@@ -109,7 +108,6 @@ void UMS_NormalModeWidget::OnClickedCloseMarketButton()
 			Param.BlendTime = 0.f;
 			gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
 			gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
-			gUnitMng.DestroyAllUnits();
 			gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
 		});
 		gSceneMng.RequestChangeScene(Command);

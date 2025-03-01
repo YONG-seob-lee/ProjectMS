@@ -63,6 +63,8 @@ void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason
 {
 	gInputMng.OnPointerDownDelegate.RemoveAll(this);
 	gInputMng.OnPointerUpDelegate.RemoveAll(this);
+
+	gUnitMng.DestroyAllUnits();
 	
 	Super::EndPlay(EndPlayReason);
 }
@@ -78,10 +80,6 @@ void AMS_StageLevelScriptActor::Tick(float DeltaTime)
 	}
 }
 
-void AMS_StageLevelScriptActor::Destroyed()
-{	
-	Super::Destroyed();
-}
 void AMS_StageLevelScriptActor::SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly /* = false */)
 {
 	SetDayAndNight_Internal(aDayAndNight, bDirectly);

@@ -74,14 +74,7 @@ void AMS_Market::LaunchEvent()
 	Command->SetFadeInTransitionType(EMS_TransitionStyle::GradationIn);
 	Command->SetFadeAnimationType(EMS_FadeAnimationCurveType::Linear);
 	Command->SetLoadingWidgetType(EMS_LoadingWidgetType::Default);
-	gSceneMng.OnFadeFinishedEventDelegate.AddWeakLambda(this, [this]
-		{
-			gUnitMng.DestroyAllUnits();
-			gSceneMng.OnFadeFinishedEventDelegate.RemoveAll(this);
-		});
 	gSceneMng.RequestChangeScene(Command);
-
-	gUnitMng.DestroyAllUnits();
 }
 
 void AMS_Market::OnAutoDoorTrigger(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult)

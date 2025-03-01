@@ -17,6 +17,12 @@ class PROJECTMS_API AMS_MarketLevelScriptActor : public AMS_ConstructibleLevelSc
 
 public:
 	AMS_MarketLevelScriptActor();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const;
@@ -39,10 +45,6 @@ public:
 	void AddTestAIActorComeInMarket(int32 aUnitId) const;
 	bool IsUnitInMarket(int32 aUnitHandle) const;
 #endif
-	
-protected:
-	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
 	
 private:
 	void InitializePlayerDataFurnitures();

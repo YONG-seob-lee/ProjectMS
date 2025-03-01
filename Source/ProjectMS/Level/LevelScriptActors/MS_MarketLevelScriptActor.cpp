@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
@@ -16,6 +17,54 @@
 AMS_MarketLevelScriptActor::AMS_MarketLevelScriptActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void AMS_MarketLevelScriptActor::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	ChattingCollectComponent = MS_NewObject<UMS_UnitChattingCollectComponent>(this);
+	if(ChattingCollectComponent)
+	{
+		ChattingCollectComponent->Initialize();
+	}
+	BehaviorCollectComponent =MS_NewObject<UMS_UnitBehaviorCollectComponent>(this);
+	if(BehaviorCollectComponent)
+	{
+		BehaviorCollectComponent->Initialize();
+	}
+	PurchaseCollectComponent = MS_NewObject<UMS_UnitPurchaseCollectComponent>(this);
+	if(PurchaseCollectComponent)
+	{
+		PurchaseCollectComponent->Initialize();
+	}
+
+	InitializePlayerDataFurnitures();
+}
+
+void AMS_MarketLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if(ChattingCollectComponent)
+	{
+		ChattingCollectComponent->Finalize();
+		MS_DeleteObject(ChattingCollectComponent);
+	}
+	
+	if(BehaviorCollectComponent)
+	{
+		BehaviorCollectComponent->Finalize();
+		MS_DeleteObject(BehaviorCollectComponent);
+	}
+	
+	if(PurchaseCollectComponent)
+	{
+		PurchaseCollectComponent->Finalize();
+		MS_DeleteObject(PurchaseCollectComponent);
+	}
+	
+	gUnitMng.DestroyAllUnits();
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void AMS_MarketLevelScriptActor::Tick(float DeltaTime)
@@ -133,49 +182,6 @@ bool AMS_MarketLevelScriptActor::IsUnitInMarket(int32 aUnitHandle) const
 	return false;
 }
 #endif
-
-void AMS_MarketLevelScriptActor::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	ChattingCollectComponent = MS_NewObject<UMS_UnitChattingCollectComponent>(this);
-	if(ChattingCollectComponent)
-	{
-		ChattingCollectComponent->Initialize();
-	}
-	BehaviorCollectComponent =MS_NewObject<UMS_UnitBehaviorCollectComponent>(this);
-	if(BehaviorCollectComponent)
-	{
-		BehaviorCollectComponent->Initialize();
-	}
-	PurchaseCollectComponent = MS_NewObject<UMS_UnitPurchaseCollectComponent>(this);
-	if(PurchaseCollectComponent)
-	{
-		PurchaseCollectComponent->Initialize();
-	}
-
-	InitializePlayerDataFurnitures();
-}
-
-void AMS_MarketLevelScriptActor::Destroyed()
-{
-	if(ChattingCollectComponent)
-	{
-		ChattingCollectComponent->Finalize();
-		MS_DeleteObject(ChattingCollectComponent);
-	}
-	if(BehaviorCollectComponent)
-	{
-		BehaviorCollectComponent->Finalize();
-		MS_DeleteObject(BehaviorCollectComponent);
-	}
-	if(PurchaseCollectComponent)
-	{
-		PurchaseCollectComponent->Finalize();
-		MS_DeleteObject(PurchaseCollectComponent);
-	}
-	Super::Destroyed();
-}
 
 void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
 {

@@ -25,7 +25,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void Destroyed() override;
 
 	void SetDayAndNight(EMS_DayAndNight aDayAndNight, bool bDirectly = false);
 	
