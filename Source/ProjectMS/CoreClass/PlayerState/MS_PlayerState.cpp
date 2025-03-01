@@ -143,7 +143,7 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	FMS_FurniturePositionData Rack = FMS_FurniturePositionData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);
 	GridPositionToMarketFurnitureDatas.Emplace(Rack.GridPosition, Rack);
 	
-	FMS_FurniturePositionData Pallet = FMS_FurniturePositionData(10, FIntVector2(-4, 27), EMS_Rotation::Rot180);
+	FMS_FurniturePositionData Pallet = FMS_FurniturePositionData(10, FIntVector2(-4, 28), EMS_Rotation::Rot180);
 	GridPositionToMarketFurnitureDatas.Emplace(Pallet.GridPosition, Pallet);
 	
 	// Items

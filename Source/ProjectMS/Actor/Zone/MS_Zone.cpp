@@ -28,12 +28,6 @@ AMS_Zone::AMS_Zone(const FObjectInitializer& aObjectInitializer)
 	{
 		ZoneBoxComponent->SetupAttachment(SceneRootComponent);
 	}
-	
-	WallAttachedComponent = CreateDefaultSubobject<USceneComponent>(TEXT("WallAttachedComponent"));
-	if (WallAttachedComponent)
-	{
-		WallAttachedComponent->SetupAttachment(ZoneBoxComponent);
-	}
 
 	ZoneOpenMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ZoneOpenMeshComponent"));
 	if (ZoneOpenMeshComponent)
@@ -78,11 +72,6 @@ void AMS_Zone::BeginPlay()
 		{
 			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
 		}
-	}
-	
-	if (!bOpened)
-	{
-		WallAttachedComponent->SetVisibility(false, true);
 	}
 	
 	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
@@ -289,7 +278,7 @@ void AMS_Zone::OnZoneOpened()
 				if (!It.Value.FloorMeshName.IsNone())
 				{
 					TArray<FTransform>& Transforms = FloorMeshNameToTransforms.FindOrAdd(It.Value.FloorMeshName);
-					Transforms.Emplace(FTransform(It.Value.GetGridLocation()));
+					Transforms.Emplace(FTransform(It.Value.GetGridCenterLocation()));
 				}
 			}
 

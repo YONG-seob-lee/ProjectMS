@@ -88,9 +88,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* ZoneBoxComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* WallAttachedComponent;
-
 	// Zone Open
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UStaticMeshComponent> ZoneOpenMeshComponent;
