@@ -58,7 +58,9 @@ EBTNodeResult::Type UMS_CompleteStaffActionAITask::ExecuteTask(UBehaviorTreeComp
 	{
 		AIUnit->UnregisterNoneIssueStaffAction(StaffActionType);
 	}
-	
+
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffAction, static_cast<uint8>(EMS_StaffActionType::None));
+	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(EMS_StaffIssueType::None));
 	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_StaffActionState::None));
 	AIAnimInstance->SetActionState(EMS_StaffActionState::None);
 	

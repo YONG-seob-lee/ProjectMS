@@ -279,21 +279,22 @@ void UMS_StaffAIUnit::RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>
 
 void UMS_StaffAIUnit::UnregisterAsIssueTicketStaff()
 {
-	// Staff 등록만 취소하고 티켓 삭제는 가구쪽에서 담당
-	
-	if (IssueTicket == nullptr)
-	{
-		return;
-	}
-	
-	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
-	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
-	{
-		RunMarketMode->UnregisterIssueTicketStaff(IssueTicket);
-	}
-
 	// Slot에 아이템이 남았다면 NotPlaced로 이동
 	ResetSlotDatas();
+	
+	// Staff 등록만 취소하고 티켓 삭제는 가구쪽에서 담당
+	if (IssueTicket == nullptr)
+	{
+		OnUnregisteredAsIssueTicketStaff();
+	}
+	else
+	{
+		UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+		if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+		{
+			RunMarketMode->UnregisterIssueTicketStaff(IssueTicket);
+		}
+	}
 }
 
 void UMS_StaffAIUnit::OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket)
@@ -306,21 +307,28 @@ void UMS_StaffAIUnit::OnUnregisteredAsIssueTicketStaff()
 	IssueTicket = nullptr;
 }
 
-TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFurnitrueUnit() const
+TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFurnitrueUnit()
 {
-	if (IssueTicket != nullptr)
+	if (IssueTicket == nullptr)
 	{
-		return IssueTicket->GetRequestFurnitureUnit();
+		UnregisterAsIssueTicketStaff();
+		return nullptr;
 	}
-
-	return nullptr;
+	
+	return IssueTicket->GetRequestFurnitureUnit();
 }
 
 bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
-	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
+	TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits)
 {
 	aOutTargetUnits.Empty();
 
+	if (IssueTicket == nullptr)
+	{
+		UnregisterAsIssueTicketStaff();
+		return false;
+	}
+	
 	FMS_SlotData SlotData = IssueTicket->GetRequestSlotData();
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 
@@ -353,10 +361,16 @@ bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
 	return false;
 }
 
-bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits) const
+bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UMS_StorageUnit>>& aOutTargetUnits)
 {
 	aOutTargetUnits.Empty();
 
+	if (IssueTicket == nullptr)
+	{
+		UnregisterAsIssueTicketStaff();
+		return false;
+	}
+	
 	FMS_SlotData SlotData = IssueTicket->GetRequestSlotData();
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 
@@ -391,6 +405,12 @@ bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UM
 
 void UMS_StaffAIUnit::DeliveryItems()
 {
+	if (IssueTicket == nullptr)
+	{
+		UnregisterAsIssueTicketStaff();
+		return;
+	}
+	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	
 	if (IssueType != EMS_StaffIssueType::ReturnItemsFromDisplay
@@ -450,6 +470,12 @@ void UMS_StaffAIUnit::DeliveryItems()
 
 void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 {
+	if (IssueTicket == nullptr)
+	{
+		UnregisterAsIssueTicketStaff();
+		return;
+	}
+	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	
 	if (IssueType != EMS_StaffIssueType::AddItemsToDisplay
@@ -502,6 +528,12 @@ void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 
 void UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼기
 {
+	if (IssueTicket == nullptr)
+	{
+		UnregisterAsIssueTicketStaff();
+		return;
+	}
+	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
 	
 	if (IssueType != EMS_StaffIssueType::ReturnItemsFromDisplay
