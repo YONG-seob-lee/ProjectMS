@@ -80,7 +80,7 @@ enum class EMS_CustomerActionType : uint8
 	None = 0,
 	GoToMarket = 2,
 	GoHome = 3,
-	SelectItems = 4,
+	PickUpItems = 4,
 	Payment = 5,
 };
 

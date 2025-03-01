@@ -13,13 +13,13 @@ void UMS_GridBFS_2x2::CollectAllZoneTypeMovingPoints()
 	CollectMovingPoints(EMS_ZoneType::Display);
 	CollectMovingPoints(EMS_ZoneType::Shelf);
 	CollectMovingPoints(EMS_ZoneType::Pallet);
+	CollectMovingPoints(EMS_ZoneType::Outside);
 }
 
 void UMS_GridBFS_2x2::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 {
 	TArray<FIntVector2> FreeMovableGridPositions;
 	FreeMovableGridPositions.Empty();
-	PalletFreeMovableWalkingPoints.Empty();
 	
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
@@ -67,6 +67,12 @@ void UMS_GridBFS_2x2::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 					break;
 				}
 
+			case EMS_ZoneType::Outside :
+				{
+					OutsideFreeMovableWalkingPoints.Add(GridPosition);
+					break;
+				}
+
 			default:
 				{
 					MS_ENSURE(false);
@@ -103,6 +109,12 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearch
 			break;
 		}
 
+	case EMS_ZoneType::Outside :
+		{
+			FreeMovableWalkingPoints = OutsideFreeMovableWalkingPoints;
+			break;
+		}
+		
 	default:
 		{
 			MS_ENSURE(false);

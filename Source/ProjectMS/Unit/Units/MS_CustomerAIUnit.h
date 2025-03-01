@@ -29,6 +29,8 @@ protected:
 public:
 	FORCEINLINE EMS_CustomerActionType GetCustomerActionType() const { return ActionType; }
 	FORCEINLINE void SetCustomerActionType(EMS_CustomerActionType aActionType) { ActionType = aActionType; }
+
+	EMS_CustomerActionType UpdateCustomerActionType();
 	
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;

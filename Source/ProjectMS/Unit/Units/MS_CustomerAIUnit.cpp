@@ -58,6 +58,18 @@ UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
+EMS_CustomerActionType UMS_CustomerAIUnit::UpdateCustomerActionType()
+{
+	if (ActionType == EMS_CustomerActionType::None)
+	{
+		// ToDo : 상황에 따라 ActionType 설정
+		// Test
+		ActionType = EMS_CustomerActionType::Payment;
+	}
+	
+	return ActionType;
+}
+
 bool UMS_CustomerAIUnit::FindNearestSpline()
 {
 	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 

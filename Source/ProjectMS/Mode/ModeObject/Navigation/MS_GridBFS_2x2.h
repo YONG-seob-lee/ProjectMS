@@ -29,6 +29,7 @@ private:
 	TArray<FIntVector2> DisplayFreeMovableWalkingPoints = {};
 	TArray<FIntVector2> ShelfFreeMovableWalkingPoints = {};
 	TArray<FIntVector2> PalletFreeMovableWalkingPoints = {};
+	TArray<FIntVector2> OutsideFreeMovableWalkingPoints = {};
 
 	// 등록 순서가 탐색 우선순위와 같음
 	const TArray<FIntVector2> TestAddedPoints ={

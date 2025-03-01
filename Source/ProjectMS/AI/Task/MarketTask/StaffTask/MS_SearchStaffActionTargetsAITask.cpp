@@ -7,7 +7,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
-#include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 

@@ -37,7 +37,7 @@ void UMS_CustomerCacheTable::Finalize()
 
 void UMS_CustomerCacheTable::MakeNewCustomerData(FMS_CustomerData& NewCustomerData)
 {
-	if(FMS_Customer** Customer = CustomerDatas.Find(FMath::RandRange(0, CustomerDatas.Num() - 1)))
+	if(FMS_Customer** Customer = CustomerDatas.Find(FMath::RandRange(1, CustomerDatas.Num())))
 	{
 		NewCustomerData = FMS_CustomerData((*Customer)->ColorType, (*Customer)->PathFile, (*Customer)->MaxItemKind, (*Customer)->MaxItemCount);
 	}

@@ -49,7 +49,7 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 	}
 	
 	// Customer Action
-	EMS_CustomerActionType CustomerAction =  AIUnit->GetCustomerActionType();
+	EMS_CustomerActionType CustomerAction =  AIUnit->UpdateCustomerActionType();
 
 	BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(CustomerAction));
 
@@ -60,10 +60,31 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 
 	// Issue Type, Action State
 	EMS_CustomerActionState ActionState = EMS_CustomerActionState::None;
-	
-	if (CustomerAction == EMS_CustomerActionType::GoToMarket)
+
+	switch (CustomerAction)
 	{
-		ActionState = EMS_CustomerActionState::Spline_GoToMarket;
+	case EMS_CustomerActionType::GoToMarket :
+		{
+			ActionState = EMS_CustomerActionState::Spline_GoToMarket;
+			break;
+		}
+		
+	case EMS_CustomerActionType::PickUpItems :
+		{
+			ActionState = EMS_CustomerActionState::PickUp_SearchTargets;
+			break;
+		}
+		
+	case EMS_CustomerActionType::Payment :
+		{
+			ActionState = EMS_CustomerActionState::Payment_SearchTargets;
+			break;
+		}
+
+	default:
+		{
+			break;
+		}
 	}
 	
 	BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(ActionState));
