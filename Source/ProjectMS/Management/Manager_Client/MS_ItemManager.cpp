@@ -515,13 +515,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 					if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
 					{
-						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value());
 
 						NotPlacedItems.Remove(NotPlacedItems.begin().Key());
 					}
 					else
 					{
-						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount);
 
 						NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
 					}
@@ -549,13 +549,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 
 					if (NotPlacedItemCount < EmptyCount)
 					{
-						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount);
 
 						NotPlacedItems.Remove(StorageSlotDatas[i].CurrentItemTableId);
 					}
 					else
 					{
-						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+						StorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount);
 
 						NotPlacedItemCount -= EmptyCount;
 					}
@@ -606,13 +606,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 
 			if (NotPlacedItems.begin().Value() < NotPlacedItemData->BoxMaxCount)
 			{
-				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value(), false, false);
+				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItems.begin().Value());
 
 				NotPlacedItems.Remove(NotPlacedItems.begin().Key());
 			}
 			else
 			{
-				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, NotPlacedItems.begin().Key(), NotPlacedItemData->BoxMaxCount);
 
 				NotPlacedItems.begin().Value() -= NotPlacedItemData->BoxMaxCount;
 			}
@@ -640,13 +640,13 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 
 			if (NotPlacedItemCount < EmptyCount)
 			{
-				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, NotPlacedItemCount);
 
 				NotPlacedItems.Remove(StorageSlotDatas[i].CurrentItemTableId);
 			}
 			else
 			{
-				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount, false, false);
+				aStorageUnit->AddCurrentItemCount(i, StorageSlotDatas[i].CurrentItemTableId, EmptyCount);
 
 				NotPlacedItemCount -= EmptyCount;
 			}
