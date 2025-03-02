@@ -64,4 +64,8 @@ public:
 	
 	// Level Specific Character
 	void RegisterLevelSpecificActorToSupervisor(const FName& aName, TWeakObjectPtr<AActor> aActor) const;
+
+
+private:
+	TWeakObjectPtr<AActor> CachePressDownActor;
 };

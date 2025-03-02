@@ -124,11 +124,18 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 void UMS_ModeState_RunMarket::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, aHitActor);
+
+	if (aHitActor)
+	{
+		CachePressDownActor = aHitActor;
+	}
 }
 
 void UMS_ModeState_RunMarket::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
+
+	CachePressDownActor = nullptr;
 	
 	if(gSequenceMng.IsPlayingSequence())
 	{
@@ -167,6 +174,11 @@ void UMS_ModeState_RunMarket::OnInputPointerLongTouch(float aElapsedTime, const 
 	
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
+		if (CachePressDownActor != nullptr && InteractActor != CachePressDownActor)
+		{
+			return;
+		}
+		
 		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
 			SelectActor(InteractActor);
@@ -180,13 +192,6 @@ void UMS_ModeState_RunMarket::OnInputPointerClick(const FVector2D& aPosition,
 	const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerClick(aPosition, aInteractableHitResult);
-
-	AActor* InteractableActor = aInteractableHitResult.GetActor();
-	
-	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
-	{
-		SelectActor(InteractableActor);
-	}
 }
 
 void UMS_ModeState_RunMarket::OnInputPointerDoubleClickEvent(FVector2D aPosition,
@@ -207,7 +212,7 @@ void UMS_ModeState_RunMarket::SelectActor(AActor* aSelectedActor)
 		return;
 	}
 	
-	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	if (aSelectedActor->IsA(AMS_Prop::StaticClass()))
 	{
 		gInteractionMng.SelectActor(aSelectedActor);
 	}

@@ -68,6 +68,8 @@ void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPositio
 void UMS_ModeState_Normal::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
+
+	CachePressDownActor = nullptr;
 }
 
 void UMS_ModeState_Normal::OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta,
@@ -98,6 +100,11 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
+		if (CachePressDownActor != nullptr && InteractActor != CachePressDownActor)
+		{
+			return;
+		}
+		
 		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
 		{
 			SelectActor(InteractActor);
@@ -110,13 +117,6 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 void UMS_ModeState_Normal::OnInputPointerClick(const FVector2D& aPosition, const FHitResult& aInteractableHitResult)
 {
 	Super::OnInputPointerClick(aPosition, aInteractableHitResult);
-
-	AActor* InteractableActor = aInteractableHitResult.GetActor();
-	
-	if (IsValid(InteractableActor) && InteractableActor->IsA(AMS_Prop::StaticClass()))
-	{
-		SelectActor(InteractableActor);
-	}
 }
 
 void UMS_ModeState_Normal::OnInputPointerDoubleClickEvent(FVector2D aPosition, const FHitResult& aInteractableHitResult)
@@ -136,7 +136,7 @@ void UMS_ModeState_Normal::SelectActor(AActor* aSelectedActor)
 		return;
 	}
 	
-	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
+	if (aSelectedActor->IsA(AMS_Prop::StaticClass()))
 	{
 		gInteractionMng.SelectActor(aSelectedActor);
 	}
