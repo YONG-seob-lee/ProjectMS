@@ -45,14 +45,12 @@ void AMS_Storage::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
+TWeakObjectPtr<class UMS_Widget> AMS_Storage::OpenStatusWidget()
 {
 	StatusWidget= gWidgetMng.Create_Widget(UMS_StorageStatusWidget::GetWidgetName(), false);
 
 	if (StatusWidget != nullptr)
 	{
-		gWidgetMng.SetCustomPositionWidget(StatusWidget.Get(), aClickPosition);
-
 		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
 		{
 			MS_ENSURE(OwnerUnit != nullptr);
@@ -78,7 +76,11 @@ void AMS_Storage::OpenStatusWidget(const FVector2D& aClickPosition)
 				});
 			}
 		}
+
+		return StatusWidget;
 	}
+
+	return nullptr;
 }
 
 void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)

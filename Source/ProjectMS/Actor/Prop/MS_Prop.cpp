@@ -203,19 +203,11 @@ void AMS_Prop::OnSelectProp(EMS_ModeState aModeState)
 
 void AMS_Prop::OnUnselectProp(EMS_ModeState aModeState)
 {
-	CloseStatusWidget();
 }
 
-void AMS_Prop::OpenStatusWidget(const FVector2D& aClickPosition)
+TWeakObjectPtr<class UMS_Widget> AMS_Prop::OpenStatusWidget()
 {
-}
-
-void AMS_Prop::CloseStatusWidget()
-{
-	if (StatusWidget != nullptr)
-	{
-		gWidgetMng.DestroyWidget(StatusWidget.Get());
-	}
+	return nullptr;
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)

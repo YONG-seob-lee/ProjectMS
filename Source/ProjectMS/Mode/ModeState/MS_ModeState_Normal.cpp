@@ -6,7 +6,10 @@
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/MS_Prop.h"
+#include "Widget/MS_Widget.h"
+#include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 
 
 UMS_ModeState_Normal::UMS_ModeState_Normal()
@@ -104,12 +107,15 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 		{
 			return;
 		}
+
+		if (gInteractionMng.GetSelectedActor() != nullptr)
+		{
+			return;
+		}
 		
-		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
+		if(InteractActor.IsA(AMS_Prop::StaticClass()))
 		{
 			SelectActor(InteractActor);
-			
-			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
 }
@@ -158,6 +164,8 @@ void UMS_ModeState_Normal::OnSelectActor(AActor* aSelectedActor)
 	{
 		SelectedProp->OnSelectProp(EMS_ModeState::Normal);
 	}
+
+	OpenStatusWidget(aSelectedActor);
 }
 
 void UMS_ModeState_Normal::OnUnselectActor(AActor* aUnselectedActor)
@@ -170,5 +178,31 @@ void UMS_ModeState_Normal::OnUnselectActor(AActor* aUnselectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
 	{
 		SelectedProp->OnUnselectProp(EMS_ModeState::Normal);
+	}
+
+	CloseStatusWidget();
+}
+
+void UMS_ModeState_Normal::OpenStatusWidget(AActor* aSelectedActor)
+{
+	if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(aSelectedActor))
+	{
+		StatusWidget = PropActor->OpenStatusWidget();
+		
+		if (StatusWidget != nullptr)
+		{
+			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
+			{
+				StorageStatusWidget->OnClickedConfirmButtonDelegate.BindUObject(this, &UMS_ModeState_Normal::UnselectActor);
+			}
+		}
+	}
+}
+
+void UMS_ModeState_Normal::CloseStatusWidget()
+{
+	if (StatusWidget != nullptr)
+	{
+		gWidgetMng.DestroyWidget(StatusWidget.Get());
 	}
 }

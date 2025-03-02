@@ -12,6 +12,7 @@
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Prop/MS_Prop.h"
 #include "Widget/Market/Modal/MS_MarketEndModal.h"
+#include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 
 
 UMS_ModeState_RunMarket::UMS_ModeState_RunMarket()
@@ -178,12 +179,15 @@ void UMS_ModeState_RunMarket::OnInputPointerLongTouch(float aElapsedTime, const 
 		{
 			return;
 		}
+
+		if (gInteractionMng.GetSelectedActor() != nullptr)
+		{
+			return;
+		}
 		
-		if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(InteractActor))
+		if(InteractActor.IsA(AMS_Prop::StaticClass()))
 		{
 			SelectActor(InteractActor);
-			
-			PropActor->OpenStatusWidget(aPosition);
 		}
 	}
 }
@@ -234,6 +238,8 @@ void UMS_ModeState_RunMarket::OnSelectActor(AActor* aSelectedActor)
 	{
 		SelectedProp->OnSelectProp(EMS_ModeState::RunMarket);
 	}
+
+	OpenStatusWidget(aSelectedActor);
 }
 
 void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
@@ -246,6 +252,32 @@ void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
 	{
 		SelectedProp->OnUnselectProp(EMS_ModeState::RunMarket);
+	}
+
+	CloseStatusWidget();
+}
+
+void UMS_ModeState_RunMarket::OpenStatusWidget(AActor* aSelectedActor)
+{
+	if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(aSelectedActor))
+	{
+		StatusWidget = PropActor->OpenStatusWidget();
+
+		if (StatusWidget != nullptr)
+		{
+			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
+			{
+				StorageStatusWidget->OnClickedConfirmButtonDelegate.BindUObject(this, &UMS_ModeState_RunMarket::UnselectActor);
+			}
+		}
+	}
+}
+
+void UMS_ModeState_RunMarket::CloseStatusWidget()
+{
+	if (StatusWidget != nullptr)
+	{
+		gWidgetMng.DestroyWidget(StatusWidget.Get());
 	}
 }
 

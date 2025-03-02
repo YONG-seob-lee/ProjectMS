@@ -58,8 +58,7 @@ public:
 	virtual void OnSelectProp(EMS_ModeState aModeState);
 	virtual void OnUnselectProp(EMS_ModeState aModeState);
 
-	virtual void OpenStatusWidget(const FVector2D& aClickPosition);
-	virtual void CloseStatusWidget();
+	virtual TWeakObjectPtr<class UMS_Widget> OpenStatusWidget();
 
 	
 	// For Preview

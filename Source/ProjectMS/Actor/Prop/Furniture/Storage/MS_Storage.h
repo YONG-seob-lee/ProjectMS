@@ -23,7 +23,7 @@ protected:
 
 public:
 	// Slot Datas
-	virtual void OpenStatusWidget(const FVector2D& aClickPosition) override;
+	virtual TWeakObjectPtr<class UMS_Widget> OpenStatusWidget() override;
 	
 	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);

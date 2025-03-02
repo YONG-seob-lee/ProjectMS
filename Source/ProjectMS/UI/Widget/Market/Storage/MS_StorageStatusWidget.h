@@ -8,10 +8,10 @@
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_StorageStatusWidget.generated.h"
 
-enum class EMS_ZoneType : uint8;
 /**
  * 
  */
+DECLARE_DELEGATE(FMS_OnClickedConfirmButtonDelegate);
 DECLARE_DELEGATE_TwoParams(FMS_OnClickRequestSlotDelegate, int32, int32);
 
 UCLASS()
@@ -57,4 +57,5 @@ protected:
 public:
 	// Delegate
 	FMS_OnClickRequestSlotDelegate OnClickRequestSlotDelegate;
+	FMS_OnClickedConfirmButtonDelegate OnClickedConfirmButtonDelegate;
 };

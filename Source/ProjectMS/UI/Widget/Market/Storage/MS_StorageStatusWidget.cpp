@@ -41,7 +41,7 @@ void UMS_StorageStatusWidget::NativeDestruct()
 
 void UMS_StorageStatusWidget::OnClickedConfirmButton()
 {
-	gWidgetMng.DestroyWidget(UMS_StorageStatusWidget::GetWidgetName());
+	OnClickedConfirmButtonDelegate.ExecuteIfBound();
 }
 
 void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
