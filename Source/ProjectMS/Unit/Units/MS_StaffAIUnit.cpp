@@ -140,12 +140,45 @@ bool UMS_StaffAIUnit::ReachSplineEndPoint() const
 	return false;
 }
 
+bool UMS_StaffAIUnit::ReachSplineStartPoint() const
+{
+	if(DuckSplineActor.IsValid() == false)
+	{
+		return false;
+	}
+	const FVector ActorLocation = GetActorLocation();
+	const FVector SplineEndPoint = DuckSplineActor->GetStartPoint();
+	if(FVector::Distance(ActorLocation, SplineEndPoint) < 10.f)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void UMS_StaffAIUnit::GoingToWork() const
 {
 	if(DuckSplineActor.IsValid())
 	{
 		const FVector CurrentVehicleLocation = GetActorLocation();
 		const FVector TangentLocation = DuckSplineActor->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
+		FRotator MoveNextRotation = TangentLocation.Rotation();
+		MoveNextRotation.Yaw -= 90.f;
+		const FVector ClosetLocation = DuckSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
+		if(const TObjectPtr<AMS_CharacterBase> StaffCharacter = GetCharacter())
+		{
+			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			StaffCharacter->SetActorRotation(MoveNextRotation);
+		}
+	}
+}
+
+void UMS_StaffAIUnit::GoingToHome() const
+{
+	if(DuckSplineActor.IsValid())
+	{
+		const FVector CurrentVehicleLocation = GetActorLocation();
+		const FVector TangentLocation = -DuckSplineActor->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
 		FRotator MoveNextRotation = TangentLocation.Rotation();
 		MoveNextRotation.Yaw -= 90.f;
 		const FVector ClosetLocation = DuckSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);

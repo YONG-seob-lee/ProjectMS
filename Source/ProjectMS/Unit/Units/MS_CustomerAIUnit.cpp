@@ -136,6 +136,22 @@ bool UMS_CustomerAIUnit::ReachSplineEndPoint() const
 	return false;
 }
 
+bool UMS_CustomerAIUnit::ReachSplineStartPoint() const
+{
+	if(CustomerSplineActor.IsValid() == false)
+	{
+		return false;
+	}
+	const FVector ActorLocation = GetActorLocation();
+	const FVector SplineEndPoint = CustomerSplineActor->GetStartPoint();
+	if(FVector::Distance(ActorLocation, SplineEndPoint) < 10.f)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void UMS_CustomerAIUnit::GoingToMarket() const
 {
 	if(CustomerSplineActor.IsValid())
@@ -149,6 +165,23 @@ void UMS_CustomerAIUnit::GoingToMarket() const
 		{
 			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
+		}
+	}
+}
+
+void UMS_CustomerAIUnit::GoingToHome() const
+{
+	if(CustomerSplineActor.IsValid())
+	{
+		const FVector CurrentVehicleLocation = GetActorLocation();
+		const FVector TangentLocation = -CustomerSplineActor->FindTangentClosestToWorldLocation(CurrentVehicleLocation);
+		FRotator MoveNextRotation = TangentLocation.Rotation();
+		MoveNextRotation.Yaw -= 90.f;
+		const FVector ClosetLocation = CustomerSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
+		if(const TObjectPtr<AMS_CharacterBase> StaffCharacter = GetCharacter())
+		{
+			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			StaffCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
 }

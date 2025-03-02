@@ -36,7 +36,9 @@ public:
 	// Spline
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
+	bool ReachSplineStartPoint() const;
 	void GoingToMarket() const;
+	void GoingToHome() const;
 	
 	
 private:

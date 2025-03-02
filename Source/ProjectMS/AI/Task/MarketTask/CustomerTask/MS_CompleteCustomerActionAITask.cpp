@@ -8,6 +8,7 @@
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "Units/MS_CustomerAIUnit.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Manager_Both/MS_UnitManager.h"
 
 
 UMS_CompleteCustomerActionAITask::UMS_CompleteCustomerActionAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -48,6 +49,13 @@ EBTNodeResult::Type UMS_CompleteCustomerActionAITask::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Type::Failed;
 	}
 
+	if(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState) == static_cast<uint8>(EMS_CustomerActionState::Spline_GoHome))
+	{
+		AIController->UnPossess();
+		gUnitMng.DestroyUnit(AIUnit->GetUnitHandle());
+		return EBTNodeResult::Type::Succeeded;
+	}
+	
 	EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
 	AIUnit->UnregisterCustomerAction(CustomerActionType);
 	

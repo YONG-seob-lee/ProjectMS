@@ -28,9 +28,12 @@ protected:
 	virtual UClass* GetBlueprintClass() const override;
 
 public:
+	FORCEINLINE TWeakObjectPtr<class AMS_DuckSplineActor> GetDuckSplineActor() const { return DuckSplineActor; }
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
+	bool ReachSplineStartPoint() const;
 	void GoingToWork() const;
+	void GoingToHome() const;
 	
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
