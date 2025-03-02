@@ -8,11 +8,10 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "ContentsUtilities/MS_AIDefine.h"
-#include "Controller/MS_PlayerController.h"
 #include "ElementData/MS_StaffPropertyElementData.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Widget/Staff/MS_StaffDetailWidget.h"
 
@@ -105,89 +104,14 @@ FReply UMS_StaffPropertyElementWidget::NativeOnMouseButtonDown(const FGeometry& 
 
 void UMS_StaffPropertyElementWidget::OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
 {
-	UWorld* World = GetWorld();
-	if (!IsValid(World))
-	{
-		return;
-	}
-
-	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
-	if (!IsValid(PlayerController))
-	{
-		return;
-	}
-	
-	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
-	if (!IsValid(PlayerState))
-	{
-		return;
-	}
-	
 	const int32* pUIPriorityType = SelectItems.FindKey(SelectedItem);
 	if(!pUIPriorityType)
 	{
 		return;
 	}
 	StaffUIPriorityType = static_cast<EMS_StaffUIPriorityType>(*pUIPriorityType);
-	
-	TArray<EMS_StaffIssueType> PriorityOfWorks;
-	
-	switch (StaffUIPriorityType)
-	{
-	case EMS_StaffUIPriorityType::PaymentFirst :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::Payment,
-				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
-				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
-			break;
-		}
 
-	case EMS_StaffUIPriorityType::DisplayFirst :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
-				EMS_StaffIssueType::Payment,
-				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
-			break;
-		}
-		
-	case EMS_StaffUIPriorityType::ShelfFirst :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf,
-				EMS_StaffIssueType::Payment,
-				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
-			break;
-		}
-
-	case EMS_StaffUIPriorityType::PaymentOnly :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::Payment};
-			break;
-		}
-
-	case EMS_StaffUIPriorityType::DisplayOnly :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
-			break;
-		}
-
-	case EMS_StaffUIPriorityType::ShelfOnly :
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
-			break;
-		}
-
-	default:
-		{
-			PriorityOfWorks = {EMS_StaffIssueType::Payment,
-				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
-				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
-			break;
-		}
-	}
-	
-	// Write To Player Data
-	PlayerState->RegisterStaffPriorityOfWorks(StaffId, StaffIdTag, PriorityOfWorks, StaffUIPriorityType);
-	PlayerState->SavePlayerData();
+	gItemMng.UpdateStaffPriorityOfWorks(StaffId, StaffIdTag, StaffUIPriorityType);
 }
 
 FString UMS_StaffPropertyElementWidget::GetUIIssueName(int32 aUIIssueType)

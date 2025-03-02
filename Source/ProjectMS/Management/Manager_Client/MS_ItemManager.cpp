@@ -787,6 +787,86 @@ void UMS_ItemManager::GetStaffProperties(TArray<UMS_StaffPropertyElementData*>& 
 	StaffPropertys.GenerateValueArray(aStaffProperties);
 }
 
+void UMS_ItemManager::UpdateStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag, EMS_StaffUIPriorityType aStaffUIPriorityType)
+{
+	UWorld* World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	AMS_PlayerController* PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+	
+	TArray<EMS_StaffIssueType> PriorityOfWorks;
+	
+	switch (aStaffUIPriorityType)
+	{
+	case EMS_StaffUIPriorityType::PaymentFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::DisplayFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+		
+	case EMS_StaffUIPriorityType::ShelfFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf,
+				EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::PaymentOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::DisplayOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::ShelfOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+
+	default:
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+	}
+	
+	// Write To Player Data
+	PlayerState->RegisterStaffPriorityOfWorks(aStaffId, aStaffIdTag, PriorityOfWorks, aStaffUIPriorityType);
+	PlayerState->SavePlayerData();
+}
+
 UMS_ItemManager* UMS_ItemManager::GetInstance()
 {
 	return ItemManager;

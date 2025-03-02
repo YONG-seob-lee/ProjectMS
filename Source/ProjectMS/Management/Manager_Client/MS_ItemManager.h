@@ -90,6 +90,8 @@ public:
 	void UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDatas);
 	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
+	void UpdateStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag, EMS_StaffUIPriorityType aStaffUIPriorityType);
+
 private:
 	// Items
 	TMap<int32, int32> Items = {};
