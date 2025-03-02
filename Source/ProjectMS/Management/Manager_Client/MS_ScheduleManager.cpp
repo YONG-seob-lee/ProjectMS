@@ -8,8 +8,10 @@
 #include "Controller/MS_PlayerController.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
+#include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MonthFinancialElementData.h"
-#include "Widget/ListViewElement/ElementData/MS_ScheduleDayElementData.h"
+#include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
 
 void FMS_TimeSchedule::PassTheDay()
@@ -50,25 +52,6 @@ void UMS_ScheduleManager::Initialize()
 
 	IntervalSecondReal = CommonTable->GetParameter01(CommonContents::INTERVAL_SECOND);
 
-	// for test
-	for(int32 i = 1 ; i <= 28; i++)
-	{
-		UMS_ScheduleDayElementData* Data = MS_NewObject<UMS_ScheduleDayElementData>(this);
-		Data->SetDays(i);
-		if( i % 7 == 6)
-		{
-			Data->SetColor(FLinearColor::Blue);
-		}
-		else if( i % 7 == 0)
-		{
-			Data->SetColor(FLinearColor::Red);
-		}
-		else
-		{
-			Data->SetColor(FLinearColor::Black);
-		}
-		ScheduleDayElementData.Emplace(Data);
-	}
 	
 	// for test
 	for(int32 i = 1 ; i <=6 ; i++)
@@ -103,12 +86,6 @@ void UMS_ScheduleManager::Finalize()
 		MS_DeleteObject(Data);
 	}
 	MonthFinancialElementDatas.Empty();
-
-	for(const auto& Data : ScheduleDayElementData)
-	{
-		MS_DeleteObject(Data);
-	}
-	ScheduleDayElementData.Empty();
 	
 	Super::Finalize();
 }
@@ -169,6 +146,8 @@ void UMS_ScheduleManager::PassTheDay()
 	TimeSchedule.PassTheDay();
 	TimeSchedule.SetDailyTimeZone(EMS_DailyTimeZone::Morning);
 	TimeSchedule.ResetMinute();
+
+	SetupNewDiary();
 	
 	SaveGameDate();
 	
@@ -231,12 +210,6 @@ void UMS_ScheduleManager::SetMultiplyIntervalSecondReal(int32 aMultiply)
 	MultiplyIntervalSecondReal = aMultiply;
 }
 
-void UMS_ScheduleManager::GetScheduleData(TArray<UMS_ScheduleDayElementData*>& aScheduleDayElementData)
-{
-	aScheduleDayElementData.Empty();
-	aScheduleDayElementData = ScheduleDayElementData;
-}
-
 void UMS_ScheduleManager::GetFinancialData(TArray<UMS_MonthFinancialElementData*>& aMonthFinancialElementDatas) const
 {
 	aMonthFinancialElementDatas.Empty();
@@ -252,6 +225,113 @@ bool UMS_ScheduleManager::IsOverTime(EMS_MarketScheduleEvent ScheduleEvent)
 	}
 
 	return *ScheduleEventTime < TimeSchedule.GetMinute();
+}
+
+void UMS_ScheduleManager::UpdateDailySheet()
+{
+	// 당일 판매금
+	int32 TotalSellItemPrice = 0;
+
+	TMap<int32, int32> SoldItems;
+	gItemMng.GetSoldItems(SoldItems);
+	for(const auto& SoldItem : SoldItems)
+	{
+		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+		if (ItemTable == nullptr)
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		TotalSellItemPrice += ItemTable->GetItemPrice(SoldItem.Key);
+	}
+
+	// 당일 구매한 가구
+	int32 TotalOrderFurniturePrice = 0;
+
+	TMap<int32, int32> OrderFurnitures;
+	gItemMng.GetOrderFurnitures(OrderFurnitures);
+	for(const auto& OrderFurniture : OrderFurnitures)
+	{
+		const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
+		if(FurnitureTable == nullptr)
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		
+		TotalOrderFurniturePrice += FurnitureTable->GetFurniturePrice(OrderFurniture.Key);
+	}
+
+	// 당일 구매한 물건
+	int32 TotalOrderItemPrice = 0;
+
+	TMap<int32, int32> OrderItems;
+	gItemMng.GetOrderItems(OrderItems);
+	for(const auto& SoldItem : OrderItems)
+	{
+		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+		if (ItemTable == nullptr)
+		{
+			MS_ENSURE(false);
+			continue;
+		}
+		TotalOrderItemPrice += ItemTable->GetItemPrice(SoldItem.Key);
+	}
+
+	const int32 ElectricityBill = 100;
+
+	int32 TotalPersonalExpanses = 0;
+
+	TArray<UMS_StaffPropertyElementData*> StaffProperties;
+	gItemMng.GetStaffProperties(StaffProperties);
+	for(const auto& StaffProperty : StaffProperties)
+	{
+		TotalPersonalExpanses += StaffProperty->GetDailySalary();
+	}
+
+	const int32 LoanInterest = 50;
+
+	DailySheet = FMS_SettlementSheet(GetGameDate(), TotalSellItemPrice, TotalOrderFurniturePrice, TotalOrderItemPrice, ElectricityBill
+									, TotalPersonalExpanses, LoanInterest);
+}
+
+void UMS_ScheduleManager::WriteDiary() const
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+	
+	PlayerState->WriteDiary(DailySheet);
+}
+
+void UMS_ScheduleManager::SetupNewDiary() const
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+	
+	PlayerState->WriteDiary(FMS_SettlementSheet(GetGameDate()));
+}
+
+void UMS_ScheduleManager::GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet)
+{
+	for(auto& Note : Diary)
+	{
+		if(Note.Date == aGameDate)
+		{
+			Sheet = Note;
+		}
+	}
 }
 
 void UMS_ScheduleManager::PlayTimer(int32 aGamePlayMinute)

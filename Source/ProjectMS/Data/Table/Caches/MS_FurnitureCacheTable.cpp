@@ -86,3 +86,14 @@ void UMS_FurnitureCacheTable::GetOrderFurnitureElementDatas(TArray<TObjectPtr<UM
 		aOrderFurnitureElementDatas.Emplace(OrderItemElementData);
 	}
 }
+
+int32 UMS_FurnitureCacheTable::GetFurniturePrice(int32 FurnitureTableId) const
+{
+	const FMS_FurnitureData* FurnitureData = GetFurnitureData(FurnitureTableId);
+	if(!FurnitureData)
+	{
+		return 0;
+	}
+
+	return FurnitureData->Price;
+}

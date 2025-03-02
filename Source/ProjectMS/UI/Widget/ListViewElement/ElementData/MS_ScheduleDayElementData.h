@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "UObject/Object.h"
 #include "MS_ScheduleDayElementData.generated.h"
 
@@ -14,13 +15,13 @@ class PROJECTMS_API UMS_ScheduleDayElementData : public UObject
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE void SetDays(int32 aDay) { Day = aDay; }
+	FORCEINLINE void SetDate(FMS_GameDate aDay) { Date = aDay; }
 	FORCEINLINE void SetColor(FLinearColor aColor) { Color = aColor; }
 	
-	FORCEINLINE int32 GetDays() const { return Day; }
+	FORCEINLINE FMS_GameDate GetDate() const { return Date; }
 	FORCEINLINE FLinearColor GetColor() const { return Color; }
 
 private:
-	int32 Day = 0;
+	FMS_GameDate Date = FMS_GameDate();
 	FLinearColor Color = FLinearColor::White;
 };

@@ -6,7 +6,7 @@
 #include "MS_Define.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Client/MS_ItemManager.h"
-#include "Table/Caches/MS_StaffCacheTable.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Test/TestServer/MS_TestDB.h"
 
 
@@ -147,6 +147,23 @@ void AMS_PlayerState::RegisterStaffPriorityOfWorks(int32 aStaffId, int32 aStaffI
 	}
 }
 
+void AMS_PlayerState::WriteDiary(const FMS_SettlementSheet& Sheet)
+{
+	for(int32 i = 0 ; i < Diary.Num() ; i++)
+	{
+		if(Diary[i].Date == Sheet.Date)
+		{
+			Diary[i] = Sheet;
+			return;
+		}
+	}
+	Diary.Emplace(Sheet);
+	
+	SavePlayerData();
+	
+	gScheduleMng.UpdateDiary(Diary);
+}
+
 void AMS_PlayerState::InitDefaultPlayerData()
 {
 	// GameData
@@ -183,6 +200,9 @@ void AMS_PlayerState::InitDefaultPlayerData()
 
 	// Staff
 	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
+
+	// Diary
+	Diary.Emplace(FMS_SettlementSheet());
 }
 
 void AMS_PlayerState::InitPlayerData()
@@ -225,6 +245,13 @@ void AMS_PlayerState::InitPlayerData()
 	StaffDatas = TestDB->StaffDatas;
 	gItemMng.UpdateStaffProperty(StaffDatas);
 
+	Diary = TestDB->Diary;
+	if(Diary.Num() == 1)
+	{
+		Diary[0].Date = gScheduleMng.GetGameDate();
+	}
+	gScheduleMng.UpdateDiary(Diary);
+	
 	if (!bInitDefaultData)
 	{
 		bInitDefaultData = true;
@@ -264,6 +291,8 @@ void AMS_PlayerState::SavePlayerData()
 	NewTestDBData->Furnitures = Furnitures;
 	
 	NewTestDBData->StaffDatas = StaffDatas;
+
+	NewTestDBData->Diary = Diary;
 	
 	if (!UGameplayStatics::SaveGameToSlot(NewTestDBData, SaveSlotName, 0))
 	{

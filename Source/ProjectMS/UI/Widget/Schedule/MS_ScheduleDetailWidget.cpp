@@ -11,13 +11,7 @@
 void UMS_ScheduleDetailWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
 {
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
-
-	// for test
-	if(CPP_FinancialDetailWidget)
-	{
-		CPP_FinancialDetailWidget->InitDetail(300, 150, 130, 150, 5, 45, 100);
-	}
-
+	
 	if (CPP_SkipButton)
 	{
 		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
@@ -25,11 +19,16 @@ void UMS_ScheduleDetailWidget::InitWidget(const FName& aTypeName, bool bManaged,
 	}
 }
 
-void UMS_ScheduleDetailWidget::SetDay(int32 aDay) const
+void UMS_ScheduleDetailWidget::SetDetail(const FMS_SettlementSheet& aDailySheet)
 {
 	if(CPP_FinancialIndicator)
 	{
-		CPP_FinancialIndicator->SetText(FText::FromString(FString::Format(TEXT("{0}일 재무 재표"), {aDay})));
+		CPP_FinancialIndicator->SetText(FText::FromString(FString::Format(TEXT("{0}일 재무 재표"), {aDailySheet.Date.Day})));
+	}
+	
+	if(CPP_FinancialDetailWidget)
+	{
+		CPP_FinancialDetailWidget->InitDetail(aDailySheet);
 	}
 }
 

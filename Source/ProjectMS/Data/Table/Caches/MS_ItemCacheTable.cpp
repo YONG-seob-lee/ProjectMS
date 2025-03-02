@@ -138,3 +138,14 @@ EMS_TemperatureType UMS_ItemCacheTable::GetItemTemperature(int32 aItemId) const
 
 	return static_cast<EMS_TemperatureType>(TargetItem->TemperatureType);
 }
+
+int32 UMS_ItemCacheTable::GetItemPrice(int32 ItemId) const
+{
+	const FMS_ItemData* ItemData = GetItem(ItemId);
+	if(!ItemData)
+	{
+		return 0;
+	}
+
+	return ItemData->PriceMin;
+}

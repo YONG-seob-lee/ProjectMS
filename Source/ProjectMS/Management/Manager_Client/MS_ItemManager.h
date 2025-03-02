@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "MS_ScheduleManager.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
@@ -64,10 +65,14 @@ public:
 	FORCEINLINE void UpdateItems(const TMap<int32, int32>& aItems) { Items = aItems; }
 	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }
 	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = OrderItems; }
+	FORCEINLINE void GetSoldItems(TMap<int32, int32>& aSoldItems) const { aSoldItems = SoldItems; }
+
+	void PurchaseItems(const TMap<int32, int32>& aSoldItems);
 	
 	bool IsAvailablePurchase() const;
 	
 	// Furniture
+	void GetOrderFurnitures(TMap<int32, int32> aOrderFurniture);
 	void GetNotDeployFurniture(TMap<int32, int32>& aNotDeployFurnitures);
 	
 	FORCEINLINE void UpdateFurnitures(TMap<int32, int32> aFurnitures) { Furnitures = aFurnitures; }
@@ -86,7 +91,6 @@ public:
 	void SaveFurniturePosition() const;
 	
 	// Staff
-	void GetStaffProfileElementData(TArray<TObjectPtr<class UMS_StaffProfileElementData>>& aProfileDatas) const;
 	void UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDatas);
 	void GetStaffProperties(TArray<class UMS_StaffPropertyElementData*>& aStaffProperties);
 
@@ -104,11 +108,8 @@ private:
 	TMap<int32, int32> Furnitures = {};
 	TMap<int32, int32> OrderFurnitures = {};
 	TMap<FIntVector2, FMS_FurniturePositionData> GridPositionToMarketFurnitureDatas = {};
-
+	
 	// Staff
-	UPROPERTY()
-	TArray<TObjectPtr<UMS_StaffProfileElementData>> StaffProfileDatas;
-
 	UPROPERTY()
 	TMap<int32, UMS_StaffPropertyElementData*> StaffPropertys;
 

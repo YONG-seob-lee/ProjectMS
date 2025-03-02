@@ -9,6 +9,7 @@
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "PlayerState/MS_PlayerState.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_CustomerAIUnit.h"
@@ -35,21 +36,6 @@ void UMS_ItemManager::BuiltInInitialize()
 void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
-	
-	// 해당 데이터는 원래라면 서버에서 받아야 함
-	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
-	MS_ENSURE(StaffTable);
-
-	TMap<int32, FMS_Staff*> StaffDatas;
-	StaffTable->GetStaffDatas(StaffDatas);
-	for(const auto& StaffData : StaffDatas)
-	{
-		UMS_StaffProfileElementData* Data = MS_NewObject<UMS_StaffProfileElementData>(this);
-		Data->SetStaffId(StaffData.Key);
-		Data->SetWorkDay(FMath::RandRange(30, 120));
-		StaffProfileDatas.Emplace(Data);
-	}
-	// 여기까지
 }
 
 void UMS_ItemManager::PostInitialize()
@@ -656,6 +642,15 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems(TWeakObjectPtr<UMS_Stora
 	CacheNotPlacedItems = NotPlacedItems;
 }
 
+void UMS_ItemManager::PurchaseItems(const TMap<int32, int32>& aSoldItems)
+{
+	for(const auto& aSoldItem : aSoldItems)
+	{
+		int32& SoldItemCount = SoldItems.FindOrAdd(aSoldItem.Key);
+		SoldItemCount += aSoldItem.Value;
+	}
+}
+
 bool UMS_ItemManager::IsAvailablePurchase() const
 {
 	if(gSceneMng.GetCurrentLevelType() != EMS_LevelType::MarketLevel)
@@ -675,6 +670,20 @@ bool UMS_ItemManager::IsAvailablePurchase() const
 	}
 
 	return true;
+}
+
+void UMS_ItemManager::GetOrderFurnitures(TMap<int32, int32> aOrderFurniture)
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	PlayerState->GetOrderFurnitures(aOrderFurniture);
 }
 
 void UMS_ItemManager::GetNotDeployFurniture(TMap<int32, int32>& aNotDeployFurnitures)
@@ -754,12 +763,6 @@ void UMS_ItemManager::SaveFurniturePosition() const
 	PlayerState->SaveFurniturePositionDatas(GridPositionToMarketFurnitureDatas);
 }
 
-void UMS_ItemManager::GetStaffProfileElementData(TArray<TObjectPtr<UMS_StaffProfileElementData>>& aProfileDatas) const
-{
-	aProfileDatas.Empty();
-	aProfileDatas = StaffProfileDatas;
-}
-
 void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDatas)
 {
 	StaffPropertys.Empty();
@@ -774,6 +777,7 @@ void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDat
     		StaffProperty->SetHP(100);
     		StaffProperty->SetCondition(100);
     		StaffProperty->SetFeeling(1);
+			StaffProperty->SetDailySalary(StaffData.DailyPrice);
 			StaffProperty->SetFirstDateOfWork(StaffData.FirstDateOfWork);
     		StaffProperty->SetExpirationDate(StaffData.ExpirationDate);
     		StaffPropertys.Emplace(StaffData.StaffId, StaffProperty);

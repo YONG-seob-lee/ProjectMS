@@ -6,6 +6,7 @@
 #include "Character/MS_CharacterBase.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "Manager_Client/MS_InteractionManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
@@ -109,6 +110,8 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 		}
 	case EMS_MarketScheduleEvent::CloseMarket:
 		{
+			gScheduleMng.UpdateDailySheet();
+			gScheduleMng.WriteDiary();
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());

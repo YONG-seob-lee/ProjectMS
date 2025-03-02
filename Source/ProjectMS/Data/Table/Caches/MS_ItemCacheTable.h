@@ -28,6 +28,7 @@ public:
 	const FMS_ItemData* GetItemByName(const FName& aItemName);
 	TArray<FName> GetAllItemNames();
 	EMS_TemperatureType GetItemTemperature(int32 aItemId) const;
+	int32 GetItemPrice(int32 ItemId) const;
 
 private:
 	TMap<int32, FMS_ItemData*> ItemDatas;

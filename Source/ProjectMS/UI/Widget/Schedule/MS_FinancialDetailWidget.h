@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_FinancialDetailWidget.generated.h"
 
@@ -14,29 +15,27 @@ class PROJECTMS_API UMS_FinancialDetailWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-	void InitDetail(int32 aDailySales, int32 aPurchaseNum, int32 aCostNum
-		, int32 aMaintenanceCost, int32 aWorkStaffNum, int32 aEnteredCustomerNum
-		, int32 aDailyLoanInterest) const;
+	void InitDetail(const FMS_SettlementSheet& aDailySheet) const;
 	
 private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_DailySales = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_ItemPurchaseNum = nullptr;
+	TObjectPtr<class UTextBlock> CPP_OrderFurnitures = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_ItemCostNum = nullptr;
+	TObjectPtr<class UTextBlock> CPP_OrderItems = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_MartMaintenanceCost = nullptr;
+	TObjectPtr<class UTextBlock> CPP_ElectricityBill = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_WorkStaffNum = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UTextBlock> CPP_EnteredCustomerNum = nullptr;
+	TObjectPtr<class UTextBlock> CPP_PersonalExpanses = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_DailyLoanInterest = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_TotalAggregate = nullptr;
 };

@@ -18,10 +18,10 @@ public:
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
 	
 private:
-	void SetMonth(int32 aMonth) const;
+	void UpdateSchedule();
 	void OnClickedChangeMonthButton(int32 aChangeMonthProperty);
 
-	int32 Month = 0;
+	int32 CurrentMonth = 0;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UTextBlock> CPP_MonthScheduleText = nullptr;

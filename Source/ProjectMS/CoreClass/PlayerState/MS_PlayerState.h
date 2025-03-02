@@ -7,6 +7,7 @@
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "ContentsUtilities/MS_AIDefine.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "MS_PlayerState.generated.h"
 
 /**
@@ -41,6 +42,7 @@ public:
 	// Furniture
 	void OrderFurniture(const TMap<int32, int32>& aOrderFurnitures);
 	void OrganizeFurniture();
+	FORCEINLINE void GetOrderFurnitures(TMap<int32, int32>& aOrderFurnitures) { aOrderFurnitures = OrderFurnitures; }
 
 	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas) const
 	{
@@ -55,6 +57,8 @@ public:
 	void RegisterStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag, const TArray<EMS_StaffIssueType>& aPriorityOfWorks, EMS_StaffUIPriorityType aStaffUIPriorityType);
 	const TArray<FMS_PlayerStaffData>& GetStaffDatas() const { return StaffDatas; }
 
+	void WriteDiary(const FMS_SettlementSheet& Sheet);
+	FORCEINLINE TArray<FMS_SettlementSheet>& GetDiary() { return Diary; }
 	
 	void InitDefaultPlayerData();
 	
@@ -93,4 +97,7 @@ private:
 	//Staff
 	UPROPERTY()
 	TArray<FMS_PlayerStaffData> StaffDatas;
+
+	UPROPERTY()
+	TArray<FMS_SettlementSheet> Diary;
 };

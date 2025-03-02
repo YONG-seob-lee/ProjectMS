@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Widget/MS_Widget.h"
 #include "MS_ScheduleDetailWidget.generated.h"
 
@@ -17,7 +18,7 @@ public:
 	static FName GetWidgetName() { return TEXT("ScheduleDetail"); }
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
 
-	void SetDay(int32 aDay) const;
+	void SetDetail(const FMS_SettlementSheet& aDailySheet);
 private:
 	void OnClickedBlankButton();
 	

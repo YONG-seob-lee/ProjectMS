@@ -8,6 +8,41 @@
 #include "MS_ScheduleManager.generated.h"
 
 USTRUCT()
+struct FMS_SettlementSheet
+{
+	GENERATED_BODY()
+public:
+	FMS_SettlementSheet() {}
+
+	FMS_SettlementSheet(FMS_GameDate aDate) : Date(aDate) {} 
+	FMS_SettlementSheet(FMS_GameDate aDate, int32 aSellItemPrice, int32 aOrderFurnitures, int32 aOrderItems, int32 aElectricityBill,
+						int32 aPersonalExpanses, int32 aLoanInterest)
+			: Date(aDate), SellItemPrice(aSellItemPrice), OrderFurnitures(aOrderFurnitures), OrderItems(aOrderItems)
+				, ElectricityBill(aElectricityBill), PersonalExpanses(aPersonalExpanses)
+				, LoanInterest(aLoanInterest)
+	{
+		TotalAggregate = aSellItemPrice - aOrderFurnitures - aOrderItems - aElectricityBill - aPersonalExpanses - aLoanInterest;
+	}
+
+	UPROPERTY()
+	FMS_GameDate Date = FMS_GameDate();
+	UPROPERTY()
+	int32 SellItemPrice = 0;
+	UPROPERTY()
+	int32 OrderFurnitures = 0;
+	UPROPERTY()
+	int32 OrderItems = 0;
+	UPROPERTY()
+	int32 ElectricityBill = 0;
+	UPROPERTY()
+	int32 PersonalExpanses = 0;
+	UPROPERTY()
+	int32 LoanInterest = 0;
+	UPROPERTY()
+	int32 TotalAggregate = 0;
+};
+
+USTRUCT()
 struct FMS_TimeSchedule
 {
 	GENERATED_BODY()
@@ -84,11 +119,18 @@ public:
 	
 	void SetMultiplyIntervalSecondReal(int32 aMultiply);
 	
-	void GetScheduleData(TArray<class UMS_ScheduleDayElementData*>& aScheduleDayElementData);
 	void GetFinancialData(TArray<class UMS_MonthFinancialElementData*>& Array) const;
 
 	bool IsOverTime(EMS_MarketScheduleEvent ScheduleEvent);
+
+	// Diary
+	FORCEINLINE void UpdateDiary(const TArray<FMS_SettlementSheet>& aDiary) { Diary = aDiary; }
+	void UpdateDailySheet();
+	void WriteDiary() const;
+	void SetupNewDiary() const;
+	void GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet);
 	
+	FORCEINLINE FMS_SettlementSheet& GetDailySheet() { return DailySheet; }
 private:
 	void PlayTimer(int32 aGamePlayMinute);
 	void PauseTimer();
@@ -106,9 +148,6 @@ private:
 	// 현실시간 1초에 게임시간이 몇분 지나가야하는지에 대한 멤버변수
 	int32 IntervalSecondReal = 0;
 	int32 MultiplyIntervalSecondReal = 1;
-
-	UPROPERTY()
-	TArray<class UMS_ScheduleDayElementData*> ScheduleDayElementData;
 	
 	UPROPERTY()
 	TArray<class UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
@@ -116,6 +155,10 @@ private:
 	UPROPERTY()
 	TMap<int32, int32> MinuteToScheduleEvent;
 
+	UPROPERTY()
+	TArray<FMS_SettlementSheet> Diary;
+	
+	FMS_SettlementSheet DailySheet = FMS_SettlementSheet();
 public:
 	FMS_OnUpdateMinuteDelegate OnUpdateMinuteDelegate;
 	FMS_OnUpdateScheduleEventDelegate OnUpdateScheduleEventDelegate;

@@ -5,10 +5,10 @@
 
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ScheduleDayElementData.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Slate/SceneViewport.h"
 #include "Widget/Schedule/MS_ScheduleDetailWidget.h"
-#include "Widget/System/Modal/MS_ModalWidget.h"
 
 void UMS_ScheduleDayElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
 {
@@ -20,21 +20,27 @@ void UMS_ScheduleDayElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 		return;
 	}
 
-	Day = Data->GetDays();
+	Date = Data->GetDate();
 	
 	if(CPP_Days)
 	{
-		CPP_Days->SetText(FText::FromString(FString::Format(TEXT("{0} 일"), {Day})));
+		CPP_Days->SetText(FText::FromString(FString::Format(TEXT("{0} 일"), {Date.Day})));
 		CPP_Days->SetColorAndOpacity(Data->GetColor());
 	}
 }
 
-FReply UMS_ScheduleDayElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UMS_ScheduleDayElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
-	const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
-	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
 	
-	gWidgetMng.SetCustomPositionWidget(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false), AbsoluteScreenPosition);
-	
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	//const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
+	//const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
+
+	if(UMS_ScheduleDetailWidget* DetailWidget = Cast<UMS_ScheduleDetailWidget>(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName())))
+	{
+		FMS_SettlementSheet Sheet;
+		gScheduleMng.GetSettlementSheet(Date, Sheet);
+		DetailWidget->SetDetail(Sheet);
+	}
+	//gWidgetMng.SetCustomPositionWidget(, false), AbsoluteScreenPosition);
 }

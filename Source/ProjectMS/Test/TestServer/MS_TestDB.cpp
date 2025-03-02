@@ -11,4 +11,5 @@ UMS_TestDB::UMS_TestDB()
 	MarketFurnitureDatas.Empty();
 	Items.Empty();
 	StaffDatas.Empty();
+	Diary.Empty();
 }

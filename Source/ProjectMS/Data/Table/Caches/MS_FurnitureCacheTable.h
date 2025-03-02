@@ -24,6 +24,8 @@ public:
 	FMS_FurnitureData* GetFurnitureData(int32 aFurnitureId) const;
 	void GetFurnitureCategoryData(TArray<TObjectPtr<class UMS_ConstructCategoryElementData>>& aCategoryArray);
 	void GetOrderFurnitureElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderFurnitureElementDatas);
+	
+	int32 GetFurniturePrice(int32 FurnitureTableId) const;
 
 private:
 	TMap<int32, FMS_FurnitureData*> FurnitureDatas; 

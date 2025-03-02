@@ -7,6 +7,7 @@
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "ContentsUtilities/MS_AIDefine.h"
+#include "Manager_Client/MS_ScheduleManager.h"
 #include "MS_TestDB.generated.h"
 
 /**
@@ -46,4 +47,7 @@ public:
 	
 	UPROPERTY()
 	TArray<FMS_PlayerStaffData> StaffDatas;
+
+	UPROPERTY()
+	TArray<FMS_SettlementSheet> Diary;
 };

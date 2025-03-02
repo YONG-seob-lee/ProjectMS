@@ -197,7 +197,7 @@ public:
 	
 	UPROPERTY()
 	TArray<EMS_StaffIssueType> PriorityOfWorks;
-	
+
 	UPROPERTY()
 	FMS_GameDate FirstDateOfWork;
 
@@ -206,7 +206,10 @@ public:
 
 	UPROPERTY()
 	int32 WorkDay = 0;
-
+	
+	UPROPERTY()
+	int32 DailyPrice = 0;
+	
 	UPROPERTY()
 	TArray<EMS_DayOfWeek> WorkingDays;
 };
