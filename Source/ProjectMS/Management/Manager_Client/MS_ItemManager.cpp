@@ -392,7 +392,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Staff
 	TMap<int32, int32> StaffItems;
-	GetStorageItems(EMS_ZoneType::Display, StaffItems);
+	GetStaffItems(StaffItems);
 
 	for (const auto& StaffItem : StaffItems)
 	{
@@ -402,7 +402,7 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 
 	// Customer
 	TMap<int32, int32> CustomerItems;
-	GetStorageItems(EMS_ZoneType::Display, CustomerItems);
+	GetCustomerItems(CustomerItems);
 
 	for (const auto& CustomerItem : CustomerItems)
 	{

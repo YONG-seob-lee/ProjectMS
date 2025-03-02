@@ -32,7 +32,10 @@ EBTNodeResult::Type UMS_StaffPickUpCurrentItemAITask::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Type::Failed;
 	}
 
-	AIUnit->PickUpCurrentItems();
+	if (!AIUnit->PickUpCurrentItems())
+	{
+		return EBTNodeResult::Type::Failed;
+	}
 	
 	return EBTNodeResult::Type::InProgress;
 }

@@ -84,11 +84,11 @@ void UMS_StorageUnit::SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool 
 		}
 		
 		OnChangeRequestSlotDatas();
-		OnChangeCurrentSlotDatas(false);
+		OnChangeCurrentSlotDatas();
 	}
 }
 
-bool UMS_StorageUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/, bool bUpdateNotPlacedItems /*= true*/)
+bool UMS_StorageUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -120,15 +120,14 @@ bool UMS_StorageUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aC
 		}
 
 		OnChangeRequestSlotDatas();
-		OnChangeCurrentSlotDatas(bUpdateNotPlacedItems);
+		OnChangeCurrentSlotDatas();
 		return true;
 	}
 
 	return false;
 }
 
-int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData,
-	bool bUpdateNotPlacedItems)
+int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData)
 {
 	int32 RemainAddCount = aCount;
 
@@ -147,12 +146,20 @@ int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, b
 		{
 			break;
 		}
-		
-		if (SlotDatas[i].RequestItemTableId == aItemId && SlotDatas[i].CurrentItemCount > 0)
+
+		if (SlotDatas[i].CurrentItemTableId != aItemId && SlotDatas[i].CurrentItemCount == 0 &&
+			SlotDatas[i].RequestItemTableId == aItemId)
+		{
+			SlotDatas[i].CurrentItemTableId = aItemId;
+		}
+
+		// ReqiestItemId가 일치하지 않더라도 이미 가지고 있는 아이템과 같은 종류면 집어 넣기
+		// 유저 인터렉션으로 Staff가 일을 처리하는 중간에 값이 바꼈을 때 더 자연스럽게 연출하기 위함
+		if (SlotDatas[i].CurrentItemTableId == aItemId)
 		{
 			int32 AddCount = FMath::Min(RemainAddCount, MaxSlotCount - SlotDatas[i].CurrentItemCount);
 
-			if (AddCurrentItemCount(i, aItemId, AddCount, bSavePlayerData, bUpdateNotPlacedItems))
+			if (AddCurrentItemCount(i, aItemId, AddCount, bSavePlayerData))
 			{
 				RemainAddCount -= AddCount;
 			}
@@ -162,7 +169,7 @@ int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, b
 	return aCount - RemainAddCount;
 }
 
-bool UMS_StorageUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/, bool bUpdateNotPlacedItems /*= true*/)
+bool UMS_StorageUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData /*= false*/)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())
 	{
@@ -198,15 +205,14 @@ bool UMS_StorageUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int
 		}
 		
 		OnChangeRequestSlotDatas();
-		OnChangeCurrentSlotDatas(bUpdateNotPlacedItems);
+		OnChangeCurrentSlotDatas();
 		return true;
 	}
 
 	return false;
 }
 
-int32 UMS_StorageUnit::SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData,
-	bool bUpdateNotPlacedItems)
+int32 UMS_StorageUnit::SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData)
 {
 	int32 RemainSubtractCount = aCount;
 	
@@ -221,7 +227,7 @@ int32 UMS_StorageUnit::SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCou
 		{
 			int32 SubtractCount = FMath::Min(RemainSubtractCount, SlotDatas[i].CurrentItemCount);
 
-			if (SubtractCurrentItemCount(i, aItemId, SubtractCount, bSavePlayerData, bUpdateNotPlacedItems))
+			if (SubtractCurrentItemCount(i, aItemId, SubtractCount, bSavePlayerData))
 			{
 				RemainSubtractCount -= SubtractCount;
 			}
@@ -368,7 +374,7 @@ void UMS_StorageUnit::OnChangeRequestSlotDatas()
 	Storage->OnChangeRequestSlotDatas(SlotDatas);
 }
 
-void UMS_StorageUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= true*/)
+void UMS_StorageUnit::OnChangeCurrentSlotDatas()
 {
 	// 이 가구의 이슈 업데이트
 	if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Display)
@@ -388,15 +394,6 @@ void UMS_StorageUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= tr
 		else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
 		{
 			RunMarketMode->UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType::Display);
-		}
-	}
-
-	// Not Placed Item이 옮겨질 수 있는 지 업데이트
-	if (bUpdateNotPlacedItems)
-	{
-		if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Pallet))
-		{
-			gItemMng.UpdateNotPlacedItemsToPalletItems(this);
 		}
 	}
 	

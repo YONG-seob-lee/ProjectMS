@@ -27,11 +27,13 @@ protected:
 	virtual UClass* GetBlueprintClass() const override;
 
 public:
-	FORCEINLINE EMS_CustomerActionType GetCustomerActionType() const { return ActionType; }
-	FORCEINLINE void SetCustomerActionType(EMS_CustomerActionType aActionType) { ActionType = aActionType; }
+	// Action
+	EMS_CustomerActionType GetFirstCustomerAction();
 
-	EMS_CustomerActionType UpdateCustomerActionType();
-	
+	void RegisterCustomerAction(EMS_CustomerActionType aCustomerActionType);
+	void UnregisterCustomerAction(EMS_CustomerActionType aCustomerActionType);
+
+	// Spline
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
 	void GoingToMarket() const;
@@ -42,5 +44,5 @@ private:
 	
 	TWeakObjectPtr<class AMS_CustomerSplineActor> CustomerSplineActor = nullptr;
 
-	EMS_CustomerActionType ActionType = EMS_CustomerActionType::None;
+	TArray<EMS_CustomerActionType> CustomerActions = {};
 };

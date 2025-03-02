@@ -32,11 +32,11 @@ public:
 	
 	void SetSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, bool bSavePlayerData = false);
 
-	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-	int32 AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
+	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
+	int32 AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false);
 
-	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
-	int32 SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false, bool bUpdateNotPlacedItems = true);
+	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
+	int32 SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false);
 
 	UFUNCTION()
 	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
@@ -46,7 +46,7 @@ public:
 	
 private:
 	void OnChangeRequestSlotDatas();
-	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = true);
+	void OnChangeCurrentSlotDatas();
 
 public:
 	// IssueTickets

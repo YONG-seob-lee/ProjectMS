@@ -58,9 +58,9 @@ public:
 	bool GetIssueTicketPickUpTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits);
 	bool GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits);
 
-	void DeliveryItems();
-	void PickUpRequestItems();
-	void PickUpCurrentItems();
+	bool DeliveryItems();
+	bool PickUpRequestItems();
+	bool PickUpCurrentItems();
 
 	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
 

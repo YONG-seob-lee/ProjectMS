@@ -32,7 +32,10 @@ EBTNodeResult::Type UMS_StaffDeliveryAITask::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Type::Failed;
 	}
 
-	AIUnit->DeliveryItems();
+	if (!AIUnit->DeliveryItems())
+	{
+		return EBTNodeResult::Type::Failed;
+	}
 	
 	return EBTNodeResult::Type::InProgress;
 }

@@ -32,7 +32,10 @@ EBTNodeResult::Type UMS_StaffPickUpRequestItemAITask::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Type::Failed;
 	}
 
-	AIUnit->PickUpRequestItems();
+	if (!AIUnit->PickUpRequestItems())
+	{
+		return EBTNodeResult::Type::Failed;
+	}
 	
 	return EBTNodeResult::Type::InProgress;
 }

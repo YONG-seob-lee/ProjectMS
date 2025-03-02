@@ -58,16 +58,31 @@ UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
 	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
 }
 
-EMS_CustomerActionType UMS_CustomerAIUnit::UpdateCustomerActionType()
+EMS_CustomerActionType UMS_CustomerAIUnit::GetFirstCustomerAction()
 {
-	if (ActionType == EMS_CustomerActionType::None)
+	if (CustomerActions.IsValidIndex(0))
+	{
+		MS_ENSURE (CustomerActions[0] != EMS_CustomerActionType::None);
+	}
+	
+	else
 	{
 		// ToDo : 상황에 따라 ActionType 설정
 		// Test
-		ActionType = EMS_CustomerActionType::Payment;
+		CustomerActions.Emplace(EMS_CustomerActionType::Payment);
 	}
 	
-	return ActionType;
+	return CustomerActions[0];
+}
+
+void UMS_CustomerAIUnit::RegisterCustomerAction(EMS_CustomerActionType aCustomerActionType)
+{
+	CustomerActions.Emplace(aCustomerActionType);
+}
+
+void UMS_CustomerAIUnit::UnregisterCustomerAction(EMS_CustomerActionType aCustomerActionType)
+{
+	CustomerActions.RemoveSingle(aCustomerActionType);
 }
 
 bool UMS_CustomerAIUnit::FindNearestSpline()

@@ -403,12 +403,12 @@ bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UM
 	return false;
 }
 
-void UMS_StaffAIUnit::DeliveryItems()
+bool UMS_StaffAIUnit::DeliveryItems()
 {
-	if (IssueTicket == nullptr)
+	/*if (IssueTicket == nullptr)
 	{
 		UnregisterAsIssueTicketStaff();
-		return;
+		return false;
 	}
 	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
@@ -419,26 +419,33 @@ void UMS_StaffAIUnit::DeliveryItems()
 	&& IssueType != EMS_StaffIssueType::AddItemsToShelf)
 	{
 		MS_ENSURE(false);
-		return;
-	}
+		return false;
+	}*/
 	
 	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemTableId == INDEX_NONE || SlotDatas[0].CurrentItemCount == 0)	// 직원이 아이템을 들고 있는지
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 	
-	// Take In
+	// Delivery
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
 	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
 	{
-		if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay
-		|| IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
+		//if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay
+		//|| IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
+		//{
+		int32 MoveCount = StorageUnit->AddAnySlotCurrentItemCount(SlotDatas[0].CurrentItemTableId, SlotDatas[0].CurrentItemCount);
+		if (MoveCount == 0)
 		{
-			int32 MoveCount = StorageUnit->AddAnySlotCurrentItemCount(SlotDatas[0].CurrentItemTableId, SlotDatas[0].CurrentItemCount);
-			SubtractCurrentItemCount(0, SlotDatas[0].CurrentItemTableId, MoveCount);
+			return false;
 		}
+		
+		SubtractCurrentItemCount(0, SlotDatas[0].CurrentItemTableId, MoveCount);
+		return true;
+		//}
 
+		/*
 		else
 		{
 			FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
@@ -453,27 +460,26 @@ void UMS_StaffAIUnit::DeliveryItems()
 				}
 			
 				int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
-				int32 DeliveryCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
+				int32 MoveCount = FMath::Min(SlotMaxCount - RequestSlotData.CurrentItemCount, SlotDatas[0].CurrentItemCount);
 			
-				if (StorageUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, DeliveryCount))
+				if (StorageUnit->AddCurrentItemCount(IssueTicket->GetRequestSlotId(), RequestSlotData.RequestItemTableId, MoveCount))
 				{
-					SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, DeliveryCount);
+					SubtractCurrentItemCount(0, RequestSlotData.RequestItemTableId, MoveCount);
 				}
 			}
 		}
+		*/
 	}
-	else
-	{
-		MS_ENSURE(false);
-	}
+
+	return false;
 }
 
-void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
+bool UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 {
 	if (IssueTicket == nullptr)
 	{
 		UnregisterAsIssueTicketStaff();
-		return;
+		return false;
 	}
 	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
@@ -482,7 +488,7 @@ void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 	&& IssueType != EMS_StaffIssueType::AddItemsToShelf)
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 	
 	FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
@@ -492,46 +498,56 @@ void UMS_StaffAIUnit::PickUpRequestItems()	// Add할 아이템 꺼내기
 		if (RequestSlotData.CurrentItemCount != 0)	// Request Item과 CurrentItem이 다르면 아이템이 없어야 Add 가능
 		{
 			MS_ENSURE(false);
-			return;
+			return false;
 		}
 	}
 	
 	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemCount != 0)	// 직원 슬롯에 공간이 남았는지
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 
 	FMS_ItemData* RequestItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, RequestSlotData.RequestItemTableId);
 	if (RequestItemData == nullptr)
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 
 	// Request Count
 	int32 SlotMaxCount = IssueType == EMS_StaffIssueType::AddItemsToDisplay ? RequestItemData->Slot100x100MaxCount : RequestItemData->BoxMaxCount;
 	int32 RequestCount = SlotMaxCount - RequestSlotData.CurrentItemCount;
 
-	// Take Out
+	// Pick Up
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
 	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
 	{
 		int32 MoveCount = StorageUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.RequestItemTableId, RequestCount);
+		if (MoveCount == 0)
+		{
+			return false;
+		}
+
 		AddCurrentItemCount(0, RequestSlotData.RequestItemTableId, MoveCount);
+
+		if (StorageUnit->GetZoneType() == EMS_ZoneType::Pallet)
+		{
+			gItemMng.UpdateNotPlacedItemsToPalletItems(StorageUnit);
+		}
+		
+		return true;
 	}
-	else
-	{
-		MS_ENSURE(false);
-	}
+	
+	return false;
 }
 
-void UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼기
+bool UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼기
 {
 	if (IssueTicket == nullptr)
 	{
 		UnregisterAsIssueTicketStaff();
-		return;
+		return false;
 	}
 	
 	EMS_StaffIssueType IssueType = IssueTicket->GetIssueType();
@@ -540,7 +556,7 @@ void UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼�
 	&& IssueType != EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 	
 	FMS_SlotData RequestSlotData = IssueTicket->GetRequestSlotData();
@@ -548,25 +564,35 @@ void UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼�
 	if (RequestSlotData.RequestItemTableId == RequestSlotData.CurrentItemTableId)	// 뺄 필요가 없음
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 
 	if (!SlotDatas.IsValidIndex(0) || SlotDatas[0].CurrentItemCount != 0)	// 직원 슬롯에 공간이 남았는지
 	{
 		MS_ENSURE(false);
-		return;
+		return false;
 	}
 
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
 	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
 	{
 		int32 MoveCount = StorageUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.CurrentItemTableId, RequestSlotData.CurrentItemCount);
+		if (MoveCount == 0)
+		{
+			return false;
+		}
+
 		AddCurrentItemCount(0, RequestSlotData.CurrentItemTableId, MoveCount);
+
+		if (StorageUnit->GetZoneType() == EMS_ZoneType::Pallet)
+		{
+			gItemMng.UpdateNotPlacedItemsToPalletItems(StorageUnit);
+		}
+		
+		return true;
 	}
-	else
-	{
-		MS_ENSURE(false);
-	}
+	
+	return false;
 }
 
 TWeakObjectPtr<UMS_FurnitureUnit> UMS_StaffAIUnit::GetInteractableFurnitureUnit()
