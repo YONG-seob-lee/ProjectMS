@@ -29,6 +29,20 @@ enum class EMS_StaffIssueType : uint8
 };
 
 UENUM(BlueprintType)
+enum class EMS_StaffUIPriorityType : uint8
+{
+	PaymentFirst = 0,
+	DisplayFirst = 1,
+	ShelfFirst = 2,
+	PaymentOnly = 3,
+	DisplayOnly = 4,
+	ShelfOnly = 5,
+
+	EMS_StaffUIPriorityType_Max = 6
+};
+
+
+UENUM(BlueprintType)
 enum class EMS_StaffActionState : uint8
 {
 	None = 0,
@@ -117,54 +131,70 @@ public:
 		: StaffId(INDEX_NONE)
 	{
 		WorkingDays.Empty();
-
-		// ToDo : Test를 위해 임시 배치
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
+		
+		StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
+		
+		PriorityOfWorks = {EMS_StaffIssueType::Payment,
+			EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+			EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
 	}
 
 	FMS_PlayerStaffData(int32 aStaffId)
-		: StaffId(aStaffId), FirstDateOfWork(FMS_GameDate(1, 1, 1))
+		: StaffId(aStaffId), StaffIdTag(INDEX_NONE), FirstDateOfWork(FMS_GameDate(1, 1, 1))
 	{
 		WorkingDays.Empty();
 
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
-	}
-
-	FMS_PlayerStaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork)
-		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork)
-	{
-		WorkingDays.Empty();
-
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
-	}
-
-	FMS_PlayerStaffData(int32 aStaffId, const FMS_GameDate& aFirstDateOfWork, int32 aWorkDay)
-		: StaffId(aStaffId), FirstDateOfWork(aFirstDateOfWork), ExpirationDate(FMS_GameDate(aFirstDateOfWork, aWorkDay)), WorkDay(aWorkDay)
-	{
+		StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
 		
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::Payment);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToDisplay);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::ReturnItemsFromShelf);
-		PriorityOfWorks.Emplace(EMS_StaffIssueType::AddItemsToShelf);
+		PriorityOfWorks = {EMS_StaffIssueType::Payment,
+			EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+			EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
 	}
 
+	FMS_PlayerStaffData(int32 aStaffId, int32 aStaffIdTag)
+	: StaffId(aStaffId), StaffIdTag(aStaffIdTag), FirstDateOfWork(FMS_GameDate(1, 1, 1))
+	{
+		WorkingDays.Empty();
+
+		StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
+		
+		PriorityOfWorks = {EMS_StaffIssueType::Payment,
+			EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+			EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+	}
+
+	FMS_PlayerStaffData(int32 aStaffId, int32 aStaffIdTag, const FMS_GameDate& aFirstDateOfWork)
+		: StaffId(aStaffId), StaffIdTag(aStaffIdTag), FirstDateOfWork(aFirstDateOfWork)
+	{
+		WorkingDays.Empty();
+
+		StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
+		
+		PriorityOfWorks = {EMS_StaffIssueType::Payment,
+			EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+			EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+	}
+
+	FMS_PlayerStaffData(int32 aStaffId, int32 aStaffIdTag, const FMS_GameDate& aFirstDateOfWork, int32 aWorkDay)
+		: StaffId(aStaffId), StaffIdTag(aStaffIdTag), FirstDateOfWork(aFirstDateOfWork), ExpirationDate(FMS_GameDate(aFirstDateOfWork, aWorkDay)), WorkDay(aWorkDay)
+	{
+		StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
+		
+		PriorityOfWorks = {EMS_StaffIssueType::Payment,
+			EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+			EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+	}
+	
 	
 	UPROPERTY()
 	int32 StaffId;
 
+	UPROPERTY()
+	int32 StaffIdTag;	// StaffId #1, #2 ...
+
+	UPROPERTY()
+	EMS_StaffUIPriorityType StaffUIPriorityType;	// ToDo : PriorityOfWorks와 중복 데이터. 정리하자.
+	
 	UPROPERTY()
 	TArray<EMS_StaffIssueType> PriorityOfWorks;
 	

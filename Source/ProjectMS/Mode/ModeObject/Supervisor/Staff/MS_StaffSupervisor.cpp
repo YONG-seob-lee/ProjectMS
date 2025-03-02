@@ -226,7 +226,7 @@ void UMS_StaffSupervisor::InitStaffSpawnPoint()
 
 		if (StaffTableData->PreSpawned)
 		{
-			return;
+			continue;
 		}
 		
 		const int32 TargetSpawnIndex = FMath::RandRange(0, StaffSpawnPoints.Num() - 1);

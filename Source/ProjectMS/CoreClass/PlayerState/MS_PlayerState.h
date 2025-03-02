@@ -51,7 +51,8 @@ public:
 	void SaveFurniturePositionDatas(TMap<FIntVector2, FMS_FurniturePositionData> aGridPositionToMarketFurnitureDatas);
 	
 	// Staff
-	void RegisterStaff(int32 StaffId, int32 WorkDay);
+	void RegisterStaff(int32 aStaffId, int32 aWorkDay);
+	void RegisterStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag, const TArray<EMS_StaffIssueType>& aPriorityOfWorks, EMS_StaffUIPriorityType aStaffUIPriorityType);
 	const TArray<FMS_PlayerStaffData>& GetStaffDatas() const { return StaffDatas; }
 
 	

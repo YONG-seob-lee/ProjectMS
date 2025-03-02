@@ -768,6 +768,8 @@ void UMS_ItemManager::UpdateStaffProperty(TArray<FMS_PlayerStaffData>& aStaffDat
 		if(UMS_StaffPropertyElementData* StaffProperty = MS_NewObject<UMS_StaffPropertyElementData>())
     	{
     		StaffProperty->SetStaffId(StaffData.StaffId);
+    		StaffProperty->SetStaffIdTag(StaffData.StaffIdTag);
+    		StaffProperty->SetStaffUIPriorityType(StaffData.StaffUIPriorityType);
 			StaffProperty->SetWorkDay(StaffData.WorkDay);
     		StaffProperty->SetHP(100);
     		StaffProperty->SetCondition(100);

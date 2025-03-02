@@ -106,16 +106,45 @@ void AMS_PlayerState::SaveFurniturePositionDatas(TMap<FIntVector2, FMS_Furniture
 	SavePlayerData();
 }
 
-void AMS_PlayerState::RegisterStaff(int32 StaffId, int32 WorkDay)
+void AMS_PlayerState::RegisterStaff(int32 aStaffId, int32 aWorkDay)
 {
+	// StaffIdTag 발급
+	int32 MaxIdTag = INDEX_NONE;
+	for (auto& StaffData : StaffDatas)
+	{
+		if (StaffData.StaffId == aStaffId)
+		{
+			if (StaffData.StaffIdTag > MaxIdTag)
+			{
+				MaxIdTag = StaffData.StaffIdTag;
+			}
+		}
+	}
+	
+	int32 StaffIdTag = MaxIdTag + 1;
+		
 	// Save ( 직원은 다음날 출근하기에 + 1일 )
 	FMS_GameDate FirstDateOfWork = GameDate;
 	FirstDateOfWork.Day += 1;
-	StaffDatas.Emplace(FMS_PlayerStaffData(StaffId, FirstDateOfWork, WorkDay));
+	StaffDatas.Emplace(FMS_PlayerStaffData(aStaffId, StaffIdTag, FirstDateOfWork, aWorkDay));
 	SavePlayerData();
 	
 	// 아이템으로 재등록
 	gItemMng.UpdateStaffProperty(StaffDatas);
+}
+
+void AMS_PlayerState::RegisterStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag,
+	const TArray<EMS_StaffIssueType>& aPriorityOfWorks, EMS_StaffUIPriorityType aStaffUIPriorityType)
+{
+	for (auto& StaffData : StaffDatas)
+	{
+		if (StaffData.StaffId == aStaffId && StaffData.StaffIdTag == aStaffIdTag)
+		{
+			StaffData.StaffUIPriorityType = aStaffUIPriorityType;
+			StaffData.PriorityOfWorks = aPriorityOfWorks;
+			return;
+		}
+	}
 }
 
 void AMS_PlayerState::InitDefaultPlayerData()
@@ -153,7 +182,7 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	Items.Emplace(17, 10);
 
 	// Staff
-	StaffDatas.Emplace(FMS_PlayerStaffData(1, FMS_GameDate(1, 1, 1)));
+	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
 }
 
 void AMS_PlayerState::InitPlayerData()

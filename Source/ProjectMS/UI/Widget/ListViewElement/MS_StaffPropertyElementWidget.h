@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/IUserObjectListEntry.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "Widget/MS_Widget.h"
 #include "MS_StaffPropertyElementWidget.generated.h"
 
@@ -23,9 +24,14 @@ private:
 	UFUNCTION()
 	void OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
 	
-	FString GetIssueName(int32 _IssueType);
+	FString GetUIIssueName(int32 aUIIssueType);
 	
 	int32 StaffId = INDEX_NONE;
+
+	int32 StaffIdTag = INDEX_NONE;
+
+	EMS_StaffUIPriorityType StaffUIPriorityType = EMS_StaffUIPriorityType::PaymentFirst;
+	
 	int32 WorkDay = 0;
 	
 	TMap<int32, FString> SelectItems;
