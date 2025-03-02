@@ -13,9 +13,13 @@ void UMS_SettingModalWidget::InitWidget(const FName& aTypeName, bool bManaged, b
 
 	TMap<int32, float> DefaultSoundVolume;
 	gSoundMng.GetAllDefaultVolume(DefaultSoundVolume);
-
+	DefaultSoundVolume.KeySort([](int32 lv, int32 rv) { return lv < rv; });
 	for(const auto& SoundVolume : DefaultSoundVolume)
 	{
+		if(static_cast<EMS_SoundClassType>(SoundVolume.Key) == EMS_SoundClassType::Undefined)
+		{
+			continue;
+		}
 		if(UMS_SliderSystemElementData* Data = MS_NewObject<UMS_SliderSystemElementData>(this))
 		{
 			Data->SetSettingName(GetSoundName(static_cast<EMS_SoundClassType>(SoundVolume.Key)));
@@ -45,9 +49,9 @@ FString UMS_SettingModalWidget::GetSoundName(EMS_SoundClassType aSoundType)
 	switch (aSoundType)
 	{
 	case EMS_SoundClassType::Master:
+		return TEXT("마스터 음량");
+	case EMS_SoundClassType::BGM:
 		return TEXT("BGM 음량");
-	case EMS_SoundClassType::Music:
-		return TEXT("기타음악 음량");
 	case EMS_SoundClassType::Ambient:
 		return TEXT("환경음 음량");
 	case EMS_SoundClassType::Voice:

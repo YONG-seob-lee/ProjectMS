@@ -238,11 +238,6 @@ void UMS_RootWidget::RequestDialog(const TArray<FMS_DialogParameter>& aDialogPar
 	CPP_DialogWidget->RequestDialog(aDialogParameters);
 }
 
-void UMS_RootWidget::Test(int32 t) const
-{
-	CPP_GeneralWidget->Test(t);
-}
-
 void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 {
 	if(aLevelType <= EMS_LevelType::LobbyLevel)
@@ -273,27 +268,6 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 	{
 		CPP_GeneralWidget->SetRenderOpacity(0.001f);
 		CPP_GeneralWidget->SetType(EMS_GeneralWidgetType::None);
-	}
-}
-
-void UMS_RootWidget::SetBGMAnimation(EMS_LevelType aLevelType) const
-{
-	CPP_GeneralWidget->StopAllAnimations();
-	
-	if(aLevelType == EMS_LevelType::LobbyLevel || aLevelType == EMS_LevelType::Stage01 || aLevelType == EMS_LevelType::Stage02 || aLevelType == EMS_LevelType::Stage03)
-	{
-		if(CPP_GeneralWidget->IsPlayingAnimation() == false)
-		{
-			CPP_GeneralWidget->PlayAnimationByName(BGM::Town, 0.f, 50000);
-		}
-	}
-	else if(aLevelType == EMS_LevelType::MarketLevel)
-	{
-		CPP_GeneralWidget->PlayAnimationByName(BGM::Market, 0.f, 50000);
-	}
-	else
-	{
-		CPP_GeneralWidget->StopAllAnimations();
 	}
 }
 

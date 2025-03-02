@@ -16,11 +16,6 @@ enum class EMS_GeneralWidgetType
 	Market,
 };
 
-namespace BGM
-{
-	const FName Town = TEXT("TownBGM");
-	const FName Market = TEXT("MarketBGM");
-}
 /**
  * 
  */
@@ -33,7 +28,6 @@ public:
 	
 	void SetType(EMS_GeneralWidgetType aType);
 
-	void Test(int32 t) const;
 private:
 	void InitLeftExpander();
 	

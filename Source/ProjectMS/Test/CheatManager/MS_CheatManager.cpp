@@ -164,11 +164,6 @@ void UMS_CheatManager::RequestDialog(FString DialogType, float TypeSpeed)
 	gWidgetMng.RequestDialog(DialogParameters);
 }
 
-void UMS_CheatManager::RequestTutorial(int32 t)
-{
-	gWidgetMng.Test(t);
-}
-
 void UMS_CheatManager::ResetProcessTutorial()
 {
 	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());

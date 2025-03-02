@@ -8,11 +8,12 @@
 
 UMS_GameUserSettings::UMS_GameUserSettings()
 {
+	DefaultSoundVolume.Empty();
 	DefaultSoundVolume.Emplace(EMS_SoundClassType::Master, 0.5f);
-	DefaultSoundVolume.Emplace(EMS_SoundClassType::Music, 0.5f);
-	DefaultSoundVolume.Emplace(EMS_SoundClassType::Ambient, 0.5f);
 	DefaultSoundVolume.Emplace(EMS_SoundClassType::Voice, 0.5f);
 	DefaultSoundVolume.Emplace(EMS_SoundClassType::UserInterface, 0.5f);
+	DefaultSoundVolume.Emplace(EMS_SoundClassType::Ambient, 0.5f);
+	DefaultSoundVolume.Emplace(EMS_SoundClassType::BGM, 0.5f);
 }
 
 void UMS_GameUserSettings::UpdateDefaultSoundVolume(EMS_SoundClassType aSoundType, float aVolume)

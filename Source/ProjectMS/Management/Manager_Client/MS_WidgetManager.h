@@ -58,8 +58,6 @@ public:
 
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
-	void Test(int32 t) const;
-
 	FMS_CreateWidget OnCreateWidget;
 	FMS_DestroyWidget OnDestroyWidget;
 

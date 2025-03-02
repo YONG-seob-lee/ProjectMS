@@ -41,13 +41,10 @@ public:
 	void ShowRotateWidget() const;
 	void ShowModalWidget(const FMS_ModalParameter& aModalParameter) const;
 	void SetGeneralWidget(EMS_LevelType aLevelType) const;
-	void SetBGMAnimation(EMS_LevelType aLevelType) const;
 	void ShowGeneralWidget(bool bShow) const;
 	void CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const;
 	
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
-
-	void Test(int32 t) const;
 	
 	UPROPERTY(BlueprintReadOnly, Meta = (BindWidget))
 	TObjectPtr<class UMS_CanvasPanel> CPP_CutoutFrameCanvasPanel = nullptr;

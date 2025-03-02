@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
+#include "Command/SceneCommand/MS_SceneCommand.h"
 #include "MS_SoundManager.generated.h"
 
 UENUM(BlueprintType) enum class EMS_SoundClassType : uint8
 {
 	Undefined		UMETA(DisplayName = "Undefined"),
 	Master			UMETA(DisplayName = "Master"),
-	Music			UMETA(DisplayName = "Music"),
+	BGM				UMETA(DisplayName = "BGM"),
 	Ambient			UMETA(DisplayName = "Ambient"),
 	Voice			UMETA(DisplayName = "Voice"), 
 	UserInterface	UMETA(DisplayName = "UserInterface"),
@@ -31,6 +32,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void AdjustSoundVolume(EMS_SoundClassType aSoundClassType, float aSoundVolume = -1.f);
+
+	void PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelType aLevelType);
 	
 	float GetSoundVolume(EMS_SoundClassType aSoundClassType) const;
 	float GetDefaultVolume(EMS_SoundClassType aSoundClassType);
@@ -39,7 +42,8 @@ public:
 private:
 	UPROPERTY(EditAnywhere) TObjectPtr<class USoundMix> SoundMix = nullptr;
 
-
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> BGMComponent = nullptr;
 	
 public:
 	static UMS_SoundManager* GetInstance();

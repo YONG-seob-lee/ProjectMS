@@ -4,7 +4,9 @@
 #include "MS_SoundManager.h"
 
 #include "MS_Define.h"
+#include "Components/AudioComponent.h"
 #include "GameUserSettings/MS_GameUserSettings.h"
+#include "Kismet/GameplayStatics.h"
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
 
@@ -76,6 +78,7 @@ void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, flo
 	if(SoundMix->SoundClassEffects.IsValidIndex(0))
 	{
 		const FSoundClassAdjuster SoundClassAdjuster = SoundMix->SoundClassEffects[0];
+		
 		USoundClass* MasterSoundClass = SoundClassAdjuster.SoundClassObject;
 		if(aSoundClassType == EMS_SoundClassType::Master)
 		{
@@ -106,6 +109,47 @@ void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, flo
 			}
 		}
 	}
+}
+
+void UMS_SoundManager::PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelType aLevelType)
+{
+	TObjectPtr<USoundWave> MarketBGM = nullptr;
+	
+	switch(aSoundClassType)
+	{
+	case EMS_SoundClassType::BGM:
+		{
+			if(BGMComponent)
+			{
+				BGMComponent->Stop();
+				MS_DeleteObject(BGMComponent);
+				BGMComponent = nullptr;
+			}
+			
+			switch(aLevelType)
+			{
+			case EMS_LevelType::Stage01:
+			case EMS_LevelType::Stage02:
+			case EMS_LevelType::Stage03:
+			case EMS_LevelType::LobbyLevel:
+				{
+					MarketBGM = Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, TEXT("/Game/Sound/SoundWave/LobbyBGM.LobbyBGM")));
+					break;
+				}
+			case EMS_LevelType::MarketLevel:
+				{
+					MarketBGM = Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, TEXT("/Game/Sound/SoundWave/MarketBGM.MarketBGM")));
+					break;
+				}
+			default:
+					break;
+			}
+			break;
+		}
+	default:
+		break;
+	}
+	BGMComponent = UGameplayStatics::SpawnSound2D(GetWorld(), MarketBGM);
 }
 
 float UMS_SoundManager::GetSoundVolume(EMS_SoundClassType aSoundClassType) const

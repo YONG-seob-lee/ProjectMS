@@ -111,19 +111,6 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 	}
 }
 
-void UMS_GeneralWidget::Test(int32 t) const
-{
-	if(t == 1)
-	{
-		CPP_LeftButton->PlayTutorial(FText::FromString(TEXT("해당 버튼은 스케줄 관리 버튼 입니다..")), FText::FromString(TEXT("글루따띠온~")));
-	}
-	else if(t == 2)
-	{
-		CPP_RightButton->PlayTutorial(FText::FromString(TEXT("해당 버튼은 통합 시스템 버튼 입니다.")), FText::FromString(TEXT("글루따띠온~")));
-	}
-}
-
-
 void UMS_GeneralWidget::InitLeftExpander()
 {
 	CPP_LeftExpanderPanel->SetVisibility(ESlateVisibility::Collapsed);
