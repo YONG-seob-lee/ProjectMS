@@ -57,7 +57,7 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 
 	if (StaffAction == EMS_StaffActionType::None)
 	{
-		return EBTNodeResult::Type::Failed;
+		return EBTNodeResult::Type::Succeeded;
 	}
 
 	// Issue Type, Action State

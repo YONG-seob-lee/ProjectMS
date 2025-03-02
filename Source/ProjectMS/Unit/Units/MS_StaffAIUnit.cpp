@@ -282,7 +282,7 @@ void UMS_StaffAIUnit::UnregisterAsIssueTicketStaff()
 	// Slot에 아이템이 남았다면 NotPlaced로 이동
 	ResetSlotDatas();
 	
-	// Staff 등록만 취소하고 티켓 삭제는 가구쪽에서 담당
+	// Staff 등록만 취소 후 Enable을 False 처리하고(가구에서 확인 전 다시 가져오지 못 하도록) 티켓 삭제는 가구쪽에서 담당
 	if (IssueTicket == nullptr)
 	{
 		OnUnregisteredAsIssueTicketStaff();

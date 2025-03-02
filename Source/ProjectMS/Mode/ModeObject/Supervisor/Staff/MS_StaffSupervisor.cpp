@@ -11,6 +11,7 @@
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Prop/Spline/MS_DuckSplineActor.h"
 #include "SpawnPoint/MS_StaffDuckSpawnPoint.h"
+#include "Table/RowBase/MS_Staff.h"
 #include "Units/MS_SplineUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
@@ -220,6 +221,14 @@ void UMS_StaffSupervisor::InitStaffSpawnPoint()
 	
 	for(auto& StaffData : PlayerStaffDatas)
 	{
+		FMS_Staff* StaffTableData = gTableMng.GetTableRowData<FMS_Staff>(EMS_TableDataType::Staff, StaffData.StaffId);
+		MS_ENSURE(StaffTableData != nullptr);
+
+		if (StaffTableData->PreSpawned)
+		{
+			return;
+		}
+		
 		const int32 TargetSpawnIndex = FMath::RandRange(0, StaffSpawnPoints.Num() - 1);
 		
 		if(StaffSpawnPoints.IsValidIndex(TargetSpawnIndex))
