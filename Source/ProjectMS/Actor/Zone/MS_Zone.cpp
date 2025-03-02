@@ -376,7 +376,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 					continue;
 				}
 
-				const FMS_GridData* GridData_Front = GetGrid(WallGridPosition_Front - FIntVector2(0, -1));
+				const FMS_GridData* GridData_Front = GetGrid(WallGridPosition_Front + FIntVector2(0, -1));
 				if (GridData_Front)
 				{
 					TWeakObjectPtr<AActor> WallObject = GridData_Front->Object;
@@ -440,7 +440,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 					continue;
 				}
 
-				const FMS_GridData* GridData_Right = GetGrid(WallGridPosition_Right - FIntVector2(-1, 0));
+				const FMS_GridData* GridData_Right = GetGrid(WallGridPosition_Right + FIntVector2(-1, 0));
 				if (GridData_Right)
 				{
 					TWeakObjectPtr<AActor> WallObject = GridData_Right->Object;
