@@ -48,8 +48,10 @@ EBTNodeResult::Type UMS_CompleteCustomerActionAITask::ExecuteTask(UBehaviorTreeC
 		return EBTNodeResult::Type::Failed;
 	}
 
-	AIUnit->SetCustomerActionType(EMS_CustomerActionType::None);
+	EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
+	AIUnit->UnregisterCustomerAction(CustomerActionType);
 	
+	BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
 	BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
 	AIAnimInstance->SetActionState(EMS_CustomerActionState::None);
 	

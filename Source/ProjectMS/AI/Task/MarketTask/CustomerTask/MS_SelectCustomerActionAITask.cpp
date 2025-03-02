@@ -49,7 +49,7 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 	}
 	
 	// Customer Action
-	EMS_CustomerActionType CustomerAction =  AIUnit->UpdateCustomerActionType();
+	EMS_CustomerActionType CustomerAction =  AIUnit->GetFirstCustomerAction();
 
 	BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(CustomerAction));
 

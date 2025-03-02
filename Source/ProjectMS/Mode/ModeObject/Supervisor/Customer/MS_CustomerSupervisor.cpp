@@ -91,7 +91,7 @@ bool UMS_CustomerSupervisor::SpawnCustomer()
 	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::CustomerAI, 0,true, SpawnLocation, SpawnRotator);
 	if (UMS_CustomerAIUnit* CustomerAIUnit = Cast<UMS_CustomerAIUnit>(Unit))
 	{
-		CustomerAIUnit->SetCustomerActionType(EMS_CustomerActionType::GoToMarket);
+		CustomerAIUnit->RegisterCustomerAction(EMS_CustomerActionType::GoToMarket);
 		CustomerAIUnits.Emplace(CustomerAIUnit);
 		
 		return true;
