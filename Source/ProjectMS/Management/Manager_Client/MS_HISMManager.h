@@ -6,25 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "MS_HISMManager.generated.h"
 
-namespace MeshName
-{
-	const FName FloorA = TEXT("FloorA");
-	const FName FloorB = TEXT("FloorB");
-	const FName OutsideFloorA = TEXT("OutsideFloorA");
-	const FName WallA = TEXT("WallA");
-	
-	const TMap<FName, const TCHAR*> NameToMeshPath = {
-		{MeshName::FloorA, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50A.SM_CON_FLOOR_50A")}
-		, {MeshName::FloorB, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50B.SM_CON_FLOOR_50B")}
-		, {MeshName::WallA, TEXT("/Game/3D/StaticMesh/SM_CON_WALL_50A.SM_CON_WALL_50A")}
-		, {MeshName::OutsideFloorA, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50A.SM_CON_FLOOR_50A")}
-	};
-
-	const TMap<FName, const TCHAR*> NameToMaterialPath = {
-		{MeshName::OutsideFloorA, TEXT("/Game/3D/Material/MI_atlas_03.MI_atlas_03")}
-	};
-}
-
 
 UCLASS()
 class PROJECTMS_API AMS_HISMManager : public AActor
@@ -42,22 +23,22 @@ protected:
 public:
 	void Initialize();
 	
-	void AddInstance(const FName& aMeshName, const FTransform& aTransform);
-	void AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms);
+	void AddInstance(int32 aMeshId, const FTransform& aTransform);
+	void AddInstances(int32 aMeshId, const TArray<FTransform>& aTransforms);
 
-	bool RemoveInstance(const FName& aMeshName, const FVector& aLocation);
-	bool RemoveInstances(const FName& aMeshName, const TArray<FVector>& aLocations);
+	bool RemoveInstance(int32 aMeshId, const FVector& aLocation);
+	bool RemoveInstances(int32 aMeshId, const TArray<FVector>& aLocations);
 	
 	void ClearInstances();
 
 private:
-	void RebuildInstanceIds(const FName& aMeshName);
+	void RebuildInstanceIds(int32 aMeshId);
 
 	
 private:
-	TMap<FName, TObjectPtr<class UHierarchicalInstancedStaticMeshComponent>> MeshNameToHISM;
+	TMap<int32, TObjectPtr<class UHierarchicalInstancedStaticMeshComponent>> MeshTableIdToHISM;
 
-	TMap<FName, TMap<FVector, int32>> MeshLocationToInstanceIds;
+	TMap<int32, TMap<FVector, int32>> MeshLocationToInstanceIds;
 	
 	// Instance
 	inline static TObjectPtr<AMS_HISMManager> HISMManager = nullptr;

@@ -79,12 +79,12 @@ struct FMS_GridData
 
 public:
 	FMS_GridData()
-	: GridPosition(FIntVector2::ZeroValue), FloorMeshName(FName())
+	: GridPosition(FIntVector2::ZeroValue), FloorMeshId(INDEX_NONE)
 	{
 	}
 
 	FMS_GridData(TWeakObjectPtr<AActor> aOwnerZone, FIntVector2 aWorldGridPosition)
-		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition), FloorMeshName(FName())
+		: OwnerZone(aOwnerZone), GridPosition(aWorldGridPosition), FloorMeshId(INDEX_NONE)
 	{
 	}
 	
@@ -111,7 +111,7 @@ private:
 
 public:
 	UPROPERTY()
-	FName FloorMeshName;
+	int32 FloorMeshId;
 
 	UPROPERTY()
 	TWeakObjectPtr<AActor> Object;
@@ -145,12 +145,12 @@ struct FMS_WallData
 
 public:
 	FMS_WallData()
-		: Location(FVector::ZeroVector), Rotator(FRotator::ZeroRotator), WallMeshName(FName())
+		: Location(FVector::ZeroVector), Rotator(FRotator::ZeroRotator), WallMeshId(INDEX_NONE)
 	{
 	}
 	
 	FMS_WallData(const FVector& aLocation, const FRotator& aRotation)
-		: Location(aLocation), Rotator(aRotation), WallMeshName(FName())
+		: Location(aLocation), Rotator(aRotation), WallMeshId(INDEX_NONE)
 	{
 	}
 	
@@ -161,7 +161,7 @@ public:
 	FRotator Rotator;
 	
 	UPROPERTY()
-	FName WallMeshName;
+	int32 WallMeshId;
 };
 
 USTRUCT()

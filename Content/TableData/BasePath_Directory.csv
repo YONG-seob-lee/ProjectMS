@@ -30,6 +30,7 @@ Id,Directory
 1005,UI/Image/Portrait
 4001,Environment/Prop/Furniture
 5001,3D/StaticMesh
+5100,3D/Material
 7001,Environment/Slot
 8001,Environment/Item
 9001,Unit/Character

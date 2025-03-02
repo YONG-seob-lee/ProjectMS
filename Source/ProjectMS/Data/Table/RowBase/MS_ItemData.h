@@ -29,6 +29,8 @@ USTRUCT(BlueprintType) struct FMS_ItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	int32 PathFile = 0;
 	UPROPERTY(EditAnywhere)
+	int32 MeshPath = 0;
+	UPROPERTY(EditAnywhere)
 	int32 BoxMeshPath = 0;
 	UPROPERTY(EditAnywhere)
 	int32 SlotPath100x100 = 0;

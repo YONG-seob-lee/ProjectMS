@@ -5,6 +5,7 @@
 
 #include "MS_Define.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Table/Caches/MS_BasePathMeshFileCacheTable.h"
 
 
 AMS_HISMManager::AMS_HISMManager()
@@ -13,39 +14,58 @@ AMS_HISMManager::AMS_HISMManager()
 	
 	HISMManager = this;
 
-	for (auto& It : MeshName::NameToMeshPath)
+	if (const TObjectPtr TableManager = gTableMng)
 	{
-		UHierarchicalInstancedStaticMeshComponent* pHISMComponent = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(It.Key);
-		if (pHISMComponent)
-		{
-			if(UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, It.Value)))
-			{
-				pHISMComponent->SetStaticMesh(Mesh);
-			}
-			else
-			{
-				MS_ENSURE(false);
-			}
+		const TObjectPtr<UMS_BasePathMeshFileCacheTable> MeshPathCacheTable = Cast<UMS_BasePathMeshFileCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::BasePathMeshFile));
+		MS_ENSURE(MeshPathCacheTable);
 
-			MeshNameToHISM.Emplace(It.Key, pHISMComponent);
-			MeshLocationToInstanceIds.Emplace(It.Key);
+		const TArray<int32>& HISMIds = MeshPathCacheTable->GetHISMIds();
+	
+		for (int32 Id : HISMIds)
+		{
+			UHierarchicalInstancedStaticMeshComponent* pHISMComponent = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>
+				(FName(FString("HISM") + FString::FromInt(Id)));
+		
+			if (pHISMComponent)
+			{
+				const FString MeshPath = gTableMng.GetPath(EMS_TableDataType::BasePathMeshFile, Id);
+			
+				if(UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *MeshPath)))
+				{
+					pHISMComponent->SetStaticMesh(Mesh);
+				}
+				else
+				{
+					MS_ENSURE(false);
+				}
+
+				MeshTableIdToHISM.Emplace(Id, pHISMComponent);
+				MeshLocationToInstanceIds.Emplace(Id);
+			}
 		}
-	}
 
-	for (auto& It : MeshName::NameToMaterialPath)
-	{
-		TObjectPtr<UHierarchicalInstancedStaticMeshComponent>* ppHISMComponent = MeshNameToHISM.Find(It.Key);
-		if (ppHISMComponent != nullptr)
+		const TArray<int32>& OverlapMaterialHISMIds = MeshPathCacheTable->GetOverlapMaterialHISMIds();
+		
+		for (int32 Id : OverlapMaterialHISMIds)
 		{
-			TObjectPtr<UHierarchicalInstancedStaticMeshComponent> pHISMComponent = *ppHISMComponent;
+			const FString MaterialPath = gTableMng.GetPath(EMS_TableDataType::BasePathMeshFile, Id, false, 1);
 
-			if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, It.Value)))
+			if (!MaterialPath.IsEmpty())
 			{
-				pHISMComponent->SetOverlayMaterial(Material);
-			}
-			else
-			{
-				MS_ENSURE(false);
+				TObjectPtr<UHierarchicalInstancedStaticMeshComponent>* ppHISMComponent = MeshTableIdToHISM.Find(Id);
+				if (ppHISMComponent != nullptr)
+				{
+					TObjectPtr<UHierarchicalInstancedStaticMeshComponent> pHISMComponent = *ppHISMComponent;
+
+					if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *MaterialPath)))
+					{
+						pHISMComponent->SetOverlayMaterial(Material);
+					}
+					else
+					{
+						MS_ENSURE(false);
+					}
+				}
 			}
 		}
 	}
@@ -65,18 +85,18 @@ void AMS_HISMManager::Initialize()
 {
 }
 
-void AMS_HISMManager::AddInstance(const FName& aMeshName, const FTransform& aTransform)
+void AMS_HISMManager::AddInstance(int32 aMeshId, const FTransform& aTransform)
 {
-	if (!MeshNameToHISM.Contains(aMeshName))
+	if (!MeshTableIdToHISM.Contains(aMeshId))
 	{
 		MS_ENSURE(false);
 		return;
 	}
 
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -88,18 +108,18 @@ void AMS_HISMManager::AddInstance(const FName& aMeshName, const FTransform& aTra
 	}
 }
 
-void AMS_HISMManager::AddInstances(const FName& aMeshName, const TArray<FTransform>& aTransforms)
+void AMS_HISMManager::AddInstances(int32 aMeshId, const TArray<FTransform>& aTransforms)
 {
-	if (!MeshNameToHISM.Contains(aMeshName))
+	if (!MeshTableIdToHISM.Contains(aMeshId))
 	{
 		MS_ENSURE(false);
 		return;
 	}
 
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -118,18 +138,18 @@ void AMS_HISMManager::AddInstances(const FName& aMeshName, const TArray<FTransfo
 	}
 }
 
-bool AMS_HISMManager::RemoveInstance(const FName& aMeshName, const FVector& aLocation)
+bool AMS_HISMManager::RemoveInstance(int32 aMeshId, const FVector& aLocation)
 {
-	if (!MeshNameToHISM.Contains(aMeshName))
+	if (!MeshTableIdToHISM.Contains(aMeshId))
 	{
 		MS_ENSURE(false);
 		return false;
 	}
 
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -141,7 +161,7 @@ bool AMS_HISMManager::RemoveInstance(const FName& aMeshName, const FVector& aLoc
 			int32 Id = *pMap->Find(aLocation);
 			if (HISM->RemoveInstance(Id))
 			{
-				RebuildInstanceIds(aMeshName);
+				RebuildInstanceIds(aMeshId);
 				return true;
 			}
 		}
@@ -150,18 +170,18 @@ bool AMS_HISMManager::RemoveInstance(const FName& aMeshName, const FVector& aLoc
 	return false;
 }
 
-bool AMS_HISMManager::RemoveInstances(const FName& aMeshName, const TArray<FVector>& aLocations)
+bool AMS_HISMManager::RemoveInstances(int32 aMeshId, const TArray<FVector>& aLocations)
 {
-	if (!MeshNameToHISM.Contains(aMeshName))
+	if (!MeshTableIdToHISM.Contains(aMeshId))
 	{
 		MS_ENSURE(false);
 		return false;
 	}
 
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -179,7 +199,7 @@ bool AMS_HISMManager::RemoveInstances(const FName& aMeshName, const TArray<FVect
 		
 		if (HISM->RemoveInstances(Ids))
 		{
-			RebuildInstanceIds(aMeshName);
+			RebuildInstanceIds(aMeshId);
 			return true;
 		}
 	}
@@ -189,7 +209,7 @@ bool AMS_HISMManager::RemoveInstances(const FName& aMeshName, const TArray<FVect
 
 void AMS_HISMManager::ClearInstances()
 {
-	for (auto& It : MeshNameToHISM)
+	for (auto& It : MeshTableIdToHISM)
 	{
 		if (It.Value)
 		{
@@ -203,18 +223,18 @@ void AMS_HISMManager::ClearInstances()
 	}
 }
 
-void AMS_HISMManager::RebuildInstanceIds(const FName& aMeshName)
+void AMS_HISMManager::RebuildInstanceIds(int32 aMeshId)
 {
-	if (!MeshNameToHISM.Contains(aMeshName))
+	if (!MeshTableIdToHISM.Contains(aMeshId))
 	{
 		MS_ENSURE(false);
 		return;
 	}
 
-	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshNameToHISM.Find(aMeshName);
+	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshName);
+		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);

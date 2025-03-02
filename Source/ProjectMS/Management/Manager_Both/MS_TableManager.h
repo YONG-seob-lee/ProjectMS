@@ -16,18 +16,18 @@ enum class EMS_TableDataType : uint8
 	ResourceWidget = 1					UMETA(DisplayName = "ResourceWidget"),
 
 	BasePathDirectory = 2				UMETA(DisplayName = "BasePathDirectory"),
-	BasePathBPFile = 3					UMETA(DisplayName = "BasePathBP_File"),
+	BasePathBPFile = 3					UMETA(DisplayName = "BasePathBPFile"),
 	BasePathImgFile	= 4					UMETA(DisplayName = "BasePathImgFile"),
+	BasePathMeshFile = 5				UMETA(DisplayName = "BasePathMeshFile"),
 
-	Level = 5							UMETA(DisplayName = "Level"),
-	PlayerStatus = 6					UMETA(DisplayName = "PlayerStatus"),
-	Staff = 7							UMETA(DisplayName = "Staff"),
-	StaffAbility = 8					UMETA(DisplayName = "StaffAbility"),
-	Customer = 9						UMETA(DisplayName = "Customer"),
+	Level = 6							UMETA(DisplayName = "Level"),
+	PlayerStatus = 7					UMETA(DisplayName = "PlayerStatus"),
+	Staff = 8							UMETA(DisplayName = "Staff"),
+	StaffAbility = 9					UMETA(DisplayName = "StaffAbility"),
+	Customer = 10						UMETA(DisplayName = "Customer"),
 	
-	ItemData = 10						UMETA(DisplayName = "ItemData"),
-	Furniture = 11						UMETA(DisplayName = "Furniture"),
-	// 12
+	ItemData = 11						UMETA(DisplayName = "ItemData"),
+	Furniture = 12						UMETA(DisplayName = "Furniture"),
 	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
 	Tutorial = 14						UMETA(DisplayName = "Tutorial"),
 };
@@ -87,7 +87,7 @@ public:
 	virtual void GetRowDataMap(EMS_TableDataType aTableType, TMap<FName, uint8*>& aOutCache);
 
 	FMS_CacheTableData* GetCacheTableData(EMS_TableDataType aTableType);
-	FString GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath = false);
+	FString GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath = false, int32 aPathType = 0);
 	FString GetDirectory(int32 aDirectoryTableId);
 	
 	TObjectPtr<UDataTable> GetTableData(EMS_TableDataType aTableType);

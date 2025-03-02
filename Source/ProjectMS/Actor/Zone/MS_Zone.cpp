@@ -270,19 +270,19 @@ void AMS_Zone::OnZoneOpened()
 		if (bOpened)
 		{
 			// Floor
-			TMap<FName, TArray<FTransform>> FloorMeshNameToTransforms = {};
+			TMap<int32, TArray<FTransform>> FloorIdToTransforms = {};
 			
 			for (auto& It : Grids)
 			{
-				It.Value.FloorMeshName = GetGridFloorMeshName(It.Value.GetGridPosition());
-				if (!It.Value.FloorMeshName.IsNone())
+				It.Value.FloorMeshId = GetGridFloorMeshId(It.Value.GetGridPosition());
+				if (It.Value.FloorMeshId != INDEX_NONE)
 				{
-					TArray<FTransform>& Transforms = FloorMeshNameToTransforms.FindOrAdd(It.Value.FloorMeshName);
+					TArray<FTransform>& Transforms = FloorIdToTransforms.FindOrAdd(It.Value.FloorMeshId);
 					Transforms.Emplace(FTransform(It.Value.GetGridCenterLocation()));
 				}
 			}
 
-			for (auto& It : FloorMeshNameToTransforms)
+			for (auto& It : FloorIdToTransforms)
 			{
 				gHISMMng.AddInstances(It.Key, It.Value);
 			}
@@ -460,9 +460,9 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 				LocationToNewWallDatas.Emplace(WallLocation_Right, FMS_WallData(WallLocation_Right, WallRotator_Right));
 			}
 			
-			FName WallMeshName = GetWallMeshName();
+			int32 WallMeshId = GetWallMeshId();
 
-			if (!WallMeshName.IsNone())
+			if (WallMeshId != INDEX_NONE)
 			{
 				// ===== Remove Wall Mesh ===== //
 				TArray<FVector> RemoveLocations;
@@ -479,7 +479,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 					else
 					{
 						FMS_WallData* pWallData = LocationToWallDatas.Find(Key);
-						if (pWallData != nullptr && !pWallData->WallMeshName.IsNone())
+						if (pWallData != nullptr && pWallData->WallMeshId != INDEX_NONE)
 						{
 							RemoveLocations.Emplace(Key);
 						}
@@ -488,7 +488,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 					}
 				}
 
-				if (!gHISMMng.RemoveInstances(WallMeshName, RemoveLocations))
+				if (!gHISMMng.RemoveInstances(WallMeshId, RemoveLocations))
 				{
 					MS_ENSURE(false);
 				}
@@ -500,7 +500,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 				for (auto& It : LocationToNewWallDatas)
 				{
 					FMS_WallData WallData = It.Value;
-					WallData.WallMeshName = WallMeshName;
+					WallData.WallMeshId = WallMeshId;
 					LocationToWallDatas.Emplace(It.Key, WallData);
 					
 					FTransform Transform;
@@ -509,7 +509,7 @@ void AMS_Zone::OnAnyZoneOpened(TWeakObjectPtr<class AMS_ConstructibleLevelScript
 					WallTransforms.Emplace(Transform);
 				}
 
-				gHISMMng.AddInstances(WallMeshName, WallTransforms);
+				gHISMMng.AddInstances(WallMeshId, WallTransforms);
 			}
 		}
 	}
@@ -616,28 +616,28 @@ void AMS_Zone::ShowDebugZoneData()
 #endif
 }
 
-const FName& AMS_Zone::GetGridFloorMeshName(const FIntVector2& aGridPosition) const
+int32 AMS_Zone::GetGridFloorMeshId(const FIntVector2& aGridPosition) const
 {
 	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
 	{
-		return MeshName::OutsideFloorA;
+		return 1003;
 	}
 
 	else
 	{
 		if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
 		{
-			return MeshName::FloorA;
+			return 1001;
 		}
 		else
 		{
-			return MeshName::FloorB;
+			return 1002;
 		}
 	}
 }
 
-const FName& AMS_Zone::GetWallMeshName() const
+int32 AMS_Zone::GetWallMeshId() const
 {
-	return MeshName::WallA;
+	return 1007;
 }
 

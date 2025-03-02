@@ -75,7 +75,7 @@ void AMS_Prop::BeginPlay()
 	{
 		if (const TObjectPtr HISMManager = gHISMMng)
 		{
-			gHISMMng.AddInstance(MeshName, GetTransform());
+			//gHISMMng.AddInstance(MeshName, GetTransform());
 		}
 	}
 }
@@ -87,7 +87,7 @@ void AMS_Prop::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		if (const TObjectPtr HISMManager = gHISMMng)
 		{
-			MeshIndex = gHISMMng.RemoveInstance(MeshName, GetActorLocation());
+			//MeshIndex = gHISMMng.RemoveInstance(MeshName, GetActorLocation());
 		}
 	}
 

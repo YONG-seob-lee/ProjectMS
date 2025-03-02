@@ -80,8 +80,8 @@ public:
 
 	void ShowDebugZoneData();
 
-	const FName& GetGridFloorMeshName(const FIntVector2& aGridPosition) const;
-	const FName& GetWallMeshName() const;
+	int32 GetGridFloorMeshId(const FIntVector2& aGridPosition) const;
+	int32 GetWallMeshId() const;
 	
 protected:
 	// Components

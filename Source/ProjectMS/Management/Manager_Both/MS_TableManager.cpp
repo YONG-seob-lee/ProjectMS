@@ -7,6 +7,7 @@
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathBPFile.h"
 #include "ProjectMS/Data/Table/RowBase/MS_BasePathDirectory.h"
 #include "ProjectMS/Utility/MS_Define.h"
+#include "Table/Caches/MS_BasePathMeshFileCacheTable.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
 #include "Table/Caches/MS_CustomerCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
@@ -116,7 +117,7 @@ FMS_CacheTableData* UMS_TableManager::GetCacheTableData(EMS_TableDataType aTable
 	return CacheTableData;
 }
 
-FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath)
+FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool bResourcePath, int32 aPathType)
 {
 	switch(aTableType)
 	{
@@ -133,6 +134,31 @@ FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool
 			return bResourcePath ? GetDirectory(RowData->Directory_Table_Id) + RowData->BP_File_Name.ToString() + '.' + RowData->BP_File_Name.ToString() + TEXT("_C")
 			// 관리 안하는 경우 : 레퍼런스 경로
 				: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->BP_File_Name.ToString()});
+		}
+		break;
+	case EMS_TableDataType::BasePathMeshFile:
+		{
+			const FMS_BasePathMeshFile* RowData = GetTableRowData<FMS_BasePathMeshFile>(aTableType, aKey);
+
+			if(RowData == nullptr)
+			{
+				return FString();
+			}
+
+			if (aPathType == 1)
+			{
+				// 테이블로 관리하는 경우 : 경로 + 파일 이름
+				return bResourcePath ? GetDirectory(RowData->OverlayMaterial_Directory_Table_Id) + RowData->OverlayMaterial_File_Path.ToString() + '.' + RowData->OverlayMaterial_File_Path.ToString() + TEXT("_C")
+				// 관리 안하는 경우 : 레퍼런스 경로
+					: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->OverlayMaterial_File_Path.ToString()});
+			}
+			else
+			{
+				// 테이블로 관리하는 경우 : 경로 + 파일 이름
+				return bResourcePath ? GetDirectory(RowData->Directory_Table_Id) + RowData->Mesh_File_Name.ToString() + '.' + RowData->Mesh_File_Name.ToString() + TEXT("_C")
+				// 관리 안하는 경우 : 레퍼런스 경로
+					: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->Mesh_File_Name.ToString()});
+			}
 		}
 		break;
 	case EMS_TableDataType::BasePathImgFile:
@@ -263,6 +289,7 @@ void UMS_TableManager::MakeTableStructData()
 	CreateTableData(EMS_TableDataType::BasePathDirectory, TEXT("/Game/TableData/BasePath_Directory"));
 	CreateTableData(EMS_TableDataType::BasePathBPFile, TEXT("/Game/TableData/BasePath_BP_File"));
 	CreateTableData(EMS_TableDataType::BasePathImgFile, TEXT("/Game/TableData/BasePath_Img_File"));
+	CreateTableData(EMS_TableDataType::BasePathMeshFile, TEXT("/Game/TableData/BasePath_Mesh_File"), UMS_BasePathMeshFileCacheTable::StaticClass());
 	
 	CreateTableData(EMS_TableDataType::Level, TEXT("/Game/TableData/Level.Level"), UMS_LevelCacheTable::StaticClass());
 	CreateTableData(EMS_TableDataType::ResourceWidget, TEXT("/Game/TableData/ResourceWidget.ResourceWidget"), UMS_ResourceWidgetCacheTable::StaticClass());
