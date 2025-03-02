@@ -52,7 +52,7 @@ void AMS_StaffAICharacter::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& 
 
 	if (TotalItemCount == 0)
 	{
-		Unequip();
+		UnEquip();
 		return;
 	}
 

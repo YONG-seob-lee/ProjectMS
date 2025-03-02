@@ -27,7 +27,7 @@ AMS_MarketAICharacter::AMS_MarketAICharacter()
 		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	}
 	
-	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if (CharacterMovementComponent)
 	{
 		CharacterMovementComponent->GravityScale = 0.f;
@@ -375,13 +375,25 @@ void AMS_MarketAICharacter::Equip(const FName& aEquipmentName)
 	CurrentEquipmentName = aEquipmentName;
 
 	UpdateShowEquipment();
+
+	const TObjectPtr<UMS_MarketAIAnimInstance> MarketAIAnimInstance = Cast<UMS_MarketAIAnimInstance>(GetAIAnimInstance());
+	if(MarketAIAnimInstance)
+	{
+		MarketAIAnimInstance->SetEquipmentName(CurrentEquipmentName);
+	}
 }
 
-void AMS_MarketAICharacter::Unequip()
+void AMS_MarketAICharacter::UnEquip()
 {
 	CurrentEquipmentName = FName();
 	
 	UpdateShowEquipment();
+
+	const TObjectPtr<UMS_MarketAIAnimInstance> MarketAIAnimInstance = Cast<UMS_MarketAIAnimInstance>(GetAIAnimInstance());
+	if(MarketAIAnimInstance)
+	{
+		MarketAIAnimInstance->SetEquipmentName(FName());
+	}
 }
 
 void AMS_MarketAICharacter::OnChangeAnimationInAction(bool bInAction)

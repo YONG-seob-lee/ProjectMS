@@ -46,7 +46,7 @@ public:
 	void SpawnAllEquipment();
 	
 	void Equip(const FName& aEquipmentName);
-	void Unequip();
+	void UnEquip();
 
 	UFUNCTION()
 	void OnChangeAnimationInAction(bool bInAction);

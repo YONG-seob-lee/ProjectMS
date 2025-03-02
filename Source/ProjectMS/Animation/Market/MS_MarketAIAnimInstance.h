@@ -23,10 +23,16 @@ public:
 	
 	FORCEINLINE bool IsInAction() const { return bInAction; }
 
+	FORCEINLINE void SetEquipmentName(const FName& aEquipmentName) { EquipmentName = aEquipmentName; }
+
 	
 private:
 	UPROPERTY()
 	bool bInAction = false;
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	FName EquipmentName;
 
 public:
 	FOnChangeInActionDelegate OnChangeInActionDelegate;
