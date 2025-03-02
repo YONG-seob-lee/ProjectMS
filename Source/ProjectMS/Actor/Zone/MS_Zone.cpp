@@ -618,13 +618,21 @@ void AMS_Zone::ShowDebugZoneData()
 
 const FName& AMS_Zone::GetGridFloorMeshName(const FIntVector2& aGridPosition) const
 {
-	if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
+	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
 	{
-		return MeshName::FloorA;
+		return MeshName::OutsideFloorA;
 	}
+
 	else
 	{
-		return MeshName::FloorB;
+		if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
+		{
+			return MeshName::FloorA;
+		}
+		else
+		{
+			return MeshName::FloorB;
+		}
 	}
 }
 

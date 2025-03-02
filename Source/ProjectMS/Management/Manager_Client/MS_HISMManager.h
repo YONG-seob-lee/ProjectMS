@@ -10,13 +10,21 @@ namespace MeshName
 {
 	const FName FloorA = TEXT("FloorA");
 	const FName FloorB = TEXT("FloorB");
+	const FName OutsideFloorA = TEXT("OutsideFloorA");
 	const FName WallA = TEXT("WallA");
 	
-	const TMap<FName, const TCHAR*> MeshNameToPath
-	= {{MeshName::FloorA, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50A.SM_CON_FLOOR_50A")}
+	const TMap<FName, const TCHAR*> NameToMeshPath = {
+		{MeshName::FloorA, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50A.SM_CON_FLOOR_50A")}
 		, {MeshName::FloorB, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50B.SM_CON_FLOOR_50B")}
-		, {MeshName::WallA, TEXT("/Game/3D/StaticMesh/SM_CON_WALL_50A.SM_CON_WALL_50A")}};
+		, {MeshName::WallA, TEXT("/Game/3D/StaticMesh/SM_CON_WALL_50A.SM_CON_WALL_50A")}
+		, {MeshName::OutsideFloorA, TEXT("/Game/3D/StaticMesh/SM_CON_FLOOR_50A.SM_CON_FLOOR_50A")}
+	};
+
+	const TMap<FName, const TCHAR*> NameToMaterialPath = {
+		{MeshName::OutsideFloorA, TEXT("/Game/3D/Material/MI_atlas_03.MI_atlas_03")}
+	};
 }
+
 
 UCLASS()
 class PROJECTMS_API AMS_HISMManager : public AActor

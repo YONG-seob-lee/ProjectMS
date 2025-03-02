@@ -13,22 +13,40 @@ AMS_HISMManager::AMS_HISMManager()
 	
 	HISMManager = this;
 
-	for (auto& It : MeshName::MeshNameToPath)
+	for (auto& It : MeshName::NameToMeshPath)
 	{
-		UHierarchicalInstancedStaticMeshComponent* Component = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(It.Key);
-		if (Component)
+		UHierarchicalInstancedStaticMeshComponent* pHISMComponent = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(It.Key);
+		if (pHISMComponent)
 		{
 			if(UStaticMesh* Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, It.Value)))
 			{
-				Component->SetStaticMesh(Mesh);
+				pHISMComponent->SetStaticMesh(Mesh);
 			}
 			else
 			{
 				MS_ENSURE(false);
 			}
 
-			MeshNameToHISM.Emplace(It.Key, Component);
+			MeshNameToHISM.Emplace(It.Key, pHISMComponent);
 			MeshLocationToInstanceIds.Emplace(It.Key);
+		}
+	}
+
+	for (auto& It : MeshName::NameToMaterialPath)
+	{
+		TObjectPtr<UHierarchicalInstancedStaticMeshComponent>* ppHISMComponent = MeshNameToHISM.Find(It.Key);
+		if (ppHISMComponent != nullptr)
+		{
+			TObjectPtr<UHierarchicalInstancedStaticMeshComponent> pHISMComponent = *ppHISMComponent;
+
+			if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, It.Value)))
+			{
+				pHISMComponent->SetOverlayMaterial(Material);
+			}
+			else
+			{
+				MS_ENSURE(false);
+			}
 		}
 	}
 }
