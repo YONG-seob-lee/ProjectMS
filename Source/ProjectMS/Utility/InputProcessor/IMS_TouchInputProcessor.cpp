@@ -236,19 +236,12 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	gInputMng.GetHitResultUnderPointerPosition(aPointerDownPosition, ECollisionChannel::ECC_GameTraceChannel1, false, InteractableHitResult);
 
 	UMS_ModeStateBase* CurrentModeState = gModeMng.GetCurrentModeState();
-
-	AActor* HitActor = InteractableHitResult.GetActor();
-
-	if(!HitActor)
-	{
-		return;
-	}
 	
 	if(aType == EMS_TouchActionType::Down)
 	{
 		if (IsValid(CurrentModeState))
 		{
-			CurrentModeState->OnInputPointerDownEvent(aPointerDownPosition, HitActor);
+			CurrentModeState->OnInputPointerDownEvent(aPointerDownPosition, InteractableHitResult);
 		}
 		gInputMng.OnPointerDownDelegate.Broadcast(aPointerDownPosition, InteractableHitResult);
 	}
@@ -256,7 +249,7 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	{
 		if (IsValid(CurrentModeState))
 		{
-			CurrentModeState->OnInputPointerUpEvent(aPointerDownPosition, HitActor);
+			CurrentModeState->OnInputPointerUpEvent(aPointerDownPosition, InteractableHitResult);
 		}
 		
 		gInputMng.OnPointerUpDelegate.Broadcast(aPointerDownPosition, InteractableHitResult);

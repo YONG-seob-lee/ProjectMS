@@ -95,25 +95,25 @@ void UMS_ModeState_Construct::Exit()
 	gInteractionMng.OnSelectActorDelegate.RemoveDynamic(this, &UMS_ModeState_Construct::OnSelectProp);
 }
 
-void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor)
+void UMS_ModeState_Construct::OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& InteractableHitResult)
 {
-	Super::OnInputPointerDownEvent(aPointerDownPosition, aHitActor);
+	Super::OnInputPointerDownEvent(aPointerDownPosition, InteractableHitResult);
 
 	
-	if (aHitActor)
+	if (AActor* HitActor = InteractableHitResult.GetActor())
 	{
-		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(aHitActor))
+		if (AMS_Prop* InteractableProp = Cast<AMS_Prop>(HitActor))
 		{
-			SelectProp(aHitActor);
+			SelectProp(InteractableProp);
 		
 			gCameraMng.RestrictCameraMovement(true);
 		}
 	}
 }
 
-void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor)
+void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& InteractableHitResult)
 {
-	Super::OnInputPointerUpEvent(aPointerUpPosition, aHitActor);
+	Super::OnInputPointerUpEvent(aPointerUpPosition, InteractableHitResult);
 
 	if (PreviewProp)
 	{

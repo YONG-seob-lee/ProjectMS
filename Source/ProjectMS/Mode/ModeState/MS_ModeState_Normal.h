@@ -28,9 +28,9 @@ protected:
 
 	
 public:
-	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, AActor* aHitActor) override;
+	virtual void OnInputPointerDownEvent(FVector2D aPointerDownPosition, const FHitResult& InteractableHitResult) override;
 	
-	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, AActor* aHitActor) override;
+	virtual void OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& InteractableHitResult) override;
 	
 	virtual void OnInputPointerMove(const FVector2D& aPosition, const FVector2D& aPositionDelta, const FVector2D& aPositionDeltaTrend) override;
 	
