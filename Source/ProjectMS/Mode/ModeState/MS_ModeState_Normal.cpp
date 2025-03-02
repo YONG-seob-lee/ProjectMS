@@ -108,10 +108,10 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 			return;
 		}
 
-		if (gInteractionMng.GetSelectedActor() != nullptr)
-		{
-			return;
-		}
+		//if (gInteractionMng.GetSelectedActor() != nullptr)
+		//{
+		//	return;
+		//}
 		
 		if(InteractActor.IsA(AMS_Prop::StaticClass()))
 		{
