@@ -4,13 +4,11 @@
 #include "MS_SlotActor.h"
 
 #include "MS_Define.h"
-#include "UtilityFunctions.h"
-#include "Component/Actor/Item/MS_ItemChildActorComponent.h"
+#include "Component/Actor/Item/MS_MeshTransformComponent.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Table/RowBase/MS_ItemData.h"
 
-
-struct FMS_ItemData;
 
 AMS_SlotActor::AMS_SlotActor(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
@@ -38,63 +36,108 @@ void AMS_SlotActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-	TArray<UMS_ItemChildActorComponent*> ItemComponents;
-	GetComponents<UMS_ItemChildActorComponent>(ItemComponents);
+	TArray<UMS_MeshTransformComponent*> ItemComponents;
+	GetComponents<UMS_MeshTransformComponent>(ItemComponents);
 
-	for (UMS_ItemChildActorComponent* ItemComponent : ItemComponents)
+	for (UMS_MeshTransformComponent* ItemComponent : ItemComponents)
 	{
-		if (ItemComponent->GetItemOrder() == INDEX_NONE)
+		if (ItemComponent->GetOrder() == INDEX_NONE)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] Please set item components order"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 		}
 		
-		ItemOrderToItemComponents.Emplace(ItemComponent->GetItemOrder(), ItemComponent);
+		MeshTransformComponents.Emplace(ItemComponent->GetOrder(), ItemComponent);
 	}
 }
 
-void AMS_SlotActor::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas, bool bChangeItemTableId)
+void AMS_SlotActor::OnChangeCurrentSlotData(const FMS_SlotData& aSlotData)
 {
-	// Kind
-	if (bChangeItemTableId)
+	if (bCacheVisibility)
 	{
-		for (auto& It : ItemOrderToItemComponents)
-		{
-			MS_ENSURE(IsValid(It.Value));
-			
-			if (aSlotDatas.CurrentItemTableId == INDEX_NONE)
-			{
-				It.Value->DestroyChildActor();
-				return;
-			}
-
-			FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aSlotDatas.CurrentItemTableId);
-			MS_ENSURE(ItemData != nullptr);
+		UpdateMeshes(aSlotData, false);
+	}
 	
-			if (ItemData->ItemType == static_cast<int32>(EMS_ItemType::Money)
-				|| ItemData->ItemType == static_cast<int32>(EMS_ItemType::Cash))
-			{
-				It.Value->DestroyChildActor();
-		
-				MS_ENSURE(false);
-				return;
-			}
-			
-			UClass* ItemClass = UUtilityFunctions::GetClassByTablePathId(ItemData->PathFile);
+	CacheSlotData = aSlotData;
+}
 
-			if (IsValid(ItemClass))
+void AMS_SlotActor::SetVisibility(bool bVisibility)
+{
+	if (bCacheVisibility != bVisibility)
+	{
+		UpdateMeshes(CacheSlotData, !bVisibility);
+		bCacheVisibility = bVisibility;
+	}
+}
+
+void AMS_SlotActor::UpdateMeshes(FMS_SlotData aSlotData, bool bRemoveAll)
+{
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aSlotData.CurrentItemTableId);
+	
+	int32 MeshId = ItemData != nullptr ? ItemData->MeshPath : INDEX_NONE;
+
+	// ===== Remove ===== //
+	if (CacheMeshId > 0)
+	{
+		bool bClear = bRemoveAll || MeshId <= 0 || MeshId != CacheMeshId;
+
+		TArray<FVector> RemoveMeshLocations;
+		
+		if (bClear)	// 일단 전부 지워야하는 경우
+		{
+			for (auto& It : MeshTransformComponents)
 			{
-				It.Value->SetChildActorClass(ItemClass);
-				It.Value->CreateChildActor();
+				if (It.Value->HaveMash())
+				{
+					RemoveMeshLocations.Emplace(It.Value->GetComponentLocation());
+					It.Value->SetHaveMash(false);
+				}
 			}
+		}
+	
+		else	// 슬롯 데이터보다 많은 수만 지워야 하는 경우
+		{
+			for (auto& It : MeshTransformComponents)
+			{
+				if (It.Value->HaveMash())
+				{
+					if (It.Key >= aSlotData.CurrentItemCount)
+					{
+						RemoveMeshLocations.Emplace(It.Value->GetComponentLocation());
+						It.Value->SetHaveMash(false);
+					}
+				}
+			}
+		}
+
+		if (RemoveMeshLocations.Num() > 0)
+		{
+			gHISMMng.RemoveInstances(CacheMeshId, RemoveMeshLocations);
 		}
 	}
 
-	// Amount
-	for (auto& It : ItemOrderToItemComponents)
+	// ===== Add ===== //
+	if (!bRemoveAll && MeshId > 0)
 	{
-		MS_ENSURE(IsValid(It.Value));
+		TArray<FTransform> AddMeshTransforms;
 		
-		It.Value->SetItemVisibility(It.Key < aSlotDatas.CurrentItemCount);
+		for (auto& It : MeshTransformComponents)
+		{
+			if (!It.Value->HaveMash())
+			{
+				if (It.Key < aSlotData.CurrentItemCount)
+				{
+					AddMeshTransforms.Emplace(It.Value->GetComponentTransform());
+					It.Value->SetHaveMash(true);
+				}
+			}
+		}
+
+		if (AddMeshTransforms.Num() > 0)
+		{
+			gHISMMng.AddInstances(MeshId, AddMeshTransforms);
+		}
 	}
+
+	CacheMeshId = MeshId;
 }

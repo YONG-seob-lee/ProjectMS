@@ -128,3 +128,19 @@ void AMS_Storage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotData
 		}
 	}
 }
+
+void AMS_Storage::SetVisibility(bool bVisibility)
+{
+	Super::SetVisibility(bVisibility);
+
+	if (!IsPreviewProp())
+	{
+		for (auto& It : ItemSlotIdToSlotComponents)
+		{
+			if (It.Value != nullptr)
+			{
+				It.Value->SetVisibility(bVisibility);
+			}
+		}
+	}
+}

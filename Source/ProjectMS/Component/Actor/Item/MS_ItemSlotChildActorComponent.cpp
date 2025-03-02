@@ -81,6 +81,20 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 		MS_ENSURE(false);
 		return;
 	}
+
+	SlotActor->SetVisibility(bCacheVisibility);
+	SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+}
+
+void UMS_ItemSlotChildActorComponent::SetVisibility(bool bVisibility)
+{
+	bCacheVisibility = bVisibility;
 	
-	SlotActor->OnChangeCurrentSlotData(aSlotDatas, bChangeItemTableId);
+	AMS_SlotActor* SlotActor = Cast<AMS_SlotActor>(GetChildActor());
+	if (!IsValid(SlotActor))
+	{
+		return;
+	}
+
+	SlotActor->SetVisibility(bVisibility);
 }

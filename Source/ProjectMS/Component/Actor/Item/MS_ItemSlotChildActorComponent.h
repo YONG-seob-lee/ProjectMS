@@ -20,18 +20,21 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Property :: Getter
 	int32 GetSlotId() const { return SlotId; }
 
 	void OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas);
 	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas);
 
+	void SetVisibility(bool bVisibility);
+
 	
 protected:
-	// Property
 	UPROPERTY(EditAnywhere)
 	int32 SlotId;
-
+	
 	UPROPERTY(Transient)
 	FMS_SlotData CacheSlotData;
+
+	UPROPERTY(Transient)
+	bool bCacheVisibility;
 };

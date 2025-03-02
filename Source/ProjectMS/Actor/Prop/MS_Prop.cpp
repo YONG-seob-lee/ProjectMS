@@ -71,6 +71,8 @@ void AMS_Prop::BeginPlay()
 	Super::BeginPlay();
 
 	// Mesh
+	SetVisibility(true);
+	
 	if (!MeshName.IsNone())
 	{
 		if (const TObjectPtr HISMManager = gHISMMng)
@@ -267,4 +269,9 @@ void AMS_Prop::ShowArrangementWidget(bool bShow) const
 	{
 		ArrangementWidgetComponent->SetVisibility(bShow);
 	}
+}
+
+void AMS_Prop::SetVisibility(bool bVisibility)
+{
+	SetActorHiddenInGame(!bVisibility);
 }

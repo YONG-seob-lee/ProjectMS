@@ -382,7 +382,7 @@ void UMS_ModeState_Construct::CreateLinkedPreviewProp(AMS_Prop* aSelectedProp)
 		CancelPreviewProp();
 	}
 	
-	aSelectedProp->SetActorHiddenInGame(true);
+	aSelectedProp->SetVisibility(false);
 	gWidgetMng.ShowMessageOnScreen(TEXT("CreateLinkedPreviewProp"));
 	FVector Location = aSelectedProp->GetActorLocation() + FVector(0.f, 0.f, 5.f);
 	FRotator Rotator = aSelectedProp->GetActorRotation();
@@ -510,7 +510,7 @@ void UMS_ModeState_Construct::CancelPreviewProp()
 	
 	if (PreviewProp->GetLinkedProp() != nullptr)
 	{
-		PreviewProp->GetLinkedProp()->SetActorHiddenInGame(false);
+		PreviewProp->GetLinkedProp()->SetVisibility(true);
 	}
 	
 	PreviewProp->Destroy();

@@ -75,6 +75,8 @@ public:
 
 	void ShowArrangementWidget(bool bShow) const;
 
+	virtual void SetVisibility(bool bVisibility);
+
 	
 protected:
 	UPROPERTY(EditAnywhere, Category=HISM)

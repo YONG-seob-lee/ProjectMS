@@ -28,6 +28,8 @@ public:
 	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
+	virtual void SetVisibility(bool bVisibility) override;
+
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

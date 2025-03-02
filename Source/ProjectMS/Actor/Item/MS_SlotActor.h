@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_Actor.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_SlotActor.generated.h"
 
 UCLASS()
@@ -22,14 +23,26 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	
-	void OnChangeCurrentSlotData(const struct FMS_SlotData& aSlotDatas, bool bChangeItemTableId);
+	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotData);
+
+	void SetVisibility(bool bVisibility);
+	
+	void UpdateMeshes(FMS_SlotData aSlotDatas, bool bRemoveAll);
 
 	
 protected:
-	// Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* ItemAttachedComponent;
+	USceneComponent* ItemAttachedComponent;
 
 	UPROPERTY()
-	TMap<int32, TObjectPtr<class UMS_ItemChildActorComponent>> ItemOrderToItemComponents;
+	TMap<int32, TObjectPtr<class UMS_MeshTransformComponent>> MeshTransformComponents;
+
+	UPROPERTY(Transient)
+	FMS_SlotData CacheSlotData;
+	
+	UPROPERTY(Transient)
+	int32 CacheMeshId;
+
+	UPROPERTY(Transient)
+	bool bCacheVisibility;
 };
