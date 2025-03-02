@@ -150,7 +150,7 @@ FString UMS_TableManager::GetPath(EMS_TableDataType aTableType, int32 aKey, bool
 				// 테이블로 관리하는 경우 : 경로 + 파일 이름
 				return bResourcePath ? GetDirectory(RowData->OverlayMaterial_Directory_Table_Id) + RowData->OverlayMaterial_File_Path.ToString() + '.' + RowData->OverlayMaterial_File_Path.ToString() + TEXT("_C")
 				// 관리 안하는 경우 : 레퍼런스 경로
-					: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->OverlayMaterial_File_Path.ToString()});
+					: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->OverlayMaterial_Directory_Table_Id), RowData->OverlayMaterial_File_Path.ToString()});
 			}
 			else
 			{
