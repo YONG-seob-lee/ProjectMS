@@ -4,6 +4,7 @@
 #include "MS_GeneralButton.h"
 
 #include "Components/Image.h"
+#include "Manager_Client/MS_SceneManager.h"
 
 namespace ImagePath
 {
@@ -18,6 +19,8 @@ namespace ImagePath
 	const FString StaffManage = TEXT("/Game/UI/Image/Icon/StaffManageIcon.StaffManageIcon");
 	const FString CustomerManage = TEXT("/Game/UI/Image/Icon/CustomerManageIcon.CustomerManageIcon");
 	const FString SalesDetail = TEXT("/Game/UI/Image/Icon/SalesDetailIcon.SalesDetailIcon");
+	const FString MartIcon = TEXT("/Game/UI/Image/Icon/MartIcon.MartIcon");
+	const FString TownIcon = TEXT("/Game/UI/Image/Icon/TownIcon.TownIcon");
 }
 
 void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
@@ -100,6 +103,18 @@ void UMS_GeneralButton::SetButtonType(EMS_GeneralButtonType aType)
 			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::SalesDetail));
 			CPP_Image->SetBrushFromTexture(Image);
+			break;
+		}
+	case EMS_GeneralButtonType::GoTo:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+			if(const TObjectPtr SceneManager = gSceneMng)
+			{
+				const FString CurrentIconPath = SceneManager->GetCurrentLevelType() == EMS_LevelType::MarketLevel ? ImagePath::MartIcon : ImagePath::TownIcon;
+				UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *CurrentIconPath));
+				CPP_Image->SetBrushFromTexture(Image);
+			}
 			break;
 		}
 	default:
@@ -192,6 +207,12 @@ void UMS_GeneralButton::SynchronizeProperties()
 			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::SalesDetail));
 			CPP_Image->SetBrushFromTexture(Image);
 			break;
+		}
+	case EMS_GeneralButtonType::GoTo:
+		{
+			CPP_Image->SetVisibility(ESlateVisibility::HitTestInvisible);
+			UTexture2D* Image = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath::MartIcon));
+			CPP_Image->SetBrushFromTexture(Image);
 		}
 	default:
 		{

@@ -22,6 +22,7 @@ enum class EMS_GeneralButtonType
 	StaffManage,
 	CustomerManage,
 	SalesDetail,
+	GoTo,
 };
 /**
  * 

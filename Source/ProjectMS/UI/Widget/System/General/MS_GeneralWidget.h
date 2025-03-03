@@ -29,69 +29,28 @@ public:
 	void SetType(EMS_GeneralWidgetType aType);
 
 private:
-	void InitLeftExpander();
+	void InitRightExpander();
 	
 	void OnClickedLeftButton();
 	void OnClickedRightButton();
-	void OnClickedMenuElementButton();
-
-	// Left Expander Button
-	void OnClickedExpanderButton();
-
-	void OnClickedOrderItemButton();
-	void OnClickedCheckOrderButton();
-	void OnClickedOrderFurnitureButton();
-	void OnClickedHireStaffButton();
-	void OnClickedManageStaffButton();
-	void OnClickedManageCustomerButton();
-	void OnClickedFinancialIndicatorButton();
-
-	void OpenLeftExpander() const;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_LeftPanel = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UCanvasPanel> CPP_LeftExpanderPanel = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton01 = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton02 = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton03 = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton04 = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton05 = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton06 = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_LeftExpanderButton07 = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_RightPanel = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralLeftExpanderWidget> CPP_LeftExpanderWidget = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_GeneralRightExpanderWidget> CPP_RightExpanderWidget = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_LeftButton = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_RightButton = nullptr;
-
-	UPROPERTY(meta= (BindWidget))
-	TObjectPtr<class UCanvasPanel> CPP_MenuExpanderPanel = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_TileView> CPP_MenuTileView = nullptr;
-
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralButton> CPP_ExpanderButton = nullptr;
 
 	EMS_GeneralButtonType LeftButtonType = EMS_GeneralButtonType::None;
 	EMS_GeneralButtonType RightButtonType = EMS_GeneralButtonType::None;
