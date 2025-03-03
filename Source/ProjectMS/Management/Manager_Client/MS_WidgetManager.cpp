@@ -246,16 +246,6 @@ void UMS_WidgetManager::CloseModalWidget(const TFunction<void()>& _OnCloseModalW
 	RootWidget->CloseModalWidget(_OnCloseModalWidgetCallback);
 }
 
-void UMS_WidgetManager::SetGeneralWidget(EMS_LevelType aLevelType) const
-{
-	RootWidget->SetGeneralWidget(aLevelType);
-}
-
-void UMS_WidgetManager::ShowGeneralWidget(bool bShow) const
-{
-	RootWidget->ShowGeneralWidget(bShow);
-}
-
 void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition)
 {
 	if (IsValid(aWidget) == false)

@@ -20,36 +20,31 @@ void UMS_GeneralWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	FillDefaultAnimations();
-
-	CPP_LeftButton->SetVisibility(ESlateVisibility::Visible);
+	
 	CPP_LeftButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedLeftButton);
-	CPP_RightButton->SetVisibility(ESlateVisibility::Visible);
 	CPP_RightButton->GetOnClickedDelegate().AddUObject(this, &UMS_GeneralWidget::OnClickedRightButton);
+
 	CPP_LeftExpanderWidget->SetVisibility(ESlateVisibility::Collapsed);
 	CPP_RightExpanderWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	InitializeGeneralWidgetType();
+	
 	InitRightExpander();
 }
 
-void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
+void UMS_GeneralWidget::InitializeGeneralWidgetType()
 {
-	switch (aType)
+	switch (GeneralWidgetType)
 	{
-	case EMS_GeneralWidgetType::Lobby:
-		{
-			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
-			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
-			RightButtonType = EMS_GeneralButtonType::Setting;
-			break;
-		}
 	case EMS_GeneralWidgetType::Town:
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Schedule);
-			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
+			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			LeftButtonType = EMS_GeneralButtonType::Schedule;
-			RightButtonType = EMS_GeneralButtonType::Menu;
+			RightButtonType = EMS_GeneralButtonType::Setting;
 			CPP_RightExpanderWidget->UpdateButton();
 			break;
 		}
@@ -57,16 +52,18 @@ void UMS_GeneralWidget::SetType(EMS_GeneralWidgetType aType)
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
-			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Menu);
+			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
 			LeftButtonType = EMS_GeneralButtonType::Manage;
-			RightButtonType = EMS_GeneralButtonType::Menu;
+			RightButtonType = EMS_GeneralButtonType::Setting;
 			CPP_RightExpanderWidget->UpdateButton();
 			break;
 		}
 	default:
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
+			CPP_RightPanel->SetVisibility(ESlateVisibility::Collapsed);
 			RightButtonType = EMS_GeneralButtonType::None;
 			break;
 		}

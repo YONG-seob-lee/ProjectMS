@@ -11,7 +11,6 @@ UENUM()
 enum class EMS_GeneralWidgetType
 {
 	None = 0,
-	Lobby,
 	Town,
 	Market,
 };
@@ -26,7 +25,7 @@ class PROJECTMS_API UMS_GeneralWidget : public UMS_Widget
 public:
 	virtual void NativeConstruct() override;
 	
-	void SetType(EMS_GeneralWidgetType aType);
+	void InitializeGeneralWidgetType();
 
 private:
 	void InitRightExpander();
@@ -52,6 +51,9 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_RightButton = nullptr;
 
+	UPROPERTY(EditInstanceOnly, Category=MS_Widget)
+	EMS_GeneralWidgetType GeneralWidgetType = EMS_GeneralWidgetType::None;
+	
 	EMS_GeneralButtonType LeftButtonType = EMS_GeneralButtonType::None;
 	EMS_GeneralButtonType RightButtonType = EMS_GeneralButtonType::None;
 };

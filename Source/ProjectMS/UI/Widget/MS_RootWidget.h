@@ -40,9 +40,7 @@ public:
 
 	void ShowRotateWidget() const;
 	void ShowModalWidget(const FMS_ModalParameter& aModalParameter) const;
-	void SetGeneralWidget(EMS_LevelType aLevelType) const;
 	void ShowContentsWidget(bool bShow) const;
-	void ShowGeneralWidget(bool bShow) const;
 	void CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const;
 	
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
@@ -70,8 +68,6 @@ private:
 	TObjectPtr<class UMS_RotateWidget> CPP_RotateWidget = nullptr;
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ModalWidget> CPP_ModalWidget = nullptr;
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_GeneralWidget> CPP_GeneralWidget = nullptr;
 	
 	
 	UPROPERTY(Meta = (BindWidget))

@@ -93,7 +93,6 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
-	RootWidget->ShowGeneralWidget(false);
 	RootWidget->ShowContentsWidget(false);
 	StartFade();
 }
@@ -181,10 +180,8 @@ void UMS_SceneManager::EndFade()
 		{
 			gWidgetMng.Create_Widget(NewCommand->GetNextWidgetName());
 		}
-
-		RootWidget->ShowGeneralWidget(true);
+		
 		RootWidget->ShowContentsWidget(true);
-		RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 		if(NewCommand->OnFadeEventDelegate.IsBound())
 		{
 			NewCommand->OnFadeEventDelegate.Broadcast();
@@ -210,9 +207,7 @@ void UMS_SceneManager::EndFade()
 		else if(LevelChangeStep == EMS_FadeStep::ExitFadeIn)
 		{
 			RootWidget->ResetCanvasZOrder();
-			RootWidget->ShowGeneralWidget(true);
 			RootWidget->ShowContentsWidget(true);
-			RootWidget->SetGeneralWidget(NewCommand->GetLevelType());
 
 			gInputMng.SetAllowInteractActor(NewCommand->IsAllowInteractActor());
 			gCameraMng.RestrictCameraMovement(false);

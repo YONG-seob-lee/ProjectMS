@@ -67,7 +67,6 @@ void UMS_GeneralRightExpanderWidget::OnClickedGotoButton()
 			FViewTargetTransitionParams Param;
 			Param.BlendTime = 0.f;
 			gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
-			gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
 		};
 		gSceneMng.RequestChangeScene(Command);
 	}

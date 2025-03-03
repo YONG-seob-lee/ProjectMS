@@ -66,7 +66,6 @@ void UMS_NormalModeWidget::OnClickedTownButton()
 		FViewTargetTransitionParams Param;
 		Param.BlendTime = 0.f;
 		gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
-		gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
 	};
 	gSceneMng.RequestChangeScene(Command);
 }
@@ -101,7 +100,6 @@ void UMS_NormalModeWidget::OnClickedCloseMarketButton()
 			FViewTargetTransitionParams Param;
 			Param.BlendTime = 0.f;
 			gCameraMng.SwitchViewCamera(EMS_ViewCameraType::QuarterView, Param);
-			gWidgetMng.SetGeneralWidget(EMS_LevelType::Stage01);
 		};
 		gSceneMng.RequestChangeScene(Command);
 	}
