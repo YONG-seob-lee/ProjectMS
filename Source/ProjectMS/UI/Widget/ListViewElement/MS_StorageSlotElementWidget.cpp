@@ -74,6 +74,7 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageRequestStatus()
 		return;
 	}
 	
+	CPP_TextSwitcher->SetActiveWidgetIndex(0);
 	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
@@ -83,6 +84,10 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageRequestStatus()
 	else if (OwnerZoneType == EMS_ZoneType::Shelf)
 	{
 		CPP_CountWidget->SetCount(SlotData.CurrentItemTableId == SlotData.RequestItemTableId ? SlotData.CurrentItemCount : -1, ItemData->BoxMaxCount);
+	}
+	else if (OwnerZoneType == EMS_ZoneType::Pallet)
+	{
+		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->BoxMaxCount);
 	}
 	else
 	{
@@ -104,14 +109,17 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageCurrentStatus()
 		CPP_CountWidget->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
-
+	
+	CPP_TextSwitcher->SetActiveWidgetIndex(0);
 	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
+	
+	CPP_CountWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
 		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->SlotPath100x100);
 	}
-	else if (OwnerZoneType == EMS_ZoneType::Shelf)
+	else if (OwnerZoneType == EMS_ZoneType::Shelf || OwnerZoneType == EMS_ZoneType::Pallet)
 	{
 		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, ItemData->BoxMaxCount);
 	}
@@ -119,7 +127,7 @@ void UMS_StorageSlotElementWidget::UpdateWhenStorageCurrentStatus()
 	{
 		CPP_CountWidget->SetCount(SlotData.CurrentItemCount, -1);
 	}
-			
+		
 	CPP_ItemSlotWidget->SetSlot(SlotData.CurrentItemTableId);
 }
 

@@ -46,6 +46,11 @@ void UMS_StorageStatusWidget::OnClickedConfirmButton()
 
 void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 {
+	if (OwnerZoneType != EMS_ZoneType::Display && OwnerZoneType != EMS_ZoneType::Shelf)
+	{
+		return;
+	}
+	
 	CPP_SelectRequestedItemWidget->SetDisplaySlotIndex(aSlotIndex);
 	
 	if (!CPP_SelectRequestedItemWidget->IsVisible())
@@ -75,7 +80,7 @@ void UMS_StorageStatusWidget::InitializeStorageDatas(EMS_ZoneType aOwnerZoneType
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
 		Data->SetOwnerZoneType(OwnerZoneType);
-		Data->SetSlotType(EMS_ItemSlotUIType::StorageRequestStatus);
+		Data->SetSlotType(OwnerZoneType == EMS_ZoneType::Pallet ? EMS_ItemSlotUIType::StorageCurrentStatus : EMS_ItemSlotUIType::StorageRequestStatus);
 		Data->SetSlotIndex(i);
 		Data->SetSlotData(FMS_SlotData());
 		Data->OnClickDisplaySlotDelegate.AddUObject(this, &UMS_StorageStatusWidget::OnClickedStorageSlotButton);

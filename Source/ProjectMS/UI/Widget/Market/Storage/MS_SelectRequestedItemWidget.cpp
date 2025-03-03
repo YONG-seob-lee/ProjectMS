@@ -22,24 +22,26 @@ void UMS_SelectRequestedItemWidget::NativeDestruct()
 
 void UMS_SelectRequestedItemWidget::SetTileView(EMS_TemperatureType aTemperatureType)
 {
-	TMap<int32, int32> RequestableItems;
+	TMap<int32, int32> DeployableItems;
+	TMap<int32, int32> RequestStateItems;
 	
 	if (OwnerZoneType == EMS_ZoneType::Display)
 	{
-		gItemMng.GetStorageItems(EMS_ZoneType::Shelf, RequestableItems, aTemperatureType);
+		gItemMng.GetDeployableItems(DeployableItems, aTemperatureType);
+		gItemMng.GetStorageItems(EMS_ZoneType::Shelf, RequestStateItems, aTemperatureType);
 	}
 	else if (OwnerZoneType == EMS_ZoneType::Shelf)
 	{
-		gItemMng.GetStorageItems(EMS_ZoneType::Pallet, RequestableItems);
+		gItemMng.GetDeployableItems(DeployableItems, aTemperatureType);
+		gItemMng.GetStorageItems(EMS_ZoneType::Pallet, RequestStateItems);
 	}
 	else
 	{
-		MS_ENSURE(false);
 		return;
 	}
 	
 	TArray<TObjectPtr<UMS_StorageSlotElementData>> StorageItemElementDatas;
-		
+	
 	// 빈 슬롯 하나 추가.
 	const TObjectPtr<UMS_StorageSlotElementData> BlankData = MS_NewObject<UMS_StorageSlotElementData>(this);
 	BlankData->SetSlotType(EMS_ItemSlotUIType::Requestable);
@@ -47,11 +49,19 @@ void UMS_SelectRequestedItemWidget::SetTileView(EMS_TemperatureType aTemperature
 	BlankData->OnClickShelfSlotDelegate.AddUObject(this, &UMS_SelectRequestedItemWidget::OnClickedShelfSlotButton);
 	StorageItemElementDatas.Emplace(BlankData);
 	
-	for(const auto RequestableItem : RequestableItems)
+	for(const auto DeployableItem : DeployableItems)
 	{
 		const TObjectPtr<UMS_StorageSlotElementData> Data = MS_NewObject<UMS_StorageSlotElementData>(this);
 		Data->SetSlotType(EMS_ItemSlotUIType::Requestable);
-		Data->SetSlotData(FMS_SlotData(RequestableItem.Key, RequestableItem.Key, RequestableItem.Value));
+
+		int32 ItemCount = 0;
+		
+		if (RequestStateItems.Contains(DeployableItem.Key))
+		{
+			ItemCount = *RequestStateItems.Find(DeployableItem.Key);
+		}
+
+		Data->SetSlotData(FMS_SlotData(DeployableItem.Key, DeployableItem.Key, ItemCount));
 		Data->OnClickShelfSlotDelegate.AddUObject(this, &UMS_SelectRequestedItemWidget::OnClickedShelfSlotButton);
 		StorageItemElementDatas.Emplace(Data);
 	}

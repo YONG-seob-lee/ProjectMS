@@ -39,6 +39,8 @@ public:
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
 	
 	// Items
+	void GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
+	
 	void GetRemainItems(TMap<int32, int32>& OutItems) const;
 	int32 GetRemainItemCount(int32 aItemId) const;
 

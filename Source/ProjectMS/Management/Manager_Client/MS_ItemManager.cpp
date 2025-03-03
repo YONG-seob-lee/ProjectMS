@@ -71,6 +71,33 @@ void UMS_ItemManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+void UMS_ItemManager::GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType) const
+{
+	TMap<int32, int32> TestItems = Items;
+
+	for (const auto& OrderItem : OrderItems)
+	{
+		int32& Count = OutItems.FindOrAdd(OrderItem.Key);
+		Count += OrderItem.Value;
+	}
+
+	for (const auto& TestItem : TestItems)
+	{
+		if(aTemperatureType != EMS_TemperatureType::Undefined)
+		{
+			TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+			MS_ENSURE(ItemTable);
+					
+			if(ItemTable->GetItemTemperature(TestItem.Key) != aTemperatureType)
+			{
+				continue;
+			}	
+		}
+
+		OutItems.Emplace(TestItem.Key, TestItem.Value);
+	}
+}
+
 void UMS_ItemManager::GetRemainItems(TMap<int32, int32>& OutItems) const
 {
 	OutItems = Items;
