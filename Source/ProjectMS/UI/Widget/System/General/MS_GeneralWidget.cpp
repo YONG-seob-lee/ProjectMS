@@ -94,7 +94,15 @@ void UMS_GeneralWidget::OnClickedLeftButton()
 		{
 			return;
 		}
-		CPP_LeftExpanderWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		if (CPP_LeftExpanderWidget->GetVisibility() != ESlateVisibility::SelfHitTestInvisible)
+		{
+			CPP_LeftExpanderWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+		else
+		{
+			CPP_LeftExpanderWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 	else
 	{
