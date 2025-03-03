@@ -25,7 +25,4 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UCanvasPanel> CPP_MenuExpanderPanel = nullptr;
-	
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_TileView> CPP_MenuList = nullptr;
 };

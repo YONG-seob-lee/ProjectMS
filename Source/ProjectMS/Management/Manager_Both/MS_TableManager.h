@@ -28,8 +28,7 @@ enum class EMS_TableDataType : uint8
 	
 	ItemData = 11						UMETA(DisplayName = "ItemData"),
 	Furniture = 12						UMETA(DisplayName = "Furniture"),
-	MenuElement = 13					UMETA(DisplayName = "MenuElement"),
-	Tutorial = 14						UMETA(DisplayName = "Tutorial"),
+	Tutorial = 13						UMETA(DisplayName = "Tutorial"),
 };
 
 namespace MS_LocalizedTableId
