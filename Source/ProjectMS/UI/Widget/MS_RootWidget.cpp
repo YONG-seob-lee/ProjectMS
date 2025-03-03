@@ -273,6 +273,11 @@ void UMS_RootWidget::SetGeneralWidget(EMS_LevelType aLevelType) const
 	}
 }
 
+void UMS_RootWidget::ShowContentsWidget(bool bShow) const
+{
+	CPP_ContentFrameCanvasPanel->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+}
+
 void UMS_RootWidget::ShowGeneralWidget(bool bShow) const
 {
 	CPP_GeneralWidget->SetVisibility(bShow ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
