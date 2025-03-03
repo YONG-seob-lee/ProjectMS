@@ -315,9 +315,13 @@ void UMS_SceneManager::HandleLoadingLevel()
 	}
 	
 	gWidgetMng.RefreshContentWidget();
-	if (!LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()).IsNone() && NewCommand->GetNextWidgetName() == TEXT("None"))
+	if (NewCommand->GetNextWidgetName() == TEXT("None"))
 	{
 		gWidgetMng.Create_Widget(LevelTable->GetPrimitiveWidgetName(NewCommand->GetLevelType()));
+	}
+	else
+	{
+		gWidgetMng.Create_Widget(NewCommand->GetNextWidgetName());
 	}
 
 	// Sound Im ( BGM )

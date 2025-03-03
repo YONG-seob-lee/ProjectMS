@@ -9,7 +9,7 @@
 
 void UMS_SceneCommand::SetLevelType(EMS_LevelType aType, const UWorld* aWorld /* = nullptr */)
 {
-	if(aType == EMS_LevelType::LobbyLevel)
+	if(aType == EMS_LevelType::LobbyLevel || aType == EMS_LevelType::Stage01 || aType == EMS_LevelType::Stage02 || aType == EMS_LevelType::Stage03)
 	{
 		CheckTownLevelType(LevelType, aWorld);
 		ReplaceCamera(LevelType);

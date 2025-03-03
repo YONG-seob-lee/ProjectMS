@@ -14,8 +14,9 @@ class PROJECTMS_API UMS_LobbyWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
+	static FName GetWidgetName() { return TEXT("Lobby"); }
 	virtual void NativeConstruct() override;
-	
+
 private:
 	void OnClickedStartButton();
 	void OnFinishedTransition();

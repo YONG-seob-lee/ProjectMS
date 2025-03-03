@@ -57,9 +57,12 @@ void UMS_RootWidget::OnRuntimeInitialize()
 
 void UMS_RootWidget::AttachContentWidget(const TObjectPtr<UMS_Widget>& aContentWidget) const
 {
-	MS_CHECK(CPP_ContentFrameCanvasPanel);
+	if(aContentWidget == nullptr)
+	{
+		return;
+	}
 
-	if(CPP_ContentFrameCanvasPanel->HasChild(aContentWidget) == false)
+	if(CPP_ContentFrameCanvasPanel && CPP_ContentFrameCanvasPanel->HasChild(aContentWidget) == false)
 	{
 		CPP_ContentFrameCanvasPanel->AddChild(aContentWidget);
 		const TObjectPtr<UCanvasPanelSlot> CanvasPanelSlot = Cast<UCanvasPanelSlot>(aContentWidget->Slot);
