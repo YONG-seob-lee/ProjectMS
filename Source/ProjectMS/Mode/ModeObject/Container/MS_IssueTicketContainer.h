@@ -86,10 +86,11 @@ public:
 
 	TWeakObjectPtr<class UMS_IssueTicket> SearchStaffIssueTicket(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 	TWeakObjectPtr<class UMS_IssueTicket> SearchStaffIssueTicket(const FMS_PlayerStaffData& aPlayerStaffData, const FIntVector2& aStaffGridPosition);
-	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
+	void RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket, TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 	void UnregisterIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aTargetTicket);
 	
 	void UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType aZoneType);
+	void UpdateIssueTicketsEnabled(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket);
 
 	
 private:

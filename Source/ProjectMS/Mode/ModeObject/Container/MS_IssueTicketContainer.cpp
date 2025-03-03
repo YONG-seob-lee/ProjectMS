@@ -4,6 +4,7 @@
 #include "MS_IssueTicketContainer.h"
 
 #include "Manager_Client/MS_ItemManager.h"
+#include "Table/RowBase/MS_ItemData.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
@@ -172,6 +173,7 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::RegisterIssueTicket(EM
 	if (IssueTicket)
 	{
 		IssueTicket->Initialize(aIssueType, aRequestUnit, aSlotId);
+		UpdateIssueTicketsEnabled(IssueTicket);
 		IssueTickets.Emplace(IssueTicket);
 		return IssueTicket;
 	}
@@ -515,7 +517,7 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket
 	return nullptr;
 }
 
-void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket,
+void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket,
 														TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
 	MS_ENSURE (aTargetTicket != nullptr);
@@ -557,32 +559,22 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 		// Return Items Tickets
 		TArray<TWeakObjectPtr<UMS_IssueTicket>> ReturnItemsTickets;
 		GetTypeIssueTickets(ReturnItemsTickets, EMS_StaffIssueType::ReturnItemsFromDisplay);
-
+		
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
-			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
-
-			TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
-			Ticket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, DeliveryTargetStorages));
+			UpdateIssueTicketsEnabled(Ticket);
 		}
 		
 		// Add Items Tickets
 		TArray<TWeakObjectPtr<UMS_IssueTicket>> AddItemsTickets;
-		GetTypeIssueTickets(ReturnItemsTickets, EMS_StaffIssueType::AddItemsToDisplay);
+		GetTypeIssueTickets(AddItemsTickets, EMS_StaffIssueType::AddItemsToDisplay);
 
-		if (!AddItemsTickets.IsEmpty())
+		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
 		{
-			TMap<int32, int32> ShelfItems;
-			gItemMng.GetStorageItems(EMS_ZoneType::Shelf, ShelfItems);
-
-			for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
-			{
-				FMS_SlotData SlotData = Ticket->GetRequestSlotData();
-				
-				Ticket->SetIsEnabled(ShelfItems.Contains(SlotData.RequestItemTableId));
-			}
+			UpdateIssueTicketsEnabled(Ticket);
 		}
 	}
+	
 	else if (aZoneType == EMS_ZoneType::Shelf)
 	{
 		// Return Items Tickets
@@ -591,27 +583,61 @@ void UMS_IssueTicketContainer::UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneT
 
 		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : ReturnItemsTickets)
 		{
-			FMS_SlotData SlotData = Ticket->GetRequestSlotData();
-
-			TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
-			Ticket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, DeliveryTargetStorages));
+			UpdateIssueTicketsEnabled(Ticket);
 		}
 		
 		// Add Items Tickets
 		TArray<TWeakObjectPtr<UMS_IssueTicket>> AddItemsTickets;
 		GetTypeIssueTickets(ReturnItemsTickets, EMS_StaffIssueType::AddItemsToShelf);
 
-		if (!AddItemsTickets.IsEmpty())
+		for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
 		{
-			TMap<int32, int32> PalletItems;
-			gItemMng.GetStorageItems(EMS_ZoneType::Pallet, PalletItems);
-
-			for (TWeakObjectPtr<UMS_IssueTicket> Ticket : AddItemsTickets)
-			{
-				FMS_SlotData SlotData = Ticket->GetRequestSlotData();
-				
-				Ticket->SetIsEnabled(PalletItems.Contains(SlotData.RequestItemTableId));
-			}
+			UpdateIssueTicketsEnabled(Ticket);
 		}
+	}
+}
+
+void UMS_IssueTicketContainer::UpdateIssueTicketsEnabled(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket)
+{
+	if (aTargetTicket == nullptr)
+	{
+		return;
+	}
+	
+	if (aTargetTicket->GetIssueType() == EMS_StaffIssueType::ReturnItemsFromDisplay)
+	{
+		FMS_SlotData SlotData = aTargetTicket->GetRequestSlotData();
+		
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> Dummy;
+		aTargetTicket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, Dummy));
+	}
+
+	else if (aTargetTicket->GetIssueType() == EMS_StaffIssueType::ReturnItemsFromShelf)
+	{
+		FMS_SlotData SlotData = aTargetTicket->GetRequestSlotData();
+		
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> Dummy;
+		aTargetTicket->SetIsEnabled(gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, Dummy));
+	}
+
+	else if (aTargetTicket->GetIssueType() == EMS_StaffIssueType::AddItemsToDisplay)
+	{
+		FMS_SlotData SlotData = aTargetTicket->GetRequestSlotData();
+		
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> Dummy;
+		aTargetTicket->SetIsEnabled(gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Shelf, Dummy));
+	}
+
+	else if (aTargetTicket->GetIssueType() == EMS_StaffIssueType::AddItemsToShelf)
+	{
+		FMS_SlotData SlotData = aTargetTicket->GetRequestSlotData();
+		
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> Dummy;
+		aTargetTicket->SetIsEnabled(gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Pallet, Dummy));
+	}
+
+	else
+	{
+		aTargetTicket->SetIsEnabled(true);
 	}
 }
