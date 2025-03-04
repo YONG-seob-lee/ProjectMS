@@ -62,32 +62,34 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 		MS_LOG_VERBOSITY(Error, TEXT("Sequence Is Null. Please Check Sequence Path [ MS_SequenceManager.h Namespace : SequencePath ]"));
 		return;
 	}
-	
-	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
+
+	if (SequenceType == EMS_SequenceType::Entrance || SequenceType == EMS_SequenceType::Truck)
 	{
-		bSetBlendCamera = Parameter.bSetBlendCamera; 
-		if(Parameter.bSetBlendCamera)
+		if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 		{
-			gCameraMng.SetViewTarget(SequenceActor);
-			FVector QuarterCameraLocation;
-			FRotator QuarterCameraRotator;
-			gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
-			SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
+			bSetBlendCamera = Parameter.bSetBlendCamera; 
+			if(Parameter.bSetBlendCamera)
+			{
+				gCameraMng.SetViewTarget(SequenceActor);
+				FVector QuarterCameraLocation;
+				FRotator QuarterCameraRotator;
+				gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
+				SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
+			}
+	
+			if(Parameter.OnFinishedSequenceCallback)
+			{
+				OnFinishedSequenceCallback = Parameter.OnFinishedSequenceCallback;
+				LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
+			}
+			
+			// Play the level sequence
+			LevelSequencePlayer->Play();
+			if(Parameter.bHideWidget)
+			{
+				gWidgetMng.HideAllWidget(true);
+			}
 		}
-
-		if(Parameter.OnFinishedSequenceCallback)
-		{
-			OnFinishedSequenceCallback = Parameter.OnFinishedSequenceCallback;
-			LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
-		}
-		
-		// Play the level sequence
-		LevelSequencePlayer->Play();
-		if(Parameter.bHideWidget)
-		{
-			gWidgetMng.HideAllWidget(true);
-		}
-
 	}
 	else
 	{
