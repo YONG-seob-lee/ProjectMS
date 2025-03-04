@@ -27,7 +27,4 @@ protected:
 	
 	UPROPERTY(Category=Decorator, BlueprintReadOnly);
 	int32 ShoppingNumLoops = 3;
-
-private:
-	int32 CurrentRemainLoops = 0;
 };

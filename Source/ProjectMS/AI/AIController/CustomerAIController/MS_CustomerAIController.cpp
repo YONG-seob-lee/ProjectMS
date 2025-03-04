@@ -74,5 +74,9 @@ void AMS_CustomerAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason
 
 void AMS_CustomerAIController::ReadyToMarket() const
 {
-	Blackboard->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_CustomerActionState::Spline_GoToMarket));
+	// 블랙보드 초기화
+	Blackboard->SetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem, false);
+	Blackboard->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
+	Blackboard->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
+	Blackboard->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::Spline_GoToMarket));
 }

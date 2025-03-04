@@ -31,7 +31,7 @@ bool FMS_CustomerData::IsPickUpAllItems()
 	{
 		if(const int32* PickUpItemCount = PickUpItems.Find(WannaBuyItem.Key))
 		{
-			// Test
+			// AITest
 			continue;
 			
 			// 실제로 모두 구하면

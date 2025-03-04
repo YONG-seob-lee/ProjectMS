@@ -43,7 +43,6 @@ UMS_CustomerShoppingLoopBTDecorator::UMS_CustomerShoppingLoopBTDecorator(const F
 				}
 			}
 		}
-		CurrentRemainLoops = ShoppingNumLoops;
 	}
 }
 
@@ -65,7 +64,6 @@ void UMS_CustomerShoppingLoopBTDecorator::OnNodeActivation(FBehaviorTreeSearchDa
 	if (DecoratorMemory->RemainingExecutions > 0)
 	{
 		DecoratorMemory->RemainingExecutions--;
-		CurrentRemainLoops--;
 	}
 	bShouldLoop = DecoratorMemory->RemainingExecutions > 0;
 
@@ -132,21 +130,29 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 		return EBTNodeResult::Type::Failed;
 	}
 
-	if(BlackboardComp->GetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem) == false)
+	const FMS_BTLoopDecoratorMemory* DecoratorMemory = reinterpret_cast<FMS_BTLoopDecoratorMemory*>(NodeMemory);
+	if(DecoratorMemory->TimeStarted <= 0)
 	{
-		MS_LOG(TEXT("ShoppingNumLoops : %d"), CurrentRemainLoops);
-		if(CurrentRemainLoops <= 0)
-		{
-			const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
-			AIUnit->UnregisterCustomerAction(CustomerActionType);
-			
-			BlackboardComp->SetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem, true);
-			BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
-			BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
-		}	
+		return true;
 	}
 	
-	return BlackboardComp->GetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem) == false;
+	if(DecoratorMemory->RemainingExecutions <= 0)
+	{
+		if(BlackboardComp->GetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem) == true)
+		{
+			return false;
+		}
+
+		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
+		AIUnit->UnregisterCustomerAction(CustomerActionType);
+
+		BlackboardComp->SetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem, true);
+		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
+		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
+		AIAnimInstance->SetActionState(EMS_CustomerActionState::None);
+	}
+	
+	return true;
 }
 
 uint16 UMS_CustomerShoppingLoopBTDecorator::GetInstanceMemorySize() const

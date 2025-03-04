@@ -60,13 +60,14 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 
 		if(UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit))
 		{
+			// AITest 나중에 가구 스토리지에 있는 아이템과 대조하여 맞춰야함.
 			const int32 SubtractItemCount = StorageUnit->SubtractAnySlotCurrentItemCount(RemainItem.Key, RemainItem.Value, true);
-			if(AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount))
+			if(AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount) == false)
 			{
-				return EBTNodeResult::Type::Succeeded;
+				continue;
 			}
 		}
 	}
 
-	return EBTNodeResult::Type::Failed;
+	return EBTNodeResult::Type::Succeeded;
 }
