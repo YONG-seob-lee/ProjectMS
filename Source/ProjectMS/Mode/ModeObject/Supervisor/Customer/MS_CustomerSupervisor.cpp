@@ -100,6 +100,18 @@ bool UMS_CustomerSupervisor::SpawnCustomer()
 	return false;
 }
 
+bool UMS_CustomerSupervisor::DestroyCustomer(UMS_CustomerAIUnit* aDestroyAIUnit)
+{
+	if(CustomerAIUnits.Contains(aDestroyAIUnit))
+	{
+		CustomerAIUnits.Remove(aDestroyAIUnit);
+		gUnitMng.DestroyUnit(aDestroyAIUnit);
+		return true;
+	}
+
+	return false;
+}
+
 void UMS_CustomerSupervisor::StartCustomerSpawn()
 {
 	SpawnIntervalDelayTime = 0.f;

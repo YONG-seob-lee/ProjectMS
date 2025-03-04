@@ -67,9 +67,23 @@ EMS_CustomerActionType UMS_CustomerAIUnit::GetFirstCustomerAction()
 	
 	else
 	{
+		if(CustomerData.IsPickUpAllItems() == false)
+		{
+			CustomerActions.Emplace(EMS_CustomerActionType::PickUpItems);
+		}
+		else
+		{
+			if(CustomerData.GetPaid() == false)
+			{
+				CustomerActions.Emplace(EMS_CustomerActionType::Payment);
+			}
+			else
+			{
+				CustomerActions.Emplace(EMS_CustomerActionType::GoHome);
+			}
+		}
 		// ToDo : 상황에 따라 ActionType 설정
 		// Test
-		CustomerActions.Emplace(EMS_CustomerActionType::Payment);
 	}
 	
 	return CustomerActions[0];
@@ -83,6 +97,46 @@ void UMS_CustomerAIUnit::RegisterCustomerAction(EMS_CustomerActionType aCustomer
 void UMS_CustomerAIUnit::UnregisterCustomerAction(EMS_CustomerActionType aCustomerActionType)
 {
 	CustomerActions.RemoveSingle(aCustomerActionType);
+}
+
+bool UMS_CustomerAIUnit::IsVisitBefore(int32 StorageUnitHandle) const
+{
+	if(VisitStorageUnitHandles.Find(StorageUnitHandle) == INDEX_NONE)
+	{
+		return false;
+	}
+	
+	return true;
+}
+
+void UMS_CustomerAIUnit::AddVisitStorageUnitHandle(MS_Handle StorageHandle)
+{
+	VisitStorageUnitHandles.Emplace(StorageHandle);
+}
+
+MS_Handle UMS_CustomerAIUnit::GetTargetStorageUnitHandle()
+{
+	if(VisitStorageUnitHandles.IsValidIndex(0))
+	{
+		return VisitStorageUnitHandles[0];
+	}
+	
+	return INDEX_NONE;
+}
+
+void UMS_CustomerAIUnit::GetRemainItems(TMap<int32, int32>& RemainItems)
+{
+	CustomerData.GetRemainItems(RemainItems);
+}
+
+bool UMS_CustomerAIUnit::PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount)
+{
+	return CustomerData.PickUpItem(PickUpItemTableId, PickUpItemCount);
+}
+
+void UMS_CustomerAIUnit::Paid()
+{
+	CustomerData.Paid();
 }
 
 bool UMS_CustomerAIUnit::FindNearestSpline()

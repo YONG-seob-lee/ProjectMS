@@ -68,7 +68,6 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 			ActionState = EMS_CustomerActionState::Spline_GoToMarket;
 			break;
 		}
-		
 	case EMS_CustomerActionType::PickUpItems :
 		{
 			ActionState = EMS_CustomerActionState::PickUp_SearchTargets;
@@ -80,7 +79,11 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 			ActionState = EMS_CustomerActionState::Payment_SearchTargets;
 			break;
 		}
-
+	case EMS_CustomerActionType::GoHome :
+		{
+			ActionState = EMS_CustomerActionState::Spline_GoHome;
+			break;
+		}
 	default:
 		{
 			break;

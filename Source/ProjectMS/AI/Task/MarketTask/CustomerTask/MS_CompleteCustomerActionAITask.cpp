@@ -9,6 +9,9 @@
 #include "Units/MS_CustomerAIUnit.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ModeManager.h"
+#include "Mode/ModeObject/Supervisor/Customer/MS_CustomerSupervisor.h"
+#include "Mode/ModeState/MS_ModeState_RunMarket.h"
 
 
 UMS_CompleteCustomerActionAITask::UMS_CompleteCustomerActionAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -51,8 +54,13 @@ EBTNodeResult::Type UMS_CompleteCustomerActionAITask::ExecuteTask(UBehaviorTreeC
 
 	if(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState) == static_cast<uint8>(EMS_CustomerActionState::Spline_GoHome))
 	{
-		AIController->UnPossess();
-		gUnitMng.DestroyUnit(AIUnit->GetUnitHandle());
+		if (const UMS_ModeState_RunMarket* RunMarket = Cast<UMS_ModeState_RunMarket>(gModeMng.GetCurrentModeState()))
+		{
+			if (UMS_CustomerSupervisor* CustomerSupervisor = RunMarket->GetCustomerSupervisor())
+			{
+				CustomerSupervisor->DestroyCustomer(AIUnit);
+			}
+		}
 		return EBTNodeResult::Type::Succeeded;
 	}
 	

@@ -44,6 +44,7 @@ public:
 	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const override;
 	
 	TObjectPtr<class UMS_StaffSupervisor> GetStaffSupervisor() const { return StaffSupervisor; }
+	TObjectPtr<class UMS_CustomerSupervisor> GetCustomerSupervisor() const { return CustomerSupervisor; }
 
 	// Issue Tickets
 	void UpdateAllFurnitureIssueTickets();

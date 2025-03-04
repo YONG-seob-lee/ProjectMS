@@ -1,0 +1,72 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MS_CollectionItemsAITask.h"
+
+#include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
+#include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
+#include "Manager_Both/MS_UnitManager.h"
+#include "Units/MS_CustomerAIUnit.h"
+#include "Units/MS_StorageUnit.h"
+
+UMS_CollectionItemsAITask::UMS_CollectionItemsAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	NodeName = "CollectionItemsAITask";
+	bNotifyTick = false;
+}
+
+EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	const TObjectPtr<AMS_CustomerAIController> AIController = Cast<AMS_CustomerAIController>(OwnerComp.GetAIOwner());
+	if(!AIController)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	const TObjectPtr<AMS_CustomerAICharacter> AICharacter = Cast<AMS_CustomerAICharacter>(AIController->GetCharacter());
+	if(!AICharacter)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	const TObjectPtr<UMS_CustomerAIUnit> AIUnit = Cast<UMS_CustomerAIUnit>(AICharacter->GetOwnerUnitBase());
+	if(!AIUnit)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+
+	if(AIUnit->GetPath().IsEmpty() == false || AIUnit->GetTargetPositions().IsEmpty() == false)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+	
+	// 유닛이 필요로 하는 아이템을 수집하는 행위
+	TMap<int32, int32> RemainItems;
+	AIUnit->GetRemainItems(RemainItems);
+
+	if(RemainItems.IsEmpty())
+	{
+		return EBTNodeResult::Type::Succeeded;
+	}
+
+	for(const auto& RemainItem : RemainItems)
+	{
+		// 현재 위치해있는 디스플레이 유닛을 찾는 행위
+		UMS_UnitBase* Unit = gUnitMng.GetUnit(AIUnit->GetTargetStorageUnitHandle());
+		if(!Unit)
+		{
+			return EBTNodeResult::Type::Failed;
+		}
+
+		if(UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit))
+		{
+			const int32 SubtractItemCount = StorageUnit->SubtractAnySlotCurrentItemCount(RemainItem.Key, RemainItem.Value, true);
+			if(AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount))
+			{
+				return EBTNodeResult::Type::Succeeded;
+			}
+		}
+	}
+
+	return EBTNodeResult::Type::Failed;
+}

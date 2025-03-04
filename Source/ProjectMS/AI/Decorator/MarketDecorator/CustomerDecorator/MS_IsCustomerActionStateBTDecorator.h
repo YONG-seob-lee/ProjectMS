@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AI/Decorator/MS_BTDecorator.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_IsCustomerActionStateBTDecorator.generated.h"
 
 /**

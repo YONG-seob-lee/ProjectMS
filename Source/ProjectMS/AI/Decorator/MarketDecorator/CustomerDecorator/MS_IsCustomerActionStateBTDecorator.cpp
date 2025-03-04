@@ -4,6 +4,7 @@
 #include "MS_IsCustomerActionStateBTDecorator.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 
 
 UMS_IsCustomerActionStateBTDecorator::UMS_IsCustomerActionStateBTDecorator(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

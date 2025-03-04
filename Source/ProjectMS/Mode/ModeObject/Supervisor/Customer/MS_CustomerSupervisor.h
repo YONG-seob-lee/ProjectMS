@@ -36,6 +36,7 @@ public:
 	virtual void UpdateScheduleEvent(int32 aScheduleEvent) override;
 
 	bool SpawnCustomer();
+	bool DestroyCustomer(class UMS_CustomerAIUnit* aDestroyAIUnit);
 	
 protected:
 	void StartCustomerSpawn();

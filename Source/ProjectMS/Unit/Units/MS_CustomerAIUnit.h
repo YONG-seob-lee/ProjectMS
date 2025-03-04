@@ -32,7 +32,15 @@ public:
 
 	void RegisterCustomerAction(EMS_CustomerActionType aCustomerActionType);
 	void UnregisterCustomerAction(EMS_CustomerActionType aCustomerActionType);
-
+	
+	bool IsVisitBefore(int32 StorageUnitHandle) const;
+	void AddVisitStorageUnitHandle(MS_Handle StorageHandle);
+	MS_Handle GetTargetStorageUnitHandle();
+	
+	void GetRemainItems(TMap<int32, int32>& RemainItems);
+	bool PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount);
+	void Paid();
+	
 	// Spline
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
@@ -47,4 +55,6 @@ private:
 	TWeakObjectPtr<class AMS_CustomerSplineActor> CustomerSplineActor = nullptr;
 
 	TArray<EMS_CustomerActionType> CustomerActions = {};
+
+	TArray<MS_Handle> VisitStorageUnitHandles = {};
 };

@@ -14,10 +14,22 @@ public:
 	FMS_CustomerData(int32 aDuckColor, int32 aCharacterBPPathFile, int32 aMaxItemKind, int32 aMaxItemCount);
 
 	FORCEINLINE int32 GetCharacterBPPathFile() const { return CharacterBPPathFile; }
+
+	// 1000원을 지불했다는 뜻 테스트용 ( 나중에 계산 ) 
+	void Paid() { PricePaid = 1000;}
+	
+	FORCEINLINE bool GetPaid() const { return PricePaid > 0; }
+	bool IsPickUpAllItems();
+
+	void GetRemainItems(TMap<int32, int32>& RemainItems);
+	bool PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
+
 private:
 	int32 DuckColor = 0;
 	int32 CharacterBPPathFile = 0;
-	TMap<int32, int32> PurchaseItem = {};
+	TMap<int32, int32> WannaBuyItems = {};
+	TMap<int32, int32> PickUpItems = {};
+	int32 PricePaid = 0;
 };
 
 /**

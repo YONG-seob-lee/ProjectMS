@@ -235,6 +235,7 @@ namespace CustomerBoardKeyName
 {
 	const FName CustomerAction = TEXT("CustomerAction");
 	const FName CustomerActionState = TEXT("CustomerActionState");
+	const FName CustomerPickUpAllItem = TEXT("CustomerPickUpAllItem");
 }
 
 namespace SocketName

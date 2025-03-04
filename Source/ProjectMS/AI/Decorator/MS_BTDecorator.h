@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
-#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_BTDecorator.generated.h"
 
 /**

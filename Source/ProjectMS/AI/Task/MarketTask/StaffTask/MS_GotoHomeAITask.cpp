@@ -105,7 +105,6 @@ void UMS_GotoHomeAITask::CustomerTickTask(UBehaviorTreeComponent& OwnerComp, con
 	
 	if(AIUnit->ReachSplineStartPoint())
 	{
-		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
 		CustomerAIAnimInstance->SetActionState(EMS_CustomerActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
