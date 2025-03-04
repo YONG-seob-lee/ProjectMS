@@ -59,7 +59,7 @@ public:
 	void SetSkin(const FName& aCapName, const FName& aTopName);
 
 	// Chatting
-	void ShowChatting(EMS_ChattingType aChattingType) const;
+	void ShowChatting() const;
 	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
 
 	FORCEINLINE void ResetChatting() { bIsChatting = false;}

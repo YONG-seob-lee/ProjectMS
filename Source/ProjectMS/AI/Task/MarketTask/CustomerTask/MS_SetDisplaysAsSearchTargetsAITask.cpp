@@ -52,10 +52,11 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
 	TArray<FIntVector2> TargetPositions = {};
-	
+
+	TArray<TObjectPtr<UMS_StorageUnit>> DisplayUnits = {};
 	for (const TObjectPtr<UMS_UnitBase>& Unit : Units)
 	{
-		const UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit);
+		const TObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit);
 		if (!IsValid(StorageUnit))
 		{
 			MS_ENSURE(false);
@@ -66,24 +67,31 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 		{
 			continue;
 		}
-		
-		if(AIUnit->IsVisitBefore(StorageUnit->GetUnitHandle()) == false)
+		// AITest 나중에 모든 아이템이 전부 픽업 되면 바로 카운터로 이동할 수 있게 개선.
+		if(AIUnit->IsVisitBefore(StorageUnit->GetUnitHandle()))
 		{
-			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = StorageUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
-
-			if (PropPurposeSpaceComponents.Num() == 0)
-			{
-				continue;
-			}
-			
-			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-			{
-				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-			}
-
-			AIUnit->AddVisitStorageUnitHandle(StorageUnit->GetUnitHandle());
-			break;
+			continue;
 		}
+		
+		DisplayUnits.Emplace(StorageUnit);
+	}
+
+	const int32 RandomDisplayUnitIndex = FMath::RandRange(0, DisplayUnits.Num() - 1);
+	if(DisplayUnits.IsValidIndex(RandomDisplayUnitIndex))
+	{
+		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = DisplayUnits[RandomDisplayUnitIndex]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+		if (PropPurposeSpaceComponents.Num() == 0)
+		{
+			return EBTNodeResult::Type::Failed;
+		}
+			
+		for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+		{
+			TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+		}
+
+		AIUnit->AddVisitStorageUnitHandle(DisplayUnits[RandomDisplayUnitIndex]->GetUnitHandle());
 	}
 	
 	AIUnit->SetTargetPositions(TargetPositions);

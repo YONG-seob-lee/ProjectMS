@@ -227,11 +227,11 @@ bool UMS_MarketAIUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, in
 	return true;
 }
 
-void UMS_MarketAIUnit::ShowChatting(EMS_ChattingType aChattingType) const
+void UMS_MarketAIUnit::ShowChatting() const
 {
 	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
 	{
-		Customer->ShowChatting(aChattingType);
+		Customer->ShowChatting();
 	}
 }
 

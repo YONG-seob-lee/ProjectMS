@@ -475,12 +475,17 @@ void AMS_MarketAICharacter::SetSkin(const FName& aCapName, const FName& aTopName
 	}
 }
 
-void AMS_MarketAICharacter::ShowChatting(EMS_ChattingType aChattingType) const
+void AMS_MarketAICharacter::ShowChatting() const
 {
 	FText Chatting = FText();
+
+	const EMS_ChattingType RandomType
+	= static_cast<EMS_ChattingType>(FMath::RandRange(static_cast<int32>(EMS_ChattingType::PriceTooExpensive)
+		, static_cast<int32>(EMS_ChattingType::NuclearMissile)));
+	
 	if(AIParameterComponent)
 	{
-		AIParameterComponent->ChattingTrigger(aChattingType, Chatting, FText(),FText());
+		AIParameterComponent->ChattingTrigger(RandomType, Chatting, FText(),FText());
 	}
 	
 	if(WidgetComponent)

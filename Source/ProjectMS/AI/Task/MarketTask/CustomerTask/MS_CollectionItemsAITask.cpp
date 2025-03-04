@@ -108,6 +108,6 @@ void UMS_CollectionItemsAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 
 	if(AIUnit->IsChatBefore() == false)
 	{
-		AIUnit->ShowChatting(EMS_ChattingType::PriceCheap);
+		AIUnit->ShowChatting();
 	}
 }
