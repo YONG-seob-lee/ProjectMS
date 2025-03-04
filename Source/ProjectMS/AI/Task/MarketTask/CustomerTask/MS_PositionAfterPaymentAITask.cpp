@@ -1,25 +1,22 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_SetCountersAsSearchTargetsAITask.h"
+#include "MS_PositionAfterPaymentAITask.h"
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
-#include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
-#include "Units/MS_CustomerAIUnit.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
-#include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_CounterUnit.h"
+#include "Units/MS_CustomerAIUnit.h"
 
-
-UMS_SetCountersAsSearchTargetsAITask::UMS_SetCountersAsSearchTargetsAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UMS_PositionAfterPaymentAITask::UMS_PositionAfterPaymentAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	NodeName = "Set Counters As Search Targets";
+	NodeName = "Position Before Payment";
 	bNotifyTick = false;
 }
 
-EBTNodeResult::Type UMS_SetCountersAsSearchTargetsAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
-	uint8* NodeMemory)
+EBTNodeResult::Type UMS_PositionAfterPaymentAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const TObjectPtr<AMS_CustomerAIController> AIController = Cast<AMS_CustomerAIController>(OwnerComp.GetAIOwner());
 	if(!AIController)
@@ -45,7 +42,7 @@ EBTNodeResult::Type UMS_SetCountersAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 		return EBTNodeResult::Type::Failed;
 	}
 
-	EMS_CustomerActionType SelectedCustomerAction = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
+	const EMS_CustomerActionType SelectedCustomerAction = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
 	if (SelectedCustomerAction != EMS_CustomerActionType::Payment)
 	{
 		return EBTNodeResult::Type::Failed;
@@ -66,7 +63,7 @@ EBTNodeResult::Type UMS_SetCountersAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 		}
 		
 		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-				CounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::BeforePayment);
+				CounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::AfterPayment);
 
 		if (PropPurposeSpaceComponents.Num() == 0)
 		{

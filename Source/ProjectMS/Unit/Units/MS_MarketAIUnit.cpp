@@ -120,7 +120,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		{
 			// 이동을 시작할 때 
 			CachePath.RemoveAt(0);
-			MarketAICharacter->SetRocationByWalkingDirection(NextDirection);
+			MarketAICharacter->SetRotationByWalkingDirection(NextDirection);
 			
 			// ===== OnReachPathLocationDelegate를 통해 이미 삭제 된 부분 ===== //
 			// 방향 바꾸는 타이밍
@@ -225,6 +225,40 @@ bool UMS_MarketAIUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, in
 	
 	OnChangeCurrentSlotDatas();
 	return true;
+}
+
+void UMS_MarketAIUnit::ShowChatting(EMS_ChattingType aChattingType) const
+{
+	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
+	{
+		Customer->ShowChatting(aChattingType);
+	}
+}
+
+void UMS_MarketAIUnit::ShowImage(EMS_SpeechImageType SpeechImageType) const
+{
+	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
+	{
+		Customer->ShowImage(SpeechImageType);
+	}
+}
+
+bool UMS_MarketAIUnit::IsChatBefore() const
+{
+	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
+	{
+		return Customer->IsChattingBefore();
+	}
+
+	return false;
+}
+
+void UMS_MarketAIUnit::ResetChatting() const
+{
+	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
+	{
+		Customer->ResetChatting();
+	}
 }
 
 void UMS_MarketAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= false*/)

@@ -6,6 +6,8 @@
 #include "MS_AIUnit.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "BehaviorTree/BehaviorTreeTypes.h"
+#include "Component/Actor/MS_AIParameterComponent.h"
+#include "Widget/Dialog/SpeechBubble/MS_SpeechBubbleWidget.h"
 #include "MS_MarketAIUnit.generated.h"
 
 /**
@@ -46,6 +48,13 @@ public:
 	void ResetSlotDatas();
 	bool AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
 	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount);
+
+	
+	// Process Shopping
+	void ShowChatting(EMS_ChattingType aChattingType) const;
+	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
+	bool IsChatBefore() const;
+	void ResetChatting() const;
 	
 private:
 	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false);

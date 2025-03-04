@@ -9,6 +9,7 @@
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "Actor/Equipment/MS_Equipment.h"
 #include "Animation/Market/MS_MarketAIAnimInstance.h"
+#include "Components/WidgetComponent.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Engine/SkeletalMeshSocket.h"
 
@@ -44,6 +45,14 @@ AMS_MarketAICharacter::AMS_MarketAICharacter()
 	{
 		SkinTopMesh->SetupAttachment(GetMesh());
 	}
+	
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	if(WidgetComponent)
+	{
+		WidgetComponent->SetVisibility(false);
+	}
+	
+	AIParameterComponent = CreateDefaultSubobject<UMS_AIParameterComponent>(TEXT("AIParameterComponent"));
 }
 
 void AMS_MarketAICharacter::PreInitializeComponents()
@@ -123,6 +132,19 @@ void AMS_MarketAICharacter::Tick(float aDeltaTime)
 		UpdateLocation(aDeltaTime);
 		UpdateRotation(aDeltaTime);
 	}
+
+	if(bIsChatting == false)
+	{
+		if(const TObjectPtr<UMS_SpeechBubbleWidget> SpeechBubble = Cast<UMS_SpeechBubbleWidget>(WidgetComponent->GetWidget()))
+		{
+			if(SpeechBubble->bIsConstructed && SpeechBubble->IsPlayingAnimation() == false)
+			{
+				SpeechBubble->PlaySpeech();
+				bIsChatting = true;
+			}
+		}
+	}
+	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0.f, -50.f, 0.f));
 }
 
 void AMS_MarketAICharacter::SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection,
@@ -138,7 +160,7 @@ void AMS_MarketAICharacter::SetWalkingDirectionAndPathLocation(EMS_Direction aWa
 	bStopInPathLocation = aStopInPathLocation;
 }
 
-void AMS_MarketAICharacter::SetRocationByWalkingDirection(EMS_Direction aWalkingDirection)
+void AMS_MarketAICharacter::SetRotationByWalkingDirection(EMS_Direction aWalkingDirection)
 {
 	WalkingDirection = aWalkingDirection;
 	PathLocation = FVector2D::ZeroVector;
@@ -450,5 +472,49 @@ void AMS_MarketAICharacter::SetSkin(const FName& aCapName, const FName& aTopName
 	{
 		SkinTopMesh->SetSkeletalMesh(nullptr);
 		SkinTopMesh->SetVisibility(false);
+	}
+}
+
+void AMS_MarketAICharacter::ShowChatting(EMS_ChattingType aChattingType) const
+{
+	FText Chatting = FText();
+	if(AIParameterComponent)
+	{
+		AIParameterComponent->ChattingTrigger(aChattingType, Chatting, FText(),FText());
+	}
+	
+	if(WidgetComponent)
+	{
+		WidgetComponent->SetVisibility(true);
+		if(const TObjectPtr<UMS_SpeechBubbleWidget> SpeechBubble = Cast<UMS_SpeechBubbleWidget>(WidgetComponent->GetWidget()))
+		{
+			SpeechBubble->SetText(Chatting);
+			SpeechBubble->SetOnFinishedSpeechFunc([this]()
+			{
+				WidgetComponent->SetVisibility(false);
+			});
+		}
+	}
+}
+
+void AMS_MarketAICharacter::ShowImage(EMS_SpeechImageType SpeechImageType) const
+{
+	FText Chatting = FText();
+	// if(AIParameterComponent)
+	// {
+	// 	AIParameterComponent->ChattingTrigger(aChattingType, Chatting, FText(),FText());
+	// }
+	
+	if(WidgetComponent)
+	{
+		WidgetComponent->SetVisibility(true);
+		if(const TObjectPtr<UMS_SpeechBubbleWidget> SpeechBubble = Cast<UMS_SpeechBubbleWidget>(WidgetComponent->GetWidget()))
+		{
+			SpeechBubble->SetImage(SpeechImageType);
+			SpeechBubble->SetOnFinishedSpeechFunc([this]()
+			{
+				WidgetComponent->SetVisibility(false);
+			});
+		}
 	}
 }

@@ -17,15 +17,9 @@ void UMS_UnitChattingCollectComponent::Finalize()
 
 void UMS_UnitChattingCollectComponent::SetOnUpdateChatting(FMS_ChattingParameter aParameter)
 {
-	if(TArray<FMS_ChattingParameter>* Parameters = ChattingCollection.Find(aParameter.UnitHandle))
-	{
-		Parameters->Emplace(aParameter);
-		TimelineChattingCollection.Emplace(aParameter);
-	}
-	else
-	{
-		MS_LOG(TEXT("Wrong Process!"));
-	}
+	TArray<FMS_ChattingParameter>& Parameters = ChattingCollection.FindOrAdd(aParameter.UnitHandle);
+	Parameters.Emplace(aParameter);
+	TimelineChattingCollection.Emplace(aParameter);
 }
 
 void UMS_UnitChattingCollectComponent::GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle)

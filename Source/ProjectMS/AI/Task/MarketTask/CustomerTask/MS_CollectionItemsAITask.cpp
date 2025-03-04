@@ -12,7 +12,7 @@
 UMS_CollectionItemsAITask::UMS_CollectionItemsAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "CollectionItemsAITask";
-	bNotifyTick = false;
+	bNotifyTick = true;
 }
 
 EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -69,5 +69,45 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 		}
 	}
 
-	return EBTNodeResult::Type::Succeeded;
+	AIUnit->ResetChatting();
+	// AITest 나중에 해당 스토리지에서 PickUp 해갈 아이템 총합과 비례하게 ConsiderTime 을 입력해야함.
+	ConsiderProcessTime = 0.f;
+	ConsiderTime = 3.f;
+	return EBTNodeResult::Type::InProgress;
+}
+
+void UMS_CollectionItemsAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	if(ConsiderProcessTime > ConsiderTime)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
+
+	ConsiderProcessTime += DeltaSeconds;
+
+	const TObjectPtr<AMS_CustomerAIController> AIController = Cast<AMS_CustomerAIController>(OwnerComp.GetAIOwner());
+	if(!AIController)
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_CustomerAICharacter> AICharacter = Cast<AMS_CustomerAICharacter>(AIController->GetCharacter());
+	if(!AICharacter)
+	{
+		
+		return;
+	}
+
+	const TObjectPtr<UMS_CustomerAIUnit> AIUnit = Cast<UMS_CustomerAIUnit>(AICharacter->GetOwnerUnitBase());
+	if(!AIUnit)
+	{
+		return;
+	}
+
+	if(AIUnit->IsChatBefore() == false)
+	{
+		AIUnit->ShowChatting(EMS_ChattingType::PriceCheap);
+	}
 }

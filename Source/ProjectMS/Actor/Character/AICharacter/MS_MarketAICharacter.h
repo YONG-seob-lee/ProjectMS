@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "MS_AICharacter.h"
+#include "Component/Actor/MS_AIParameterComponent.h"
 #include "MathUtility/MS_MathUtility.h"
+#include "Widget/Dialog/SpeechBubble/MS_SpeechBubbleWidget.h"
 #include "MS_MarketAICharacter.generated.h"
 
 
@@ -30,8 +32,8 @@ public:
 	
 	void SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection, FVector2D aPathLocation, bool aStopInPathLocation);
 
-	void SetRocationByWalkingDirection(EMS_Direction aWalkingDirection);
-	
+	void SetRotationByWalkingDirection(EMS_Direction aWalkingDirection);
+
 private:
 	void UpdateLocation(float aDeltaTime);
 	void UpdateRotation(float aDeltaTime);
@@ -55,6 +57,13 @@ public:
 
 	// Skin
 	void SetSkin(const FName& aCapName, const FName& aTopName);
+
+	// Chatting
+	void ShowChatting(EMS_ChattingType aChattingType) const;
+	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
+
+	FORCEINLINE void ResetChatting() { bIsChatting = false;}
+	FORCEINLINE bool IsChattingBefore() const { return bIsChatting; }
 	
 protected:
 	// Component
@@ -106,6 +115,15 @@ protected:
 
 	UPROPERTY()
 	bool bShowEquipment = false;
+
+	// Chatting
+	bool bIsChatting = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UWidgetComponent> WidgetComponent = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<class UMS_AIParameterComponent> AIParameterComponent = nullptr;
 	
 public:
 	// Walking Progress

@@ -6,6 +6,7 @@
 #include "MS_ActorUnitBase.h"
 #include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
+#include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Prop/Spline/MS_CustomerSplineActor.h"
 #include "Table/Caches/MS_CustomerCacheTable.h"
@@ -232,10 +233,10 @@ void UMS_CustomerAIUnit::GoingToHome() const
 		FRotator MoveNextRotation = TangentLocation.Rotation();
 		MoveNextRotation.Yaw -= 90.f;
 		const FVector ClosetLocation = CustomerSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
-		if(const TObjectPtr<AMS_CharacterBase> StaffCharacter = GetCharacter())
+		if(const TObjectPtr<AMS_CharacterBase> CustomerCharacter = GetCharacter())
 		{
-			StaffCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
-			StaffCharacter->SetActorRotation(MoveNextRotation);
+			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MS_MarketAIUnit.h"
+#include "Component/Actor/MS_AIParameterComponent.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Table/Caches/MS_CustomerCacheTable.h"
 #include "MS_CustomerAIUnit.generated.h"

@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "AI/Task/MS_AITask.h"
-#include "MS_CollectionItemsAITask.generated.h"
+#include "MS_PutDownItemCustomerAITack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_CollectionItemsAITask : public UMS_AITask
+class PROJECTMS_API UMS_PutDownItemCustomerAITack : public UMS_AITask
 {
 	GENERATED_BODY()
 	
 public:
-	UMS_CollectionItemsAITask(const FObjectInitializer& ObjectInitializer);
+	UMS_PutDownItemCustomerAITack(const FObjectInitializer& ObjectInitializer);
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
-	float ConsiderTime = 0.f;
-	float ConsiderProcessTime = 0.f;
+	float PutDownProcessTime = 0.f;
+	float PutDownTime = 0.f;
 };

@@ -138,7 +138,7 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 	
 	if(DecoratorMemory->RemainingExecutions <= 0)
 	{
-		if(BlackboardComp->GetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem) == true)
+		if(BlackboardComp->GetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpAllItem) == true)
 		{
 			return false;
 		}
@@ -146,7 +146,7 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
 		AIUnit->UnregisterCustomerAction(CustomerActionType);
 
-		BlackboardComp->SetValueAsBool(CustomerBoardKeyName::CustomerPickUpAllItem, true);
+		BlackboardComp->SetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpAllItem, true);
 		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
 		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
 		AIAnimInstance->SetActionState(EMS_CustomerActionState::None);
