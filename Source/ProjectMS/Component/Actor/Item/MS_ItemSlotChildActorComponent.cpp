@@ -51,8 +51,7 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 		{
 			SlotActor->OnChangeCurrentSlotData(aSlotDatas);
 			DestroyChildActor();
-		
-			MS_ENSURE(false);
+			
 			return;
 		}
 	}

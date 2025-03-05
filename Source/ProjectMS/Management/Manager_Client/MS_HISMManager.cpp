@@ -128,7 +128,7 @@ void AMS_HISMManager::AddInstances(int32 aMeshId, const TArray<FTransform>& aTra
 		
 		TArray<int32> Ids = HISM->AddInstances(aTransforms, true, true);
 		
-		for (int32 i = 0; i < aTransforms.Num() - 1; ++i)
+		for (int32 i = 0; i < aTransforms.Num(); ++i)
 		{
 			if (Ids.IsValidIndex(i))
 			{
