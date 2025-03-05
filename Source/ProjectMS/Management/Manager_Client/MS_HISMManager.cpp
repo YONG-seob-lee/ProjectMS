@@ -96,7 +96,7 @@ void AMS_HISMManager::AddInstance(int32 aMeshId, const FTransform& aTransform)
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
+		TMap<FIntVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -104,7 +104,7 @@ void AMS_HISMManager::AddInstance(int32 aMeshId, const FTransform& aTransform)
 		}
 		
 		int32 Id = HISM->AddInstance(aTransform, true);
-		pMap->Emplace(aTransform.GetLocation(), Id);
+		pMap->Emplace(ConvertLocationToHISMKey(aTransform.GetLocation()), Id);
 	}
 }
 
@@ -119,7 +119,7 @@ void AMS_HISMManager::AddInstances(int32 aMeshId, const TArray<FTransform>& aTra
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
+		TMap<FIntVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -132,7 +132,7 @@ void AMS_HISMManager::AddInstances(int32 aMeshId, const TArray<FTransform>& aTra
 		{
 			if (Ids.IsValidIndex(i))
 			{
-				pMap->Emplace(aTransforms[i].GetLocation(), Ids[i]);
+				pMap->Emplace(ConvertLocationToHISMKey(aTransforms[i].GetLocation()), Ids[i]);
 			}
 		}
 	}
@@ -149,16 +149,18 @@ bool AMS_HISMManager::RemoveInstance(int32 aMeshId, const FVector& aLocation)
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
+		FIntVector Key = ConvertLocationToHISMKey(aLocation);
+		
+		TMap<FIntVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
 			return false;
 		}
 		
-		if (pMap->Contains(aLocation))
+		if (pMap->Contains(Key))
 		{
-			int32 Id = *pMap->Find(aLocation);
+			int32 Id = *pMap->Find(Key);
 			if (HISM->RemoveInstance(Id))
 			{
 				RebuildInstanceIds(aMeshId);
@@ -181,7 +183,7 @@ bool AMS_HISMManager::RemoveInstances(int32 aMeshId, const TArray<FVector>& aLoc
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
+		TMap<FIntVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -191,9 +193,11 @@ bool AMS_HISMManager::RemoveInstances(int32 aMeshId, const TArray<FVector>& aLoc
 		TArray<int32> Ids;
 		for (const FVector& Location : aLocations)
 		{
-			if (pMap->Contains(Location))
+			FIntVector Key = ConvertLocationToHISMKey(Location);
+			
+			if (pMap->Contains(Key))
 			{
-				Ids.Emplace(*pMap->Find(Location));
+				Ids.Emplace(*pMap->Find(Key));
 			}
 		}
 		
@@ -234,7 +238,7 @@ void AMS_HISMManager::RebuildInstanceIds(int32 aMeshId)
 	TObjectPtr<UHierarchicalInstancedStaticMeshComponent> HISM = *MeshTableIdToHISM.Find(aMeshId);
 	if (HISM)
 	{
-		TMap<FVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
+		TMap<FIntVector, int32>* pMap = MeshLocationToInstanceIds.Find(aMeshId);
 		if (pMap == nullptr)
 		{
 			MS_ENSURE(false);
@@ -247,7 +251,12 @@ void AMS_HISMManager::RebuildInstanceIds(int32 aMeshId)
 		{
 			FTransform Transform = FTransform();
 			HISM->GetInstanceTransform(i, Transform, true);
-			pMap->Emplace(Transform.GetLocation(), i);
+			pMap->Emplace(ConvertLocationToHISMKey(Transform.GetLocation()), i);
 		}
 	}
+}
+
+FIntVector AMS_HISMManager::ConvertLocationToHISMKey(const FVector& aLocation)
+{
+	return FIntVector(FMath::FloorToInt32(aLocation.X), FMath::FloorToInt32(aLocation.Y), FMath::FloorToInt32(aLocation.Z));
 }

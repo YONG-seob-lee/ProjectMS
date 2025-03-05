@@ -34,11 +34,13 @@ public:
 private:
 	void RebuildInstanceIds(int32 aMeshId);
 
+	static FIntVector ConvertLocationToHISMKey(const FVector& aLocation);
+
 	
 private:
 	TMap<int32, TObjectPtr<class UHierarchicalInstancedStaticMeshComponent>> MeshTableIdToHISM;
 
-	TMap<int32, TMap<FVector, int32>> MeshLocationToInstanceIds;
+	TMap<int32, TMap<FIntVector, int32>> MeshLocationToInstanceIds;
 	
 	// Instance
 	inline static TObjectPtr<AMS_HISMManager> HISMManager = nullptr;
