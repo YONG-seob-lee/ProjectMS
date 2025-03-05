@@ -46,8 +46,15 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 
 	if (CacheSlotData.CurrentItemTableId == INDEX_NONE)
 	{
-		DestroyChildActor();
-		return;
+		AMS_SlotActor* SlotActor = Cast<AMS_SlotActor>(GetChildActor());
+		if (IsValid(SlotActor))
+		{
+			SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+			DestroyChildActor();
+		
+			MS_ENSURE(false);
+			return;
+		}
 	}
 
 	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aSlotDatas.CurrentItemTableId);
@@ -56,10 +63,15 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 	if (ItemData->ItemType == static_cast<int32>(EMS_ItemType::Money)
 		|| ItemData->ItemType == static_cast<int32>(EMS_ItemType::Cash))
 	{
-		DestroyChildActor();
+		AMS_SlotActor* SlotActor = Cast<AMS_SlotActor>(GetChildActor());
+		if (IsValid(SlotActor))
+		{
+			SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+			DestroyChildActor();
 		
-		MS_ENSURE(false);
-		return;
+			MS_ENSURE(false);
+			return;
+		}
 	}
 	
 	// Slot Kind

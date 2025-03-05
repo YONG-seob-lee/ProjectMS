@@ -15,4 +15,18 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+
+	virtual void SetVisibility(bool bVisibility) override;
+
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* ItemSlotAttachedComponent;
+
+	UPROPERTY()
+	TMap<int32, TObjectPtr<class UMS_ItemSlotChildActorComponent>> SlotIdToItemSlotComponents;
 };

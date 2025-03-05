@@ -29,12 +29,4 @@ public:
 	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
 
 	virtual void SetVisibility(bool bVisibility) override;
-
-	
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* ItemSlotAttachedComponent;
-
-	UPROPERTY()
-	TMap<int32, TObjectPtr<class UMS_ItemSlotChildActorComponent>> ItemSlotIdToSlotComponents;
 };
