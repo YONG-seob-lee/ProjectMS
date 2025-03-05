@@ -198,15 +198,18 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	FMS_FurniturePositionData RoomTemperature1 = FMS_FurniturePositionData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);
 	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(4, 4, 10));
 	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(5, 5, 10));
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(6, 6, 10));
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature1.GridPosition, RoomTemperature1);
 
 	FMS_FurniturePositionData RoomTemperature2 = FMS_FurniturePositionData(7, FIntVector2(9, 2), EMS_Rotation::Rot0);
-	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(12, 12, 6));
-	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(13, 13, 6));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(12, 12, 10));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(13, 13, 10));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(14, 14, 10));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(15, 15, 10));
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature2.GridPosition, RoomTemperature2);
 	
 	FMS_FurniturePositionData VeggieStand = FMS_FurniturePositionData(8, FIntVector2(13, 2), EMS_Rotation::Rot0);
-	VeggieStand.SlotDatas.Emplace(FMS_SlotData(25, 25, 5));
+	VeggieStand.SlotDatas.Emplace(FMS_SlotData(25, 25, 10));
 	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand.GridPosition, VeggieStand);
 
 	FMS_FurniturePositionData Rack = FMS_FurniturePositionData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);

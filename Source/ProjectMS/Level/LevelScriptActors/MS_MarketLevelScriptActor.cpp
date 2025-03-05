@@ -72,17 +72,17 @@ void AMS_MarketLevelScriptActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMS_MarketLevelScriptActor::GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const
+void AMS_MarketLevelScriptActor::GetUnitsHandle(TArray<MS_Handle>& aUnitsHandle) const
 {
-	if(ChattingCollectComponent)
+	if(BehaviorCollectComponent)
 	{
-		ChattingCollectComponent->GetUnitsHandle(aUnitsHandle);
+		BehaviorCollectComponent->GetUnitsHandle(aUnitsHandle);
 	}
 }
 
 int32 AMS_MarketLevelScriptActor::GetComeInMarketPeoplePerDay() const
 {
-	TMap<MS_Handle, bool> UnitsHandle;
+	TArray<MS_Handle> UnitsHandle;
 	UnitsHandle.Empty();
 	GetUnitsHandle(UnitsHandle);
 

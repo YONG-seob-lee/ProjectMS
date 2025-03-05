@@ -34,7 +34,8 @@ public:
 
 	void GetUnitBehavior(MS_Handle aUnitHandle, TArray<FMS_BehaviorParameter>& aParameters);
 	void GetAllBehavior(TArray<FMS_BehaviorParameter>& aBehaviorCollection) const;
-	
+	void GetUnitsHandle(TArray<MS_Handle>& aUnitsHandle);
+
 private:
 	// Key : UnitHandle, Value : Value's Key is TimeStamp, Value's Value is LocalizedStringTableId
 	TMap<MS_Handle, TArray<FMS_BehaviorParameter>> BehaviorCollection;

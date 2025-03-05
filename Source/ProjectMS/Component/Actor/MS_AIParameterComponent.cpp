@@ -4,6 +4,7 @@
 #include "MS_AIParameterComponent.h"
 
 #include "MS_UnitBase.h"
+#include "Units/MS_CustomerAIUnit.h"
 
 
 UMS_AIParameterComponent::UMS_AIParameterComponent()
@@ -32,13 +33,23 @@ void UMS_AIParameterComponent::BehaviorTrigger(EMS_BehaviorType aBehaviorType)
 	{
 	case EMS_BehaviorType::ComeInMarket:
 		{
-			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeInMarket);
+			const TObjectPtr<UMS_CustomerAIUnit> CustomerUnit = Cast<UMS_CustomerAIUnit>(gUnitMng.GetUnit(UnitHandle));
+			if(!CustomerUnit)
+			{
+				break;
+			}
+			const FText Behavior = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeInMarket), FText::FromString(CustomerUnit->GetCustomerName()));
 			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
 	case EMS_BehaviorType::ComeOutMarket:
 		{
-			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeOutMarket);
+			const TObjectPtr<UMS_CustomerAIUnit> CustomerUnit = Cast<UMS_CustomerAIUnit>(gUnitMng.GetUnit(UnitHandle));
+			if(!CustomerUnit)
+			{
+				break;
+			}
+			const FText Behavior = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::ComeOutMarket), FText::FromString(CustomerUnit->GetCustomerName()));
 			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}
@@ -56,7 +67,12 @@ void UMS_AIParameterComponent::BehaviorTrigger(EMS_BehaviorType aBehaviorType)
 		}
 	case EMS_BehaviorType::LostWay:
 		{
-			const FText Behavior = FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::LostWay);
+			const TObjectPtr<UMS_CustomerAIUnit> CustomerUnit = Cast<UMS_CustomerAIUnit>(gUnitMng.GetUnit(UnitHandle));
+			if(!CustomerUnit)
+			{
+				break;
+			}
+			const FText Behavior = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, BehaviorLocalizedString::LostWay), FText::FromString(CustomerUnit->GetCustomerName()));
 			gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitHandle, gScheduleMng.GetMinute(), Behavior));
 			break;
 		}

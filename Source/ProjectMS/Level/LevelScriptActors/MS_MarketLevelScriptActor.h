@@ -25,7 +25,7 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	
-	void GetUnitsHandle(TMap<MS_Handle, bool>& aUnitsHandle) const;
+	void GetUnitsHandle(TArray<MS_Handle>& aUnitsHandle) const;
 	int32 GetComeInMarketPeoplePerDay() const;
 	void GetUnitComeMarketData(MS_Handle aUnitHandle, int32& ComeInMinute, int32& ComeOutMinute) const;
 	

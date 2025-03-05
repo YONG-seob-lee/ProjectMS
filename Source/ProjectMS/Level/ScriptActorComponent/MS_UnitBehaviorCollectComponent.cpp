@@ -39,3 +39,13 @@ void UMS_UnitBehaviorCollectComponent::GetAllBehavior(TArray<FMS_BehaviorParamet
 
 	aBehaviorCollection = TimelineBehaviorCollection;
 }
+
+void UMS_UnitBehaviorCollectComponent::GetUnitsHandle(TArray<MS_Handle>& aUnitsHandle)
+{
+	aUnitsHandle.Empty();
+	
+	for(const auto& Chatting : BehaviorCollection)
+	{
+		aUnitsHandle.Emplace(Chatting.Key);
+	}
+}

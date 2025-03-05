@@ -42,7 +42,7 @@ void UMS_CustomerDetailWidget::SetType(EMS_PopulationNumber aPopulationNumber, E
 	else if(aDetailType == EMS_CustomerDetailType::Behavior)
 	{
 		CPP_BehaviorButton->SetActive(true);
-		//CPP_BehaviorWidget->SetBehavior(aPopulationNumber);
+		CPP_BehaviorWidget->SetBehavior(PersonUnitHandle, aPopulationNumber);
 	}
 	else if(aDetailType == EMS_CustomerDetailType::Purchase)
 	{
@@ -79,7 +79,7 @@ void UMS_CustomerDetailWidget::OnClickedDetailButton(EMS_CustomerDetailType aCus
 	else if(aCustomerDetailButtonType == EMS_CustomerDetailType::Behavior)
 	{
 		CPP_BehaviorButton->SetActive(true);
-		//CPP_BehaviorWidget->SetBehavior(aPopulationNumber);
+		CPP_BehaviorWidget->SetBehavior(PersonUnitHandle, PopulationNumber);
 	}
 	else if(aCustomerDetailButtonType == EMS_CustomerDetailType::Purchase)
 	{

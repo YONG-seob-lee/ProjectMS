@@ -12,13 +12,16 @@ FMS_CustomerData::FMS_CustomerData(const FString& aCustomerName, int32 aDuckColo
 	DuckColor = aDuckColor;
 	CharacterBPPathFile = aCharacterBPPathFile;
 
-	TArray<int32> MarketItemIds;
-	gItemMng.GetMarketItemKeys(MarketItemIds);
-
 	// 일단 Display에 위치한 아이템만으로 구성하자. (너무 확률적으로 안됨)
 	TMap<int32, int32> DisplayItemIds;
 	gItemMng.GetStorageItems(EMS_ZoneType::Display, DisplayItemIds);
 
+	if(DisplayItemIds.Num() == 0)
+	{
+		MS_ENSURE(false);
+		MS_ERROR(TEXT("아무런 아이템이 전시되어있지 않소!!!"));
+	}
+	TArray<int32> MarketItemIds;
 	DisplayItemIds.GenerateKeyArray(MarketItemIds);
 	for(int32 i = 0 ; i < FMath::RandRange(1, aMaxItemKind) ; i++)
 	{

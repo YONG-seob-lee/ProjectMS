@@ -88,10 +88,8 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 		return INDEX_NONE;
 	}
 
-	TMap<MS_Handle, bool> UnitsHandleMap;
-	MarketLevelScriptActor->GetUnitsHandle(UnitsHandleMap);
 	TArray<MS_Handle> UnitsHandleArray;
-	UnitsHandleMap.GenerateKeyArray(UnitsHandleArray);
+	MarketLevelScriptActor->GetUnitsHandle(UnitsHandleArray);
 
 	for(const auto& UnitHandle : UnitsHandleArray)
 	{
@@ -101,7 +99,7 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
 			continue;
 		}
-		UnitsName.Emplace(CustomerUnit->GetCustomerName(), CustomerUnit->GetTableId());
+		UnitsName.Emplace(CustomerUnit->GetCustomerName(), UnitHandle);
 	}
 
 	CPP_PersonComboBox->ClearOptions();
