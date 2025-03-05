@@ -59,7 +59,7 @@ public:
 	void SetSkin(const FName& aCapName, const FName& aTopName);
 
 	// Chatting
-	void ShowChatting() const;
+	void ShowChatting(EMS_ChattingType ChattingType) const;
 	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
 
 	FORCEINLINE void ResetChatting() { bIsChatting = false;}
@@ -115,7 +115,7 @@ protected:
 
 	UPROPERTY()
 	bool bShowEquipment = false;
-
+	
 	// Chatting
 	bool bIsChatting = false;
 	

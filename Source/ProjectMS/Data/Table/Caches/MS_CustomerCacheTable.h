@@ -22,7 +22,7 @@ public:
 	bool IsPickUpAllItems();
 
 	void GetRemainItems(TMap<int32, int32>& RemainItems);
-	bool PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
+	void PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
 
 private:
 	int32 DuckColor = 0;

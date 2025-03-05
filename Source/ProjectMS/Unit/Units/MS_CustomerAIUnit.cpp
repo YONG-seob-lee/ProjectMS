@@ -50,7 +50,7 @@ int32 UMS_CustomerAIUnit::GetBlueprintPathId() const
 
 UClass* UMS_CustomerAIUnit::GetBlueprintClass() const
 {
-	int32 BPPathId = GetBlueprintPathId();
+	const int32 BPPathId = GetBlueprintPathId();
 	if (BPPathId == INDEX_NONE)
 	{
 		return nullptr;
@@ -117,9 +117,9 @@ void UMS_CustomerAIUnit::AddVisitStorageUnitHandle(MS_Handle StorageHandle)
 
 MS_Handle UMS_CustomerAIUnit::GetTargetStorageUnitHandle()
 {
-	if(VisitStorageUnitHandles.IsValidIndex(0))
+	if(VisitStorageUnitHandles.Num() > 0)
 	{
-		return VisitStorageUnitHandles[0];
+		return VisitStorageUnitHandles.Last();
 	}
 	
 	return INDEX_NONE;
@@ -130,9 +130,21 @@ void UMS_CustomerAIUnit::GetRemainItems(TMap<int32, int32>& RemainItems)
 	CustomerData.GetRemainItems(RemainItems);
 }
 
-bool UMS_CustomerAIUnit::PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount)
+void UMS_CustomerAIUnit::PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount)
 {
-	return CustomerData.PickUpItem(PickUpItemTableId, PickUpItemCount);
+	CustomerData.PickUpItem(PickUpItemTableId, PickUpItemCount);
+	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
+	{
+		CustomerAICharacter->PickUp(PickUpItemTableId);
+	}
+}
+
+void UMS_CustomerAIUnit::ShowPickItem(bool bShow) const
+{
+	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
+	{
+		CustomerAICharacter->ShowPickUp(bShow);
+	}
 }
 
 void UMS_CustomerAIUnit::Paid()

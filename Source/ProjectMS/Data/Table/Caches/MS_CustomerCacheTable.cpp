@@ -4,24 +4,25 @@
 #include "MS_CustomerCacheTable.h"
 
 #include "MS_ItemCacheTable.h"
+#include "Manager_Client/MS_ItemManager.h"
 
 FMS_CustomerData::FMS_CustomerData(int32 aDuckColor, int32 aCharacterBPPathFile, int32 aMaxItemKind, int32 aMaxItemCount)
 {
 	DuckColor = aDuckColor;
 	CharacterBPPathFile = aCharacterBPPathFile;
-	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
-	MS_ENSURE(ItemTable);
 
+	TArray<int32> MarketItemIds;
+	gItemMng.GetMarketItemKeys(MarketItemIds);
 
-	TMap<int32, FMS_ItemData*> ItemDatas = {};
-	ItemTable->GetItems(ItemDatas);
+	// 일단 Display에 위치한 아이템만으로 구성하자. (너무 확률적으로 안됨)
+	TMap<int32, int32> DisplayItemIds;
+	gItemMng.GetStorageItems(EMS_ZoneType::Display, DisplayItemIds);
 
-	TArray<int32> ItemIds;
-	ItemDatas.GenerateKeyArray(ItemIds);
+	DisplayItemIds.GenerateKeyArray(MarketItemIds);
 	for(int32 i = 0 ; i < FMath::RandRange(1, aMaxItemKind) ; i++)
 	{
-		const int32 RandomIndex = FMath::RandRange(0, ItemIds.Num() - 1);
-		WannaBuyItems.Emplace(ItemIds[RandomIndex], FMath::RandRange(1, aMaxItemCount));
+		const int32 RandomIndex = FMath::RandRange(0, MarketItemIds.Num() - 1);
+		WannaBuyItems.Emplace(MarketItemIds[RandomIndex], FMath::RandRange(1, aMaxItemCount));
 	}
 }
 
@@ -69,28 +70,23 @@ void FMS_CustomerData::GetRemainItems(TMap<int32, int32>& RemainItems)
 	}
 }
 
-bool FMS_CustomerData::PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount)
+void FMS_CustomerData::PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount)
 {
-	int32& BeforePickUpItemCount = PickUpItems.FindOrAdd(_PickUpItemTableId);
-
 	if(const int32* WannaItemCount = WannaBuyItems.Find(_PickUpItemTableId))
 	{
+		int32& BeforePickUpItemCount = PickUpItems.FindOrAdd(_PickUpItemTableId);
 		if(*WannaItemCount < BeforePickUpItemCount + _PickUpItemCount)
 		{
 			MS_ENSURE(false);
 			MS_LOG_VERBOSITY(Error, TEXT("[%s] I bought more than I wanted. Something Is Wrong."), *MS_FUNC_STRING);
-			return false;
 		}
+		BeforePickUpItemCount += _PickUpItemCount;
 	}
 	else
 	{
 		MS_ENSURE(false);
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] Wrong Wanna To Buy Items Data. Please Check CustomerSupervisor Class."), *MS_FUNC_STRING);
-		return false;
 	}
-	
-	BeforePickUpItemCount += _PickUpItemCount;
-	return true;
 }
 
 void UMS_CustomerCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)

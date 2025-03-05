@@ -242,4 +242,7 @@ namespace CustomerBoardKeyName
 namespace SocketName
 {
 	const FName Equipment = TEXT("Equipment");
+	const FName HeadItem = TEXT("HeadItem");
+	const FName RightItem = TEXT("RightItem");
+	const FName LeftItem = TEXT("LeftItem");
 }

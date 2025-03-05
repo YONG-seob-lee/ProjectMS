@@ -6,6 +6,7 @@
 #include "MS_AIUnit.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "BehaviorTree/BehaviorTreeTypes.h"
+#include "Component/Actor/MS_AIParameterComponent.h"
 #include "Widget/Dialog/SpeechBubble/MS_SpeechBubbleWidget.h"
 #include "MS_MarketAIUnit.generated.h"
 
@@ -50,7 +51,7 @@ public:
 
 	
 	// Process Shopping
-	void ShowChatting() const;
+	void ShowChatting(EMS_ChattingType ChattingType = EMS_ChattingType::Undefined) const;
 	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
 	bool IsChatBefore() const;
 	void ResetChatting() const;

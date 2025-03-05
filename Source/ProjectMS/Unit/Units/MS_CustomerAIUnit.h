@@ -39,7 +39,8 @@ public:
 	MS_Handle GetTargetStorageUnitHandle();
 	
 	void GetRemainItems(TMap<int32, int32>& RemainItems);
-	bool PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount);
+	void PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount);
+	void ShowPickItem(bool bShow) const;
 	void Paid();
 	
 	// Spline

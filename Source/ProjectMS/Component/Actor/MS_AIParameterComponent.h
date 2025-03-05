@@ -20,6 +20,8 @@ enum class EMS_ChattingType
 	Hungry,
 	Thirsty,
 	NuclearMissile,
+	ThereIsItem,
+	ThereIsNoItem,
 	ExitOutMarket // 마켓 나감
 };
 
@@ -46,6 +48,8 @@ namespace ChattingLocalizedString
 	const FString Hungry = TEXT("Customer_Comment_06");
 	const FString Thirsty = TEXT("Customer_Comment_07");
 	const FString NuclearMissile = TEXT("Customer_Comment_08");
+	const FString ThereIsItem = TEXT("Customer_Comment_09");
+	const FString ThereIsNoItem = TEXT("Customer_Comment_10");
 }
 
 namespace BehaviorLocalizedString
@@ -122,6 +126,18 @@ public:
 		case EMS_ChattingType::NuclearMissile:
 			{
 				Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::NuclearMissile), {aParameter01});
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
+				break;
+			}
+		case EMS_ChattingType::ThereIsItem:
+			{
+				Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::ThereIsItem), {aParameter01});
+				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
+				break;
+			}
+		case EMS_ChattingType::ThereIsNoItem:
+			{
+				Chatting = FText::Format(FText::FromStringTable(MS_LocalizedTableId::StringTable, ChattingLocalizedString::ThereIsNoItem), {aParameter01});
 				gUnitMng.OnChattingDelegate.Broadcast(FMS_ChattingParameter(UnitHandle, false, gScheduleMng.GetMinute(), Chatting));
 				break;
 			}

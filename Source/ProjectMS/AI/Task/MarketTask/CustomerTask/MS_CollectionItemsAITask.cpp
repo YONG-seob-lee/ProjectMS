@@ -49,6 +49,7 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 		return EBTNodeResult::Type::Succeeded;
 	}
 
+	bool bPickUpAnyItem = false;
 	for(const auto& RemainItem : RemainItems)
 	{
 		// 현재 위치해있는 디스플레이 유닛을 찾는 행위
@@ -62,11 +63,19 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 		{
 			// AITest 나중에 가구 스토리지에 있는 아이템과 대조하여 맞춰야함.
 			const int32 SubtractItemCount = StorageUnit->SubtractAnySlotCurrentItemCount(RemainItem.Key, RemainItem.Value, true);
-			if(AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount) == false)
+
+			if(SubtractItemCount > 0)
 			{
-				continue;
+				AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount);
+				bPickUpAnyItem = true;
 			}
 		}
+	}
+
+	ChattingType = EMS_ChattingType::Undefined;
+	if(bPickUpAnyItem == false)
+	{
+		ChattingType = EMS_ChattingType::ThereIsItem;
 	}
 
 	AIUnit->ResetChatting();
@@ -108,6 +117,6 @@ void UMS_CollectionItemsAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 
 	if(AIUnit->IsChatBefore() == false)
 	{
-		AIUnit->ShowChatting();
+		AIUnit->ShowChatting(ChattingType);
 	}
 }

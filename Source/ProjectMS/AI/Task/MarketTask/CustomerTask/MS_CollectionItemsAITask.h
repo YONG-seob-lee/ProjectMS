@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AI/Task/MS_AITask.h"
+#include "Component/Actor/MS_AIParameterComponent.h"
 #include "MS_CollectionItemsAITask.generated.h"
 
 /**
@@ -21,6 +22,7 @@ public:
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
+	EMS_ChattingType ChattingType = EMS_ChattingType::Undefined;
 	float ConsiderTime = 0.f;
 	float ConsiderProcessTime = 0.f;
 };

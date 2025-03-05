@@ -35,6 +35,7 @@ EBTNodeResult::Type UMS_PutDownItemCustomerAITack::ExecuteTask(UBehaviorTreeComp
 		return EBTNodeResult::Type::Failed;
 	}
 	
+	AIUnit->ShowPickItem(false);
 	// AITest 나중에 Staff가 결제 하는 시간을 추가로 PaidTime 에다 기입해야한다.
 	AIUnit->ResetChatting();
 	PutDownProcessTime = 0.f;

@@ -68,6 +68,7 @@ public:
 	FORCEINLINE void UpdateOrderItems(const TMap<int32, int32>& aOrderItems) { OrderItems = aOrderItems; }
 	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = OrderItems; }
 	FORCEINLINE void GetSoldItems(TMap<int32, int32>& aSoldItems) const { aSoldItems = SoldItems; }
+	FORCEINLINE void GetMarketItemKeys(TArray<int32>& aItemKeys) const { Items.GenerateKeyArray(aItemKeys); }
 
 	void PurchaseItems(const TMap<int32, int32>& aSoldItems);
 	
