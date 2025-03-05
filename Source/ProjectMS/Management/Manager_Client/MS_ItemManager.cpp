@@ -331,20 +331,40 @@ bool UMS_ItemManager::CanDeliveryToStorage(int32 aItemId, int32 aDeliveryCount, 
 				TArray<FMS_SlotData> StorageSlotDatas;
 				StorageUnit->GetSlotDatas(StorageSlotDatas);
 
-				for (const FMS_SlotData& SlotData: StorageSlotDatas)
+				if (aZoneType == EMS_ZoneType::Pallet)
 				{
-					if (SlotData.RequestItemTableId == aItemId)
+					for (const FMS_SlotData& SlotData: StorageSlotDatas)
 					{
 						if (SlotData.CurrentItemTableId == aItemId)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
 							aOutDeliveryTargetStrage.AddUnique(StorageUnit);
 						}
-
+						
 						else if (SlotData.CurrentItemCount == 0)
 						{
 							EmptyCount = EmptyCount + ItemData->BoxMaxCount;
 							aOutDeliveryTargetStrage.AddUnique(StorageUnit);
+						}
+					}
+				}
+				else
+				{
+					for (const FMS_SlotData& SlotData: StorageSlotDatas)
+					{
+						if (SlotData.RequestItemTableId == aItemId)
+						{
+							if (SlotData.CurrentItemTableId == aItemId)
+							{
+								EmptyCount = EmptyCount + ItemData->BoxMaxCount - SlotData.CurrentItemCount;
+								aOutDeliveryTargetStrage.AddUnique(StorageUnit);
+							}
+
+							else if (SlotData.CurrentItemCount == 0)
+							{
+								EmptyCount = EmptyCount + ItemData->BoxMaxCount;
+								aOutDeliveryTargetStrage.AddUnique(StorageUnit);
+							}
 						}
 					}
 				}
