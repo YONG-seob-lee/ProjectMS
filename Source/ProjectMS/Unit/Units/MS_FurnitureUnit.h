@@ -37,10 +37,13 @@ public:
 	virtual void UpdateIssueTickets();
 	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer);
 
+	void OnChangeIssueTicketRequestUnitToStaffUnit(TWeakObjectPtr<class UMS_IssueTicket> aTargetTicket);
+
+	
 protected:
 	virtual bool RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId = INDEX_NONE);
 	virtual bool UnregisterIssueTicket(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
-	
+
 	
 protected:
 	struct FMS_FurnitureData* FurnitureData = nullptr;

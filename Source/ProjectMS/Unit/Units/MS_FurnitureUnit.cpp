@@ -83,6 +83,14 @@ void UMS_FurnitureUnit::ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer
 	IssueTickets.Empty();
 }
 
+void UMS_FurnitureUnit::OnChangeIssueTicketRequestUnitToStaffUnit(TWeakObjectPtr<UMS_IssueTicket> aTargetTicket)
+{
+	if (IssueTickets.Contains(aTargetTicket))
+	{
+		IssueTickets.Remove(aTargetTicket);
+	}
+}
+
 bool UMS_FurnitureUnit::RegisterIssueTicket(EMS_StaffIssueType aIssueType, int32 aSlotId)
 {
 	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();

@@ -21,19 +21,21 @@ class PROJECTMS_API UMS_IssueTicket : public UObject
 public:
 	UMS_IssueTicket();
 	
-	void Initialize(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_FurnitureUnit> aRequestFurnitureUnit, int32 aRequestSlot);
+	void Initialize(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit, int32 aRequestSlot);
 	void Finalize();
 
 	FORCEINLINE EMS_StaffIssueType GetIssueType() const { return IssueType; }
-	FORCEINLINE TWeakObjectPtr<class UMS_FurnitureUnit> GetRequestFurnitureUnit() const { return RequestFurnitureUnit; }
+	FORCEINLINE TWeakObjectPtr<class UMS_UnitBase> GetRequestUnit() const { return RequestUnit; }
 	FORCEINLINE int32 GetRequestSlotId() const { return RequestSlotId; }
 	FORCEINLINE TWeakObjectPtr<class UMS_StaffAIUnit> GetStaffUnit() const { return StaffUnit; }
 	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
+	void ChangeRequestUnitToStaffUnit(int32 aStaffSlotId = 0);	// 가구 유닛에서 아이템을 빼면서 가구 유닛이 이슈랑 상관없어지면 스태프에게 일임하여 이슈가 사라지는 것을 방지
+
 	FMS_SlotData GetRequestSlotData() const;
 	
 	bool IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const;
-	bool IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_FurnitureUnit> aRequestUnit, int32 aRequestSlot) const;
+	bool IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit, int32 aRequestSlot) const;
 	bool IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) const;
 	
 	static bool AllowSameIssue(EMS_StaffIssueType aIssueType);
@@ -47,7 +49,7 @@ private:
 	EMS_StaffIssueType IssueType;
 
 	UPROPERTY()
-	TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit;
+	TWeakObjectPtr<class UMS_UnitBase> RequestUnit;
 
 	UPROPERTY()
 	int32 RequestSlotId;
@@ -70,13 +72,13 @@ public:
 	void Initialize();
 	void Finalize();
 
-	TWeakObjectPtr<UMS_IssueTicket> RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_FurnitureUnit> aRequestUnit = nullptr, int32 aSlotId = INDEX_NONE);
+	TWeakObjectPtr<UMS_IssueTicket> RegisterIssueTicket(EMS_StaffIssueType aIssueType, TWeakObjectPtr<class UMS_UnitBase> aRequestUnit = nullptr, int32 aSlotId = INDEX_NONE);
 
 	void UnregisterAllIssueTickets();
 	void UnregisterUnitIssueTickets(MS_Handle aUnitHandle);
-	void UnregisterUnitIssueTickets(TWeakObjectPtr<class UMS_FurnitureUnit> aUnitHandle);
+	void UnregisterUnitIssueTickets(TWeakObjectPtr<class UMS_UnitBase> aUnitHandle);
 	void UnregisterUnitSlotIssueTickets(MS_Handle aUnitHandle, int32 aSlotId);
-	void UnregisterUnitSlotIssueTickets(TWeakObjectPtr<class UMS_FurnitureUnit> aFurnitureUnit, int32 aSlotId);
+	void UnregisterUnitSlotIssueTickets(TWeakObjectPtr<class UMS_UnitBase> aRequestUnit, int32 aSlotId);
 	bool UnregisterIssueTicket(TWeakObjectPtr<UMS_IssueTicket> aIssueTicket);
 
 	void GetTypeIssueTickets(TArray<TWeakObjectPtr<UMS_IssueTicket>>& aOutTickets, EMS_StaffIssueType aIssueType, bool NoneStaffOnly = false, bool bEnableOnly = false);

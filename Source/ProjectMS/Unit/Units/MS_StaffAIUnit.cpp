@@ -283,14 +283,14 @@ void UMS_StaffAIUnit::UnregisterNoneIssueStaffAction(EMS_StaffActionType aStaffA
 
 void UMS_StaffAIUnit::SearchAndRegisterIssueTicket()
 {
-	TWeakObjectPtr<class UMS_IssueTicket> Ticket = SearchIssueTicket();
+	TWeakObjectPtr<UMS_IssueTicket> Ticket = SearchIssueTicket();
 	if (Ticket != nullptr)
 	{
 		RegisterAsIssueTicketStaff(Ticket);
 	}
 }
 
-TWeakObjectPtr<class UMS_IssueTicket> UMS_StaffAIUnit::SearchIssueTicket() const
+TWeakObjectPtr<UMS_IssueTicket> UMS_StaffAIUnit::SearchIssueTicket() const
 {
 	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
 	if (const UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
@@ -308,6 +308,22 @@ void UMS_StaffAIUnit::RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>
 	{
 		RunMarketMode->RegisterIssueTicketStaff(aTargetTicket, this);
 	}
+}
+
+bool UMS_StaffAIUnit::UnregisterIssueTicket()
+{
+	// 자신이 이슈 티켓을 가지고 있을 경우에만 Unregister 요청 가능
+	if (IssueTicket->GetRequestUnit() == this)
+	{
+		UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	
+		if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+		{
+			return RunMarketMode->UnregisterIssueTicket(IssueTicket);
+		}
+	}
+
+	return false;
 }
 
 void UMS_StaffAIUnit::UnregisterAsIssueTicketStaff()
@@ -340,7 +356,7 @@ void UMS_StaffAIUnit::OnUnregisteredAsIssueTicketStaff()
 	IssueTicket = nullptr;
 }
 
-TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFurnitrueUnit()
+TWeakObjectPtr<UMS_UnitBase> UMS_StaffAIUnit::GetIssueTicketRequestUnit()
 {
 	if (IssueTicket == nullptr)
 	{
@@ -348,7 +364,7 @@ TWeakObjectPtr<class UMS_FurnitureUnit> UMS_StaffAIUnit::GetIssueTicketRequestFu
 		return nullptr;
 	}
 	
-	return IssueTicket->GetRequestFurnitureUnit();
+	return IssueTicket->GetRequestUnit();
 }
 
 bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
@@ -373,7 +389,7 @@ bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
 	
 	if (IssueType == EMS_StaffIssueType::AddItemsToDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> PickUpTargetStorages;
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> PickUpTargetStorages;
 		if (gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Shelf, PickUpTargetStorages))
 		{
 			aOutTargetUnits = PickUpTargetStorages;
@@ -383,7 +399,7 @@ bool UMS_StaffAIUnit::GetIssueTicketPickUpTargetUnits(
 
 	else if (IssueType == EMS_StaffIssueType::AddItemsToShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> PickUpTargetStorages;
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> PickUpTargetStorages;
 		if (gItemMng.CanPickUpFromStorage(SlotData.RequestItemTableId, EMS_ZoneType::Pallet, PickUpTargetStorages))
 		{
 			aOutTargetUnits = PickUpTargetStorages;
@@ -415,7 +431,7 @@ bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UM
 	
 	if (IssueType == EMS_StaffIssueType::ReturnItemsFromDisplay)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> DeliveryTargetStorages;
 		if (gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Shelf, DeliveryTargetStorages))
 		{
 			aOutTargetUnits = DeliveryTargetStorages;
@@ -425,7 +441,7 @@ bool UMS_StaffAIUnit::GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<UM
 
 	else if (IssueType == EMS_StaffIssueType::ReturnItemsFromShelf)
 	{
-		TArray<TWeakObjectPtr<class UMS_StorageUnit>> DeliveryTargetStorages;
+		TArray<TWeakObjectPtr<UMS_StorageUnit>> DeliveryTargetStorages;
 		if (gItemMng.CanDeliveryToStorage(SlotData.CurrentItemTableId, SlotData.CurrentItemCount, EMS_ZoneType::Pallet, DeliveryTargetStorages))
 		{
 			aOutTargetUnits = DeliveryTargetStorages;
@@ -609,6 +625,10 @@ bool UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼�
 	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
 	if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(FurnitureUnit))
 	{
+		// 가구 유닛에서 아이템을 빼면서 가구 유닛이 이슈랑 상관없어지면 스태프에게 일임하여 이슈가 사라지는 것을 방지
+		IssueTicket->ChangeRequestUnitToStaffUnit();
+
+		// 아이템 옮기기
 		int32 MoveCount = StorageUnit->SubtractAnySlotCurrentItemCount(RequestSlotData.CurrentItemTableId, RequestSlotData.CurrentItemCount);
 		if (MoveCount == 0)
 		{
@@ -644,4 +664,23 @@ TWeakObjectPtr<UMS_FurnitureUnit> UMS_StaffAIUnit::GetInteractableFurnitureUnit(
 	}
 	
 	return nullptr;
+}
+
+void UMS_StaffAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems)
+{
+	Super::OnChangeCurrentSlotDatas(bUpdateNotPlacedItems);
+
+	if (IssueTicket != nullptr)
+	{
+		if (IssueTicket->GetRequestUnit() == this)
+		{
+			if (SlotDatas.IsValidIndex(0))
+			{
+				if (SlotDatas[0].CurrentItemCount == 0)
+				{
+					UnregisterIssueTicket();
+				}
+			}
+		}
+	}
 }

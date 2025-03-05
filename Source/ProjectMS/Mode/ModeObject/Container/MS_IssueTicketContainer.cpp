@@ -4,21 +4,20 @@
 #include "MS_IssueTicketContainer.h"
 
 #include "Manager_Client/MS_ItemManager.h"
-#include "Table/RowBase/MS_ItemData.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
 
 UMS_IssueTicket::UMS_IssueTicket()
-	: IssueType(EMS_StaffIssueType::None), RequestFurnitureUnit(nullptr), RequestSlotId(INDEX_NONE)
+	: IssueType(EMS_StaffIssueType::None), RequestUnit(nullptr), RequestSlotId(INDEX_NONE)
 {
 }
 
 void UMS_IssueTicket::Initialize(EMS_StaffIssueType aIssueType,
-	TWeakObjectPtr<UMS_FurnitureUnit> aRequestFurnitureUnit, int32 aRequestSlot)
+	TWeakObjectPtr<UMS_UnitBase> aRequestUnit, int32 aRequestSlot)
 {
 	IssueType = aIssueType;
-	RequestFurnitureUnit = aRequestFurnitureUnit;
+	RequestUnit = aRequestUnit;
 	RequestSlotId = aRequestSlot;
 
 	UpdateEnabled();
@@ -37,13 +36,32 @@ void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 	StaffUnit = aStaffUnit;
 }
 
+void UMS_IssueTicket::ChangeRequestUnitToStaffUnit(int32 aStaffSlotId /*= 0*/)
+{
+	if (RequestUnit != nullptr && StaffUnit != nullptr)
+	{
+		if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
+		{
+			RequestFurnitureUnit->OnChangeIssueTicketRequestUnitToStaffUnit(this);
+		
+			RequestUnit = StaffUnit;
+			RequestSlotId = aStaffSlotId;
+		}
+	}
+}
+
 FMS_SlotData UMS_IssueTicket::GetRequestSlotData() const
 {
-	if (RequestFurnitureUnit != nullptr)
+	if (RequestUnit != nullptr)
 	{
-		if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(RequestFurnitureUnit))
+		if (UMS_StorageUnit* RequestStorageUnit = Cast<UMS_StorageUnit>(RequestUnit))
 		{
-			return StorageUnit->GetSlotData(RequestSlotId);
+			return RequestStorageUnit->GetSlotData(RequestSlotId);
+		}
+
+		if (UMS_StaffAIUnit* RequestStaffUnit = Cast<UMS_StaffAIUnit>(RequestUnit))
+		{
+			return RequestStaffUnit->GetSlotData(RequestSlotId);
 		}
 	}
 
@@ -52,23 +70,23 @@ FMS_SlotData UMS_IssueTicket::GetRequestSlotData() const
 
 bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, MS_Handle aUnitHandle, int32 aRequestSlot) const
 {
-	if (RequestFurnitureUnit != nullptr)
+	if (RequestUnit != nullptr)
 	{
 		return IssueType == aIssueType
-		&& RequestFurnitureUnit->GetUnitHandle() == aUnitHandle
+		&& RequestUnit->GetUnitHandle() == aUnitHandle
 		&& RequestSlotId == aRequestSlot;
 	}
 
 	return false;
 }
 
-bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_FurnitureUnit> aRequestUnit,
+bool UMS_IssueTicket::IsSameIssue(EMS_StaffIssueType aIssueType, TWeakObjectPtr<UMS_UnitBase> aRequestUnit,
                                   int32 aRequestSlot) const
 {
-	if (RequestFurnitureUnit != nullptr)
+	if (RequestUnit != nullptr)
 	{
 		return IssueType == aIssueType
-			&& RequestFurnitureUnit == aRequestUnit
+			&& RequestUnit == aRequestUnit
 			&& RequestSlotId == aRequestSlot;
 	}
 
@@ -83,10 +101,10 @@ bool UMS_IssueTicket::IsSameIssue(const TWeakObjectPtr<UMS_IssueTicket> aOther) 
 		return false;
 	}
 
-	if (RequestFurnitureUnit != nullptr)
+	if (RequestUnit != nullptr)
 	{
 		return IssueType == aOther->IssueType
-			&& RequestFurnitureUnit == aOther->RequestFurnitureUnit
+			&& RequestUnit == aOther->RequestUnit
 			&& RequestSlotId == aOther->RequestSlotId;
 	}
 
@@ -153,7 +171,7 @@ void UMS_IssueTicketContainer::Finalize()
 }
 
 TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::RegisterIssueTicket(EMS_StaffIssueType aIssueType,
-	TWeakObjectPtr<UMS_FurnitureUnit> aRequestUnit /*= nullptr*/, int32 aSlotId /*= INDEX_NONE*/)
+	TWeakObjectPtr<UMS_UnitBase> aRequestUnit /*= nullptr*/, int32 aSlotId /*= INDEX_NONE*/)
 {
 	if (!UMS_IssueTicket::AllowSameIssue(aIssueType))
 	{
@@ -201,7 +219,7 @@ void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(MS_Handle aUnitHandle)
 	{
 		if (IsValid(IssueTickets[i]))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTickets[i]->GetRequestUnit();
 		
 			if (RequestUnit == nullptr)
 			{
@@ -218,13 +236,13 @@ void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(MS_Handle aUnitHandle)
 	}
 }
 
-void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(TWeakObjectPtr<UMS_FurnitureUnit> aUnitBase)
+void UMS_IssueTicketContainer::UnregisterUnitIssueTickets(TWeakObjectPtr<UMS_UnitBase> aUnitBase)
 {
 	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
 	{
 		if (IsValid(IssueTickets[i]))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTickets[i]->GetRequestUnit();
 		
 			if (RequestUnit == nullptr)
 			{
@@ -247,7 +265,7 @@ void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(MS_Handle aUnitHan
 	{
 		if (IsValid(IssueTickets[i]))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTickets[i]->GetRequestUnit();
 			int32 RequestSlot = IssueTickets[i]->GetRequestSlotId();
 			
 			if (RequestUnit == nullptr)
@@ -265,21 +283,21 @@ void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(MS_Handle aUnitHan
 	}
 }
 
-void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(TWeakObjectPtr<UMS_FurnitureUnit> aFurnitureUnit, int32 aSlotId)
+void UMS_IssueTicketContainer::UnregisterUnitSlotIssueTickets(TWeakObjectPtr<UMS_UnitBase> aRequestUnit, int32 aSlotId)
 {
 	for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
 	{
 		if (IsValid(IssueTickets[i]))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTickets[i]->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> TicketRequestUnit = IssueTickets[i]->GetRequestUnit();
 			int32 RequestSlot = IssueTickets[i]->GetRequestSlotId();
 			
-			if (RequestUnit == nullptr)
+			if (TicketRequestUnit == nullptr)
 			{
 				continue;
 			}
 		
-			if (RequestUnit == aFurnitureUnit && RequestSlot == aSlotId)
+			if (TicketRequestUnit == aRequestUnit && RequestSlot == aSlotId)
 			{
 				IssueTickets[i]->Finalize();
 				MS_DeleteObject(IssueTickets[i]);
@@ -347,7 +365,7 @@ void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 	{
 		if (IsValid(IssueTicket))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTicket->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTicket->GetRequestUnit();
 		
 			if (RequestUnit == nullptr)
 			{
@@ -383,7 +401,7 @@ void UMS_IssueTicketContainer::GetUnitIssueTickets(TArray<TWeakObjectPtr<UMS_Iss
 	{
 		if (IsValid(IssueTicket))
 		{
-			TWeakObjectPtr<UMS_FurnitureUnit> RequestUnit = IssueTicket->GetRequestFurnitureUnit();
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = IssueTicket->GetRequestUnit();
 			int32 RequestSlot = IssueTicket->GetRequestSlotId();
 			
 			if (RequestUnit == nullptr)
@@ -450,19 +468,22 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket
 				continue;
 			}
 			
-			TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit = TypeTicket->GetRequestFurnitureUnit();
-			if (RequestFurnitureUnit == nullptr)
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = TypeTicket->GetRequestUnit();
+			if (RequestUnit == nullptr)
 			{
 				continue;
 			}
-			
-			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - StaffGridPosition;
-			int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
 
-			if (GridPositionDistance < MinGridPositionDistance)
+			if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
 			{
-				MinGridPositionDistance = GridPositionDistance;
-				MinGridPositionTicket = TypeTicket;
+				FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - StaffGridPosition;
+				int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
+
+				if (GridPositionDistance < MinGridPositionDistance)
+				{
+					MinGridPositionDistance = GridPositionDistance;
+					MinGridPositionTicket = TypeTicket;
+				}
 			}
 		}
 
@@ -492,19 +513,22 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::SearchStaffIssueTicket
 				continue;
 			}
 			
-			TWeakObjectPtr<class UMS_FurnitureUnit> RequestFurnitureUnit = TypeTicket->GetRequestFurnitureUnit();
-			if (RequestFurnitureUnit == nullptr)
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = TypeTicket->GetRequestUnit();
+			if (RequestUnit == nullptr)
 			{
 				continue;
 			}
-			
-			FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - aStaffGridPosition;
-			int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
 
-			if (GridPositionDistance < MinGridPositionDistance)
+			if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
 			{
-				MinGridPositionDistance = GridPositionDistance;
-				MinGridPositionTicket = TypeTicket;
+				FIntVector2 GridPositionDiff = RequestFurnitureUnit->GetGridPosition() - aStaffGridPosition;
+				int32 GridPositionDistance = FMath::Abs(GridPositionDiff.X) + FMath::Abs(GridPositionDiff.Y);
+
+				if (GridPositionDistance < MinGridPositionDistance)
+				{
+					MinGridPositionDistance = GridPositionDistance;
+					MinGridPositionTicket = TypeTicket;
+				}
 			}
 		}
 

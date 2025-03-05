@@ -159,6 +159,16 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	CachePath.RemoveAt(0);
 }
 
+FMS_SlotData UMS_MarketAIUnit::GetSlotData(int32 aSlotId) const
+{
+	if (SlotDatas.IsValidIndex(aSlotId))
+	{
+		return SlotDatas[aSlotId];
+	}
+	
+	return FMS_SlotData();
+}
+
 void UMS_MarketAIUnit::ResetSlotDatas()
 {
 	for (FMS_SlotData& SlotData : SlotDatas)

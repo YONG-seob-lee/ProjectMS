@@ -50,14 +50,15 @@ public:
 private:
 	TWeakObjectPtr<class UMS_IssueTicket> SearchIssueTicket() const;
 	void RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket);
-
+	bool UnregisterIssueTicket();
+	
 public:
 	void UnregisterAsIssueTicketStaff();
 	
 	void OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);
 	void OnUnregisteredAsIssueTicketStaff();
 
-	TWeakObjectPtr<class UMS_FurnitureUnit> GetIssueTicketRequestFurnitrueUnit();
+	TWeakObjectPtr<class UMS_UnitBase> GetIssueTicketRequestUnit();
 	bool GetIssueTicketPickUpTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits);
 	bool GetIssueTicketDeliveryTargetUnits(TArray<TWeakObjectPtr<class UMS_StorageUnit>>& aOutTargetUnits);
 
@@ -66,6 +67,9 @@ public:
 	bool PickUpCurrentItems();
 
 	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
+
+protected:
+	virtual void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false) override;
 
 	
 private:

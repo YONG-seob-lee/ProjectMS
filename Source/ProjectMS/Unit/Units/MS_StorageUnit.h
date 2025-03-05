@@ -52,7 +52,7 @@ public:
 	// IssueTickets
 	virtual void UpdateIssueTickets() override;
 	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer) override;
-
+	
 private:
 	void UpdateStorageSlotIssueTickets();
 	

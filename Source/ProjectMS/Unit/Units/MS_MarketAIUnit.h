@@ -42,6 +42,7 @@ public:
 
 	// Slot
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
+	FMS_SlotData GetSlotData(int32 aSlotId) const;
 
 	FORCEINLINE virtual int32 GetSlotCount() const { return 0; }
 
@@ -56,8 +57,8 @@ public:
 	bool IsChatBefore() const;
 	void ResetChatting() const;
 	
-private:
-	void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false);
+protected:
+	virtual void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false);
 
 	
 private:
