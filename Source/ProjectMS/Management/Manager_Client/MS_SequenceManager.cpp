@@ -63,32 +63,29 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 		return;
 	}
 
-	if (SequenceType == EMS_SequenceType::Entrance || SequenceType == EMS_SequenceType::Truck)
+	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 	{
-		if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
+		bSetBlendCamera = Parameter.bSetBlendCamera; 
+		if(Parameter.bSetBlendCamera)
 		{
-			bSetBlendCamera = Parameter.bSetBlendCamera; 
-			if(Parameter.bSetBlendCamera)
-			{
-				gCameraMng.SetViewTarget(SequenceActor);
-				FVector QuarterCameraLocation;
-				FRotator QuarterCameraRotator;
-				gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
-				SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
-			}
+			gCameraMng.SetViewTarget(SequenceActor);
+			FVector QuarterCameraLocation;
+			FRotator QuarterCameraRotator;
+			gCameraMng.GetViewCamera(EMS_ViewCameraType::QuarterView)->GetCameraPosition(QuarterCameraLocation, QuarterCameraRotator);
+			SequenceActor->SetActorLocationAndRotation(QuarterCameraLocation, QuarterCameraRotator);
+		}
 	
-			if(Parameter.OnFinishedSequenceCallback)
-			{
-				OnFinishedSequenceCallback = Parameter.OnFinishedSequenceCallback;
-				LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
-			}
+		if(Parameter.OnFinishedSequenceCallback)
+		{
+			OnFinishedSequenceCallback = Parameter.OnFinishedSequenceCallback;
+			LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &UMS_SequenceManager::OnFinishedSequence);
+		}
 			
-			// Play the level sequence
-			LevelSequencePlayer->Play();
-			if(Parameter.bHideWidget)
-			{
-				gWidgetMng.HideAllWidget(true);
-			}
+		// Play the level sequence
+		LevelSequencePlayer->Play();
+		if(Parameter.bHideWidget)
+		{
+			gWidgetMng.HideAllWidget(true);
 		}
 	}
 	else
