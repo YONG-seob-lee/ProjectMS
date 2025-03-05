@@ -173,17 +173,40 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	OpenedZoneIds.AddUnique(1);
 	OpenedZoneIds.AddUnique(10);
 
+	// Items
+	Items.Emplace(4, 10);
+	Items.Emplace(5, 10);
+	Items.Emplace(12, 10);
+	Items.Emplace(13, 10);
+	Items.Emplace(21, 10);
+	Items.Emplace(22, 10);
+	Items.Emplace(25, 10);
+	Items.Emplace(26, 10);
+	Items.Emplace(27, 10);
+	Items.Emplace(31, 10);
+	Items.Emplace(32, 10);
+	Items.Emplace(33, 10);
+	Items.Emplace(34, 10);
+	Items.Emplace(35, 10);
+	Items.Emplace(40, 10);
+	Items.Emplace(41, 10);
+	
 	//Furniture
 	FMS_FurniturePositionData Counter = FMS_FurniturePositionData(1, FIntVector2(13, 10), EMS_Rotation::Rot270);
 	GridPositionToMarketFurnitureDatas.Emplace(Counter.GridPosition, Counter);
 
 	FMS_FurniturePositionData RoomTemperature1 = FMS_FurniturePositionData(7, FIntVector2(7, 2), EMS_Rotation::Rot0);
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(4, 4, 10));
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(5, 5, 10));
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature1.GridPosition, RoomTemperature1);
 
 	FMS_FurniturePositionData RoomTemperature2 = FMS_FurniturePositionData(7, FIntVector2(9, 2), EMS_Rotation::Rot0);
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(12, 12, 6));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(13, 13, 6));
 	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature2.GridPosition, RoomTemperature2);
-
+	
 	FMS_FurniturePositionData VeggieStand = FMS_FurniturePositionData(8, FIntVector2(13, 2), EMS_Rotation::Rot0);
+	VeggieStand.SlotDatas.Emplace(FMS_SlotData(25, 25, 5));
 	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand.GridPosition, VeggieStand);
 
 	FMS_FurniturePositionData Rack = FMS_FurniturePositionData(11, FIntVector2(-3, 13), EMS_Rotation::Rot0);
@@ -206,24 +229,6 @@ void AMS_PlayerState::InitDefaultPlayerData()
 
 	FMS_FurniturePositionData Pallet6 = FMS_FurniturePositionData(10, FIntVector2(-14, 28), EMS_Rotation::Rot180);
 	GridPositionToMarketFurnitureDatas.Emplace(Pallet6.GridPosition, Pallet6);
-	
-	// Items
-	Items.Emplace(4, 10);
-	Items.Emplace(5, 10);
-	Items.Emplace(12, 10);
-	Items.Emplace(13, 10);
-	Items.Emplace(21, 10);
-	Items.Emplace(22, 10);
-	Items.Emplace(25, 10);
-	Items.Emplace(26, 10);
-	Items.Emplace(27, 10);
-	Items.Emplace(31, 10);
-	Items.Emplace(32, 10);
-	Items.Emplace(33, 10);
-	Items.Emplace(34, 10);
-	Items.Emplace(35, 10);
-	Items.Emplace(40, 10);
-	Items.Emplace(41, 10);
 
 	// Staff
 	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
