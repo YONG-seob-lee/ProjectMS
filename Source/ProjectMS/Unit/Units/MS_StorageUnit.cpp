@@ -368,6 +368,20 @@ void UMS_StorageUnit::OnChangeRequestSlotDatas()
 		UpdateStorageSlotIssueTickets();
 	}
 
+	// 이 가구의 아이템슬롯이 변경 되어 다른 가구의 이슈들이 해결 가능, 불가능해졌는지 업데이트
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Pallet))
+		{
+			RunMarketMode->UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType::Shelf);
+		}
+		else if (FurnitureData->ZoneType == static_cast<int32>(EMS_ZoneType::Shelf))
+		{
+			RunMarketMode->UpdateAllZoneStorageIssueTicketsEnabled(EMS_ZoneType::Display);
+		}
+	}
+	
 	AMS_Storage* Storage = GetActor<AMS_Storage>();
 	MS_ENSURE(IsValid(Storage));
 	

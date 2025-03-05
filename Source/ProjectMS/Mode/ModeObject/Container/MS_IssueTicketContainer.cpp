@@ -157,13 +157,13 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::RegisterIssueTicket(EM
 {
 	if (!UMS_IssueTicket::AllowSameIssue(aIssueType))
 	{
-		for (UMS_IssueTicket* TestTicket : IssueTickets)
+		for (int32 i = IssueTickets.Num() - 1; i >= 0; --i)
 		{
-			if (IsValid(TestTicket))
+			if (IsValid(IssueTickets[i]))
 			{
-				if (TestTicket->IsSameIssue(aIssueType, aRequestUnit, aSlotId))
+				if (IssueTickets[i]->IsSameIssue(aIssueType, aRequestUnit, aSlotId))
 				{
-					return nullptr;
+					UnregisterIssueTicket(IssueTickets[i]);
 				}
 			}
 		}
