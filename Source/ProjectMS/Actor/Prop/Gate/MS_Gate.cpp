@@ -54,24 +54,32 @@ EMS_ZoneType AMS_Gate::GetLinkedZoneType() const
 void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(Cast<AMS_AICharacter>(OtherActor))
+	if(bOpenedArray.Num() == 0)
 	{
-		if(gSequenceMng.IsPlayingSequence() == false)
+		if(Cast<AMS_AICharacter>(OtherActor))
 		{
-			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
-		}
+			if(gSequenceMng.IsPlayingSequence() == false)
+			{
+				gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
+				bOpenedArray.Emplace(true);
+			}
+		}	
 	}
 }
 
 void AMS_Gate::OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(Cast<AMS_AICharacter>(OtherActor))
+	if(bOpenedArray.Num() > 0)
 	{
-		if(gSequenceMng.IsPlayingSequence() == false)
+		if(Cast<AMS_AICharacter>(OtherActor))
 		{
-			gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false));
-		}
+			if(gSequenceMng.IsPlayingSequence() == false)
+			{
+				gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false));
+				bOpenedArray.RemoveAt(0);
+			}
+		}	
 	}
 }
 

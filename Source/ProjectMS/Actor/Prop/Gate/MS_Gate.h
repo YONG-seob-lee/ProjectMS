@@ -39,4 +39,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category=MS_Gate)
 	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
+
+private:
+	UPROPERTY()
+	TArray<bool> bOpenedArray = {};
 };
