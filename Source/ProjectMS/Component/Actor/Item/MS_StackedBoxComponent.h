@@ -5,25 +5,23 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
-#include "MS_BoxSlotComponent.generated.h"
+#include "MS_StackedBoxComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PROJECTMS_API UMS_BoxSlotComponent : public USceneComponent
+class PROJECTMS_API UMS_StackedBoxComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:
-	UMS_BoxSlotComponent();
+	UMS_StackedBoxComponent();
 
 protected:
 	virtual void BeginPlay() override;
 	
 public:
-	int32 GetSlotId() const { return SlotId; }
-
-	void OnChangeRequestSlotData(const FMS_SlotData& aSlotData);
-	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotData);
+	void OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas);
+	void OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas);
 
 	void SetVisibility(bool bVisibility);
 
@@ -33,16 +31,16 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	int32 BoxMeshId = 5001;
-	
+
 	UPROPERTY(EditAnywhere)
-	int32 SlotId = INDEX_NONE;
+	TArray<FVector> BoxMeshLocations;
 	
 	UPROPERTY(Transient)
-	FMS_SlotData CacheSlotData;
-
+	TArray<FMS_SlotData> CacheSlotDatas;
+	
 	UPROPERTY(Transient)
 	bool bCacheVisibility;
 
-	UPROPERTY(EditAnywhere)
-	bool bHaveMash;
+	UPROPERTY(Transient)
+	int32 CacheBoxMeshNum;
 };

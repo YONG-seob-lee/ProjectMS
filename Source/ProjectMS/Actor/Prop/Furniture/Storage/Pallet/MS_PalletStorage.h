@@ -15,4 +15,15 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+
+	virtual void SetVisibility(bool bVisibility) override;
+
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<class UMS_StackedBoxComponent> StackedBoxComponent;
 };

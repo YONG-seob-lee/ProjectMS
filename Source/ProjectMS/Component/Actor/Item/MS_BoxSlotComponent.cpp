@@ -7,7 +7,6 @@
 
 
 UMS_BoxSlotComponent::UMS_BoxSlotComponent()
-	: SlotId(INDEX_NONE)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
@@ -17,28 +16,14 @@ void UMS_BoxSlotComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UMS_BoxSlotComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_BoxSlotComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotData)
 {
-	if (CacheSlotData.RequestItemTableId == aSlotDatas.RequestItemTableId)
-	{
-		return;
-	}
-
-	CacheSlotData.RequestItemTableId = aSlotDatas.RequestItemTableId;
+	CacheSlotData = aSlotData;
 }
 
-void UMS_BoxSlotComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_BoxSlotComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotData)
 {
-	bool bChangeItemTableId = CacheSlotData.CurrentItemTableId != aSlotDatas.CurrentItemTableId;
-	bool bChangeItemCount = CacheSlotData.CurrentItemCount != aSlotDatas.CurrentItemCount;
-	
-	if (!bChangeItemTableId && !bChangeItemCount)
-	{
-		return;
-	}
-	
-	CacheSlotData.CurrentItemTableId = aSlotDatas.CurrentItemTableId;
-	CacheSlotData.CurrentItemCount = aSlotDatas.CurrentItemCount;
+	CacheSlotData = aSlotData;
 
 	UpdateMesh();
 }
@@ -56,7 +41,7 @@ void UMS_BoxSlotComponent::UpdateMesh()
 	{
 		if (bHaveMash)
 		{
-			gHISMMng.RemoveInstance(MeshId::BoxMeshId, GetComponentLocation());
+			gHISMMng.RemoveInstance(BoxMeshId, GetComponentLocation());
 			bHaveMash = false;
 		}
 	}
@@ -65,7 +50,7 @@ void UMS_BoxSlotComponent::UpdateMesh()
 	{
 		if (!bHaveMash)
 		{
-			gHISMMng.AddInstance(MeshId::BoxMeshId, GetComponentTransform());
+			gHISMMng.AddInstance(BoxMeshId, GetComponentTransform());
 			bHaveMash = true;
 		}
 	}

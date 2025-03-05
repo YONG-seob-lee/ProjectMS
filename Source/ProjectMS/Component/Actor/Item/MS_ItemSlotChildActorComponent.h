@@ -22,8 +22,8 @@ protected:
 public:
 	int32 GetSlotId() const { return SlotId; }
 
-	void OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas);
-	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas);
+	void OnChangeRequestSlotData(const FMS_SlotData& aSlotData);
+	void OnChangeCurrentSlotData(const FMS_SlotData& aSlotData);
 
 	void SetVisibility(bool bVisibility);
 

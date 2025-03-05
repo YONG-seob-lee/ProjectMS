@@ -88,8 +88,3 @@ namespace CommonItemTableKeyName
 	const FString BIGBOX_COUNT = TEXT("BIGBOX_COUNT");
 	const FString SMALLBOX_COUNT = TEXT("SMALLBOX_COUNT");
 }
-
-namespace MeshId
-{
-	const int32 BoxMeshId = 5001;
-}

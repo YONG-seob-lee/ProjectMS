@@ -21,42 +21,42 @@ void UMS_ItemSlotChildActorComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UMS_ItemSlotChildActorComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_ItemSlotChildActorComponent::OnChangeRequestSlotData(const FMS_SlotData& aSlotData)
 {
-	if (CacheSlotData.RequestItemTableId == aSlotDatas.RequestItemTableId)
+	if (CacheSlotData.RequestItemTableId == aSlotData.RequestItemTableId)
 	{
 		return;
 	}
 
-	CacheSlotData.RequestItemTableId = aSlotDatas.RequestItemTableId;
+	CacheSlotData.RequestItemTableId = aSlotData.RequestItemTableId;
 }
 
-void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotDatas)
+void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData& aSlotData)
 {
-	bool bChangeItemTableId = CacheSlotData.CurrentItemTableId != aSlotDatas.CurrentItemTableId;
-	bool bChangeItemCount = CacheSlotData.CurrentItemCount != aSlotDatas.CurrentItemCount;
+	bool bChangeItemTableId = CacheSlotData.CurrentItemTableId != aSlotData.CurrentItemTableId;
+	bool bChangeItemCount = CacheSlotData.CurrentItemCount != aSlotData.CurrentItemCount;
 	
 	if (!bChangeItemTableId && !bChangeItemCount)
 	{
 		return;
 	}
 	
-	CacheSlotData.CurrentItemTableId = aSlotDatas.CurrentItemTableId;
-	CacheSlotData.CurrentItemCount = aSlotDatas.CurrentItemCount;
+	CacheSlotData.CurrentItemTableId = aSlotData.CurrentItemTableId;
+	CacheSlotData.CurrentItemCount = aSlotData.CurrentItemCount;
 
 	if (CacheSlotData.CurrentItemTableId == INDEX_NONE)
 	{
 		AMS_SlotActor* SlotActor = Cast<AMS_SlotActor>(GetChildActor());
 		if (IsValid(SlotActor))
 		{
-			SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+			SlotActor->OnChangeCurrentSlotData(aSlotData);
 			DestroyChildActor();
 			
 			return;
 		}
 	}
 
-	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aSlotDatas.CurrentItemTableId);
+	FMS_ItemData* ItemData = gTableMng.GetTableRowData<FMS_ItemData>(EMS_TableDataType::ItemData, aSlotData.CurrentItemTableId);
 	MS_ENSURE(ItemData != nullptr);
 	
 	if (ItemData->ItemType == static_cast<int32>(EMS_ItemType::Money)
@@ -65,7 +65,7 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 		AMS_SlotActor* SlotActor = Cast<AMS_SlotActor>(GetChildActor());
 		if (IsValid(SlotActor))
 		{
-			SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+			SlotActor->OnChangeCurrentSlotData(aSlotData);
 			DestroyChildActor();
 		
 			MS_ENSURE(false);
@@ -94,7 +94,7 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 	}
 
 	SlotActor->SetVisibility(bCacheVisibility);
-	SlotActor->OnChangeCurrentSlotData(aSlotDatas);
+	SlotActor->OnChangeCurrentSlotData(aSlotData);
 }
 
 void UMS_ItemSlotChildActorComponent::SetVisibility(bool bVisibility)
