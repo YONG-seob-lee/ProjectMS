@@ -34,7 +34,10 @@ void UMS_InteractionManager::UnselectActor()
 {
 	if (SelectedActor != nullptr)
 	{
-		OnUnselectActorDelegate.Broadcast(SelectedActor.Get());
+		// Broadcast 중 재호출 되지 않도록 안전코드 개념으로 null 처리 먼저 함
+		AActor* TargetActor = SelectedActor.Get();
 		SelectedActor = nullptr;
+		
+		OnUnselectActorDelegate.Broadcast(TargetActor);
 	}
 }

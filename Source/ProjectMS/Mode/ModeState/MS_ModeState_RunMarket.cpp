@@ -237,9 +237,19 @@ void UMS_ModeState_RunMarket::OnSelectActor(AActor* aSelectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
 		SelectedProp->OnSelectProp(EMS_ModeState::RunMarket);
-	}
 
-	OpenStatusWidget(aSelectedActor);
+		SelectedProp->CancelSelectedDelegate.BindWeakLambda(this,
+			[this](TWeakObjectPtr<AMS_Prop> aTargetProp)
+			{
+				if (aTargetProp != nullptr)
+				{
+					if (gInteractionMng.GetSelectedActor() == aTargetProp)
+					{
+						UnselectActor();
+					}
+				}
+			});
+	}
 }
 
 void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
@@ -252,32 +262,6 @@ void UMS_ModeState_RunMarket::OnUnselectActor(AActor* aUnselectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
 	{
 		SelectedProp->OnUnselectProp(EMS_ModeState::RunMarket);
-	}
-
-	CloseStatusWidget();
-}
-
-void UMS_ModeState_RunMarket::OpenStatusWidget(AActor* aSelectedActor)
-{
-	if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(aSelectedActor))
-	{
-		StatusWidget = PropActor->OpenStatusWidget();
-
-		if (StatusWidget != nullptr)
-		{
-			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
-			{
-				StorageStatusWidget->OnClickedConfirmButtonDelegate.BindUObject(this, &UMS_ModeState_RunMarket::UnselectActor);
-			}
-		}
-	}
-}
-
-void UMS_ModeState_RunMarket::CloseStatusWidget()
-{
-	if (StatusWidget != nullptr)
-	{
-		gWidgetMng.DestroyWidget(StatusWidget.Get());
 	}
 }
 

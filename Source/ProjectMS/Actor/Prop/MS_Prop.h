@@ -3,10 +3,11 @@
 #include "CoreMinimal.h"
 #include "MS_Actor.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
+#include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_Prop.generated.h"
 
 
-enum class EMS_ModeState : uint8;
+DECLARE_DELEGATE_OneParam(FMS_CancelSelectedDelegate, TWeakObjectPtr<AMS_Prop>);
 
 UCLASS()
 class PROJECTMS_API AMS_Prop : public AMS_Actor
@@ -59,6 +60,7 @@ public:
 	virtual void OnUnselectProp(EMS_ModeState aModeState);
 
 	virtual TWeakObjectPtr<class UMS_Widget> OpenStatusWidget();
+	virtual void CloseStatusWidget();
 
 	
 	// For Preview
@@ -119,4 +121,7 @@ protected:
 	bool bIsPreviewProp;
 	
 	TWeakObjectPtr<AMS_Prop> LinkedProp;
+
+public:
+	FMS_CancelSelectedDelegate CancelSelectedDelegate;
 };

@@ -62,12 +62,7 @@ public:
 	UFUNCTION()
 	void OnUnselectActor(AActor* aUnselectedActor);
 
-	void OpenStatusWidget(AActor* aSelectedActor);
-	void CloseStatusWidget();
-
 	
 private:
 	TWeakObjectPtr<AActor> CachePressDownActor = nullptr;
-
-	TWeakObjectPtr<class UMS_Widget> StatusWidget = nullptr;
 };

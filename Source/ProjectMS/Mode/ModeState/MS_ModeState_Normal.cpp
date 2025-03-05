@@ -160,9 +160,19 @@ void UMS_ModeState_Normal::OnSelectActor(AActor* aSelectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aSelectedActor))
 	{
 		SelectedProp->OnSelectProp(EMS_ModeState::Normal);
+		
+		SelectedProp->CancelSelectedDelegate.BindWeakLambda(this,
+			[this](TWeakObjectPtr<AMS_Prop> aTargetProp)
+			{
+				if (aTargetProp != nullptr)
+				{
+					if (gInteractionMng.GetSelectedActor() == aTargetProp)
+					{
+						UnselectActor();
+					}
+				}
+			});
 	}
-
-	OpenStatusWidget(aSelectedActor);
 }
 
 void UMS_ModeState_Normal::OnUnselectActor(AActor* aUnselectedActor)
@@ -175,31 +185,5 @@ void UMS_ModeState_Normal::OnUnselectActor(AActor* aUnselectedActor)
 	if (AMS_Prop* SelectedProp = Cast<AMS_Prop>(aUnselectedActor))
 	{
 		SelectedProp->OnUnselectProp(EMS_ModeState::Normal);
-	}
-
-	CloseStatusWidget();
-}
-
-void UMS_ModeState_Normal::OpenStatusWidget(AActor* aSelectedActor)
-{
-	if(const TObjectPtr<AMS_Prop> PropActor = Cast<AMS_Prop>(aSelectedActor))
-	{
-		StatusWidget = PropActor->OpenStatusWidget();
-		
-		if (StatusWidget != nullptr)
-		{
-			if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
-			{
-				StorageStatusWidget->OnClickedConfirmButtonDelegate.BindUObject(this, &UMS_ModeState_Normal::UnselectActor);
-			}
-		}
-	}
-}
-
-void UMS_ModeState_Normal::CloseStatusWidget()
-{
-	if (StatusWidget != nullptr)
-	{
-		gWidgetMng.DestroyWidget(StatusWidget.Get());
 	}
 }

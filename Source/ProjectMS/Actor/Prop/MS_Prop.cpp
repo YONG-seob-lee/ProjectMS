@@ -11,6 +11,7 @@
 #include "Units/MS_StorageUnit.h"
 #include "Widget/MS_Widget.h"
 #include "Widget/Market/MS_ArrangementWidget.h"
+#include "Widget/Market/Storage/MS_StorageStatusWidget.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -201,15 +202,39 @@ void AMS_Prop::SetZoneData(TWeakObjectPtr<AMS_Zone> aOwnerZone)
 
 void AMS_Prop::OnSelectProp(EMS_ModeState aModeState)
 {
+	TWeakObjectPtr<UMS_Widget> Widget = OpenStatusWidget();
+
+	if (Widget != nullptr)
+	{
+		if (UMS_StorageStatusWidget* StorageStatusWidget = Cast<UMS_StorageStatusWidget>(StatusWidget))
+		{
+			StorageStatusWidget->OnClickedConfirmButtonDelegate.BindUObject(this, &AMS_Prop::CloseStatusWidget);
+		}
+	}
 }
 
 void AMS_Prop::OnUnselectProp(EMS_ModeState aModeState)
 {
+	CloseStatusWidget();
 }
 
-TWeakObjectPtr<class UMS_Widget> AMS_Prop::OpenStatusWidget()
+TWeakObjectPtr<UMS_Widget> AMS_Prop::OpenStatusWidget()
 {
 	return nullptr;
+}
+
+void AMS_Prop::CloseStatusWidget()
+{
+	if (StatusWidget != nullptr)
+	{
+		gWidgetMng.DestroyWidget(StatusWidget.Get());
+
+		bool bBound = CancelSelectedDelegate.ExecuteIfBound(this);
+		if (bBound)
+		{
+			CancelSelectedDelegate.Unbind();
+		}
+	}
 }
 
 void AMS_Prop::InitializeWhenPreviewProp(AMS_Prop* aLinkedProp)
