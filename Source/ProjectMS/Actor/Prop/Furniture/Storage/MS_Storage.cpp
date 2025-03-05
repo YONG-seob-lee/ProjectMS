@@ -61,7 +61,7 @@ TWeakObjectPtr<class UMS_Widget> AMS_Storage::OpenStatusWidget()
 	return nullptr;
 }
 
-void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
 	if (StatusWidget != nullptr)
 	{
@@ -72,7 +72,7 @@ void AMS_Storage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotData
 	}
 }
 
-void AMS_Storage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_Storage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
 	if (StatusWidget != nullptr)
 	{

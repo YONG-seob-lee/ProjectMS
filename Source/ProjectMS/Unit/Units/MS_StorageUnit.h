@@ -41,12 +41,9 @@ public:
 	UFUNCTION()
 	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
 
-	UFUNCTION()
-	virtual void TakeItemsImmediately(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
-	
 private:
-	void OnChangeRequestSlotDatas();
-	void OnChangeCurrentSlotDatas();
+	void OnChangeRequestSlotDatas(const TArray<int32>& aChangeSlotIds);
+	void OnChangeCurrentSlotDatas(const TArray<int32>& aChangeSlotIds);
 
 public:
 	// IssueTickets
@@ -54,7 +51,7 @@ public:
 	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer) override;
 	
 private:
-	void UpdateStorageSlotIssueTickets();
+	void UpdateStorageSlotIssueTicket(int32 aSlotId);
 	
 private:
 	// Property

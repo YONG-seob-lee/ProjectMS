@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Prop/MS_Prop.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_Furniture.generated.h"
 
 

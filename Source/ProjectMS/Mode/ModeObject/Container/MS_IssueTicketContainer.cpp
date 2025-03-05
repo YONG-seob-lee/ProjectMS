@@ -181,7 +181,8 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_IssueTicketContainer::RegisterIssueTicket(EM
 			{
 				if (IssueTickets[i]->IsSameIssue(aIssueType, aRequestUnit, aSlotId))
 				{
-					UnregisterIssueTicket(IssueTickets[i]);
+					UpdateIssueTicketsEnabled(IssueTickets[i]);
+					return IssueTickets[i];
 				}
 			}
 		}

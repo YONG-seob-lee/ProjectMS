@@ -5,8 +5,6 @@
 #include "MS_Storage.generated.h"
 
 
-enum class EMS_ModeState : uint8;
-
 UCLASS()
 class PROJECTMS_API AMS_Storage : public AMS_Furniture
 {
@@ -25,8 +23,8 @@ public:
 	// Slot Datas
 	virtual TWeakObjectPtr<class UMS_Widget> OpenStatusWidget() override;
 	
-	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
-	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas);
+	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds);
+	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds);
 
 	virtual void SetVisibility(bool bVisibility) override;
 };

@@ -22,9 +22,9 @@ void AMS_PalletStorage::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_PalletStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_PalletStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
-	Super::OnChangeRequestSlotDatas(aSlotDatas);
+	Super::OnChangeRequestSlotDatas(aSlotDatas, aChangeSlotIds);
 	
 	if (StackedBoxComponent)
 	{
@@ -32,9 +32,9 @@ void AMS_PalletStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSl
 	}
 }
 
-void AMS_PalletStorage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_PalletStorage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
-	Super::OnChangeCurrentSlotDatas(aSlotDatas);
+	Super::OnChangeCurrentSlotDatas(aSlotDatas, aChangeSlotIds);
 
 	if (StackedBoxComponent)
 	{

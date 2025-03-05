@@ -37,9 +37,9 @@ void AMS_DisplayStorage::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_DisplayStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_DisplayStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
-	Super::OnChangeRequestSlotDatas(aSlotDatas);
+	Super::OnChangeRequestSlotDatas(aSlotDatas, aChangeSlotIds);
 
 	for (auto& It : SlotIdToItemSlotComponents)
 	{
@@ -54,9 +54,9 @@ void AMS_DisplayStorage::OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aS
 	}
 }
 
-void AMS_DisplayStorage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
+void AMS_DisplayStorage::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds)
 {
-	Super::OnChangeCurrentSlotDatas(aSlotDatas);
+	Super::OnChangeCurrentSlotDatas(aSlotDatas, aChangeSlotIds);
 
 	for (auto& It : SlotIdToItemSlotComponents)
 	{

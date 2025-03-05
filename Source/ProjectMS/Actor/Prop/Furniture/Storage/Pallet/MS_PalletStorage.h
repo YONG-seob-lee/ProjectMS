@@ -17,8 +17,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void OnChangeRequestSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
-	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
+	virtual void OnChangeRequestSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds) override;
+	virtual void OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas, const TArray<int32>& aChangeSlotIds) override;
 
 	virtual void SetVisibility(bool bVisibility) override;
 
