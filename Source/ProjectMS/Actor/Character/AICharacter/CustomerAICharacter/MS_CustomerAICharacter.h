@@ -27,11 +27,10 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
-
 	
 	void PickUp(int32 ItemTableId);
 	void ShowPickUp(bool bShow);
-	
+
 private:
 	UPROPERTY()
 	TMap<int32, TObjectPtr<class AMS_ItemEquipment>> PickUpSockets;

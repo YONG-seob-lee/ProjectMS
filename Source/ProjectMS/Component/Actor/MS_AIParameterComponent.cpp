@@ -16,14 +16,14 @@ void UMS_AIParameterComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UMS_AIParameterComponent::Initialize(MS_Handle aUnitHandle)
+{
+	UnitHandle = aUnitHandle;
+}
+
 void UMS_AIParameterComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if(const TObjectPtr<UMS_UnitBase> ParentUnit = Cast<UMS_UnitBase>(GetOuter()))
-	{
-		UnitHandle = ParentUnit->GetUnitHandle();
-	}
 }
 
 void UMS_AIParameterComponent::BehaviorTrigger(EMS_BehaviorType aBehaviorType)

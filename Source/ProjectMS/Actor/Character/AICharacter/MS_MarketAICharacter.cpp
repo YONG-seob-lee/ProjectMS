@@ -147,8 +147,16 @@ void AMS_MarketAICharacter::Tick(float aDeltaTime)
 	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0.f, -50.f, 0.f));
 }
 
+void AMS_MarketAICharacter::PostInitialize(MS_Handle aUnitHandle) const
+{
+	if(AIParameterComponent)
+	{
+		AIParameterComponent->Initialize(aUnitHandle);
+	}
+}
+
 void AMS_MarketAICharacter::SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection,
-	FVector2D aPathLocation, bool aStopInPathLocation)
+																FVector2D aPathLocation, bool aStopInPathLocation)
 {
 	if (PathLocation != aPathLocation)
 	{
@@ -524,6 +532,25 @@ void AMS_MarketAICharacter::ShowImage(EMS_SpeechImageType SpeechImageType) const
 			{
 				WidgetComponent->SetVisibility(false);
 			});
+		}
+	}
+}
+
+void AMS_MarketAICharacter::EventBehavior(EMS_BehaviorType aBehaviorType) const
+{
+	if(AIParameterComponent)
+	{
+		AIParameterComponent->BehaviorTrigger(aBehaviorType);
+	}
+}
+
+void AMS_MarketAICharacter::EventPurchase(const TMap<int32, int32>& PurchaseItems) const
+{
+	if(AIParameterComponent)
+	{
+		for(const auto& PurchaseItem : PurchaseItems)
+		{
+			AIParameterComponent->PurchaseTrigger(PurchaseItem.Key, PurchaseItem.Value);
 		}
 	}
 }

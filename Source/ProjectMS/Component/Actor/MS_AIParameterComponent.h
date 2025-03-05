@@ -71,7 +71,8 @@ class PROJECTMS_API UMS_AIParameterComponent : public UActorComponent
 public:
 	UMS_AIParameterComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
+	void Initialize(MS_Handle aUnitHandle);
 protected:
 	virtual void BeginPlay() override;
 

@@ -36,6 +36,11 @@ void UMS_CustomerAIUnit::Finalize()
 void UMS_CustomerAIUnit::PostInitialize()
 {
 	Super::PostInitialize();
+	
+	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
+	{
+		CustomerAICharacter->PostInitialize(UnitHandle);
+	}
 }
 
 void UMS_CustomerAIUnit::Tick(float aDeltaTime)
@@ -250,5 +255,23 @@ void UMS_CustomerAIUnit::GoingToHome() const
 			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
+	}
+}
+
+void UMS_CustomerAIUnit::EventBehavior(EMS_BehaviorType aBehaviorType) const
+{
+	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
+	{
+		CustomerAICharacter->EventBehavior(aBehaviorType);
+	}
+}
+
+void UMS_CustomerAIUnit::EventPurchase() const
+{
+	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
+	{
+		TMap<int32, int32> PickUpItems;
+		CustomerData.GetAllPickUpItem(PickUpItems);
+		CustomerAICharacter->EventPurchase(PickUpItems);
 	}
 }

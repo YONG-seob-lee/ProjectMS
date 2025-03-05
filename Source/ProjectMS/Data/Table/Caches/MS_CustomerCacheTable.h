@@ -11,7 +11,7 @@ struct FMS_CustomerData
 {
 public:
 	FMS_CustomerData() {};
-	FMS_CustomerData(int32 aDuckColor, int32 aCharacterBPPathFile, int32 aMaxItemKind, int32 aMaxItemCount);
+	FMS_CustomerData(const FString& aCustomerName, int32 aDuckColor, int32 aCharacterBPPathFile, int32 aMaxItemKind, int32 aMaxItemCount);
 
 	FORCEINLINE int32 GetCharacterBPPathFile() const { return CharacterBPPathFile; }
 
@@ -24,7 +24,11 @@ public:
 	void GetRemainItems(TMap<int32, int32>& RemainItems);
 	void PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
 
+	void GetAllPickUpItem(TMap<int32, int32>& aPickUpItems) const { aPickUpItems = PickUpItems; }
+
+	FORCEINLINE FString& GetName() { return CustomerName; }
 private:
+	FString CustomerName = {};
 	int32 DuckColor = 0;
 	int32 CharacterBPPathFile = 0;
 	TMap<int32, int32> WannaBuyItems = {};
@@ -46,4 +50,6 @@ public:
 
 private:
 	TMap<int32, FMS_Customer*> CustomerDatas = {};
+	TArray<FString> CustomerFirstName = {};
+	TArray<FString> CustomerLastName = {};
 };

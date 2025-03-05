@@ -9,8 +9,8 @@
 
 namespace Customer
 {
-	constexpr int32 SpawnMaxUnitCount = 4;
-	constexpr int32 SpawnMaxTime = 30.f;
+	constexpr int32 SpawnMaxUnitCount = 13;
+	constexpr int32 SpawnMaxTime = 5.f;
 }
 /**
  * 

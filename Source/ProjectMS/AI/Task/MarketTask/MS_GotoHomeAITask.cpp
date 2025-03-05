@@ -103,10 +103,9 @@ void UMS_GotoHomeAITask::CustomerTickTask(UBehaviorTreeComponent& OwnerComp, con
 		return;
 	}
 	
-	// const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
-	// const EMS_CustomerActionState State = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState));
 	if(AIUnit->ReachSplineStartPoint())
 	{
+		AIUnit->EventBehavior(EMS_BehaviorType::ComeOutMarket);
 		CustomerAIAnimInstance->SetActionState(EMS_CustomerActionState::None);
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}

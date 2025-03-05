@@ -26,6 +26,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
+	void PostInitialize(MS_Handle aUnitHandle) const;
 
 	EMS_Direction GetWalkingDirection() const { return WalkingDirection; }
 	const FVector2D& GetPathLocation() const { return PathLocation; }
@@ -64,6 +65,12 @@ public:
 
 	FORCEINLINE void ResetChatting() { bIsChatting = false;}
 	FORCEINLINE bool IsChattingBefore() const { return bIsChatting; }
+
+	// Behavior
+	void EventBehavior(EMS_BehaviorType aBehaviorType) const;
+
+	// Purchase
+	void EventPurchase(const TMap<int32, int32>& PurchaseItems) const;
 	
 protected:
 	// Component

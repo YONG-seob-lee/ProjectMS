@@ -50,7 +50,14 @@ public:
 	void GoingToMarket() const;
 	void GoingToHome() const;
 	
+	FORCEINLINE FString& GetCustomerName() { return CustomerData.GetName(); }
 	
+	// Behavior
+	void EventBehavior(EMS_BehaviorType aBehaviorType) const;
+
+	// Purchase
+	void EventPurchase() const;
+
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();
 	

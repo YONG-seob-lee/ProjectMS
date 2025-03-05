@@ -9,6 +9,7 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Units/MS_BasePlayerUnit.h"
+#include "Units/MS_CustomerAIUnit.h"
 #include "Widget/Customer/MS_CustomerDetailWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -94,13 +95,13 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 
 	for(const auto& UnitHandle : UnitsHandleArray)
 	{
-		TObjectPtr<UMS_BasePlayerUnit> Unit = Cast<UMS_BasePlayerUnit>(gUnitMng.GetUnit(UnitHandle));
-		if(!Unit)
+		TObjectPtr<UMS_CustomerAIUnit> CustomerUnit = Cast<UMS_CustomerAIUnit>(gUnitMng.GetUnit(UnitHandle));
+		if(!CustomerUnit)
 		{
 			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
 			continue;
 		}
-		UnitsName.Emplace(Unit->GetUnitName().ToString(), Unit->GetTableId());
+		UnitsName.Emplace(CustomerUnit->GetCustomerName(), CustomerUnit->GetTableId());
 	}
 
 	CPP_PersonComboBox->ClearOptions();

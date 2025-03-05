@@ -18,15 +18,9 @@ void UMS_UnitBehaviorCollectComponent::Finalize()
 
 void UMS_UnitBehaviorCollectComponent::SetOnUpdateBehavior(FMS_BehaviorParameter aParameter)
 {
-	if(TArray<FMS_BehaviorParameter>* Parameters = BehaviorCollection.Find(aParameter.UnitHandle))
-	{
-		Parameters->Emplace(aParameter);
-		TimelineBehaviorCollection.Emplace(aParameter);
-	}
-	else
-	{
-		MS_LOG(TEXT("Wrong Process!"));
-	}
+	TArray<FMS_BehaviorParameter>& BehaviorParameter = BehaviorCollection.FindOrAdd(aParameter.UnitHandle);
+	BehaviorParameter.Emplace(aParameter);
+	TimelineBehaviorCollection.Emplace(aParameter);
 }
 
 void UMS_UnitBehaviorCollectComponent::GetUnitBehavior(MS_Handle aUnitHandle, TArray<FMS_BehaviorParameter>& aParameters)

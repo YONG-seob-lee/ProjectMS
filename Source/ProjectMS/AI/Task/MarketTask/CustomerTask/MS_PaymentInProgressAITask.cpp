@@ -64,6 +64,8 @@ void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	
 	if(PaidProcessTime > PaidTime)
 	{
+		AIUnit->EventBehavior(EMS_BehaviorType::BuyItem);
+		AIUnit->EventPurchase();
 		AIUnit->ShowPickItem(true);
 		AIUnit->Paid();
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

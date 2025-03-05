@@ -17,16 +17,8 @@ void UMS_UnitPurchaseCollectComponent::Finalize()
 
 void UMS_UnitPurchaseCollectComponent::SetOnUpdatePurchase(FMS_PurchaseParameter aParameter)
 {
-	if(TArray<FMS_PurchaseParameter>* Parameters = PurchaseCollection.Find(aParameter.UnitHandle))
-	{
-		Parameters->Emplace(aParameter);
-	}
-	else
-	{
-		TArray<FMS_PurchaseParameter> UnitPurchaseParameterArray;
-		UnitPurchaseParameterArray.Emplace(aParameter);
-		PurchaseCollection.Emplace(aParameter.UnitHandle, UnitPurchaseParameterArray);
-	}
+	TArray<FMS_PurchaseParameter>& Parameters = PurchaseCollection.FindOrAdd(aParameter.UnitHandle);
+	Parameters.Emplace(aParameter);
 }
 
 void UMS_UnitPurchaseCollectComponent::GetUnitPurchase(MS_Handle aUnitHandle, TArray<FMS_PurchaseParameter>& aParameters)

@@ -66,6 +66,7 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 
 			if(SubtractItemCount > 0)
 			{
+				AIUnit->EventBehavior(EMS_BehaviorType::PickUpItem);
 				AIUnit->PickUpItem(RemainItem.Key, SubtractItemCount);
 				bPickUpAnyItem = true;
 			}
