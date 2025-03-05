@@ -64,5 +64,6 @@ public:
 
 	
 private:
-	TWeakObjectPtr<AActor> CachePressDownActor = nullptr;
+	UPROPERTY()
+	FVector2D CachePressDownLocation = FVector2D::ZeroVector;
 };
