@@ -505,6 +505,7 @@ void AMS_MarketAICharacter::ShowChatting(EMS_ChattingType ChattingType) const
 		WidgetComponent->SetVisibility(true);
 		if(const TObjectPtr<UMS_SpeechBubbleWidget> SpeechBubble = Cast<UMS_SpeechBubbleWidget>(WidgetComponent->GetWidget()))
 		{
+			SpeechBubble->StopAllAnimations();
 			SpeechBubble->SetText(Chatting);
 			SpeechBubble->SetOnFinishedSpeechFunc([this]()
 			{
@@ -534,6 +535,15 @@ void AMS_MarketAICharacter::ShowImage(EMS_SpeechImageType SpeechImageType) const
 			});
 		}
 	}
+}
+
+void AMS_MarketAICharacter::ResetChatting()
+{
+	if(const TObjectPtr<UMS_SpeechBubbleWidget> SpeechBubble = Cast<UMS_SpeechBubbleWidget>(WidgetComponent->GetWidget()))
+	{
+		SpeechBubble->StopAllAnimations();
+	}
+	bIsChatting = false;
 }
 
 void AMS_MarketAICharacter::EventBehavior(EMS_BehaviorType aBehaviorType) const

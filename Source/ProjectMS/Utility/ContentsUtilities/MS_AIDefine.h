@@ -96,6 +96,7 @@ enum class EMS_CustomerActionType : uint8
 	GoHome = 3,
 	PickUpItems = 4,
 	Payment = 5,
+	AngryAndGoHome = 6,
 };
 
 UENUM(BlueprintType)
@@ -119,6 +120,10 @@ enum class EMS_CustomerActionState : uint8
 	Payment_BeforePayment = 9,
 	Payment_MoveWithinCounter = 10,
 	Payment_AfterPayment = 11,
+
+	// Spline 꼭짓점으로 이동
+	GoToSplineEndPoint = 12,
+	GoToSplineEndPointWithAngry = 13,
 };
 
 USTRUCT()

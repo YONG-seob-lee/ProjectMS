@@ -81,8 +81,12 @@ EBTNodeResult::Type UMS_SelectCustomerActionAITask::ExecuteTask(UBehaviorTreeCom
 		}
 	case EMS_CustomerActionType::GoHome :
 		{
-			ActionState = EMS_CustomerActionState::Spline_GoHome;
+			ActionState = EMS_CustomerActionState::GoToSplineEndPoint;
 			break;
+		}
+	case EMS_CustomerActionType::AngryAndGoHome :
+		{
+			ActionState = EMS_CustomerActionState::GoToSplineEndPointWithAngry;
 		}
 	default:
 		{

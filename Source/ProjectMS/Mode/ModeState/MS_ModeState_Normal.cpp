@@ -64,7 +64,7 @@ void UMS_ModeState_Normal::OnInputPointerDownEvent(FVector2D aPointerDownPositio
 	
 	if(InteractableHitResult.IsValidBlockingHit())
 	{
-		CachePressDownLocation = FVector2D(InteractableHitResult.Location.X, InteractableHitResult.Location.Y);
+		CachePressDownLocation = aPointerDownPosition;
 	}
 }
 
@@ -103,9 +103,8 @@ void UMS_ModeState_Normal::OnInputPointerLongTouch(float aElapsedTime, const FVe
 
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
-		if(FVector2D::Distance(CachePressDownLocation, FVector2D(aInteractableHitResult.Location.X, aInteractableHitResult.Location.Y)) > 10.f)
+		if(FVector2D::Distance(CachePressDownLocation, aPosition) > 10.f)
 		{
-			MS_LOG(TEXT("Distance : %f"), FVector2D::Distance(CachePressDownLocation, FVector2D(aInteractableHitResult.Location.X, aInteractableHitResult.Location.Y)));
 			return;
 		}
 

@@ -81,6 +81,6 @@ void UMS_PutDownItemCustomerAITack::TickTask(UBehaviorTreeComponent& OwnerComp, 
 	
 	if(AIUnit->IsChatBefore() == false)
 	{
-		AIUnit->ShowImage(EMS_SpeechImageType::PutDownItems);
+		AIUnit->EventChattingImage(EMS_SpeechImageType::PutDownItems);
 	}
 }

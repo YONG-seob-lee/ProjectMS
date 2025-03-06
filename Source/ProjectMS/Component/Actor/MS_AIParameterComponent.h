@@ -36,6 +36,7 @@ enum class EMS_BehaviorType
 	LostWay,
 	PickUpItem,
 	BuyItem,
+	VeryAngry,
 };
 
 namespace ChattingLocalizedString

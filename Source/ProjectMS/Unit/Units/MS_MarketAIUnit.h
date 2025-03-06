@@ -52,8 +52,8 @@ public:
 
 	
 	// Process Shopping
-	void ShowChatting(EMS_ChattingType ChattingType = EMS_ChattingType::Undefined) const;
-	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
+	void EventChatting(EMS_ChattingType ChattingType = EMS_ChattingType::Undefined) const;
+	void EventChattingImage(EMS_SpeechImageType SpeechImageType) const;
 	bool IsChatBefore() const;
 	void ResetChatting() const;
 	

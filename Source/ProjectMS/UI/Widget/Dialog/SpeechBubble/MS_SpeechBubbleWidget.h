@@ -12,12 +12,14 @@ enum class EMS_SpeechImageType
 	None = 0,
 	PutDownItems = 1,
 	Pay = 2,
+	Angry = 3,
 };
 
 namespace SpeechImagePath
 {
 	const FString PutDownItems = TEXT("/Game/UI/Image/Icon/PutDownItems.PutDownItems");
 	const FString Pay = TEXT("/Game/UI/Image/Icon/Pay.Pay");
+	const FString Angry = TEXT("/Game/UI/Image/Icon/Angry.Angry");
 }
 
 /**
@@ -31,7 +33,7 @@ public:
 	virtual void NativeConstruct() override;
 	
 	void SetText(const FText& SpeechString) const;
-	void SetImage(EMS_SpeechImageType aSpeechImageType) const;
+	void SetImage(EMS_SpeechImageType aSpeechImageType);
 
 	virtual void OnAnimationStarted_Implementation(const UWidgetAnimation* Animation) override;
 	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
@@ -41,6 +43,7 @@ public:
 
 	bool bIsConstructed = false;
 private:
+	int32 LoopIdleTime = 1;
 	TFunction<void()> OnFinishedSpeechCallback = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))

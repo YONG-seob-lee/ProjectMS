@@ -18,8 +18,10 @@ FMS_CustomerData::FMS_CustomerData(const FString& aCustomerName, int32 aDuckColo
 
 	if(DisplayItemIds.Num() == 0)
 	{
-		MS_ENSURE(false);
+#if WITH_EDITOR
 		MS_ERROR(TEXT("아무런 아이템이 전시되어있지 않소!!!"));
+#endif
+		return;
 	}
 	TArray<int32> MarketItemIds;
 	DisplayItemIds.GenerateKeyArray(MarketItemIds);
@@ -28,30 +30,6 @@ FMS_CustomerData::FMS_CustomerData(const FString& aCustomerName, int32 aDuckColo
 		const int32 RandomIndex = FMath::RandRange(0, MarketItemIds.Num() - 1);
 		WannaBuyItems.Emplace(MarketItemIds[RandomIndex], FMath::RandRange(1, aMaxItemCount));
 	}
-}
-
-bool FMS_CustomerData::IsPickUpAllItems()
-{
-	for(const auto WannaBuyItem : WannaBuyItems)
-	{
-		if(const int32* PickUpItemCount = PickUpItems.Find(WannaBuyItem.Key))
-		{
-			// AITest
-			continue;
-			
-			// 실제로 모두 구하면
-			if(*PickUpItemCount < WannaBuyItem.Value)
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 
 void FMS_CustomerData::GetRemainItems(TMap<int32, int32>& RemainItems)
@@ -91,6 +69,43 @@ void FMS_CustomerData::PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCou
 		MS_ENSURE(false);
 		MS_LOG_VERBOSITY(Error, TEXT("[%s] Wrong Wanna To Buy Items Data. Please Check CustomerSupervisor Class."), *MS_FUNC_STRING);
 	}
+}
+
+bool FMS_CustomerData::IsPickUpAllItems()
+{
+	for(const auto& WannaBuyItem : WannaBuyItems)
+	{
+		const int32* PickUpItemCount = PickUpItems.Find(WannaBuyItem.Key);
+		if(PickUpItemCount == nullptr)
+		{
+			return  false;
+		}
+
+		if(*PickUpItemCount < WannaBuyItem.Value)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool FMS_CustomerData::IsExceptAnyWannaItem()
+{
+	for(const auto& WannaBuyItem : WannaBuyItems)
+	{
+		if(PickUpItems.Find(WannaBuyItem.Key) == nullptr)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+bool FMS_CustomerData::IsAnyPickUpItemsNotHave() const
+{
+	return PickUpItems.Num() == 0;
 }
 
 void UMS_CustomerCacheTable::Initialize(TObjectPtr<UMS_TableManager> aMng)

@@ -75,6 +75,6 @@ void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 
 	if(AIUnit->IsChatBefore() == false)
 	{
-		AIUnit->ShowImage(EMS_SpeechImageType::Pay);
+		AIUnit->EventChattingImage(EMS_SpeechImageType::Pay);
 	}
 }

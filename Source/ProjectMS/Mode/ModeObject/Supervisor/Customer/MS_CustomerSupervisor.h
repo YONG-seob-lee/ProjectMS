@@ -4,13 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Mode/ModeObject/Supervisor/MS_AISupervisor.h"
-#include "Table/Caches/MS_CustomerCacheTable.h"
 #include "MS_CustomerSupervisor.generated.h"
 
 namespace Customer
 {
-	constexpr int32 SpawnMaxUnitCount = 13;
-	constexpr int32 SpawnMaxTime = 5.f;
+	constexpr int32 SpawnMaxUnitCount = 10;
+	constexpr int32 SpawnMaxTime = 8.f;
 }
 /**
  * 

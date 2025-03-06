@@ -63,7 +63,7 @@ public:
 	void ShowChatting(EMS_ChattingType ChattingType) const;
 	void ShowImage(EMS_SpeechImageType SpeechImageType) const;
 
-	FORCEINLINE void ResetChatting() { bIsChatting = false;}
+	void ResetChatting();
 	FORCEINLINE bool IsChattingBefore() const { return bIsChatting; }
 
 	// Behavior

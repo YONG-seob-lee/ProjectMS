@@ -76,7 +76,7 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 	ChattingType = EMS_ChattingType::Undefined;
 	if(bPickUpAnyItem == false)
 	{
-		ChattingType = EMS_ChattingType::ThereIsItem;
+		ChattingType = EMS_ChattingType::ThereIsNoItem;
 	}
 
 	AIUnit->ResetChatting();
@@ -118,6 +118,6 @@ void UMS_CollectionItemsAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint
 
 	if(AIUnit->IsChatBefore() == false)
 	{
-		AIUnit->ShowChatting(ChattingType);
+		AIUnit->EventChatting(ChattingType);
 	}
 }

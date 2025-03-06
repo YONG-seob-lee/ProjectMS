@@ -38,14 +38,18 @@ public:
 	void AddVisitStorageUnitHandle(MS_Handle StorageHandle);
 	MS_Handle GetTargetStorageUnitHandle();
 	
+	bool IsAnyItemInDisplay();
 	void GetRemainItems(TMap<int32, int32>& RemainItems);
 	void PickUpItem(int32 PickUpItemTableId, int32 PickUpItemCount);
 	void ShowPickItem(bool bShow) const;
 	void Paid();
+	bool IsPickUpAllItems();
+	bool IsExceptAnyWannaItem();
 	
 	// Spline
 	bool FindNearestSpline();
 	bool ReachSplineEndPoint() const;
+	FVector GetSplineEndPointPosition() const;
 	bool ReachSplineStartPoint() const;
 	void GoingToMarket() const;
 	void GoingToHome() const;

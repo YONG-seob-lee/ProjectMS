@@ -237,7 +237,7 @@ bool UMS_MarketAIUnit::SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, in
 	return true;
 }
 
-void UMS_MarketAIUnit::ShowChatting(EMS_ChattingType ChattingType) const
+void UMS_MarketAIUnit::EventChatting(EMS_ChattingType ChattingType) const
 {
 	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
 	{
@@ -245,7 +245,7 @@ void UMS_MarketAIUnit::ShowChatting(EMS_ChattingType ChattingType) const
 	}
 }
 
-void UMS_MarketAIUnit::ShowImage(EMS_SpeechImageType SpeechImageType) const
+void UMS_MarketAIUnit::EventChattingImage(EMS_SpeechImageType SpeechImageType) const
 {
 	if(const TObjectPtr<AMS_MarketAICharacter> Customer = Cast<AMS_MarketAICharacter>(GetCharacter()))
 	{

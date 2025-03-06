@@ -19,14 +19,17 @@ public:
 	void Paid() { PricePaid = 1000;}
 	
 	FORCEINLINE bool GetPaid() const { return PricePaid > 0; }
-	bool IsPickUpAllItems();
 
 	void GetRemainItems(TMap<int32, int32>& RemainItems);
 	void PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
-
+	
 	void GetAllPickUpItem(TMap<int32, int32>& aPickUpItems) const { aPickUpItems = PickUpItems; }
-
+	bool IsPickUpAllItems();
+	bool IsExceptAnyWannaItem();
+	bool IsAnyPickUpItemsNotHave() const;
+	
 	FORCEINLINE FString& GetName() { return CustomerName; }
+
 private:
 	FString CustomerName = {};
 	int32 DuckColor = 0;

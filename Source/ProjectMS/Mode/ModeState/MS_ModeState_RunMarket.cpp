@@ -129,14 +129,17 @@ void UMS_ModeState_RunMarket::OnInputPointerDownEvent(FVector2D aPointerDownPosi
 {
 	Super::OnInputPointerDownEvent(aPointerDownPosition, InteractableHitResult);
 
-	CachePressDownActor = InteractableHitResult.GetActor();
+	if(InteractableHitResult.IsValidBlockingHit())
+	{
+		CachePressDownLocation = aPointerDownPosition;
+	}
 }
 
 void UMS_ModeState_RunMarket::OnInputPointerUpEvent(FVector2D aPointerUpPosition, const FHitResult& InteractableHitResult)
 {
 	Super::OnInputPointerUpEvent(aPointerUpPosition, InteractableHitResult);
 
-	CachePressDownActor = nullptr;
+	CachePressDownLocation = FVector2D::ZeroVector;
 	
 	if(gSequenceMng.IsPlayingSequence())
 	{
@@ -175,7 +178,7 @@ void UMS_ModeState_RunMarket::OnInputPointerLongTouch(float aElapsedTime, const 
 	
 	if (const TObjectPtr<AActor> InteractActor = aInteractableHitResult.GetActor())
 	{
-		if (CachePressDownActor != nullptr && InteractActor != CachePressDownActor)
+		if(FVector2D::Distance(CachePressDownLocation, aPosition) > 10.f)
 		{
 			return;
 		}

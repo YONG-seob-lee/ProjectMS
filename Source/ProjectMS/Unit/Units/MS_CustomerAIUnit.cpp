@@ -8,6 +8,7 @@
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Prop/Spline/MS_CustomerSplineActor.h"
 #include "Table/Caches/MS_CustomerCacheTable.h"
 
@@ -70,26 +71,38 @@ EMS_CustomerActionType UMS_CustomerAIUnit::GetFirstCustomerAction()
 	{
 		MS_ENSURE (CustomerActions[0] != EMS_CustomerActionType::None);
 	}
-	
 	else
 	{
-		if(CustomerData.IsPickUpAllItems() == false)
+		if(CustomerData.IsAnyPickUpItemsNotHave())
 		{
-			CustomerActions.Emplace(EMS_CustomerActionType::PickUpItems);
-		}
-		else
-		{
-			if(CustomerData.GetPaid() == false)
+			if(IsAnyItemInDisplay())
 			{
-				CustomerActions.Emplace(EMS_CustomerActionType::Payment);
+				CustomerActions.Emplace(EMS_CustomerActionType::PickUpItems);
 			}
 			else
 			{
-				CustomerActions.Emplace(EMS_CustomerActionType::GoHome);
+				CustomerActions.Emplace(EMS_CustomerActionType::AngryAndGoHome);
 			}
 		}
-		// ToDo : 상황에 따라 ActionType 설정
-		// Test
+		else
+		{
+			// 원하는 아이템 종류중 하나라도 비어있으면
+			if(CustomerData.IsExceptAnyWannaItem())
+			{
+				CustomerActions.Emplace(EMS_CustomerActionType::AngryAndGoHome);
+			}
+			else
+			{
+				if(CustomerData.GetPaid() == false)
+				{
+					CustomerActions.Emplace(EMS_CustomerActionType::Payment);
+				}
+				else
+				{
+					CustomerActions.Emplace(EMS_CustomerActionType::GoHome);
+				}	
+			}
+		}	
 	}
 	
 	return CustomerActions[0];
@@ -130,6 +143,19 @@ MS_Handle UMS_CustomerAIUnit::GetTargetStorageUnitHandle()
 	return INDEX_NONE;
 }
 
+bool UMS_CustomerAIUnit::IsAnyItemInDisplay()
+{
+	TMap<int32, int32> DisplayItems;
+	gItemMng.GetStorageItems(EMS_ZoneType::Display, DisplayItems);
+
+	if(DisplayItems.Num() == 0)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void UMS_CustomerAIUnit::GetRemainItems(TMap<int32, int32>& RemainItems)
 {
 	CustomerData.GetRemainItems(RemainItems);
@@ -155,6 +181,16 @@ void UMS_CustomerAIUnit::ShowPickItem(bool bShow) const
 void UMS_CustomerAIUnit::Paid()
 {
 	CustomerData.Paid();
+}
+
+bool UMS_CustomerAIUnit::IsPickUpAllItems()
+{
+	return CustomerData.IsPickUpAllItems();
+}
+
+bool UMS_CustomerAIUnit::IsExceptAnyWannaItem()
+{
+	return CustomerData.IsExceptAnyWannaItem();
 }
 
 bool UMS_CustomerAIUnit::FindNearestSpline()
@@ -206,6 +242,16 @@ bool UMS_CustomerAIUnit::ReachSplineEndPoint() const
 	}
 
 	return false;
+}
+
+FVector UMS_CustomerAIUnit::GetSplineEndPointPosition() const
+{
+	if(CustomerSplineActor.IsValid() == false)
+	{
+		return FVector::ZeroVector;
+	}
+
+	return CustomerSplineActor->GetEndPoint();
 }
 
 bool UMS_CustomerAIUnit::ReachSplineStartPoint() const

@@ -23,7 +23,7 @@ void UMS_SpeechBubbleWidget::SetText(const FText& SpeechString) const
 	}
 }
 
-void UMS_SpeechBubbleWidget::SetImage(EMS_SpeechImageType aSpeechImageType) const
+void UMS_SpeechBubbleWidget::SetImage(EMS_SpeechImageType aSpeechImageType)
 {
 	CPP_SpeechSwitcher->SetActiveWidgetIndex(1);
 
@@ -34,11 +34,19 @@ void UMS_SpeechBubbleWidget::SetImage(EMS_SpeechImageType aSpeechImageType) cons
 	case EMS_SpeechImageType::PutDownItems:
 		{
 			ImageImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SpeechImagePath::PutDownItems));
+			LoopIdleTime = 1;
 			break;
 		}
 	case EMS_SpeechImageType::Pay:
 		{
 			ImageImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SpeechImagePath::Pay));
+			LoopIdleTime = 1;
+			break;
+		}
+	case EMS_SpeechImageType::Angry:
+		{
+			ImageImage = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *SpeechImagePath::Angry));
+			LoopIdleTime = 20;
 			break;
 		}
 	default:
@@ -61,7 +69,7 @@ void UMS_SpeechBubbleWidget::OnAnimationFinished_Implementation(const UWidgetAni
 
 	if(Animation == SpeechBubbleStart)
 	{
-		PlayAnimation(SpeechBubbleIdle);
+		PlayAnimation(SpeechBubbleIdle, 0.f, LoopIdleTime);
 	}
 	else if(Animation == SpeechBubbleIdle)
 	{

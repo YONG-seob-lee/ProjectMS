@@ -54,6 +54,10 @@ EMS_ZoneType AMS_Gate::GetLinkedZoneType() const
 void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	TArray<AActor*> OverlappingActors = {};
+	AutoDoorTriggerBox->GetOverlappingActors(OverlappingActors);
+
+	MS_LOG(TEXT("OverlappingActors Num : %d"), OverlappingActors.Num());
 	if(bOpenedArray.Num() == 0)
 	{
 		if(Cast<AMS_AICharacter>(OtherActor))
