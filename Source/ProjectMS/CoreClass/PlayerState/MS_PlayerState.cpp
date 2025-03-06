@@ -309,6 +309,7 @@ void AMS_PlayerState::InitPlayerData()
 	}
 
 	Money = TestDB->Money;
+	gItemMng.UpdateMoney(Money);
 	Items = TestDB->Items;
 	OrderItems = TestDB->OrderItems;
 	gItemMng.UpdateItems(Items);

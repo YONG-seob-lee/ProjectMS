@@ -39,7 +39,7 @@ public:
 
 	// Money
 	FMS_OnUpdateMoneyDelegate OnUpdateEarnMoneyDelegate;
-	FORCEINLINE void UpdateMoney(const TMap<int32, int32>& aMoneys) { Moneys = aMoneys;}
+	void UpdateMoney(const TMap<int32, int32>& aMoneys);
 	FORCEINLINE void GetDailySettleDetail(TMap<EMS_SettlementMoneyType, int32>& aDailySettleDetail) const
 	{
 		aDailySettleDetail = DailySettleDetail;

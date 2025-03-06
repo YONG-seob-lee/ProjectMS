@@ -11,11 +11,9 @@
 #include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
-#include "Table/Caches/MS_StaffCacheTable.h"
 #include "Units/MS_CustomerAIUnit.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
-#include "Widget/ListViewElement/ElementData/MS_StaffProfileElementData.h"
 #include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
 
@@ -36,6 +34,12 @@ void UMS_ItemManager::BuiltInInitialize()
 void UMS_ItemManager::Initialize()
 {
 	Super::Initialize();
+	
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::EarnMoney, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::OrderFurniture, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::OrderItem, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::ElectricityBill, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::PersonalExpanses, 0);
 }
 
 void UMS_ItemManager::PostInitialize()
@@ -69,6 +73,16 @@ void UMS_ItemManager::BeginPlay()
 void UMS_ItemManager::Tick(float aDeltaTime)
 {
 	Super::Tick(aDeltaTime);
+}
+
+void UMS_ItemManager::UpdateMoney(const TMap<int32, int32>& aMoneys)
+{
+	Moneys = aMoneys;
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::EarnMoney, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::OrderFurniture, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::OrderItem, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::ElectricityBill, 0);
+	DailySettleDetail.Emplace(EMS_SettlementMoneyType::PersonalExpanses, 0);
 }
 
 void UMS_ItemManager::InitSettleMoney()
@@ -127,11 +141,6 @@ void UMS_ItemManager::EndSettleMoney()
 		TotalEarnMoney +=elem.Value;
 	}
 	PlayerState->SettleMoney(TotalEarnMoney);
-
-	for(auto& Elem : DailySettleDetail)
-	{
-		Elem.Value = 0;
-	}
 }
 
 void UMS_ItemManager::EarnMoney(const TMap<int32, int32>& SellItems)

@@ -28,6 +28,9 @@ private:
 	TObjectPtr<class UTextBlock> CPP_GoldCount = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_PlusCount = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_Coin = nullptr;
 	
 	UPROPERTY(Meta = (BindWidgetAnim), Transient)
