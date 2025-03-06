@@ -41,5 +41,7 @@ Id,Directory_Table_Id,BP_File_Name
 7003,7001,BP_SlotActor_3x4
 7004,7001,BP_SlotActor_2x3
 7005,7001,BP_SlotActor_5x3
+7006,7001,BP_SlotActor_5x2
+7007,7001,BP_SlotActor_5x1_4x1
 9001,9001,BP_StaffAICharacter
 9002,9001,BP_CustomerAICharacter
