@@ -7,6 +7,7 @@
 #include "Button/MS_ConfirmButton.h"
 #include "Components/TextBlock.h"
 #include "Manager_Both/MS_TableManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "PlayerState/MS_PlayerState.h"
@@ -57,6 +58,8 @@ void UMS_MarketOrderModalWidget::OnClickedConfirmButton()
 	{
 		OrderItems.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
+
+	gItemMng.IsHaveEnoughMoney(OrderItems);
 
 	const TObjectPtr<UWorld> World = GetWorld();
 	if(!World)

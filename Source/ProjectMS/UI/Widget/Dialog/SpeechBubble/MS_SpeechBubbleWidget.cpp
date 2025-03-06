@@ -28,7 +28,7 @@ void UMS_SpeechBubbleWidget::SetImage(EMS_SpeechImageType aSpeechImageType)
 	CPP_SpeechSwitcher->SetActiveWidgetIndex(1);
 
 	UTexture2D* ImageImage = nullptr;
-	
+	ImageType = aSpeechImageType;
 	switch (aSpeechImageType)
 	{
 	case EMS_SpeechImageType::PutDownItems:
@@ -69,10 +69,18 @@ void UMS_SpeechBubbleWidget::OnAnimationFinished_Implementation(const UWidgetAni
 
 	if(Animation == SpeechBubbleStart)
 	{
-		PlayAnimation(SpeechBubbleIdle, 0.f, LoopIdleTime);
+		if(ImageType == EMS_SpeechImageType::PutDownItems)
+		{
+			PlayAnimation(SpeechBubbleIdle_PutDownItems);
+		}
+		else
+		{
+			PlayAnimation(SpeechBubbleIdle, 0.f, LoopIdleTime);
+		}
 	}
-	else if(Animation == SpeechBubbleIdle)
+	else if(Animation == SpeechBubbleIdle || Animation == SpeechBubbleIdle_PutDownItems)
 	{
+		ImageType = EMS_SpeechImageType::None;
 		PlayAnimation(SpeechBubbleEnd);
 	}
 }

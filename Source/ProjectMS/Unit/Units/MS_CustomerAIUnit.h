@@ -60,7 +60,7 @@ public:
 	void EventBehavior(EMS_BehaviorType aBehaviorType) const;
 
 	// Purchase
-	void EventPurchase() const;
+	void EventPurchase(TMap<int32, int32>& PickUpItems) const;
 
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();

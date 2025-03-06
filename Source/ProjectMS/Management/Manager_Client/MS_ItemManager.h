@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "MS_ManagerBase.h"
-#include "MS_ScheduleManager.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
@@ -12,7 +11,7 @@
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnClickedItem, int32, int32); /* ItemId, ItemType */
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnClickedTileViewItem, int32)
-
+DECLARE_MULTICAST_DELEGATE_OneParam(FMS_OnUpdateMoneyDelegate, bool)
 /**
  * 
  */
@@ -37,6 +36,19 @@ public:
 
 	FMS_OnClickedItem OnClickWidgetConstructItemDelegate;
 	FMS_OnClickedTileViewItem OnClickedTileViewItem;
+
+	// Money
+	FMS_OnUpdateMoneyDelegate OnUpdateEarnMoneyDelegate;
+	FORCEINLINE void UpdateMoney(const TMap<int32, int32>& aMoneys) { Moneys = aMoneys;}
+	FORCEINLINE void GetDailySettleDetail(TMap<EMS_SettlementMoneyType, int32>& aDailySettleDetail) const
+	{
+		aDailySettleDetail = DailySettleDetail;
+	}
+	void InitSettleMoney();
+	void EndSettleMoney();
+	void EarnMoney(const TMap<int32, int32>& SellItems);
+	int32 GetTotalGoldMoney();
+	bool IsHaveEnoughMoney(const TMap<int32, int32>& aOrderItems, bool bItemTypeIsFurniture = false, EMS_MoneyType aMoneyType = EMS_MoneyType::Gold);
 	
 	// Items
 	void GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;
@@ -100,6 +112,10 @@ public:
 	void UpdateStaffPriorityOfWorks(int32 aStaffId, int32 aStaffIdTag, EMS_StaffUIPriorityType aStaffUIPriorityType);
 
 private:
+	//Money
+	TMap<EMS_SettlementMoneyType, int32> DailySettleDetail = {};
+	TMap<int32, int32> Moneys = {};
+	
 	// Items
 	TMap<int32, int32> Items = {};
 	TMap<int32, int32> OrderItems = {};
@@ -115,9 +131,6 @@ private:
 	// Staff
 	UPROPERTY()
 	TMap<int32, UMS_StaffPropertyElementData*> StaffPropertys;
-
-
-
 
 	
 public:

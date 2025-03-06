@@ -8,6 +8,14 @@
 /**
  * 
  */
+enum class EMS_MoneyType
+{
+	None = 0,
+	Gold = 1,
+	Dia = 2,
+	Dia_Income = 3,
+};
+
 UENUM()
 enum class EMS_ItemType : uint8
 {
@@ -21,6 +29,18 @@ enum class EMS_ItemType : uint8
 	Snack,
 	FrozenSnack,
 	Furniture
+};
+
+UENUM()
+enum class EMS_SettlementMoneyType
+{
+	None = 0,
+	EarnMoney,
+	OrderFurniture,
+	OrderItem,
+	ElectricityBill,
+	PersonalExpanses,
+	LoanInterest,
 };
 
 UENUM()

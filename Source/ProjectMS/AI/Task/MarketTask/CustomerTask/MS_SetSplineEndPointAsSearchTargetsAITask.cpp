@@ -4,6 +4,7 @@
 #include "MS_SetSplineEndPointAsSearchTargetsAITask.h"
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Units/MS_CustomerAIUnit.h"
 
@@ -37,8 +38,19 @@ EBTNodeResult::Type UMS_SetSplineEndPointAsSearchTargetsAITask::ExecuteTask(UBeh
 	TargetPosition.Emplace(FMS_GridData::ConvertLocationToGridPosition(AIUnit->GetSplineEndPointPosition()));
 	AIUnit->SetTargetPositions(TargetPosition);
 
-	AIUnit->ResetChatting();
-	AIUnit->EventChattingImage(EMS_SpeechImageType::Angry);
-	AIUnit->EventBehavior(EMS_BehaviorType::VeryAngry);
+	
+	const TObjectPtr<UBlackboardComponent> BlackboardComp = Cast<UBlackboardComponent>(OwnerComp.GetBlackboardComponent());
+	if(!BlackboardComp)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+	const EMS_CustomerActionState CurrentActionState = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState));
+
+	if(CurrentActionState == EMS_CustomerActionState::GoToSplineEndPointWithAngry)
+	{
+		AIUnit->ResetChatting();
+		AIUnit->EventChattingImage(EMS_SpeechImageType::Angry);
+		AIUnit->EventBehavior(EMS_BehaviorType::VeryAngry);
+	}
 	return EBTNodeResult::Type::Succeeded;
 }

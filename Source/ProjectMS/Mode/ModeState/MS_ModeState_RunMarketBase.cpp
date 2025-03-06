@@ -119,6 +119,7 @@ void UMS_ModeState_RunMarketBase::Begin()
 
 	// Item Manager
 	gItemMng.UpdateNotPlacedItemsToPalletItems();
+	gItemMng.InitSettleMoney();
 
 	// Issue Tickets
 	UpdateAllFurnitureIssueTickets();
@@ -167,6 +168,8 @@ void UMS_ModeState_RunMarketBase::OnInputPointerDoubleClickEvent(FVector2D aPosi
 void UMS_ModeState_RunMarketBase::EndSchedule()
 {
 	// ToDo : Save Daily Data
+	// 세이브 및 리셋
+	gItemMng.EndSettleMoney();
 	
 	gScheduleMng.SetDailyTimeZone(EMS_DailyTimeZone::Evening);
 	gModeMng.ChangeState(EMS_ModeState::Normal);

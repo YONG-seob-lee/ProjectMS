@@ -139,6 +139,20 @@ EMS_TemperatureType UMS_ItemCacheTable::GetItemTemperature(int32 aItemId) const
 	return static_cast<EMS_TemperatureType>(TargetItem->TemperatureType);
 }
 
+int32 UMS_ItemCacheTable::GetTotalItemPrice(const TMap<int32, int32>& _ItemArray)
+{
+	int32 TotalPrice = 0;
+	for(const auto& Item : _ItemArray)
+	{
+		FMS_ItemData** ItemData = ItemDatas.Find(Item.Key);
+		MS_CHECK(ItemData)
+
+		TotalPrice += (*ItemData)->PriceMin * Item.Value;
+	}
+
+	return TotalPrice;
+}
+
 int32 UMS_ItemCacheTable::GetItemPrice(int32 ItemId) const
 {
 	const FMS_ItemData* ItemData = GetItem(ItemId);

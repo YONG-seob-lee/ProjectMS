@@ -110,6 +110,7 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 		}
 	case EMS_MarketScheduleEvent::CloseMarket:
 		{
+			// 무조건 기록이 먼저
 			gScheduleMng.UpdateDailySheet();
 			gScheduleMng.WriteDiary();
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));

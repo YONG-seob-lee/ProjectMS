@@ -44,6 +44,7 @@ public:
 	bool bIsConstructed = false;
 private:
 	int32 LoopIdleTime = 1;
+	EMS_SpeechImageType ImageType = EMS_SpeechImageType::None;
 	TFunction<void()> OnFinishedSpeechCallback = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
@@ -57,10 +58,13 @@ private:
 	
 	UPROPERTY(Meta = (BindWidgetAnim), Transient)
 	TObjectPtr<class UWidgetAnimation> SpeechBubbleStart = nullptr;
-
+	
 	UPROPERTY(Meta = (BindWidgetAnim), Transient)
 	TObjectPtr<class UWidgetAnimation> SpeechBubbleIdle = nullptr;
 
+	UPROPERTY(Meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> SpeechBubbleIdle_PutDownItems = nullptr;
+	
 	UPROPERTY(Meta = (BindWidgetAnim), Transient)
 	TObjectPtr<class UWidgetAnimation> SpeechBubbleEnd = nullptr;
 };

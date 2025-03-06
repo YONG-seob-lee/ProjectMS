@@ -26,6 +26,7 @@ public:
 	void GetOrderFurnitureElementDatas(TArray<TObjectPtr<class UMS_OrderItemElementData>>& aOrderFurnitureElementDatas);
 	
 	int32 GetFurniturePrice(int32 FurnitureTableId) const;
+	int32 GetTotalFurniturePrice(const TMap<int32, int32>& OrderFurnitures);
 
 private:
 	TMap<int32, FMS_FurnitureData*> FurnitureDatas; 

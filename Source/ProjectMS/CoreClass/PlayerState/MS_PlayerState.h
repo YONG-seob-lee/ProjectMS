@@ -30,8 +30,12 @@ public:
 	int32 GetOpenedZoneCount() const;
 	void AddOpenedZoneId(int32 aZoneId);
 
+	// Money
+	void SettleMoney(int32 aEarnMoney);
+
 	// Items
 	void OrderItem(TMap<int32, int32>& aOrderItems);
+	FORCEINLINE void GetOrderItems(TMap<int32, int32>& aOrderItems) const { aOrderItems = OrderItems; }
 	void OrganizeItems();
 
 	FORCEINLINE void GetAllItems(TMap<int32, int32>& aItems) const
@@ -42,7 +46,7 @@ public:
 	// Furniture
 	void OrderFurniture(const TMap<int32, int32>& aOrderFurnitures);
 	void OrganizeFurniture();
-	FORCEINLINE void GetOrderFurnitures(TMap<int32, int32>& aOrderFurnitures) { aOrderFurnitures = OrderFurnitures; }
+	FORCEINLINE void GetOrderFurnitures(TMap<int32, int32>& aOrderFurnitures) const { aOrderFurnitures = OrderFurnitures; }
 
 	FORCEINLINE void GetAllFurnitureDatas(TMap<FIntVector2, FMS_FurniturePositionData>& aOutFurnitureDatas) const
 	{
@@ -76,15 +80,18 @@ private:
 	
 	UPROPERTY()
 	TArray<int32> OpenedZoneIds;
+
+	// Money
+	TMap<int32, int32> Money;
 	
-	//Items
+	// Items
 	UPROPERTY()
 	TMap<int32, int32> Items;
 
 	UPROPERTY()
 	TMap<int32, int32> OrderItems;
 
-	//Furniture
+	// Furniture
 	UPROPERTY()
 	TMap<FIntVector2, FMS_FurniturePositionData> GridPositionToMarketFurnitureDatas;
 		

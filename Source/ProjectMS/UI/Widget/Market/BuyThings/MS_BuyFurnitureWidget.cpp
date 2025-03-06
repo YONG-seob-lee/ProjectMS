@@ -7,7 +7,7 @@
 #include "Button/MS_ConfirmButton.h"
 #include "Components/TextBlock.h"
 #include "Controller/MS_PlayerController.h"
-#include "Manager_Client/MS_ScheduleManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_FurnitureCacheTable.h"
@@ -27,10 +27,6 @@ void UMS_BuyFurnitureWidget::NativeConstruct()
 
 void UMS_BuyFurnitureWidget::NativeDestruct()
 {
-	// for(const auto& OrderItemElementData : OrderFurnitureElementDatas)
-	// {
-	// 	MS_DeleteObject(OrderItemElementData);
-	// }
 	OrderFurnitureElementDatas.Empty();
 	
 	Super::NativeDestruct();
@@ -85,6 +81,13 @@ void UMS_BuyFurnitureWidget::OnClickedConfirmButton()
 		}
 		OrderFurnitures.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
+
+	// 금액 체크
+	if(gItemMng.IsHaveEnoughMoney(OrderFurnitures) == false)
+	{
+		return;
+	}
+	
 
 	const TObjectPtr<UWorld> World = GetWorld();
 	MS_CHECK(World);

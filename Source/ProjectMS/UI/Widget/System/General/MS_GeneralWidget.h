@@ -28,8 +28,6 @@ public:
 	void InitializeGeneralWidgetType();
 
 private:
-	void InitRightExpander();
-	
 	void OnClickedLeftButton();
 	void OnClickedRightButton();
 	
@@ -50,6 +48,9 @@ private:
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_GeneralButton> CPP_RightButton = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_MoneyWidget> CPP_MoneyWidget = nullptr;
 
 	UPROPERTY(EditInstanceOnly, Category=MS_Widget)
 	EMS_GeneralWidgetType GeneralWidgetType = EMS_GeneralWidgetType::None;

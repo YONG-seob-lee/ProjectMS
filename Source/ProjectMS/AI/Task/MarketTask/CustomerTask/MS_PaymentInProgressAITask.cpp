@@ -5,6 +5,8 @@
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
+#include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Units/MS_CustomerAIUnit.h"
 
 UMS_PaymentInProgressAITask::UMS_PaymentInProgressAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -64,10 +66,20 @@ void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	
 	if(PaidProcessTime > PaidTime)
 	{
+		// 데이터 수집
 		AIUnit->EventBehavior(EMS_BehaviorType::BuyItem);
-		AIUnit->EventPurchase();
+		TMap<int32, int32> PickUpItems;
+		AIUnit->EventPurchase(PickUpItems);
+
+		// 아이템 및 돈 정산
+		gItemMng.PurchaseItems(PickUpItems);
+		gItemMng.EarnMoney(PickUpItems);
+		gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(true);
+
+		// 유닛 데이터 정리
 		AIUnit->ShowPickItem(true);
 		AIUnit->Paid();
+		
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 

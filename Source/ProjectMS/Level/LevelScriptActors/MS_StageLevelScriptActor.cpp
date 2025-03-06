@@ -95,6 +95,7 @@ void AMS_StageLevelScriptActor::SetDayAndNight_Internal(EMS_DayAndNight aDayAndN
 	}
 	else
 	{
+		gInputMng.SetAllowInteractActor(false);
 		DirectionalLightColorVolume = 0.f;
 		bStartNightToDayTrigger = true;
 	}
@@ -331,6 +332,7 @@ void AMS_StageLevelScriptActor::ProcessNightToDay(float DeltaTime)
 	if(DirectionalLightColorVolume >= 255.f)
 	{
 		bStartNightToDayTrigger = false;
+		gInputMng.SetAllowInteractActor(true);
 		gWidgetMng.ShowToastMessage(TEXT("아침이 밝았습니다~~"));
 	}
 	else if(DirectionalLightColorVolume >= 200.f)

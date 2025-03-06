@@ -71,6 +71,120 @@ void UMS_ItemManager::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+void UMS_ItemManager::InitSettleMoney()
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+
+	const AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	// OrderItem
+	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_ENSURE(ItemTable);
+	const int32 TotalOrderItemPrice = (-1) * ItemTable->GetTotalItemPrice(OrderItems);
+	int32& OrderItemMoney = DailySettleDetail.FindOrAdd(EMS_SettlementMoneyType::OrderItem);
+	OrderItemMoney = TotalOrderItemPrice;
+	
+	// OrderFurniture
+	const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
+	MS_ENSURE(FurnitureTable);
+	const int32 TotalOrderFurniturePrice = (-1) * FurnitureTable->GetTotalFurniturePrice(OrderFurnitures);
+	int32& OrderFurnitureMoney = DailySettleDetail.FindOrAdd(EMS_SettlementMoneyType::OrderFurniture);
+	OrderFurnitureMoney = TotalOrderFurniturePrice;
+	
+	// ElectricityBill
+	int32& ElectricityBill = DailySettleDetail.FindOrAdd(EMS_SettlementMoneyType::ElectricityBill);
+	ElectricityBill = (-1) * PlayerState->GetOpenedZoneCount() * 10;
+
+	// PersonalExpanses
+	int32& PersonalExpanses = DailySettleDetail.FindOrAdd(EMS_SettlementMoneyType::PersonalExpanses);
+	for(const auto& StaffProperty :StaffPropertys)
+	{
+		PersonalExpanses -= StaffProperty.Value->GetDailySalary();
+	}
+
+	// LoanInterest 나중에 계획
+}
+
+void UMS_ItemManager::EndSettleMoney()
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	int32 TotalEarnMoney = 0;
+	for(const auto& elem : DailySettleDetail)
+	{
+		TotalEarnMoney +=elem.Value;
+	}
+	PlayerState->SettleMoney(TotalEarnMoney);
+
+	for(auto& Elem : DailySettleDetail)
+	{
+		Elem.Value = 0;
+	}
+}
+
+void UMS_ItemManager::EarnMoney(const TMap<int32, int32>& SellItems)
+{
+	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	MS_ENSURE(ItemTable);
+	const int32 TotalPrice = ItemTable->GetTotalItemPrice(SellItems);
+	int32& EarnMoney = DailySettleDetail.FindOrAdd(EMS_SettlementMoneyType::EarnMoney);
+	EarnMoney += TotalPrice;
+}
+
+int32 UMS_ItemManager::GetTotalGoldMoney()
+{
+	const int32* EarnMoney = DailySettleDetail.Find(EMS_SettlementMoneyType::EarnMoney);
+	if(!EarnMoney)
+	{
+		return 0;
+	}
+	
+	const int32* GoldMoney = Moneys.Find(static_cast<int32>(EMS_MoneyType::Gold));
+	if(!GoldMoney)
+	{
+		return *EarnMoney;
+	}
+
+	return *EarnMoney + *GoldMoney;
+}
+
+bool UMS_ItemManager::IsHaveEnoughMoney(const TMap<int32, int32>& aOrderItems, bool bItemTypeIsFurniture /* = false */, EMS_MoneyType aMoneyType /* = EMS_MoneyType::Gold */)
+{
+	const int32* GoldMoney = Moneys.Find(static_cast<int32>(aMoneyType));
+	if(!GoldMoney)
+	{
+		return false;
+	}
+
+	int32 TotalPrice = 0;
+	if(bItemTypeIsFurniture == false)
+	{
+		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+		MS_ENSURE(ItemTable);
+		TotalPrice = ItemTable->GetTotalItemPrice(aOrderItems);
+	}
+	else
+	{
+		const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
+		MS_ENSURE(FurnitureTable);
+		TotalPrice = FurnitureTable->GetTotalFurniturePrice(aOrderItems);
+	}
+
+	return *GoldMoney >= TotalPrice;
+}
+
 void UMS_ItemManager::GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType) const
 {
 	TMap<int32, int32> TestItems = Items;

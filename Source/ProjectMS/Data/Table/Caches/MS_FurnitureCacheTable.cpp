@@ -97,3 +97,17 @@ int32 UMS_FurnitureCacheTable::GetFurniturePrice(int32 FurnitureTableId) const
 
 	return FurnitureData->Price;
 }
+
+int32 UMS_FurnitureCacheTable::GetTotalFurniturePrice(const TMap<int32, int32>& OrderFurnitures)
+{
+	int32 TotalPrice = 0;
+	for(const auto& OrderFurniture : OrderFurnitures)
+	{
+		if(FMS_FurnitureData** FurnitureData = FurnitureDatas.Find(OrderFurniture.Key))
+		{
+			TotalPrice += (*FurnitureData)->Price;	
+		}
+	}
+
+	return TotalPrice;
+}

@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY()
 	TArray<FMS_FurniturePositionData> MarketFurnitureDatas;
+
+	UPROPERTY()
+	TMap<int32, int32> Money;
 	
 	UPROPERTY()
 	TMap<int32, int32> Items;

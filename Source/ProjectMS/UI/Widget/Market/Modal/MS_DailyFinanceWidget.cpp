@@ -19,10 +19,10 @@ void UMS_DailyFinanceWidget::NativeConstruct()
 	}
 
 	CPP_DailySale->SetText(FText::FromString(FString::Format(TEXT("+{0} 당일 판매금"), {Sheet.SellItemPrice})));
-	CPP_OrderFurniture->SetText(FText::FromString(FString::Format(TEXT("-{0} 매대 구매"), {Sheet.OrderFurnitures})));
-	CPP_OrderItem->SetText(FText::FromString(FString::Format(TEXT("-{0} 물건 구매"), {Sheet.OrderItems})));
-	CPP_ElectricityBill->SetText(FText::FromString(FString::Format(TEXT("-{0} 전기세"), {Sheet.ElectricityBill})));
-	CPP_PersonalExpanses->SetText(FText::FromString(FString::Format(TEXT("-{0} 알바비"), {Sheet.PersonalExpanses})));
-	CPP_LoanInterest->SetText(FText::FromString(FString::Format(TEXT("-{0} 이자"), {Sheet.LoanInterest})));
+	CPP_OrderFurniture->SetText(FText::FromString(FString::Format(TEXT("{0} 매대 구매"), {Sheet.OrderFurnitures})));
+	CPP_OrderItem->SetText(FText::FromString(FString::Format(TEXT("{0} 물건 구매"), {Sheet.OrderItems})));
+	CPP_ElectricityBill->SetText(FText::FromString(FString::Format(TEXT("{0} 전기세"), {Sheet.ElectricityBill})));
+	CPP_PersonalExpanses->SetText(FText::FromString(FString::Format(TEXT("{0} 알바비"), {Sheet.PersonalExpanses})));
+	CPP_LoanInterest->SetText(FText::FromString(FString::Format(TEXT("{0} 이자"), {Sheet.LoanInterest})));
 	CPP_TotalAggregate->SetText(FText::FromString(FString::Format(TEXT("총계 : {0}"), {Sheet.TotalAggregate})));
 }

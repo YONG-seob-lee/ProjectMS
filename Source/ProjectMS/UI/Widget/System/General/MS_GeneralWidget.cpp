@@ -5,6 +5,7 @@
 
 #include "MS_GeneralLeftExpanderWidget.h"
 #include "MS_GeneralRightExpanderWidget.h"
+#include "MS_MoneyWidget.h"
 #include "Button/MS_DefaultButton.h"
 #include "Button/MS_GeneralButton.h"
 #include "Components/CanvasPanel.h"
@@ -28,8 +29,6 @@ void UMS_GeneralWidget::NativeConstruct()
 	CPP_RightExpanderWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	InitializeGeneralWidgetType();
-	
-	InitRightExpander();
 }
 
 void UMS_GeneralWidget::InitializeGeneralWidgetType()
@@ -40,6 +39,7 @@ void UMS_GeneralWidget::InitializeGeneralWidgetType()
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			CPP_MoneyWidget->SetVisibility(ESlateVisibility::Collapsed);
 			
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Schedule);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
@@ -55,6 +55,7 @@ void UMS_GeneralWidget::InitializeGeneralWidgetType()
 			
 			CPP_LeftButton->SetButtonType(EMS_GeneralButtonType::Manage);
 			CPP_RightButton->SetButtonType(EMS_GeneralButtonType::Setting);
+			CPP_MoneyWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			LeftButtonType = EMS_GeneralButtonType::Manage;
 			RightButtonType = EMS_GeneralButtonType::Setting;
 			CPP_RightExpanderWidget->UpdateButton();
@@ -64,15 +65,11 @@ void UMS_GeneralWidget::InitializeGeneralWidgetType()
 		{
 			CPP_LeftPanel->SetVisibility(ESlateVisibility::Collapsed);
 			CPP_RightPanel->SetVisibility(ESlateVisibility::Collapsed);
+			CPP_MoneyWidget->SetVisibility(ESlateVisibility::Collapsed);
 			RightButtonType = EMS_GeneralButtonType::None;
 			break;
 		}
 	}
-}
-
-void UMS_GeneralWidget::InitRightExpander()
-{
-	
 }
 
 void UMS_GeneralWidget::OnClickedLeftButton()

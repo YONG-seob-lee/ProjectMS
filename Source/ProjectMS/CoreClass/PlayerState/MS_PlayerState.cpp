@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
+#include "Table/Caches/MS_FurnitureCacheTable.h"
+#include "Table/Caches/MS_ItemCacheTable.h"
 #include "Test/TestServer/MS_TestDB.h"
 
 
@@ -37,6 +39,13 @@ void AMS_PlayerState::AddOpenedZoneId(int32 aZoneId)
 	OpenedZoneIds.AddUnique(aZoneId);
 }
 
+void AMS_PlayerState::SettleMoney(int32 aEarnMoney)
+{
+	int32& GoldMoney = Money.FindOrAdd(static_cast<int32>(EMS_MoneyType::Gold));
+	GoldMoney += aEarnMoney;
+	SavePlayerData();
+}
+
 void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 {
 	for(const auto& OrderItem : aOrderItems)
@@ -45,7 +54,20 @@ void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 		OrderItemCount += OrderItem.Value;
 	}
 
+	const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
+	if(!ItemTable)
+	{
+		MS_ENSURE(false);
+		MS_LOG_VERBOSITY(Error, TEXT("Please Check Item Table."));
+	}
+
+	int32& GoldMoney = Money.FindOrAdd((static_cast<int32>(EMS_MoneyType::Gold)));
+	GoldMoney -= ItemTable->GetTotalItemPrice(aOrderItems);
+	
 	SavePlayerData();
+
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
+	gItemMng.UpdateMoney(Money);
 	gItemMng.UpdateOrderItems(OrderItems);
 }
 
@@ -70,7 +92,21 @@ void AMS_PlayerState::OrderFurniture(const TMap<int32, int32>& aOrderFurnitures)
 		int32& OrderCount = OrderFurnitures.FindOrAdd(OrderFurniture.Key);
 		OrderCount += OrderFurniture.Value;
 	}
+
+	const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
+	if(!FurnitureTable)
+	{
+		MS_ENSURE(false);
+		MS_LOG_VERBOSITY(Error, TEXT("Please Check Item Table."));
+	}
+	
+	int32& GoldMoney = Money.FindOrAdd((static_cast<int32>(EMS_MoneyType::Gold)));
+	GoldMoney -= FurnitureTable->GetTotalFurniturePrice(aOrderFurnitures);
+	
 	SavePlayerData();
+
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
+	gItemMng.UpdateMoney(Money);
 }
 
 void AMS_PlayerState::OrganizeFurniture()
@@ -173,6 +209,11 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	OpenedZoneIds.AddUnique(1);
 	OpenedZoneIds.AddUnique(10);
 
+	// Money
+	Money.Emplace(1, 1500);
+	Money.Emplace(2, 0);
+	Money.Emplace(3, 0);
+	
 	// Items
 	Items.Emplace(4, 10);
 	Items.Emplace(5, 10);
@@ -266,7 +307,8 @@ void AMS_PlayerState::InitPlayerData()
 		
 		GridPositionToMarketFurnitureDatas.Emplace(MarketFurnitureData.GridPosition, MarketFurnitureData);
 	}
-	
+
+	Money = TestDB->Money;
 	Items = TestDB->Items;
 	OrderItems = TestDB->OrderItems;
 	gItemMng.UpdateItems(Items);
@@ -318,7 +360,8 @@ void AMS_PlayerState::SavePlayerData()
 	{
 		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
 	}
-	
+
+	NewTestDBData->Money = Money;
 	NewTestDBData->OrderItems = OrderItems;
 	NewTestDBData->Items = Items;
 

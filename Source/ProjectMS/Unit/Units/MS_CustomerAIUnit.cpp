@@ -312,11 +312,10 @@ void UMS_CustomerAIUnit::EventBehavior(EMS_BehaviorType aBehaviorType) const
 	}
 }
 
-void UMS_CustomerAIUnit::EventPurchase() const
+void UMS_CustomerAIUnit::EventPurchase(TMap<int32, int32>& PickUpItems) const
 {
 	if(const TObjectPtr<AMS_CustomerAICharacter> CustomerAICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter()))
 	{
-		TMap<int32, int32> PickUpItems;
 		CustomerData.GetAllPickUpItem(PickUpItems);
 		CustomerAICharacter->EventPurchase(PickUpItems);
 	}

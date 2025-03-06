@@ -230,69 +230,22 @@ bool UMS_ScheduleManager::IsOverTime(EMS_MarketScheduleEvent ScheduleEvent)
 void UMS_ScheduleManager::UpdateDailySheet()
 {
 	// 당일 판매금
-	int32 TotalSellItemPrice = 0;
+	TMap<EMS_SettlementMoneyType, int32> DailySettleDetail;
+	gItemMng.GetDailySettleDetail(DailySettleDetail);
+	const int32* EarnMoney = DailySettleDetail.Find(EMS_SettlementMoneyType::EarnMoney);
+	const int32* OrderFurniturePrice = DailySettleDetail.Find(EMS_SettlementMoneyType::OrderFurniture);
+	const int32* OrderItemPrice = DailySettleDetail.Find(EMS_SettlementMoneyType::OrderItem);
+	const int32* ElectricityBill = DailySettleDetail.Find(EMS_SettlementMoneyType::ElectricityBill);
+	const int32* PersonalExpanses = DailySettleDetail.Find(EMS_SettlementMoneyType::PersonalExpanses);
 
-	TMap<int32, int32> SoldItems;
-	gItemMng.GetSoldItems(SoldItems);
-	for(const auto& SoldItem : SoldItems)
+	if(!EarnMoney || !OrderFurniturePrice || !OrderItemPrice || !ElectricityBill || !PersonalExpanses)
 	{
-		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
-		if (ItemTable == nullptr)
-		{
-			MS_ENSURE(false);
-			continue;
-		}
-		TotalSellItemPrice += ItemTable->GetItemPrice(SoldItem.Key);
+		return;
 	}
-
-	// 당일 구매한 가구
-	int32 TotalOrderFurniturePrice = 0;
-
-	TMap<int32, int32> OrderFurnitures;
-	gItemMng.GetOrderFurnitures(OrderFurnitures);
-	for(const auto& OrderFurniture : OrderFurnitures)
-	{
-		const TObjectPtr<UMS_FurnitureCacheTable> FurnitureTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
-		if(FurnitureTable == nullptr)
-		{
-			MS_ENSURE(false);
-			continue;
-		}
-		
-		TotalOrderFurniturePrice += FurnitureTable->GetFurniturePrice(OrderFurniture.Key);
-	}
-
-	// 당일 구매한 물건
-	int32 TotalOrderItemPrice = 0;
-
-	TMap<int32, int32> OrderItems;
-	gItemMng.GetOrderItems(OrderItems);
-	for(const auto& SoldItem : OrderItems)
-	{
-		const TObjectPtr<UMS_ItemCacheTable> ItemTable = Cast<UMS_ItemCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::ItemData));
-		if (ItemTable == nullptr)
-		{
-			MS_ENSURE(false);
-			continue;
-		}
-		TotalOrderItemPrice += ItemTable->GetItemPrice(SoldItem.Key);
-	}
-
-	const int32 ElectricityBill = 100;
-
-	int32 TotalPersonalExpanses = 0;
-
-	TArray<UMS_StaffPropertyElementData*> StaffProperties;
-	gItemMng.GetStaffProperties(StaffProperties);
-	for(const auto& StaffProperty : StaffProperties)
-	{
-		TotalPersonalExpanses += StaffProperty->GetDailySalary();
-	}
-
-	const int32 LoanInterest = 50;
-
-	DailySheet = FMS_SettlementSheet(GetGameDate(), TotalSellItemPrice, TotalOrderFurniturePrice, TotalOrderItemPrice, ElectricityBill
-									, TotalPersonalExpanses, LoanInterest);
+	
+	DailySheet = FMS_SettlementSheet(GetGameDate(), *EarnMoney, *OrderFurniturePrice
+									, *OrderItemPrice, *ElectricityBill
+									, *PersonalExpanses, 0);
 }
 
 void UMS_ScheduleManager::WriteDiary() const
