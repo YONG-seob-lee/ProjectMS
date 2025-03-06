@@ -54,19 +54,19 @@ EMS_ZoneType AMS_Gate::GetLinkedZoneType() const
 void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if(bOpen)
+	{
+		return;
+	}
+	
 	TArray<AActor*> OverlappingActors = {};
 	AutoDoorTriggerBox->GetOverlappingActors(OverlappingActors);
-
-	MS_LOG(TEXT("OverlappingActors Num : %d"), OverlappingActors.Num());
-	if(bOpenedArray.Num() == 0)
+	if(OverlappingActors.Num() == 1)
 	{
 		if(Cast<AMS_AICharacter>(OtherActor))
 		{
-			if(gSequenceMng.IsPlayingSequence() == false)
-			{
-				gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
-				bOpenedArray.Emplace(true);
-			}
+			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
+			bOpen = true;
 		}	
 	}
 }
@@ -74,15 +74,18 @@ void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActo
 void AMS_Gate::OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(bOpenedArray.Num() > 0)
+	if(bOpen == false)
+	{
+		return;
+	}
+	TArray<AActor*> OverlappingActors = {};
+	AutoDoorTriggerBox->GetOverlappingActors(OverlappingActors);
+	if(OverlappingActors.Num() == 0)
 	{
 		if(Cast<AMS_AICharacter>(OtherActor))
 		{
-			if(gSequenceMng.IsPlayingSequence() == false)
-			{
-				gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false));
-				bOpenedArray.RemoveAt(0);
-			}
+			gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false));
+			bOpen = false;
 		}	
 	}
 }

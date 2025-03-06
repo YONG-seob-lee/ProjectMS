@@ -239,7 +239,6 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	
 	if(aType == EMS_TouchActionType::Down)
 	{
-		MS_LOG(TEXT("Down"));
 		if (IsValid(CurrentModeState))
 		{
 			CurrentModeState->OnInputPointerDownEvent(aPointerDownPosition, InteractableHitResult);
@@ -248,7 +247,6 @@ void IMS_TouchInputProcessor::ShootLineTrace(const FVector2D& aPointerDownPositi
 	}
 	else if(aType == EMS_TouchActionType::Up)
 	{
-		MS_LOG(TEXT("Up"));
 		if (IsValid(CurrentModeState))
 		{
 			CurrentModeState->OnInputPointerUpEvent(aPointerDownPosition, InteractableHitResult);

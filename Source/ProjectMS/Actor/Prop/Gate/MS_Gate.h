@@ -32,6 +32,7 @@ private:
 	UFUNCTION()
 	void OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	bool bOpen = false;
 	
 	// Gate Data
 	UPROPERTY(EditInstanceOnly, Category=MS_GateInfo)
@@ -39,8 +40,4 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category=MS_Gate)
 	TObjectPtr<class UBoxComponent> AutoDoorTriggerBox = nullptr;
-
-private:
-	UPROPERTY()
-	TArray<bool> bOpenedArray = {};
 };
