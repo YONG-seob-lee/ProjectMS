@@ -27,11 +27,11 @@ public class ProjectMS : ModuleRules
 			"ProjectMS/Utility" });
 		PrivateIncludePaths.AddRange(new string[] { "ProjectMS" });
 
-		if (Target.Platform == UnrealTargetPlatform.Android)
-		{
-			var manifestFile = Path.Combine(ModuleDirectory, "AndroidSanitizePermissions_UPL.xml");
-			AdditionalPropertiesForReceipt.Add("AndroidPlugin", manifestFile);
-		}
+		// if (Target.Platform == UnrealTargetPlatform.Android)
+		// {
+		// 	var manifestFile = Path.Combine(ModuleDirectory, "AndroidSanitizePermissions_UPL.xml");
+		// 	AdditionalPropertiesForReceipt.Add("AndroidPlugin", manifestFile);
+		// }
 		
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

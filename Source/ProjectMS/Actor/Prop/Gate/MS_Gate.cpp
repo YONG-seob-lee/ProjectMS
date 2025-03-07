@@ -6,6 +6,7 @@
 #include "Character/AICharacter/MS_AICharacter.h"
 #include "Components/BoxComponent.h"
 #include "Manager_Client/MS_SequenceManager.h"
+#include "Manager_Client/MS_SoundManager.h"
 #include "Zone/MS_Zone.h"
 
 
@@ -65,6 +66,7 @@ void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActo
 	{
 		if(Cast<AMS_AICharacter>(OtherActor))
 		{
+			gSoundMng.PlaySound(EMS_SoundClassType::UserInterface, EMS_SoundWaveType::DoorBell);
 			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
 			bOpen = true;
 		}	

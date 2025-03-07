@@ -152,6 +152,39 @@ void UMS_SoundManager::PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelTy
 	BGMComponent = UGameplayStatics::SpawnSound2D(GetWorld(), MarketBGM);
 }
 
+void UMS_SoundManager::PlaySound(EMS_SoundClassType aSoundClassType, EMS_SoundWaveType aSoundWaveType)
+{
+	TObjectPtr<USoundWave> SoundWave = nullptr;
+	
+	switch(aSoundClassType)
+	{
+	case EMS_SoundClassType::UserInterface:
+		{
+			if(UserInterfaceComponent)
+			{
+				UserInterfaceComponent->Stop();
+				MS_DeleteObject(UserInterfaceComponent);
+				UserInterfaceComponent = nullptr;
+			}
+			
+			switch(aSoundWaveType)
+			{
+			case EMS_SoundWaveType::DoorBell:
+				{
+					SoundWave = Cast<USoundWave>(StaticLoadObject(USoundWave::StaticClass(), nullptr, TEXT("/Game/Sound/SoundWave/DoorBell.DoorBell")));
+					break;
+				}
+			default:
+				break;
+			}
+			break;
+		}
+	default:
+		break;
+	}
+	UserInterfaceComponent = UGameplayStatics::SpawnSound2D(GetWorld(), SoundWave);
+}
+
 float UMS_SoundManager::GetSoundVolume(EMS_SoundClassType aSoundClassType) const
 {
 	if(!SoundMix)

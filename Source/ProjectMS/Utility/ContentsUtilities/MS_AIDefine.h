@@ -192,22 +192,22 @@ public:
 	
 	
 	UPROPERTY()
-	int32 StaffId;
+	int32 StaffId = 0;
 
 	UPROPERTY()
-	int32 StaffIdTag;	// StaffId #1, #2 ...
+	int32 StaffIdTag = 0;	// StaffId #1, #2 ...
 
 	UPROPERTY()
-	EMS_StaffUIPriorityType StaffUIPriorityType;	// ToDo : PriorityOfWorks와 중복 데이터. 정리하자.
+	EMS_StaffUIPriorityType StaffUIPriorityType = EMS_StaffUIPriorityType::EMS_StaffUIPriorityType_Max;	// ToDo : PriorityOfWorks와 중복 데이터. 정리하자.
 	
 	UPROPERTY()
-	TArray<EMS_StaffIssueType> PriorityOfWorks;
+	TArray<EMS_StaffIssueType> PriorityOfWorks = {};
 
 	UPROPERTY()
-	FMS_GameDate FirstDateOfWork;
+	FMS_GameDate FirstDateOfWork = {};
 
 	UPROPERTY()
-	FMS_GameDate ExpirationDate;
+	FMS_GameDate ExpirationDate = {};
 
 	UPROPERTY()
 	int32 WorkDay = 0;
@@ -216,7 +216,7 @@ public:
 	int32 DailyPrice = 0;
 	
 	UPROPERTY()
-	TArray<EMS_DayOfWeek> WorkingDays;
+	TArray<EMS_DayOfWeek> WorkingDays = {};
 };
 
 // Board Key Name

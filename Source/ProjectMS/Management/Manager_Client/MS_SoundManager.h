@@ -7,7 +7,8 @@
 #include "Command/SceneCommand/MS_SceneCommand.h"
 #include "MS_SoundManager.generated.h"
 
-UENUM(BlueprintType) enum class EMS_SoundClassType : uint8
+UENUM(BlueprintType)
+enum class EMS_SoundClassType : uint8
 {
 	Undefined		UMETA(DisplayName = "Undefined"),
 	Master			UMETA(DisplayName = "Master"),
@@ -17,6 +18,12 @@ UENUM(BlueprintType) enum class EMS_SoundClassType : uint8
 	UserInterface	UMETA(DisplayName = "UserInterface"),
 };
 
+UENUM()
+enum class EMS_SoundWaveType
+{
+	None = 0,
+	DoorBell,
+};
 /**
  * 
  */
@@ -34,6 +41,7 @@ public:
 	void AdjustSoundVolume(EMS_SoundClassType aSoundClassType, float aSoundVolume = -1.f);
 
 	void PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelType aLevelType);
+	void PlaySound(EMS_SoundClassType aSoundClassType, EMS_SoundWaveType aSoundWaveType);
 	
 	float GetSoundVolume(EMS_SoundClassType aSoundClassType) const;
 	float GetDefaultVolume(EMS_SoundClassType aSoundClassType);
@@ -44,6 +52,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> BGMComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> UserInterfaceComponent = nullptr;
 	
 public:
 	static UMS_SoundManager* GetInstance();

@@ -213,6 +213,7 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	Money.Emplace(1, 1500);
 	Money.Emplace(2, 0);
 	Money.Emplace(3, 0);
+	gItemMng.UpdateMoney(Money);
 	
 	// Items
 	Items.Emplace(4, 10);
