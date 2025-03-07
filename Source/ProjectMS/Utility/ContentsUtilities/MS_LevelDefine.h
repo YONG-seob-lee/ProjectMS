@@ -71,6 +71,15 @@ enum class EMS_PurposeType : uint8
 	Any = 100,	// != None
 };
 
+UENUM(BlueprintType)
+enum class EMS_FloorState : uint8
+{
+	Normal = 0,
+	Unconstructable = 1,
+	Selected = 2,
+	SelectedUnconstructable = 3,
+};
+
 // GridDatas
 USTRUCT()
 struct FMS_GridData

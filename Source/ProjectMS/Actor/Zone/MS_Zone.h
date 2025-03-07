@@ -80,7 +80,10 @@ public:
 
 	void ShowDebugZoneData();
 
-	int32 GetGridFloorMeshId(const FIntVector2& aGridPosition) const;
+	void SetGridViewByTarget(TWeakObjectPtr<class AMS_Prop> aLinkedProp, const TArray<FIntVector2>& aPreviewPropGridPositions, bool bShowSelected);
+	void SetAllGridView(EMS_FloorState aFloorState /*= EMS_FloorState::Normal*/);
+	
+	int32 GetGridFloorMeshId(const FIntVector2& aGridPosition, EMS_FloorState aFloorState = EMS_FloorState::Normal) const;
 	int32 GetWallMeshId() const;
 	
 protected:

@@ -56,7 +56,7 @@ public:
 	void SetZoneOpenableView(bool bZoneOpenableMode);
 	void SetZoneOpenWidgetVisibility(bool bHiddenWidgetForced = false);
 	
-	void UpdateUnconstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected);
+	void UpdateConstructableGridView(bool bShow, TWeakObjectPtr<class AMS_Prop> aTargetPreviewProp, bool bShowSelected);
 
 	
 	// Prop

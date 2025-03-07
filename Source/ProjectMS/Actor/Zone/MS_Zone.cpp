@@ -616,22 +616,144 @@ void AMS_Zone::ShowDebugZoneData()
 #endif
 }
 
-int32 AMS_Zone::GetGridFloorMeshId(const FIntVector2& aGridPosition) const
+void AMS_Zone::SetGridViewByTarget(TWeakObjectPtr<AMS_Prop> aLinkedProp,
+	const TArray<FIntVector2>& aPreviewPropGridPositions, bool bShowSelected)
 {
-	if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
+	TMap<int32, TArray<FVector>> FloorIdToRemoveLocations = {};
+	TMap<int32, TArray<FTransform>> FloorIdToAddTransforms = {};
+	
+	for (auto& Grid : Grids)
 	{
-		return 1003;
-	}
-
-	else
-	{
-		if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
+		int32 NewMeshId = 0;
+		
+		// 프리뷰 프롭이 차지하는 공간
+		if (bShowSelected && aPreviewPropGridPositions.Contains(Grid.Value.GetGridPosition()))
 		{
-			return 1001;
+			if (Grid.Value.Object == nullptr || Grid.Value.Object == aLinkedProp)
+			{
+				NewMeshId = GetGridFloorMeshId(Grid.Key, EMS_FloorState::Selected);
+			}
+			else
+			{
+				NewMeshId = GetGridFloorMeshId(Grid.Key, EMS_FloorState::SelectedUnconstructable);
+			}
 		}
+
+		// 프리뷰 프롭이 차지하는 공간이 아님
 		else
 		{
-			return 1002;
+			if (Grid.Value.Object == nullptr || Grid.Value.Object == aLinkedProp)
+			{
+				NewMeshId = GetGridFloorMeshId(Grid.Key, EMS_FloorState::Normal);
+			}
+			else
+			{
+				NewMeshId = GetGridFloorMeshId(Grid.Key, EMS_FloorState::Unconstructable);
+			}
+		}
+
+		if (Grid.Value.FloorMeshId != NewMeshId)
+		{
+			if (NewMeshId != INDEX_NONE)
+			{
+				TArray<FVector>& RemoveLocations = FloorIdToRemoveLocations.FindOrAdd(Grid.Value.FloorMeshId);
+				RemoveLocations.Emplace(Grid.Value.GetGridCenterLocation());
+				
+				TArray<FTransform>& AddTransforms = FloorIdToAddTransforms.FindOrAdd(NewMeshId);
+				AddTransforms.Emplace(FTransform(Grid.Value.GetGridCenterLocation()));
+
+				Grid.Value.FloorMeshId = NewMeshId;
+			}
+		}
+	}
+
+	for (auto& It : FloorIdToRemoveLocations)
+	{
+		gHISMMng.RemoveInstances(It.Key, It.Value);
+	}
+	
+	for (auto& It : FloorIdToAddTransforms)
+	{
+		gHISMMng.AddInstances(It.Key, It.Value);
+	}
+}
+
+void AMS_Zone::SetAllGridView(EMS_FloorState aFloorState /*= EMS_FloorState::Normal*/)
+{
+	TMap<int32, TArray<FVector>> FloorIdToRemoveLocations = {};
+	TMap<int32, TArray<FTransform>> FloorIdToAddTransforms = {};
+
+	for (auto& Grid : Grids)
+	{
+		int32 NewMeshId = GetGridFloorMeshId(Grid.Key, aFloorState);
+		if (Grid.Value.FloorMeshId != NewMeshId)
+		{
+			if (NewMeshId != INDEX_NONE)
+			{
+				TArray<FVector>& RemoveLocations = FloorIdToRemoveLocations.FindOrAdd(Grid.Value.FloorMeshId);
+				RemoveLocations.Emplace(Grid.Value.GetGridCenterLocation());
+				
+				TArray<FTransform>& AddTransforms = FloorIdToAddTransforms.FindOrAdd(NewMeshId);
+				AddTransforms.Emplace(FTransform(Grid.Value.GetGridCenterLocation()));
+
+				Grid.Value.FloorMeshId = NewMeshId;
+			}
+		}
+	}
+	
+	for (auto& It : FloorIdToRemoveLocations)
+	{
+		gHISMMng.RemoveInstances(It.Key, It.Value);
+	}
+	
+	for (auto& It : FloorIdToAddTransforms)
+	{
+		gHISMMng.AddInstances(It.Key, It.Value);
+	}
+}
+
+int32 AMS_Zone::GetGridFloorMeshId(const FIntVector2& aGridPosition, EMS_FloorState aFloorState /*= EMS_FloorState::Normal*/) const
+{
+	switch (aFloorState)
+	{
+	case EMS_FloorState::Normal :
+		{
+			if (ZoneType == EMS_ZoneType::Pallet || ZoneType == EMS_ZoneType::Outside)
+			{
+				return 1003;
+			}
+
+			else
+			{
+				if ((aGridPosition.X + aGridPosition.Y) % 2 == 0)
+				{
+					return 1001;
+				}
+				else
+				{
+					return 1002;
+				}
+			}
+		}
+
+	case EMS_FloorState::Unconstructable :
+		{
+			return 1004;
+		}
+
+	case EMS_FloorState::Selected :
+		{
+			return 1005;
+		}
+
+	case EMS_FloorState::SelectedUnconstructable :
+		{
+			return 1006;
+		}
+
+	default:
+		{
+			return 1001;
 		}
 	}
 }

@@ -55,7 +55,7 @@ void UMS_ModeState_Construct::Begin()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		// ShowUnconstructableGrid
-		LevelScriptActor->UpdateUnconstructableGridView(true, nullptr, false);
+		LevelScriptActor->UpdateConstructableGridView(true, nullptr, false);
 
 		// Zone Openable
 		LevelScriptActor->SetZoneOpenableView(true);
@@ -87,7 +87,7 @@ void UMS_ModeState_Construct::Exit()
 		LevelScriptActor->SetZoneOpenableView(false);
 		
 		// ShowUnconstructableGrid
-		LevelScriptActor->UpdateUnconstructableGridView(false, nullptr, false);
+		LevelScriptActor->UpdateConstructableGridView(false, nullptr, false);
 	}
 
 	// Delegate
@@ -126,7 +126,7 @@ void UMS_ModeState_Construct::OnInputPointerUpEvent(FVector2D aPointerUpPosition
 		if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 		{
 			LevelScriptActor->SetZoneOpenWidgetVisibility(true);
-			LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, true);
+			LevelScriptActor->UpdateConstructableGridView(true, PreviewProp, true);
 		}
 	}
 
@@ -181,7 +181,7 @@ void UMS_ModeState_Construct::OnInputPointerHold(float aElapsedTime, const FVect
 				if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 				{
 					LevelScriptActor->SetZoneOpenWidgetVisibility(false);
-					LevelScriptActor->UpdateUnconstructableGridView(true, PreviewProp, false);
+					LevelScriptActor->UpdateConstructableGridView(true, PreviewProp, false);
 				}
 			}
 		}
@@ -505,7 +505,7 @@ void UMS_ModeState_Construct::CancelPreviewProp()
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
 		LevelScriptActor->SetZoneOpenWidgetVisibility(false);
-		LevelScriptActor->UpdateUnconstructableGridView(true, nullptr, false);
+		LevelScriptActor->UpdateConstructableGridView(true, nullptr, false);
 	}
 	
 	if (PreviewProp->GetLinkedProp() != nullptr)
