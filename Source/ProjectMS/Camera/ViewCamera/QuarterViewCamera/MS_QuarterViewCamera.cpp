@@ -6,7 +6,7 @@ AMS_QuarterViewCamera::AMS_QuarterViewCamera()
 {
 	SceneComponent->SetAbsolute(false, true, true);
 	SetActorEnableCollision(true);
-	CameraDistance = 500.0f;
+	CameraDistance = 300.0f;
 	CameraComponent->SetRelativeLocationAndRotation(FVector(-CameraDistance, 0.0f, CameraDistance), FRotator(0.f, 0.0f, 0.0f));
 	Tilts.Emplace(EMS_TiltType::VeryVeryLow, -30.f);
 	Tilts.Emplace(EMS_TiltType::VeryLow, -40.f);

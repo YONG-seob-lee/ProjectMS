@@ -28,6 +28,8 @@ void UMS_TownWidget::NativeConstruct()
 
 	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
 	OnUpdateGameDate(GameDate);
+
+	PlayAnimationByName(TEXT("TownAmbient"));
 }
 
 void UMS_TownWidget::NativeDestruct()

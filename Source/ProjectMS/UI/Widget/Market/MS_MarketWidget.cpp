@@ -18,6 +18,8 @@ void UMS_MarketWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	SetActiveModeSwitcherIndex(gModeMng.GetCurrentModeStateId());
+
+	PlayAnimationByName(TEXT("MarketAmbient"));
 }
 
 void UMS_MarketWidget::NativeDestruct()

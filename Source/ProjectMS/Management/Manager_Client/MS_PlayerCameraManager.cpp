@@ -209,12 +209,18 @@ void AMS_PlayerCameraManager::ZoomCamera(float aDistance)
 	const float CameraDistanceStrength = CommonTable->GetParameter02(CommonContents::CAMERA_DISTANCE_STRENGTH);
 	EMS_LevelType LevelType = gSceneMng.GetCurrentLevelType();
 	const float CameraDistanceMax = CommonTable->GetParameter02(LevelType == EMS_LevelType::MarketLevel ? CommonContents::MAX_CAMERA_DISTANCE_MARKET : CommonContents::MAX_CAMERA_DISTANCE_TOWN);
-	const float CameraDistanceMin = CommonTable->GetParameter02(LevelType == EMS_LevelType::MarketLevel ? CommonContents::MIN_CAMERA_DISTANCE_MARKET : CommonContents::MIN_CAMERA_DISTANCE_TOWN);
-	
+	float CameraDistanceMin = CommonTable->GetParameter02(LevelType == EMS_LevelType::MarketLevel ? CommonContents::MIN_CAMERA_DISTANCE_MARKET : CommonContents::MIN_CAMERA_DISTANCE_TOWN);
+	if(LevelType != EMS_LevelType::MarketLevel)
+	{
+		CameraDistanceMin *= -1;
+	}
 	float TargetCameraDistance = CurrentCamera.Get()->CameraDistance + (-aDistance * CameraDistanceStrength);
 	TargetCameraDistance = FMath::Clamp(TargetCameraDistance, CameraDistanceMin, CameraDistanceMax);
 
 	const float NewInertiaForce = FMath::Clamp((TargetCameraDistance - CurrentCamera.Get()->CameraDistance) * 0.9f, -100.0f, 100.0f);
+
+	// Update Ambient Sound Volume
+	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Ambient, 1.f - (TargetCameraDistance - CameraDistanceMin) / (CameraDistanceMax - CameraDistanceMin));
 
 	if (GetWorld()->GetTimerManager().IsTimerActive(CameraInertiaTimerHandle))
 	{
@@ -292,24 +298,52 @@ void AMS_PlayerCameraManager::ReplaceCamera(EMS_LevelType LevelType) const
 		{
 			gCameraMng.LocateCamera(FVector(12600.f, -6380.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(13310.f, -8000.f, 390.f), EMS_ViewCameraType::SideView);
+
+			const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView);
+			if(!ViewCamera)
+			{
+				return;
+			}
+			(*ViewCamera)->AdjustCameraDistance(300.f);
 			break;
 		}
 	case EMS_LevelType::Stage02:
 		{
 			gCameraMng.LocateCamera(FVector(9270.f, -5010.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(8770.f, -3720.f, 390.f), EMS_ViewCameraType::SideView);
+
+			const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView);
+			if(!ViewCamera)
+			{
+				return;
+			}
+			(*ViewCamera)->AdjustCameraDistance(300.f);
 			break;
 		}
 	case EMS_LevelType::Stage03:
 		{	
 			gCameraMng.LocateCamera(FVector(7000.f, -1600.f, 3200.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector(6000.f, 2200.f, 390.f), EMS_ViewCameraType::SideView);
+			
+			const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView);
+			if(!ViewCamera)
+			{
+				return;
+			}
+			(*ViewCamera)->AdjustCameraDistance(300.f);
 			break;
 		}
 	case EMS_LevelType::MarketLevel:
 		{
 			gCameraMng.LocateCamera(FVector(370.f, 440.f, 0.f), EMS_ViewCameraType::QuarterView);
 			gCameraMng.LocateCamera(FVector::ZeroVector, EMS_ViewCameraType::SideView);
+
+			const TObjectPtr<class AMS_ViewCamera>* ViewCamera = ViewCameraMap.Find(EMS_ViewCameraType::QuarterView);
+			if(!ViewCamera)
+			{
+				return;
+			}
+			(*ViewCamera)->AdjustCameraDistance(800.f);
 			break;
 		}
 		default:
