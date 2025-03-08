@@ -25,23 +25,45 @@ void UMS_MoneyWidget::UpdateGold(bool bShowAnimation)
 	if(CPP_GoldCount)
 	{
 		NextMoney = gItemMng.GetTotalGoldMoney();
-		CPP_PlusCount->SetText(FText::FromString(TEXT("+ ") + FString::FromInt(NextMoney - CurrentMoney)));
-		GetWorld()->GetTimerManager().SetTimer(UpdateGoldHandle, this, &UMS_MoneyWidget::UpdateGoldCount,0.005f, true);
+		GetWorld()->GetTimerManager().SetTimer(UpdateGoldHandle, this, &UMS_MoneyWidget::UpdateGoldCount,0.001f, true);
 	}
 
 	if(bShowAnimation)
 	{
-		PlayAnimation(UpdateMoney);
+		if(CurrentMoney < NextMoney)
+		{
+			CPP_PlusCount->SetText(FText::FromString(TEXT("+ ") + FString::FromInt(NextMoney - CurrentMoney)));
+			PlayAnimation(UpdateMoney_Plus);
+		}
+		else
+		{
+			CPP_PlusCount->SetText(FText::FromString(TEXT("- ") + FString::FromInt(CurrentMoney - NextMoney)));
+			PlayAnimation(UpdateMoney_Minus);
+		}
 	}
 }
 
 void UMS_MoneyWidget::UpdateGoldCount()
 {
-	if(CurrentMoney >= NextMoney)
+	if(CurrentMoney == NextMoney + 1 || CurrentMoney == NextMoney - 1)
 	{
-		CurrentMoney = NextMoney;
-		CPP_GoldCount->SetText(FText::FromString(FString::FromInt(--CurrentMoney) + TEXT(" G")));
-		GetWorld()->GetTimerManager().ClearTimer(UpdateGoldHandle);
+		EndProcess();
+		return;
 	}
-	CPP_GoldCount->SetText(FText::FromString(FString::FromInt(++CurrentMoney) + TEXT(" G")));
+
+	if(CurrentMoney < NextMoney)
+	{
+		CPP_GoldCount->SetText(FText::FromString(FString::FromInt(++CurrentMoney) + TEXT(" G")));
+	}
+	else
+	{
+		CPP_GoldCount->SetText(FText::FromString(FString::FromInt(--CurrentMoney) + TEXT(" G")));
+	}
+}
+
+void UMS_MoneyWidget::EndProcess()
+{
+	CurrentMoney = NextMoney;
+	CPP_GoldCount->SetText(FText::FromString(FString::FromInt(CurrentMoney) + TEXT(" G")));
+	GetWorld()->GetTimerManager().ClearTimer(UpdateGoldHandle);
 }

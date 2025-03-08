@@ -105,7 +105,7 @@ int32 UMS_FurnitureCacheTable::GetTotalFurniturePrice(const TMap<int32, int32>& 
 	{
 		if(FMS_FurnitureData** FurnitureData = FurnitureDatas.Find(OrderFurniture.Key))
 		{
-			TotalPrice += (*FurnitureData)->Price;	
+			TotalPrice += (*FurnitureData)->Price * OrderFurniture.Value;	
 		}
 	}
 

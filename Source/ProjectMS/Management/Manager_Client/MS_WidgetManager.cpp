@@ -4,6 +4,7 @@
 #include "MS_WidgetManager.h"
 
 #include "MS_InputManager.h"
+#include "MS_PlayerCameraManager.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
 #include "Data/Table/Caches/MS_ResourceWidgetCacheTable.h"
 #include "Data/Table/RowBase/MS_ResourceWidget.h"
@@ -235,6 +236,7 @@ void UMS_WidgetManager::HideRotateWidget() const
 void UMS_WidgetManager::ShowModalWidget(const FMS_ModalParameter& aModalParameter /* =  = FMS_ModalParameter() */) const
 {
 	gInputMng.SetAllowInteractActor(false);
+	gCameraMng.RestrictCameraMovement(true);
 	
 	RootWidget->ShowModalWidget(aModalParameter);
 }
@@ -242,6 +244,7 @@ void UMS_WidgetManager::ShowModalWidget(const FMS_ModalParameter& aModalParamete
 void UMS_WidgetManager::CloseModalWidget(const TFunction<void()>& _OnCloseModalWidgetCallback) const
 {
 	gInputMng.SetAllowInteractActor(true);
+	gCameraMng.RestrictCameraMovement(false);
 	
 	RootWidget->CloseModalWidget(_OnCloseModalWidgetCallback);
 }

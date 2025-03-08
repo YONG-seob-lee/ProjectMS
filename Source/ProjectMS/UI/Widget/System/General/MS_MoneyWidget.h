@@ -19,6 +19,7 @@ public:
 private:
 	void UpdateGold(bool bShowAnimation);
 	void UpdateGoldCount();
+	void EndProcess();
 
 	int32 CurrentMoney = 0;
 	int32 NextMoney = 0;
@@ -34,5 +35,8 @@ private:
 	TObjectPtr<class UImage> CPP_Coin = nullptr;
 	
 	UPROPERTY(Meta = (BindWidgetAnim), Transient)
-	TObjectPtr<class UWidgetAnimation> UpdateMoney = nullptr;
+	TObjectPtr<class UWidgetAnimation> UpdateMoney_Plus = nullptr;
+
+	UPROPERTY(Meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> UpdateMoney_Minus = nullptr;
 };

@@ -70,7 +70,7 @@ void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 
 	gItemMng.UpdateMoney(Money);
 	gItemMng.UpdateOrderItems(OrderItems);
-	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(true);
 }
 
 void AMS_PlayerState::OrganizeItems()
@@ -108,7 +108,7 @@ void AMS_PlayerState::OrderFurniture(const TMap<int32, int32>& aOrderFurnitures)
 	SavePlayerData();
 
 	gItemMng.UpdateMoney(Money);
-	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(true);
 }
 
 void AMS_PlayerState::OrganizeFurniture()
