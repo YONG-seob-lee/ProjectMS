@@ -21,7 +21,6 @@ void UMS_ConstructExpanerWidget::NativeConstruct()
 	
 	CPP_ExpanderItemListView->SetScrollbarVisibility(ESlateVisibility::Collapsed);
 
-	InitCategory();
 	RefreshConstructListItems(EMS_ZoneType::Display);
 }
 
@@ -84,6 +83,7 @@ void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneTyp
 	}
 	
 	CPP_ExpanderItemListView->SetListItems(FurnitureItems);
+	CPP_ExpanderCategoryListView->SetSelectedIndex(static_cast<int32>(aZoneType) - 1);
 }
 
 void UMS_ConstructExpanerWidget::OnClickedCategoryButton(UObject* Object)

@@ -6,6 +6,10 @@
 #include "Widget/MS_Widget.h"
 #include "MS_BuyFurnitureWidget.generated.h"
 
+namespace BuyFurnitureWidget
+{
+	const FName Shake = TEXT("Shake");
+}
 /**
  * 
  */

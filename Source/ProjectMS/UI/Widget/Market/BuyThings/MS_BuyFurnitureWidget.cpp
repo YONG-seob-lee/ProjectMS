@@ -85,9 +85,17 @@ void UMS_BuyFurnitureWidget::OnClickedConfirmButton()
 		OrderFurnitures.Emplace(OrderItemElementData->GetItemId(), OrderItemElementData->GetItemCount());
 	}
 
+	if (OrderFurnitures.Num() == 0)
+	{
+		PlayAnimationByName(BuyFurnitureWidget::Shake);
+		gWidgetMng.ShowToastMessage(TEXT("물건을 하나이상 구매하세요"));
+		return;	
+	}
 	// 금액 체크
 	if(gItemMng.IsHaveEnoughMoney(OrderFurnitures, true) == false)
 	{
+		PlayAnimationByName(BuyFurnitureWidget::Shake);
+		gWidgetMng.ShowToastMessage(TEXT("금액이 충분하지 않습니다."));
 		return;
 	}
 	

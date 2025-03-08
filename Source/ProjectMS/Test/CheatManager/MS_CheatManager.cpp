@@ -3,16 +3,19 @@
 
 #include "MS_CheatManager.h"
 
+#include "Controller/MS_PlayerController.h"
 #include "GameUserSettings/MS_GameUserSettings.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Mode/ModeObject/Supervisor/Staff/MS_StaffSupervisor.h"
 #include "Mode/ModeState/MS_ModeState_RunMarket.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Table/Caches/MS_StaffCacheTable.h"
 #include "Widget/Dialog/MS_DialogWidget.h"
 
@@ -178,5 +181,20 @@ void UMS_CheatManager::ResetProcessTutorial()
 void UMS_CheatManager::FastRun(int32 aMultiply)
 {
 	gScheduleMng.SetMultiplyIntervalSecondReal(aMultiply);
+}
+
+void UMS_CheatManager::Money(int32 aCount)
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	PlayerState->SettleMoney(aCount);
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 }
 #endif

@@ -51,5 +51,8 @@ public:
 
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void FastRun(int32 aMultiply);
+
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void Money(int32 aCount);
 #endif
 };

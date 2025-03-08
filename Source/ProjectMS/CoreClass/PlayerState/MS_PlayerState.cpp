@@ -43,7 +43,9 @@ void AMS_PlayerState::SettleMoney(int32 aEarnMoney)
 {
 	int32& GoldMoney = Money.FindOrAdd(static_cast<int32>(EMS_MoneyType::Gold));
 	GoldMoney += aEarnMoney;
+	
 	SavePlayerData();
+	gItemMng.UpdateMoney(Money);
 }
 
 void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
@@ -66,9 +68,9 @@ void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 	
 	SavePlayerData();
 
-	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 	gItemMng.UpdateMoney(Money);
 	gItemMng.UpdateOrderItems(OrderItems);
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 }
 
 void AMS_PlayerState::OrganizeItems()
@@ -105,8 +107,8 @@ void AMS_PlayerState::OrderFurniture(const TMap<int32, int32>& aOrderFurnitures)
 	
 	SavePlayerData();
 
-	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 	gItemMng.UpdateMoney(Money);
+	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 }
 
 void AMS_PlayerState::OrganizeFurniture()
@@ -275,6 +277,11 @@ void AMS_PlayerState::InitDefaultPlayerData()
 	FMS_FurniturePositionData Pallet6 = FMS_FurniturePositionData(10, FIntVector2(-14, 28), EMS_Rotation::Rot180);
 	GridPositionToMarketFurnitureDatas.Emplace(Pallet6.GridPosition, Pallet6);
 
+	for(const auto& GridPositionToMarketFurnitureData : GridPositionToMarketFurnitureDatas)
+	{
+		int32& FurnitureCount = Furnitures.FindOrAdd(GridPositionToMarketFurnitureData.Value.FurnitureTableId);
+		FurnitureCount++;
+	}
 	// Staff
 	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
 

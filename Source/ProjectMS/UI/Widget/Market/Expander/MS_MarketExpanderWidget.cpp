@@ -62,6 +62,8 @@ void UMS_MarketExpanderWidget::OpenExpander()
 	PlayAnimationByName(ArrowAnimation::OpenItemList);
 	bOpen = true;
 	bOpenExpander = true;
+	CPP_ConstructExpanderWidget->InitCategory();
+	CPP_ConstructExpanderWidget->RefreshConstructListItems(EMS_ZoneType::Display);
 }
 
 void UMS_MarketExpanderWidget::OnClickedArrowButton()

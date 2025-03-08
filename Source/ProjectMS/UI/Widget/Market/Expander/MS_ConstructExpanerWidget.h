@@ -20,9 +20,10 @@ public:
 	FORCEINLINE void SetOnClickedCategoryButtonFunc(const TFunction<void()>& aFunc) { OnClickedCategoryButtonCallback = aFunc; }
 	FORCEINLINE void SetOnClickedConstructItemFunc(const TFunction<void()>& aFunc) { OnClickedConstructItemCallback = aFunc; }
 
-private:
 	void InitCategory() const;
 	void RefreshConstructListItems(EMS_ZoneType aZoneType) const;
+	
+private:
 	
 	void OnClickedCategoryButton(UObject* Object);
 	void OnClickedCategory(int32 aCategoryType);

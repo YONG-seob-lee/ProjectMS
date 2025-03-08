@@ -116,6 +116,7 @@ void UMS_SequenceManager::StopSequence()
 	if(OnFinishedSequenceCallback)
 	{
 		OnFinishedSequenceCallback();
+		OnFinishedSequenceCallback = nullptr;
 	}
 
 	GetWorld()->DestroyActor(SequenceActor);
@@ -196,6 +197,7 @@ void UMS_SequenceManager::OnFinishedSequence()
 	if(OnFinishedSequenceCallback)
 	{
 		OnFinishedSequenceCallback();
+		OnFinishedSequenceCallback = nullptr;
 	}
 	
 	if(bSetBlendCamera)
