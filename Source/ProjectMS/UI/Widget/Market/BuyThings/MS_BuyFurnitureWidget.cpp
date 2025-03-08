@@ -17,12 +17,13 @@
 void UMS_BuyFurnitureWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
 {
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
-	InitializeBuyFurnitureWidget();
 }
 
 void UMS_BuyFurnitureWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	InitializeBuyFurnitureWidget();
 }
 
 void UMS_BuyFurnitureWidget::NativeDestruct()
@@ -34,6 +35,8 @@ void UMS_BuyFurnitureWidget::NativeDestruct()
 
 void UMS_BuyFurnitureWidget::InitializeBuyFurnitureWidget()
 {
+	OrderFurnitureElementDatas.Empty();
+	
 	const TObjectPtr<UMS_FurnitureCacheTable> ItemTable = Cast<UMS_FurnitureCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Furniture));
 	MS_ENSURE(ItemTable);
 
@@ -83,7 +86,7 @@ void UMS_BuyFurnitureWidget::OnClickedConfirmButton()
 	}
 
 	// 금액 체크
-	if(gItemMng.IsHaveEnoughMoney(OrderFurnitures) == false)
+	if(gItemMng.IsHaveEnoughMoney(OrderFurnitures, true) == false)
 	{
 		return;
 	}
