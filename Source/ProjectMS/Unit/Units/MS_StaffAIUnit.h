@@ -49,10 +49,10 @@ public:
 	
 private:
 	TWeakObjectPtr<class UMS_IssueTicket> SearchIssueTicket() const;
-	void RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket);
 	bool UnregisterIssueTicket();
 	
 public:
+	void RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket);
 	void UnregisterAsIssueTicketStaff();
 	
 	void OnRegisteredAsIssueTicketStaff(TWeakObjectPtr<class UMS_IssueTicket> aIssueTicket);

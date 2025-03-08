@@ -301,15 +301,6 @@ TWeakObjectPtr<UMS_IssueTicket> UMS_StaffAIUnit::SearchIssueTicket() const
 	return nullptr;
 }
 
-void UMS_StaffAIUnit::RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket)
-{
-	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
-	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
-	{
-		RunMarketMode->RegisterIssueTicketStaff(aTargetTicket, this);
-	}
-}
-
 bool UMS_StaffAIUnit::UnregisterIssueTicket()
 {
 	// 자신이 이슈 티켓을 가지고 있을 경우에만 Unregister 요청 가능
@@ -324,6 +315,15 @@ bool UMS_StaffAIUnit::UnregisterIssueTicket()
 	}
 
 	return false;
+}
+
+void UMS_StaffAIUnit::RegisterAsIssueTicketStaff(TWeakObjectPtr<UMS_IssueTicket>& aTargetTicket)
+{
+	UMS_ModeStateBase* ModeState = gModeMng.GetCurrentModeState();
+	if (UMS_ModeState_RunMarketBase* RunMarketMode = Cast<UMS_ModeState_RunMarketBase>(ModeState))
+	{
+		RunMarketMode->RegisterIssueTicketStaff(aTargetTicket, this);
+	}
 }
 
 void UMS_StaffAIUnit::UnregisterAsIssueTicketStaff()

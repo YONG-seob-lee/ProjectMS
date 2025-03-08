@@ -88,7 +88,7 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 		}
 	}
 	
-	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(IssueType));
+ 	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(IssueType));
 	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(ActionState));
 
 	AIAnimInstance->SetActionState(ActionState);

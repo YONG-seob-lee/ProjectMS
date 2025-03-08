@@ -553,6 +553,11 @@ void UMS_IssueTicketContainer::RegisterIssueTicketStaff(TWeakObjectPtr<UMS_Issue
 	MS_ENSURE (aTargetTicket != nullptr);
 
 	TWeakObjectPtr<UMS_StaffAIUnit> PreviousStaffUnit = aTargetTicket->GetStaffUnit();
+
+	if (PreviousStaffUnit == aStaffUnit)
+	{
+		return;
+	}
 	
 	if (PreviousStaffUnit != nullptr)
 	{
