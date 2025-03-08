@@ -81,6 +81,11 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 		{
 			ActionState = EMS_StaffActionState::Add_PickUp_SearchTargets;
 		}
+
+		else if (IssueType == EMS_StaffIssueType::Payment)
+		{
+			ActionState = EMS_StaffActionState::Payment_SearchCounterUnit;
+		}
 	}
 	
 	BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(IssueType));

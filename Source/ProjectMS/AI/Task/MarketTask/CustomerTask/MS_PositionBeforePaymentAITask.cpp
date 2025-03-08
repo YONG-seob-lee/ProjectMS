@@ -51,12 +51,12 @@ EBTNodeResult::Type UMS_PositionBeforePaymentAITask::ExecuteTask(UBehaviorTreeCo
 		return EBTNodeResult::Type::Failed;
 	}
 
-	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 	gUnitMng.GetUnits(EMS_UnitType::Counter, Units);
 
 	TArray<FIntVector2> TargetPositions = {};
 	
-	for (const TObjectPtr<UMS_UnitBase>& Unit : Units)
+	for (const TWeakObjectPtr<UMS_UnitBase>& Unit : Units)
 	{
 		UMS_CounterUnit* CounterUnit = Cast<UMS_CounterUnit>(Unit);
 		if (!IsValid(CounterUnit))

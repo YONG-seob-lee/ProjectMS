@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
+#include "Units/MS_CounterUnit.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
 
@@ -144,43 +145,32 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			AIUnit->SetTargetPositions(TargetPositions);
 			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
-	}
 
-	// Change Clothes
-	/*
-	else if (SelectedStaffAction == EMS_StaffActionType::ChangeClothes)
-	{
-		TArray<FIntVector2> TargetPositions = {};
-		
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
-		gUnitMng.GetUnits(EMS_UnitType::Furniture,Units);
-
-		for (const TObjectPtr<UMS_UnitBase>& Unit : Units)
+		if (ActionState == EMS_StaffActionState::Payment_SearchCounterUnit)
 		{
-			UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit);
-			if (!IsValid(FurnitureUnit))
-			{
-				MS_ENSURE(false);
-				continue;
-			}
+			TArray<FIntVector2> TargetPositions = {};
 			
-			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-				FurnitureUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseWardrobe);
+			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
+			gUnitMng.GetUnits(EMS_UnitType::Counter, Units);
 
-			if (PropPurposeSpaceComponents.Num() == 0)
+			for (auto& Unit : Units)
 			{
-				continue;
+				if (UMS_CounterUnit* CounterUnit = Cast<UMS_CounterUnit>(Unit.Get()))
+				{
+					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+							CounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::Cashier);
+					
+					for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+					{
+						TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+					}
+				}
 			}
-			
-			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-			{
-				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-			}
+
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
-
-		AIUnit->SetTargetPositions(TargetPositions);
-		return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
-	}*/
+	}
 
 	return EBTNodeResult::Type::Failed;
 }

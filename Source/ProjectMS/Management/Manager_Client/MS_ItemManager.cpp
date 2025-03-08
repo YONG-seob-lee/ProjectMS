@@ -256,10 +256,10 @@ void UMS_ItemManager::GetStaffItems(TMap<int32, int32>& OutItems) const
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::StaffAI, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			if (const UMS_StaffAIUnit* StaffUnit = Cast<UMS_StaffAIUnit>(Unit.Get()))
 			{
@@ -301,10 +301,10 @@ void UMS_ItemManager::GetCustomerItems(TMap<int32, int32>& OutItems) const
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::CustomerAI, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			if (const UMS_CustomerAIUnit* CustomerUnit = Cast<UMS_CustomerAIUnit>(Unit.Get()))
 			{
@@ -346,10 +346,10 @@ void UMS_ItemManager::GetStorageItems(EMS_ZoneType aZoneType, TMap<int32, int32>
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			const UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get());
 			if (!StorageUnit)
@@ -395,10 +395,10 @@ int32 UMS_ItemManager::GetStorageItemCount(EMS_ZoneType aZoneType, int32 aItemId
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
@@ -439,10 +439,10 @@ bool UMS_ItemManager::CanDeliveryToStorage(int32 aItemId, int32 aDeliveryCount, 
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
@@ -512,10 +512,10 @@ bool UMS_ItemManager::CanPickUpFromStorage(int32 aItemId, EMS_ZoneType aZoneType
 
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
 			{
@@ -631,10 +631,10 @@ void UMS_ItemManager::UpdateNotPlacedItemsToPalletItems()
 	
 	if (const TObjectPtr UnitManager = gUnitMng)
 	{
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
-		for (TObjectPtr<UMS_UnitBase> Unit : Units)
+		for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 		{
 			UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get());
 			if (!StorageUnit)

@@ -4,27 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "AI/Task/MS_AITask.h"
-#include "MS_PaymentInProgressAITask.generated.h"
+#include "MS_StaffPaymentDoingTask.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_PaymentInProgressAITask : public UMS_AITask
+class PROJECTMS_API UMS_StaffPaymentDoingTask : public UMS_AITask
 {
 	GENERATED_BODY()
-	
+
 public:
-	UMS_PaymentInProgressAITask(const FObjectInitializer& ObjectInitializer);
+	UMS_StaffPaymentDoingTask(const FObjectInitializer& ObjectInitializer);
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-	virtual void OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTNodeResult::Type TaskResult) override;
-	
-	
+
 private:
 	TWeakObjectPtr<class UMS_CounterUnit> CounterUnit;
-	
-	float PaidTime = 0.f;
-	float PaidProcessTime = 0.f;
 };

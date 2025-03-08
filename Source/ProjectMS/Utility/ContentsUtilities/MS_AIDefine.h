@@ -84,8 +84,10 @@ enum class EMS_StaffActionState : uint8
 	Spline_GoHome = 23,
 
 	// Payment
-	Payment_Waiting,
-	Payment_Doing,
+	Payment_SearchCounterUnit = 24,
+	Payment_GoToCounterUnit = 25,
+	Payment_Waiting = 26,
+	Payment_Doing = 27,
 };
 
 UENUM(BlueprintType)

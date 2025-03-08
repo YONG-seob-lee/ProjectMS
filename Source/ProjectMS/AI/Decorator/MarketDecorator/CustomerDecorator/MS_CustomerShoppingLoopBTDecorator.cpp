@@ -30,7 +30,7 @@ UMS_CustomerShoppingLoopBTDecorator::UMS_CustomerShoppingLoopBTDecorator(const F
 	if(const TObjectPtr UnitManager = gUnitMng)
 	{
 		ShoppingNumLoops = 0;
-		TArray<TObjectPtr<UMS_UnitBase>> Units;
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
 
 		for(const auto& Unit : Units)

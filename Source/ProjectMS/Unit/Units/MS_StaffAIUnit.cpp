@@ -91,11 +91,11 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 
 bool UMS_StaffAIUnit::FindNearestSpline()
 {
-	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
+	TArray<TWeakObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DuckSplineUnits);
 
 	float DistanceMin = 0.f;
-	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
+	TWeakObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
 	
 	for(const auto& SplineUnit : DuckSplineUnits)
 	{
@@ -110,7 +110,7 @@ bool UMS_StaffAIUnit::FindNearestSpline()
 		}
 	}
 
-	if(!NearestSplineUnit)
+	if(NearestSplineUnit == nullptr)
 	{
 		return false;
 	}
@@ -646,24 +646,6 @@ bool UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼�
 	}
 	
 	return false;
-}
-
-TWeakObjectPtr<UMS_FurnitureUnit> UMS_StaffAIUnit::GetInteractableFurnitureUnit()
-{
-	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
-	{
-		TWeakObjectPtr<AActor> Actor = LevelScriptActor->GetGridObject(GetActorGridPosition());
-
-		if (Actor != nullptr)
-		{
-			if (AMS_Furniture* FurnitureActor = Cast<AMS_Furniture>(Actor.Get()))
-			{
-				return Cast<UMS_FurnitureUnit>(FurnitureActor->GetOwnerUnitBase());
-			}
-		}
-	}
-	
-	return nullptr;
 }
 
 void UMS_StaffAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems)

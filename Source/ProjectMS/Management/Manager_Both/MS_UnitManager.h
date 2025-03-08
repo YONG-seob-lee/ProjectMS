@@ -25,13 +25,13 @@ public:
 	UMS_UnitManager();
 	virtual void Finalize() override;
 
-	TObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
-	void GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aOutUnits);
+	TWeakObjectPtr<class UMS_UnitBase> GetUnit(MS_Handle aHandle);
+	void GetUnits(EMS_UnitType aUnitType, TArray<TWeakObjectPtr<UMS_UnitBase>>& aOutUnits);
 
-	TObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
+	TWeakObjectPtr<class UMS_UnitBase> CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor = true, const FVector& aPosition = FVector::ZeroVector, const FRotator& aRotator = FRotator::ZeroRotator);
 	void DestroyUnit(MS_Handle aHandle);
-	void DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit);
-	void DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits);
+	void DestroyUnit(TWeakObjectPtr<UMS_UnitBase> aUnit);
+	void DestroyUnits(TArray<TWeakObjectPtr<UMS_UnitBase>>& aUnits);
 	void DestroyAllUnits(EMS_UnitType aUnitType);
 	void DestroyAllUnits();
 
@@ -40,7 +40,7 @@ public:
 	FOnUpdatePurchaseDelegate OnPurchaseDelegate;
 	
 protected:
-	void DestroyUnit_Internal(TObjectPtr<class UMS_UnitBase> aUnitBase);
+	void DestroyUnit_Internal(TWeakObjectPtr<class UMS_UnitBase> aUnitBase);
 
 private:
 	TSubclassOf<UMS_UnitBase> GetUnitTypeClass(EMS_UnitType aUnitType);

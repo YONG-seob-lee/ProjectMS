@@ -88,7 +88,7 @@ bool UMS_CustomerSupervisor::SpawnCustomer()
 	FRotator SpawnRotator = FRotator::ZeroRotator;
 	GetRandomSpawnPoint(SpawnLocation, SpawnRotator);
 	
-	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::CustomerAI, 0,true, SpawnLocation, SpawnRotator);
+	TWeakObjectPtr<UMS_UnitBase> Unit = gUnitMng.CreateUnit(EMS_UnitType::CustomerAI, 0,true, SpawnLocation, SpawnRotator);
 	if (UMS_CustomerAIUnit* CustomerAIUnit = Cast<UMS_CustomerAIUnit>(Unit))
 	{
 		CustomerAIUnit->RegisterCustomerAction(EMS_CustomerActionType::GoToMarket);

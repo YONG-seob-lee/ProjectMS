@@ -47,7 +47,7 @@ private:
 
 public:
 	// IssueTickets
-	virtual void UpdateIssueTickets() override;
+	virtual void UpdateIssueTicket() override;
 	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer) override;
 	
 private:

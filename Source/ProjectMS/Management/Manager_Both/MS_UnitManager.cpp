@@ -33,7 +33,7 @@ void UMS_UnitManager::Finalize()
 	Super::Finalize();
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
+TWeakObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
 {
 	if (Units.Contains(aHandle))
 	{
@@ -43,7 +43,7 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::GetUnit(MS_Handle aHandle)
 	return nullptr;
 }
 
-void UMS_UnitManager::GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_UnitBase>>& aOutUnits)
+void UMS_UnitManager::GetUnits(EMS_UnitType aUnitType, TArray<TWeakObjectPtr<UMS_UnitBase>>& aOutUnits)
 {
 	aOutUnits.Empty();
 
@@ -56,7 +56,7 @@ void UMS_UnitManager::GetUnits(EMS_UnitType aUnitType, TArray<TObjectPtr<UMS_Uni
 	}
 }
 
-TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
+TWeakObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int32 aTableId, bool bCreateActor, const FVector& aPosition, const FRotator& aRotator)
 {
 	// Unit Handle
 	const MS_Handle NewUnitHandle = MakeUnitHandle();
@@ -91,7 +91,8 @@ TObjectPtr<UMS_UnitBase> UMS_UnitManager::CreateUnit(EMS_UnitType aUnitType, int
 
 void UMS_UnitManager::DestroyUnit(MS_Handle aHandle)
 {
-	if (const TObjectPtr<UMS_UnitBase> Unit = GetUnit(aHandle))
+	TWeakObjectPtr<UMS_UnitBase> Unit = GetUnit(aHandle);
+	if (Unit != nullptr)
 	{
 		EMS_UnitType UnitType = Unit->GetUnitType();
 		
@@ -109,9 +110,9 @@ void UMS_UnitManager::DestroyUnit(MS_Handle aHandle)
 	}
 }
 
-void UMS_UnitManager::DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit)
+void UMS_UnitManager::DestroyUnit(TWeakObjectPtr<UMS_UnitBase> aUnit)
 {
-	if (aUnit)
+	if (aUnit != nullptr)
 	{
 		int32 UnitHandle = aUnit->GetUnitHandle();
 		EMS_UnitType UnitType = aUnit->GetUnitType();
@@ -130,7 +131,7 @@ void UMS_UnitManager::DestroyUnit(TObjectPtr<UMS_UnitBase> aUnit)
 	}
 }
 
-void UMS_UnitManager::DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
+void UMS_UnitManager::DestroyUnits(TArray<TWeakObjectPtr<UMS_UnitBase>>& aUnits)
 {
 	for(const auto& Unit : aUnits)
 	{
@@ -140,7 +141,7 @@ void UMS_UnitManager::DestroyUnits(TArray<TObjectPtr<UMS_UnitBase>>& aUnits)
 
 void UMS_UnitManager::DestroyAllUnits(EMS_UnitType aUnitType)
 {
-	TArray<TObjectPtr<UMS_UnitBase>> TargetUnits;
+	TArray<TWeakObjectPtr<UMS_UnitBase>> TargetUnits;
 	GetUnits(aUnitType, TargetUnits);
 	
 	for(const auto& TargetUnit : TargetUnits)
@@ -162,9 +163,9 @@ void UMS_UnitManager::DestroyAllUnits()
 	LastUnitHandle = InvalidUnitHandle;
 }
 
-void UMS_UnitManager::DestroyUnit_Internal(TObjectPtr<UMS_UnitBase> aUnitBase)
+void UMS_UnitManager::DestroyUnit_Internal(TWeakObjectPtr<UMS_UnitBase> aUnitBase)
 {
-	if (IsValid(aUnitBase))
+	if (aUnitBase != nullptr)
 	{
 		aUnitBase->Finalize();
 		aUnitBase->MarkAsGarbage();

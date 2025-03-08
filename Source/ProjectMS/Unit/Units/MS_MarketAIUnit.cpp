@@ -3,9 +3,13 @@
 
 #include "MS_MarketAIUnit.h"
 
+#include "MS_ConstructibleLevelScriptActorBase.h"
+#include "MS_FurnitureUnit.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_SceneManager.h"
+#include "Prop/Furniture/MS_Furniture.h"
 
 
 bool UMS_MarketAIUnit::CreateUnitActor(const FVector& aPosition, const FRotator& aRotator)
@@ -157,6 +161,24 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	
 	// MS_ENSURE(aReachedLocation == PathLocationXY);
 	CachePath.RemoveAt(0);
+}
+
+TWeakObjectPtr<UMS_FurnitureUnit> UMS_MarketAIUnit::GetInteractableFurnitureUnit()
+{
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		TWeakObjectPtr<AActor> Actor = LevelScriptActor->GetGridObject(GetActorGridPosition());
+
+		if (Actor != nullptr)
+		{
+			if (AMS_Furniture* FurnitureActor = Cast<AMS_Furniture>(Actor.Get()))
+			{
+				return Cast<UMS_FurnitureUnit>(FurnitureActor->GetOwnerUnitBase());
+			}
+		}
+	}
+	
+	return nullptr;
 }
 
 FMS_SlotData UMS_MarketAIUnit::GetSlotData(int32 aSlotId) const

@@ -402,14 +402,14 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 
 void UMS_ModeState_RunMarketBase::UpdateAllFurnitureIssueTickets()
 {
-	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
-	for (TObjectPtr<UMS_UnitBase> Unit : Units)
+	for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 	{
 		if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit))
 		{
-			FurnitureUnit->UpdateIssueTickets();
+			FurnitureUnit->UpdateIssueTicket();
 		}
 	}
 }
@@ -418,10 +418,10 @@ void UMS_ModeState_RunMarketBase::ClearIssueTickets()
 {
 	IssueTicketContainer->UnregisterAllIssueTickets();
 	
-	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
-	for (TObjectPtr<UMS_UnitBase> Unit : Units)
+	for (TWeakObjectPtr<UMS_UnitBase> Unit : Units)
 	{
 		if (UMS_StorageUnit* FurnitureUnit = Cast<UMS_StorageUnit>(Unit))
 		{

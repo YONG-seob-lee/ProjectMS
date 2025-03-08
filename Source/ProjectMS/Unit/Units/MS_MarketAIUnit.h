@@ -40,6 +40,8 @@ public:
 	EBTNodeResult::Type UpdateActorLocationByPath();
 	void OnReachPathLocation(const FVector2D& aReachedLocation);
 
+	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
+	
 	// Slot
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
 	FMS_SlotData GetSlotData(int32 aSlotId) const;

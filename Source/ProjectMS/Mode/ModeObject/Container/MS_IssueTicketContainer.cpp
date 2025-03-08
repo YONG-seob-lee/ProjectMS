@@ -33,6 +33,11 @@ void UMS_IssueTicket::Finalize()
 
 void UMS_IssueTicket::SetStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUnit)
 {
+	if (StaffUnit != nullptr)
+	{
+		StaffUnit->OnUnregisteredAsIssueTicketStaff();
+	}
+	
 	StaffUnit = aStaffUnit;
 }
 

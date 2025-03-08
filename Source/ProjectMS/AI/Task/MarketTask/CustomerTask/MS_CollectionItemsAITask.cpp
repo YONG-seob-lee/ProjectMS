@@ -53,8 +53,8 @@ EBTNodeResult::Type UMS_CollectionItemsAITask::ExecuteTask(UBehaviorTreeComponen
 	for(const auto& RemainItem : RemainItems)
 	{
 		// 현재 위치해있는 디스플레이 유닛을 찾는 행위
-		UMS_UnitBase* Unit = gUnitMng.GetUnit(AIUnit->GetTargetStorageUnitHandle());
-		if(!Unit)
+		TWeakObjectPtr<UMS_UnitBase> Unit = gUnitMng.GetUnit(AIUnit->GetTargetStorageUnitHandle());
+		if(Unit == nullptr)
 		{
 			return EBTNodeResult::Type::Failed;
 		}

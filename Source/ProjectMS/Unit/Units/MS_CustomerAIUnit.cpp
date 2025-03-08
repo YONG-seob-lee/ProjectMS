@@ -195,11 +195,11 @@ bool UMS_CustomerAIUnit::IsExceptAnyWannaItem()
 
 bool UMS_CustomerAIUnit::FindNearestSpline()
 {
-	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
+	TArray<TWeakObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::CustomerSpline, DuckSplineUnits);
 
 	float DistanceMin = 0.f;
-	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
+	TWeakObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
 	
 	for(const auto& SplineUnit : DuckSplineUnits)
 	{
@@ -214,7 +214,7 @@ bool UMS_CustomerAIUnit::FindNearestSpline()
 		}
 	}
 
-	if(!NearestSplineUnit)
+	if(NearestSplineUnit == nullptr)
 	{
 		return false;
 	}

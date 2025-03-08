@@ -6,13 +6,15 @@
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Manager_Client/MS_ItemManager.h"
-#include "Manager_Client/MS_WidgetManager.h"
+#include "Units/MS_CounterUnit.h"
 #include "Units/MS_CustomerAIUnit.h"
+
 
 UMS_PaymentInProgressAITask::UMS_PaymentInProgressAITask(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "Payment In Progress";
 	bNotifyTick = true;
+	bNotifyTaskFinished = true;
 }
 
 EBTNodeResult::Type UMS_PaymentInProgressAITask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -34,12 +36,22 @@ EBTNodeResult::Type UMS_PaymentInProgressAITask::ExecuteTask(UBehaviorTreeCompon
 	{
 		return EBTNodeResult::Type::Failed;
 	}
+
+	TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = AIUnit->GetInteractableFurnitureUnit();
+	CounterUnit = Cast<UMS_CounterUnit>(FurnitureUnit);
+	if (CounterUnit != nullptr)
+	{
+		if (CounterUnit->RegisterCustomerUnit(AIUnit))
+		{
+			// AITest 나중에 Staff가 결제 하는 시간을 추가로 PaidTime 에다 기입해야한다.
+			AIUnit->ResetChatting();
+			PaidProcessTime = 0.f;
+			PaidTime = 3.f;
+			return EBTNodeResult::Type::InProgress;
+		}
+	}
 	
-	// AITest 나중에 Staff가 결제 하는 시간을 추가로 PaidTime 에다 기입해야한다.
-	AIUnit->ResetChatting();
-	PaidProcessTime = 0.f;
-	PaidTime = 3.f;
-	return EBTNodeResult::Type::InProgress;
+	return EBTNodeResult::Type::Failed;
 }
 
 void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -60,6 +72,22 @@ void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 
 	const TObjectPtr<UMS_CustomerAIUnit> AIUnit = Cast<UMS_CustomerAIUnit>(AICharacter->GetOwnerUnitBase());
 	if(!AIUnit)
+	{
+		return;
+	}
+
+	if (CounterUnit == nullptr)
+	{
+		return;
+	}
+
+	if (CounterUnit->GetStaffUnit(false) == nullptr)
+	{
+		return;
+	}
+
+	TWeakObjectPtr<UMS_CustomerAIUnit> CounterCustomerUnit = CounterUnit->GetFirstCustomerUnit();
+	if (CounterCustomerUnit == nullptr || CounterCustomerUnit != AIUnit)
 	{
 		return;
 	}
@@ -89,4 +117,33 @@ void UMS_PaymentInProgressAITask::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	{
 		AIUnit->EventChattingImage(EMS_SpeechImageType::Pay);
 	}
+}
+
+void UMS_PaymentInProgressAITask::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory,
+	EBTNodeResult::Type TaskResult)
+{
+	const TObjectPtr<AMS_CustomerAIController> AIController = Cast<AMS_CustomerAIController>(OwnerComp.GetAIOwner());
+	if(!AIController)
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_CustomerAICharacter> AICharacter = Cast<AMS_CustomerAICharacter>(AIController->GetCharacter());
+	if(!AICharacter)
+	{
+		return;
+	}
+
+	const TObjectPtr<UMS_CustomerAIUnit> AIUnit = Cast<UMS_CustomerAIUnit>(AICharacter->GetOwnerUnitBase());
+	if(!AIUnit)
+	{
+		return;
+	}
+	
+	if (CounterUnit != nullptr)
+	{
+		CounterUnit->UnregisterCustomerUnit(AIUnit);
+	}
+	
+	Super::OnTaskFinished(OwnerComp, NodeMemory, TaskResult);
 }

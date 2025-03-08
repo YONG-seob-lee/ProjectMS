@@ -94,7 +94,7 @@ void AMS_VehicleCharacter::BeginPlay()
 
 TObjectPtr<AMS_VehicleSplineActor> AMS_VehicleCharacter::FindNearestSpline() const
 {
-	TArray<TObjectPtr<UMS_UnitBase>> VehicleSplineUnits; 
+	TArray<TWeakObjectPtr<UMS_UnitBase>> VehicleSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::CarSpline, VehicleSplineUnits);
 
 	const int32 TargetSpline = FMath::RandRange(0, VehicleSplineUnits.Num() - 1);

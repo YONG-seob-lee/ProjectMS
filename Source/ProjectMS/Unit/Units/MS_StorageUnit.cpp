@@ -327,9 +327,9 @@ void UMS_StorageUnit::OnChangeCurrentSlotDatas(const TArray<int32>& aChangeSlotI
 	Storage->OnChangeCurrentSlotDatas(SlotDatas, aChangeSlotIds);
 }
 
-void UMS_StorageUnit::UpdateIssueTickets()
+void UMS_StorageUnit::UpdateIssueTicket()
 {
-	Super::UpdateIssueTickets();
+	Super::UpdateIssueTicket();
 
 	for (int32 i = 0; i < SlotDatas.Num(); ++i)
 	{

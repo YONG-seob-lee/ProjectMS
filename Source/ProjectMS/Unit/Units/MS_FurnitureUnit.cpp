@@ -66,7 +66,7 @@ TArray<UMS_PropSpaceComponent*> UMS_FurnitureUnit::GetPropPurposeSpaceComponents
 	return Furniture->GetPropPurposeSpaceComponents(aPropPurposeSpace);
 }
 
-void UMS_FurnitureUnit::UpdateIssueTickets()
+void UMS_FurnitureUnit::UpdateIssueTicket()
 {
 }
 

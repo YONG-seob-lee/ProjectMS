@@ -66,8 +66,6 @@ public:
 	bool PickUpRequestItems();
 	bool PickUpCurrentItems();
 
-	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
-
 protected:
 	virtual void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false) override;
 

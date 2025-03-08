@@ -48,16 +48,16 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 		return EBTNodeResult::Type::Failed;
 	}
 
-	TArray<TObjectPtr<UMS_UnitBase>> Units;
+	TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
 	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
 	TArray<FIntVector2> TargetPositions = {};
 
-	TArray<TObjectPtr<UMS_StorageUnit>> DisplayUnits = {};
-	for (const TObjectPtr<UMS_UnitBase>& Unit : Units)
+	TArray<TWeakObjectPtr<UMS_StorageUnit>> DisplayUnits = {};
+	for (const TWeakObjectPtr<UMS_UnitBase>& Unit : Units)
 	{
-		const TObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit);
-		if (!IsValid(StorageUnit))
+		const TWeakObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit);
+		if (StorageUnit == nullptr)
 		{
 			MS_ENSURE(false);
 			continue;

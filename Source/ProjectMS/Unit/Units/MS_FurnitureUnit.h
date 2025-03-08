@@ -34,7 +34,7 @@ public:
 	TArray<class UMS_PropSpaceComponent*> GetPropPurposeSpaceComponents(EMS_PurposeType aPropPurposeSpace) const;
 	
 	// IssueTickets
-	virtual void UpdateIssueTickets();
+	virtual void UpdateIssueTicket();
 	virtual void ClearIssueTickets(bool bNeedToUpdateIssueTicketContainer);
 
 	void OnChangeIssueTicketRequestUnitToStaffUnit(TWeakObjectPtr<class UMS_IssueTicket> aTargetTicket);

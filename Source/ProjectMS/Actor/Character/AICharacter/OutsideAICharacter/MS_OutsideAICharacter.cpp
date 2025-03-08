@@ -82,15 +82,15 @@ MS_Handle AMS_OutsideAICharacter::GetUnitHandle() const
 
 TObjectPtr<AMS_DuckSplineActor> AMS_OutsideAICharacter::FindNearestSpline() const
 {
-	TArray<TObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
+	TArray<TWeakObjectPtr<UMS_UnitBase>> DuckSplineUnits; 
 	gUnitMng.GetUnits(EMS_UnitType::DuckSpline, DuckSplineUnits);
 
 	float DistanceMin = 0.f;
-	TObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
+	TWeakObjectPtr<UMS_ActorUnitBase> NearestSplineUnit = nullptr;
 	
 	for(const auto& SplineUnit : DuckSplineUnits)
 	{
-		if(const TObjectPtr<UMS_ActorUnitBase> SplineActorUnit = Cast<UMS_ActorUnitBase>(SplineUnit))
+		if(UMS_ActorUnitBase* SplineActorUnit = Cast<UMS_ActorUnitBase>(SplineUnit))
 		{
 			const float Distance = FVector::Distance(GetActorLocation(), SplineActorUnit->GetUnitPosition());
 			if(DistanceMin == 0.f || DistanceMin > Distance)
@@ -101,7 +101,7 @@ TObjectPtr<AMS_DuckSplineActor> AMS_OutsideAICharacter::FindNearestSpline() cons
 		}
 	}
 
-	if(!NearestSplineUnit)
+	if(NearestSplineUnit == nullptr)
 	{
 		return nullptr;
 	}

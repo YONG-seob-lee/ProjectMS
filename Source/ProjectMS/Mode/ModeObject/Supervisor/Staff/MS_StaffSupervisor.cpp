@@ -119,7 +119,7 @@ void UMS_StaffSupervisor::RequestSpawnCharacterInMarket(int32 aStaffId)
 
 bool UMS_StaffSupervisor::SpawnCharacter(int32 aStaffId, const FVector& SpawnLocation, const FRotator& SpawnRotator)
 {
-	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aStaffId,true, SpawnLocation, SpawnRotator);
+	TWeakObjectPtr<UMS_UnitBase> Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aStaffId,true, SpawnLocation, SpawnRotator);
 	if (UMS_StaffAIUnit* StaffAIUnit = Cast<UMS_StaffAIUnit>(Unit))
 	{
 		StaffAIUnits.Emplace(StaffAIUnit);
@@ -133,7 +133,7 @@ bool UMS_StaffSupervisor::SpawnCharacter(int32 aStaffId, const FVector& SpawnLoc
 
 bool UMS_StaffSupervisor::SpawnCharacter(FMS_PlayerStaffData* aPlayerStaffData, const FVector& SpawnLocation, const FRotator& SpawnRotator)
 {
-	UMS_UnitBase* Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aPlayerStaffData->StaffId,true, SpawnLocation, SpawnRotator);
+	TWeakObjectPtr<UMS_UnitBase> Unit = gUnitMng.CreateUnit(EMS_UnitType::StaffAI, aPlayerStaffData->StaffId,true, SpawnLocation, SpawnRotator);
 	if (UMS_StaffAIUnit* StaffAIUnit = Cast<UMS_StaffAIUnit>(Unit))
 	{
 		StaffAIUnits.Emplace(StaffAIUnit);
