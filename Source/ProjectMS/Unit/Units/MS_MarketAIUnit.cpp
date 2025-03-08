@@ -77,6 +77,12 @@ FRotator UMS_MarketAIUnit::GetActorRotator() const
 
 void UMS_MarketAIUnit::ResetPath()
 {
+	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
+	if (IsValid(MarketAICharacter))
+	{
+		MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, FVector2D::ZeroVector, true);
+	}
+	
 	CacheTargetPositions.Empty();
 	CachePath.Empty();
 }
