@@ -101,45 +101,43 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
 			IsGridSizeXOdd(), IsGridSizeYOdd());
-
-
-		// 도착지에 PropSpace가 있는 경우
-		TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
-		if (FurnitureUnit != nullptr)
-		{
-			TWeakObjectPtr<UMS_PropSpaceComponent> PropSpace = GetInteractionPropSpaceComponent();
-			if (PropSpace != nullptr)
-			{
-				FRotator FurnitureRotator = FurnitureUnit->GetActorRotator();
-				EMS_Rotation FurnitureRotation = UMS_MathUtility::ConvertRotation(FurnitureRotator.Yaw);
-				
-				EMS_Rotation PropSpaceRotation = PropSpace->GetCharacterRotation();
-				
-				EMS_Rotation TargetRotation = UMS_MathUtility::Rotate(FurnitureRotation, PropSpaceRotation);
-				EMS_Direction TargetDirection = UMS_MathUtility::ConvertRotationToDirection(TargetRotation);
-				
-				if (FMath::IsNearlyEqual(CurrentLocationXY.X, PathLocationXY.X, MS_ERROR_TOLERANCE) && FMath::IsNearlyEqual(CurrentLocationXY.Y, PathLocationXY.Y, MS_ERROR_TOLERANCE))
-				{
-					if (CurrentRotator == FRotator(0.f, UMS_MathUtility::ConvertRotation(TargetRotation), 0.f))
-					{
-						// 이미 도착지에 도착한 것
-						CachePath.RemoveAt(0);
-						MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, PathLocationXY, true);
-						return EBTNodeResult::Succeeded;
-					}
-				}
-				
-				MarketAICharacter->SetWalkingDirectionAndPathLocation(TargetDirection, PathLocationXY, true);
-				return EBTNodeResult::InProgress;
-			}
-		}
-
-		// 도착지에 PropSpace가 없는 경우
+		
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		
 		if (Direction == EMS_Direction::None)
 		{
-			// 이미 도착지에 도착한 것
+			// 도착지에 PropSpace가 있는 경우
+			TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
+			if (FurnitureUnit != nullptr)
+			{
+				TWeakObjectPtr<UMS_PropSpaceComponent> PropSpace = GetInteractionPropSpaceComponent();
+				if (PropSpace != nullptr)
+				{
+					FRotator FurnitureRotator = FurnitureUnit->GetActorRotator();
+					EMS_Rotation FurnitureRotation = UMS_MathUtility::ConvertRotation(FurnitureRotator.Yaw);
+				
+					EMS_Rotation PropSpaceRotation = PropSpace->GetCharacterRotation();
+				
+					EMS_Rotation TargetRotation = UMS_MathUtility::Rotate(FurnitureRotation, PropSpaceRotation);
+					EMS_Direction TargetDirection = UMS_MathUtility::ConvertRotationToDirection(TargetRotation);
+				
+					if (FMath::IsNearlyEqual(CurrentLocationXY.X, PathLocationXY.X, MS_ERROR_TOLERANCE) && FMath::IsNearlyEqual(CurrentLocationXY.Y, PathLocationXY.Y, MS_ERROR_TOLERANCE))
+					{
+						if (CurrentRotator == FRotator(0.f, UMS_MathUtility::ConvertRotation(TargetRotation), 0.f))
+						{
+							// 이미 도착지에 도착한 것
+							CachePath.RemoveAt(0);
+							MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, PathLocationXY, true);
+							return EBTNodeResult::Succeeded;
+						}
+					}
+				
+					MarketAICharacter->SetWalkingDirectionAndPathLocation(TargetDirection, PathLocationXY, true);
+					return EBTNodeResult::InProgress;
+				}
+			}
+			
+			// 도착지에 PropSpace가 없는 경우
 			CachePath.RemoveAt(0);
 			MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, PathLocationXY, true);
 			return EBTNodeResult::Succeeded;
