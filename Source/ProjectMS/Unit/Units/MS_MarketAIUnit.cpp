@@ -129,7 +129,13 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 				
 					if (FMath::IsNearlyEqual(CurrentLocationXY.X, PathLocationXY.X, MS_ERROR_TOLERANCE) && FMath::IsNearlyEqual(CurrentLocationXY.Y, PathLocationXY.Y, MS_ERROR_TOLERANCE))
 					{
-						if (CurrentRotator == FRotator(0.f, UMS_MathUtility::ConvertRotation(TargetRotation), 0.f))
+						float CurrentRotatorYaw = CurrentRotator.Yaw;
+						if (CurrentRotatorYaw < 0.f)
+						{
+							CurrentRotatorYaw += 360.f;
+						}
+						
+						if (FMath::IsNearlyEqual(CurrentRotatorYaw, UMS_MathUtility::ConvertRotation(TargetRotation), MS_ERROR_TOLERANCE))
 						{
 							// 이미 도착지에 도착한 것
 							CachePath.RemoveAt(0);
@@ -195,7 +201,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 
 void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 {
-	if (!CachePath.IsValidIndex(0))
+	if (CachePath.Num() <= 1)	// Num == 1 일때는 아직 방향 회전이 남아있을 수 있어 UpdateActorLocationByPath()에서 삭제
 	{
 		return;
 	}
