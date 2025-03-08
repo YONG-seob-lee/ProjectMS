@@ -28,7 +28,7 @@ public:
 	FORCEINLINE TWeakObjectPtr<class UMS_UnitBase> GetRequestUnit() const { return RequestUnit; }
 	FORCEINLINE int32 GetRequestSlotId() const { return RequestSlotId; }
 	FORCEINLINE TWeakObjectPtr<class UMS_StaffAIUnit> GetStaffUnit() const { return StaffUnit; }
-	FORCEINLINE void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
+	void SetStaffUnit(TWeakObjectPtr<class UMS_StaffAIUnit> aStaffUnit);
 
 	void ChangeRequestUnitToStaffUnit(int32 aStaffSlotId = 0);	// 가구 유닛에서 아이템을 빼면서 가구 유닛이 이슈랑 상관없어지면 스태프에게 일임하여 이슈가 사라지는 것을 방지
 
