@@ -41,14 +41,11 @@ EBTNodeResult::Type UMS_PaymentInProgressAITask::ExecuteTask(UBehaviorTreeCompon
 	CounterUnit = Cast<UMS_CounterUnit>(FurnitureUnit);
 	if (CounterUnit != nullptr)
 	{
-		if (CounterUnit->RegisterCustomerUnit(AIUnit))
-		{
-			// AITest 나중에 Staff가 결제 하는 시간을 추가로 PaidTime 에다 기입해야한다.
-			AIUnit->ResetChatting();
-			PaidProcessTime = 0.f;
-			PaidTime = 3.f;
-			return EBTNodeResult::Type::InProgress;
-		}
+		// AITest 나중에 Staff가 결제 하는 시간을 추가로 PaidTime 에다 기입해야한다.
+		AIUnit->ResetChatting();
+		PaidProcessTime = 0.f;
+		PaidTime = 3.f;
+		return EBTNodeResult::Type::InProgress;
 	}
 	
 	return EBTNodeResult::Type::Failed;

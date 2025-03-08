@@ -48,7 +48,7 @@ bool UMS_CounterUnit::RegisterStaffUnit(TWeakObjectPtr<UMS_StaffAIUnit> aStaffUn
 
 		if (IssueTickets.IsValidIndex(0))
 		{
-			IssueTickets[0]->SetStaffUnit(StaffUnit);
+			StaffUnit->RegisterAsIssueTicketStaff(IssueTickets[0]);
 		}
 
 		return true;
@@ -112,7 +112,7 @@ void UMS_CounterUnit::UpdateIssueTicket()
 			{
 				if (StaffUnit != nullptr)
 				{
-					IssueTickets[0]->SetStaffUnit(StaffUnit);
+					StaffUnit->RegisterAsIssueTicketStaff(IssueTickets[0]);
 				}
 			}
 		}

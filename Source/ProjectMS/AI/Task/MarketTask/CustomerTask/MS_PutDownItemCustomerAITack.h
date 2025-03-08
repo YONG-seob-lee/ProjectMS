@@ -21,6 +21,8 @@ public:
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
+	TWeakObjectPtr<class UMS_CounterUnit> CounterUnit;
+	
 	float PutDownProcessTime = 0.f;
 	float PutDownTime = 0.f;
 };
