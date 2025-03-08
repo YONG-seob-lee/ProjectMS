@@ -39,6 +39,15 @@ int32 UMS_FurnitureUnit::GetBlueprintPathId() const
 	return FurnitureData->PathFile;
 }
 
+FRotator UMS_FurnitureUnit::GetActorRotator() const
+{
+	AMS_Furniture* Furniture = GetActor<AMS_Furniture>();
+	MS_ENSURE(IsValid(Furniture));
+
+	FRotator Rotator = Furniture->GetActorRotation();
+	return Rotator;
+}
+
 EMS_ZoneType UMS_FurnitureUnit::GetZoneType() const
 {
 	return static_cast<EMS_ZoneType>(FurnitureData->ZoneType);

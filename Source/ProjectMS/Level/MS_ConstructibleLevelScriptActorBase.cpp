@@ -342,6 +342,31 @@ TWeakObjectPtr<AActor> AMS_ConstructibleLevelScriptActorBase::GetGridObject(cons
 	return nullptr;
 }
 
+TWeakObjectPtr<UMS_PropSpaceComponent> AMS_ConstructibleLevelScriptActorBase::GetGridPropSpace(
+	const FIntVector2& aGridPosition) const
+{
+	int32 GridZoneIndex = GetGridZoneIndex(aGridPosition);
+	if (GridZoneIndex == INDEX_NONE)
+	{
+		return nullptr;
+	}
+
+	AMS_Zone* Zone = *Zones.Find(GridZoneIndex); // GetGridZoneIndex에서 ContainsCheck 완료
+	if (IsValid(Zone))
+	{
+		const FMS_GridData* GridData = Zone->GetGrid(aGridPosition);
+		if (GridData)
+		{
+			if (GridData->Object != nullptr)
+			{
+				return GridData->PropSpaceComponent;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void AMS_ConstructibleLevelScriptActorBase::InitializeOpenedZoneStates()
 {
 	UWorld* World = GetWorld();

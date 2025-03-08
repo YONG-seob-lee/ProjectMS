@@ -59,6 +59,32 @@ EMS_Rotation UMS_MathUtility::RotateClockwise(EMS_Rotation aRotation)
 	return EMS_Rotation::Rot0;
 }
 
+EMS_Rotation UMS_MathUtility::Rotate(EMS_Rotation aBaseRotation, EMS_Rotation aAddRotation)
+{
+	int32 BaseRotationIndex = static_cast<int32>(aBaseRotation);
+	int32 AddRotationIndex = static_cast<int32>(aAddRotation);
+
+	return static_cast<EMS_Rotation>((BaseRotationIndex + AddRotationIndex) % 4);
+}
+
+EMS_Direction UMS_MathUtility::ConvertRotationToDirection(EMS_Rotation aRotation)
+{
+	switch (aRotation)
+	{
+	case EMS_Rotation::Rot0 :
+		return EMS_Direction::Front;
+	case EMS_Rotation::Rot180 :
+		return EMS_Direction::Back;
+	case EMS_Rotation::Rot270 :
+		return EMS_Direction::Right;
+	case EMS_Rotation::Rot90 :
+		return EMS_Direction::Left;
+	}
+
+	MS_ENSURE(false);
+	return EMS_Direction::Front;
+}
+
 FVector UMS_MathUtility::ConvertDirectionToVector(EMS_Direction aDirection)
 {
 	switch (aDirection)

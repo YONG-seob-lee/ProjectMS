@@ -49,7 +49,10 @@ public:
 	static float ConvertRotation(EMS_Rotation aEnum);
 
 	static EMS_Rotation RotateClockwise(EMS_Rotation aRotation);
+	static EMS_Rotation Rotate(EMS_Rotation aBaseRotation, EMS_Rotation aAddRotation);
 
+	static EMS_Direction ConvertRotationToDirection(EMS_Rotation aRotation);
+	
 	static FVector ConvertDirectionToVector(EMS_Direction aDirection);
 	
 	static EMS_Rotation ConvertDirectionToRotation(EMS_Direction aDirection);

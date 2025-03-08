@@ -7,6 +7,7 @@
 #include "MS_FurnitureUnit.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
+#include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Prop/Furniture/MS_Furniture.h"
@@ -64,6 +65,16 @@ FVector UMS_MarketAIUnit::GetActorLocation() const
 	return FVector::ZeroVector;
 }
 
+FRotator UMS_MarketAIUnit::GetActorRotator() const
+{
+	if (GetCharacter())
+	{
+		return GetCharacter()->GetActorRotation();
+	}
+
+	return FRotator::ZeroRotator;
+}
+
 void UMS_MarketAIUnit::ResetPath()
 {
 	CacheTargetPositions.Empty();
@@ -84,21 +95,56 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	}
 
 	const FVector2D CurrentLocationXY = FVector2D(GetActorLocation().X, GetActorLocation().Y);
+	const FRotator CurrentRotator = GetActorRotator();
 	
 	if (CachePath.Num() == 1)
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
 			IsGridSizeXOdd(), IsGridSizeYOdd());
 
+
+		// 도착지에 PropSpace가 있는 경우
+		TWeakObjectPtr<UMS_FurnitureUnit> FurnitureUnit = GetInteractableFurnitureUnit();
+		if (FurnitureUnit != nullptr)
+		{
+			TWeakObjectPtr<UMS_PropSpaceComponent> PropSpace = GetInteractionPropSpaceComponent();
+			if (PropSpace != nullptr)
+			{
+				FRotator FurnitureRotator = FurnitureUnit->GetActorRotator();
+				EMS_Rotation FurnitureRotation = UMS_MathUtility::ConvertRotation(FurnitureRotator.Yaw);
+				
+				EMS_Rotation PropSpaceRotation = PropSpace->GetCharacterRotation();
+				
+				EMS_Rotation TargetRotation = UMS_MathUtility::Rotate(FurnitureRotation, PropSpaceRotation);
+				EMS_Direction TargetDirection = UMS_MathUtility::ConvertRotationToDirection(TargetRotation);
+				
+				if (FMath::IsNearlyEqual(CurrentLocationXY.X, PathLocationXY.X, MS_ERROR_TOLERANCE) && FMath::IsNearlyEqual(CurrentLocationXY.Y, PathLocationXY.Y, MS_ERROR_TOLERANCE))
+				{
+					if (CurrentRotator == FRotator(0.f, UMS_MathUtility::ConvertRotation(TargetRotation), 0.f))
+					{
+						// 이미 도착지에 도착한 것
+						CachePath.RemoveAt(0);
+						MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, PathLocationXY, true);
+						return EBTNodeResult::Succeeded;
+					}
+				}
+				
+				MarketAICharacter->SetWalkingDirectionAndPathLocation(TargetDirection, PathLocationXY, true);
+				return EBTNodeResult::InProgress;
+			}
+		}
+
+		// 도착지에 PropSpace가 없는 경우
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
+		
 		if (Direction == EMS_Direction::None)
 		{
 			// 이미 도착지에 도착한 것
 			CachePath.RemoveAt(0);
-			MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, FVector2D::ZeroVector, true);
+			MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, PathLocationXY, true);
 			return EBTNodeResult::Succeeded;
 		}
-
+		
 		MarketAICharacter->SetWalkingDirectionAndPathLocation(Direction, PathLocationXY, true);
 		return EBTNodeResult::InProgress;
 	}
@@ -107,16 +153,10 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 	{
 		FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
 			IsGridSizeXOdd(), IsGridSizeYOdd());
-		
-		const FVector2D& CurrentPathLocation = MarketAICharacter->GetPathLocation();
-		if (CurrentPathLocation == PathLocationXY)
-		{
-			return EBTNodeResult::InProgress;
-		}
-		
+
 		FVector2D NextPathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[1],
 			IsGridSizeXOdd(), IsGridSizeYOdd());
-		
+
 		EMS_Direction Direction = UMS_MathUtility::GetDirection(CurrentLocationXY, PathLocationXY);
 		EMS_Direction NextDirection = UMS_MathUtility::GetDirection(PathLocationXY, NextPathLocationXY);
 		
@@ -135,7 +175,7 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 			//return UpdateActorLocationByPath();
 			// ========== //
 		}
-
+		
 		if (Direction == NextDirection)
 		{
 			// 딱 맞게 서지 말고 자연스럽게 넘어가면서 이동
@@ -163,7 +203,7 @@ void UMS_MarketAIUnit::OnReachPathLocation(const FVector2D& aReachedLocation)
 	CachePath.RemoveAt(0);
 }
 
-TWeakObjectPtr<UMS_FurnitureUnit> UMS_MarketAIUnit::GetInteractableFurnitureUnit()
+TWeakObjectPtr<UMS_FurnitureUnit> UMS_MarketAIUnit::GetInteractableFurnitureUnit() const
 {
 	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
@@ -176,6 +216,16 @@ TWeakObjectPtr<UMS_FurnitureUnit> UMS_MarketAIUnit::GetInteractableFurnitureUnit
 				return Cast<UMS_FurnitureUnit>(FurnitureActor->GetOwnerUnitBase());
 			}
 		}
+	}
+	
+	return nullptr;
+}
+
+TWeakObjectPtr<UMS_PropSpaceComponent> UMS_MarketAIUnit::GetInteractionPropSpaceComponent() const
+{
+	if (AMS_ConstructibleLevelScriptActorBase* LevelScriptActor = Cast<AMS_ConstructibleLevelScriptActorBase>(gSceneMng.GetCurrentLevelScriptActor()))
+	{
+		return LevelScriptActor->GetGridPropSpace(GetActorGridPosition());
 	}
 	
 	return nullptr;

@@ -24,6 +24,7 @@ public:
 	
 	FIntVector2 GetActorGridPosition() const;
 	FVector GetActorLocation() const;
+	FRotator GetActorRotator() const;
 	
 	const TArray<FIntVector2>& GetTargetPositions() const { return CacheTargetPositions; }
 	void SetTargetPositions(const TArray<FIntVector2>& aTargetPositions) { CacheTargetPositions = aTargetPositions; }
@@ -40,7 +41,8 @@ public:
 	EBTNodeResult::Type UpdateActorLocationByPath();
 	void OnReachPathLocation(const FVector2D& aReachedLocation);
 
-	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit();
+	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit() const;
+	TWeakObjectPtr<class UMS_PropSpaceComponent> GetInteractionPropSpaceComponent() const;
 	
 	// Slot
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }

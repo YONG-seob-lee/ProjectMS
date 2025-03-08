@@ -46,6 +46,7 @@ public:
 	void GetGateUnitsInLevel(TArray<TWeakObjectPtr<class UMS_GateUnit>>& OutGateUnits, EMS_ZoneType ZoneType, EMS_ZoneType LinkedZoneType) const;
 	
 	TWeakObjectPtr<AActor> GetGridObject(const FIntVector2& aGridPosition) const;
+	TWeakObjectPtr<class UMS_PropSpaceComponent> GetGridPropSpace(const FIntVector2& aGridPosition) const;
 
 	void InitializeOpenedZoneStates();
 	void RequestOpenZone(int32 aZoneIndex);

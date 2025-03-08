@@ -30,6 +30,8 @@ public:
 	EMS_PropSpaceType GetPropSpaceType() const { return PropSpaceType; }
 	
 	EMS_PurposeType GetPropPurposeSpaceType() const { return PropPurposeSpaceType; }
+	
+	EMS_Rotation GetCharacterRotation() const { return CharacterRotation; }
 
 
 	// Grid Position
@@ -45,4 +47,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	EMS_PurposeType PropPurposeSpaceType;
+
+	UPROPERTY(EditDefaultsOnly)
+	EMS_Rotation CharacterRotation = EMS_Rotation::Rot0;
 };

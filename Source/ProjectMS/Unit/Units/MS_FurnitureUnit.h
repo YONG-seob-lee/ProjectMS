@@ -25,6 +25,8 @@ public:
 	
 	virtual int32 GetBlueprintPathId() const override;
 
+	FRotator GetActorRotator() const;
+
 	// Property :: Getter
 	EMS_ZoneType GetZoneType() const;
 	EMS_TemperatureType GetTemperatureType() const;

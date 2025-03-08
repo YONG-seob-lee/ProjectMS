@@ -189,7 +189,7 @@ void AMS_MarketAICharacter::UpdateLocation(float aDeltaTime)
 	// 프레임 드랍으로 경로를 벗어났을때 위치 이동
 	// ToDo : 보완 및 버그로 인해 PathLocation이 유효하지 않을 때 검사 필요
 	if (FMath::Abs((PathLocation - FVector2D(NewLocation.X, NewLocation.Y)).Length()) >
-		FMath::Max(MS_GridSize.X, FMath::Abs((PathLocation - PreviousPathLocation).Length())) * 2.f)
+		FMath::Max(MS_GridSize.X, FMath::Abs((PathLocation - PreviousPathLocation).Length())) * 4.f)
 	{
 
 		SetActorLocation(FVector(PathLocation.X, PathLocation.Y, NewLocation.Z));
