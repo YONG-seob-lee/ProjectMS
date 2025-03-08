@@ -80,11 +80,13 @@ void UMS_StaffPropertyElementWidget::NativeOnListItemObjectSet(UObject* aListIte
 	}
 }
 
-FReply UMS_StaffPropertyElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UMS_StaffPropertyElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
+	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+	
 	if(CPP_BlurPanel->IsVisible())
 	{
-		return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+		return;
 	}
 	
 	FMS_ModalParameter Parameter;
@@ -98,6 +100,26 @@ FReply UMS_StaffPropertyElementWidget::NativeOnMouseButtonDown(const FGeometry& 
 		StaffDetailWidget->ShowButtonPanel(false);
 	}
 	gWidgetMng.ShowModalWidget(Parameter);
+}
+
+FReply UMS_StaffPropertyElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// if(CPP_BlurPanel->IsVisible())
+	// {
+	// 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	// }
+	//
+	// FMS_ModalParameter Parameter;
+	// Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffDetailWidget::GetWidgetName());
+	// Parameter.bPlayOpenAnimation = false;
+	// Parameter.bPlayCloseAnimation = false;
+	//
+	// if(const TObjectPtr<UMS_StaffDetailWidget> StaffDetailWidget = Cast<UMS_StaffDetailWidget>(Parameter.InModalWidget))
+	// {
+	// 	StaffDetailWidget->SetDetail(StaffId, WorkDay);
+	// 	StaffDetailWidget->ShowButtonPanel(false);
+	// }
+	// gWidgetMng.ShowModalWidget(Parameter);
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

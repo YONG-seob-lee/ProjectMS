@@ -17,6 +17,7 @@ class PROJECTMS_API UMS_StaffProfileElementWidget : public UMS_Widget, public IU
 	
 public:
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
+	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 	void SetProfile(int32 aStaffId, int32 aWorkDay);

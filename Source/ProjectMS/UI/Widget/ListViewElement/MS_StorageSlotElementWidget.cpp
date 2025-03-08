@@ -41,10 +41,7 @@ void UMS_StorageSlotElementWidget::NativeOnListItemObjectSet(UObject* aListItemO
 void UMS_StorageSlotElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
 	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
-}
-
-FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
+	
 	if(const TObjectPtr<UMS_StorageSlotElementData> StorageSlotElementData = GetListItem<UMS_StorageSlotElementData>())
 	{
 		if(static_cast<EMS_ZoneType>(StorageSlotElementData->GetSlotUIType()) == EMS_ZoneType::Display)
@@ -56,6 +53,21 @@ FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& In
 			StorageSlotElementData->OnClickShelfSlotDelegate.Broadcast(SlotData.CurrentItemTableId);
 		}
 	}
+}
+
+FReply UMS_StorageSlotElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// if(const TObjectPtr<UMS_StorageSlotElementData> StorageSlotElementData = GetListItem<UMS_StorageSlotElementData>())
+	// {
+	// 	if(static_cast<EMS_ZoneType>(StorageSlotElementData->GetSlotUIType()) == EMS_ZoneType::Display)
+	// 	{
+	// 		StorageSlotElementData->OnClickDisplaySlotDelegate.Broadcast(SlotIndex);
+	// 	}
+	// 	else
+	// 	{
+	// 		StorageSlotElementData->OnClickShelfSlotDelegate.Broadcast(SlotData.CurrentItemTableId);
+	// 	}
+	// }
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

@@ -21,8 +21,10 @@ void UMS_StaffProfileElementWidget::NativeOnListItemObjectSet(UObject* aListItem
 	}
 }
 
-FReply UMS_StaffProfileElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UMS_StaffProfileElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
 {
+	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+
 	FMS_ModalParameter Parameter;
 	Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffDetailWidget::GetWidgetName());
 	Parameter.bPlayOpenAnimation = false;
@@ -33,6 +35,20 @@ FReply UMS_StaffProfileElementWidget::NativeOnMouseButtonDown(const FGeometry& I
 		StaffDetailWidget->SetDetail(StaffId, WorkDay);
 	}
 	gWidgetMng.ShowModalWidget(Parameter);
+}
+
+FReply UMS_StaffProfileElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// FMS_ModalParameter Parameter;
+	// Parameter.InModalWidget = gWidgetMng.Create_Widget(UMS_StaffDetailWidget::GetWidgetName());
+	// Parameter.bPlayOpenAnimation = false;
+	// Parameter.bPlayCloseAnimation = false;
+	//
+	// if(const TObjectPtr<UMS_StaffDetailWidget> StaffDetailWidget = Cast<UMS_StaffDetailWidget>(Parameter.InModalWidget))
+	// {
+	// 	StaffDetailWidget->SetDetail(StaffId, WorkDay);
+	// }
+	// gWidgetMng.ShowModalWidget(Parameter);
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

@@ -23,6 +23,32 @@ void UMS_MenuListElementWidget::NativeOnListItemObjectSet(UObject* aListItemObje
 
 FReply UMS_MenuListElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	// if(MenuName == TEXT("dollar"))
+	// {
+	// 	// FMS_ModalParameter ModalParameter;
+	// 	// ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketOrderModalWidget::GetWidgetPath());
+	// 	// ModalParameter.bPlayOpenAnimation = true;
+	// 	// ModalParameter.bPlayCloseAnimation = true;
+	// 	// gWidgetMng.ShowModalWidget(ModalParameter);
+	// }
+	// else if(MenuName == TEXT("User"))
+	// {
+	// 	FMS_ModalParameter ModalParameter;
+	// 	ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketOrderCheckModalWidget::GetWidgetPath());
+	// 	gWidgetMng.ShowModalWidget(ModalParameter);
+	// }
+	//
+	// if(const UMS_MenuElementData* MenuElementData = GetListItem<UMS_MenuElementData>())
+	// {
+	// 	MenuElementData->OnClickMenuElementDelegate.Broadcast();
+	// }
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
+{
+	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
+
 	if(MenuName == TEXT("dollar"))
 	{
 		// FMS_ModalParameter ModalParameter;
@@ -42,10 +68,4 @@ FReply UMS_MenuListElementWidget::NativeOnMouseButtonDown(const FGeometry& InGeo
 	{
 		MenuElementData->OnClickMenuElementDelegate.Broadcast();
 	}
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
-}
-
-void UMS_MenuListElementWidget::NativeOnItemSelectionChanged(bool bIsSelected)
-{
-	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
 }

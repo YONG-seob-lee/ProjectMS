@@ -18,6 +18,7 @@ class PROJECTMS_API UMS_StaffPropertyElementWidget : public UMS_Widget, public I
 	
 public:
 	virtual void NativeOnListItemObjectSet(UObject* aListItemObject) override;
+	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 private:
