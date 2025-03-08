@@ -514,6 +514,7 @@ void UMS_ModeState_Construct::CancelPreviewProp()
 	}
 	
 	PreviewProp->Destroy();
+	PreviewProp = nullptr;
 }
 
 FVector2d UMS_ModeState_Construct::GetScreenCenterPosition() const
