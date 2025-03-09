@@ -98,14 +98,32 @@ EBTNodeResult::Type UMS_SelectWaitingActionAITask::ExecuteTask(UBehaviorTreeComp
 		case  EMS_StaffIssueType::ReturnItemsFromDisplay :
 		case  EMS_StaffIssueType::AddItemsToDisplay :
 			{
-				ActionState = EMS_StaffActionState::None_SearchRandomPoint_Display;
+				float RandomValue = FMath::RandRange(0.f, 1.f);
+				if (RandomValue <= MovePercentage)
+				{
+					ActionState = EMS_StaffActionState::None_SearchRandomPoint_Display;
+				}
+				else
+				{
+					ActionState = EMS_StaffActionState::None_Idle;
+				}
+				
 				break;
 			}
 			
 		case  EMS_StaffIssueType::ReturnItemsFromShelf :
 		case  EMS_StaffIssueType::AddItemsToShelf :
 			{
-				ActionState = EMS_StaffActionState::None_SearchRandomPoint_Shelf;
+				float RandomValue = FMath::RandRange(0.f, 1.f);
+				if (RandomValue <= MovePercentage)
+				{
+					ActionState = EMS_StaffActionState::None_SearchRandomPoint_Shelf;
+				}
+				else
+				{
+					ActionState = EMS_StaffActionState::None_Idle;
+				}
+				
 				break;
 			}
 
