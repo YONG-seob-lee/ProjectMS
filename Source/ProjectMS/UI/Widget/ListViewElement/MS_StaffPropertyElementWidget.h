@@ -25,7 +25,7 @@ private:
 	UFUNCTION()
 	void OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType);
 	
-	FString GetUIIssueName(int32 aUIIssueType);
+	FString GetUIIssueName(int32 aUIIssueType) const;
 	
 	int32 StaffId = INDEX_NONE;
 

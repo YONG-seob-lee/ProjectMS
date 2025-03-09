@@ -4,6 +4,7 @@
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Table/Caches/MS_CommonCacheTable.h"
+#include "Units/MS_StaffAIUnit.h"
 #include "Widget/Staff/MS_StaffActionWidget.h"
 
 
@@ -15,9 +16,16 @@ AMS_StaffAICharacter::AMS_StaffAICharacter()
 
 void AMS_StaffAICharacter::ShowStaffStatusWidget(const FVector2D& _ClickPosition)
 {
-	if(UMS_Widget* StaffActionWidget = gWidgetMng.Create_Widget(UMS_StaffActionWidget::GetWidgetName(), false))
+	if(UMS_Widget* Widget = gWidgetMng.Create_Widget(UMS_StaffActionWidget::GetWidgetName(), false))
 	{
-		gWidgetMng.SetCustomPositionWidget(StaffActionWidget, _ClickPosition);
+		if (UMS_StaffActionWidget* StaffActionWidget = Cast<UMS_StaffActionWidget>(Widget))
+		{
+			if (UMS_StaffAIUnit* AIUnit = Cast<UMS_StaffAIUnit>(GetOwnerUnitBase()))
+			{
+				StaffActionWidget->InitStaffActionWidget(AIUnit);
+			}
+		}
+		gWidgetMng.SetCustomPositionWidget(Widget, _ClickPosition);
 	}
 }
 

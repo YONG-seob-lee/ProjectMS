@@ -12,11 +12,9 @@
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
-#include "Manager_Client/MS_SceneManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
 #include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Mode/ModeState/MS_ModeState_RunMarketBase.h"
-#include "Prop/Furniture/MS_Furniture.h"
 #include "Prop/Spline/MS_DuckSplineActor.h"
 #include "Table/RowBase/MS_ItemData.h"
 #include "Table/RowBase/MS_Staff.h"
@@ -193,7 +191,12 @@ void UMS_StaffAIUnit::GoingToHome() const
 void UMS_StaffAIUnit::SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData)
 {
 	PlayerStaffData = aPlayerStaffData;
-	
+
+	UpdateSkin();
+}
+
+void UMS_StaffAIUnit::UpdateSkin()
+{
 	AMS_StaffAICharacter* AICharacter = Cast<AMS_StaffAICharacter>(GetCharacter());
 	MS_ENSURE(AICharacter);
 	
@@ -224,6 +227,70 @@ void UMS_StaffAIUnit::SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaff
 			AICharacter->SetSkin(CapName, TopName);
 		}
 	}
+}
+
+void UMS_StaffAIUnit::UpdateStaffPriorityOfWorks(EMS_StaffUIPriorityType aStaffUIPriorityType)
+{
+	TArray<EMS_StaffIssueType> PriorityOfWorks;
+	
+	switch (aStaffUIPriorityType)
+	{
+	case EMS_StaffUIPriorityType::PaymentFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::DisplayFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+		
+	case EMS_StaffUIPriorityType::ShelfFirst :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf,
+				EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::PaymentOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::DisplayOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay};
+			break;
+		}
+
+	case EMS_StaffUIPriorityType::ShelfOnly :
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+
+	default:
+		{
+			PriorityOfWorks = {EMS_StaffIssueType::Payment,
+				EMS_StaffIssueType::ReturnItemsFromDisplay, EMS_StaffIssueType::AddItemsToDisplay,
+				EMS_StaffIssueType::ReturnItemsFromShelf, EMS_StaffIssueType::AddItemsToShelf};
+			break;
+		}
+	}
+
+	PlayerStaffData.StaffUIPriorityType = aStaffUIPriorityType;
+	PlayerStaffData.PriorityOfWorks = PriorityOfWorks;
+	UpdateSkin();
+	
+	gItemMng.UpdateStaffPriorityOfWorks(PlayerStaffData.StaffId, PlayerStaffData.StaffIdTag, PlayerStaffData.StaffUIPriorityType);
 }
 
 bool UMS_StaffAIUnit::HasStaffAction() const

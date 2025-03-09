@@ -38,6 +38,9 @@ public:
 public:
 	FORCEINLINE const FMS_PlayerStaffData& GetPlayerStaffData() const { return PlayerStaffData; }
 	void SetPlayerStaffData(const FMS_PlayerStaffData& aPlayerStaffData);
+	void UpdateSkin();
+
+	void UpdateStaffPriorityOfWorks(EMS_StaffUIPriorityType aStaffUIPriorityType);
 	
 	bool HasStaffAction() const;
 	EMS_StaffActionType GetFirstStaffAction(TWeakObjectPtr<class UMS_IssueTicket>& OutIssueTicket);

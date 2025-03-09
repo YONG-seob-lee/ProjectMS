@@ -6,18 +6,26 @@
 #include "Button/MS_Button.h"
 #include "Components/ComboBoxString.h"
 #include "ContentsUtilities/MS_AIDefine.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Units/MS_StaffAIUnit.h"
+
 
 void UMS_StaffActionWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
 {
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
 
-	InitStaffActionBox();
-
 	if(CPP_Button)
 	{
 		CPP_Button->GetOnClickedDelegate().AddUObject(this, &UMS_StaffActionWidget::OnClickedCancelButton);
 	}
+}
+
+void UMS_StaffActionWidget::InitStaffActionWidget(TWeakObjectPtr<UMS_StaffAIUnit> aOwnerUnit)
+{
+	OwnerUnit = aOwnerUnit;
+
+	InitStaffActionBox();
 }
 
 void UMS_StaffActionWidget::SynchronizeProperties()
@@ -27,36 +35,45 @@ void UMS_StaffActionWidget::SynchronizeProperties()
 
 void UMS_StaffActionWidget::InitStaffActionBox()
 {
+	EMS_StaffUIPriorityType StaffUIPriorityType = OwnerUnit->GetPlayerStaffData().StaffUIPriorityType;
+	
 	if(CPP_StaffIssueBox)
 	{
-		for(int32 i = static_cast<int32>(EMS_StaffIssueType::None) ; i < static_cast<int32>(EMS_StaffIssueType::AddItemsToShelf); i++)
+		int32 SelectedIndex = INDEX_NONE;
+		
+		for(int32 i = 0 ; i < static_cast<int32>(EMS_StaffUIPriorityType::EMS_StaffUIPriorityType_Max); ++i)
 		{
-			const FString IssueName = GetIssueName(i);
+			const FString IssueName = GetUIIssueName(i);
 			CPP_StaffIssueBox->AddOption(IssueName);
 			SelectItems.Emplace(i, IssueName);
+
+			if (i == static_cast<int32>(StaffUIPriorityType))
+			{
+				SelectedIndex = i;
+			}
 		}
 
+		CPP_StaffIssueBox->SetSelectedOption(GetUIIssueName(SelectedIndex));
 		CPP_StaffIssueBox->OnSelectionChanged.AddUniqueDynamic(this, &UMS_StaffActionWidget::OnSelectChanged);
 	}
-
-	// 최초 Staff의 이슈 넣기
-	const EMS_StaffIssueType CurrentIssueType = EMS_StaffIssueType::None;
-	CPP_StaffIssueBox->SetSelectedOption(GetIssueName(static_cast<int32>(CurrentIssueType)));
 }
 
-FString UMS_StaffActionWidget::GetIssueName(int32 _IssueType)
+FString UMS_StaffActionWidget::GetUIIssueName(int32 aUIIssueType) const
 {
-	switch(static_cast<EMS_StaffIssueType>(_IssueType))
+	switch(static_cast<EMS_StaffUIPriorityType>(aUIIssueType))
 	{
-	case EMS_StaffIssueType::Payment:
-		return TEXT("Payment");
-	case EMS_StaffIssueType::ReturnItemsFromDisplay:
-	case EMS_StaffIssueType::AddItemsToDisplay:
-		return TEXT("Store Display");
-	case EMS_StaffIssueType::ReturnItemsFromShelf:
-		return TEXT("Return Item");
-	case EMS_StaffIssueType::AddItemsToShelf:
-		return TEXT("Shelf Loading");
+	case EMS_StaffUIPriorityType::PaymentFirst:
+		return TEXT("Payment First");
+	case EMS_StaffUIPriorityType::DisplayFirst:
+		return TEXT("Display First");
+	case EMS_StaffUIPriorityType::ShelfFirst:
+		return TEXT("Shelf First");
+	case EMS_StaffUIPriorityType::PaymentOnly:
+		return TEXT("Payment Only");
+	case EMS_StaffUIPriorityType::DisplayOnly:
+		return TEXT("Display Only");
+	case EMS_StaffUIPriorityType::ShelfOnly:
+		return TEXT("Shelf Only");
 	default:
 		return TEXT("멍때리기");
 	}
@@ -69,13 +86,11 @@ void UMS_StaffActionWidget::OnClickedCancelButton()
 
 void UMS_StaffActionWidget::OnSelectChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
 {
-	const int32* StaffIssueType = SelectItems.FindKey(SelectedItem);
-	
-	if(!StaffIssueType)
+	const int32* pUIPriorityType = SelectItems.FindKey(SelectedItem);
+	if(!pUIPriorityType)
 	{
 		return;
 	}
-
-	const EMS_StaffIssueType IssueType = static_cast<EMS_StaffIssueType>(*StaffIssueType);
-	// 타입 변경하기.
+	
+	OwnerUnit->UpdateStaffPriorityOfWorks(static_cast<EMS_StaffUIPriorityType>(*pUIPriorityType));
 }

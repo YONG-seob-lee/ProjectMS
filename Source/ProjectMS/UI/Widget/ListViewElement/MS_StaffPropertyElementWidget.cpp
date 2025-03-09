@@ -136,7 +136,7 @@ void UMS_StaffPropertyElementWidget::OnSelectChanged(FString SelectedItem, ESele
 	gItemMng.UpdateStaffPriorityOfWorks(StaffId, StaffIdTag, StaffUIPriorityType);
 }
 
-FString UMS_StaffPropertyElementWidget::GetUIIssueName(int32 aUIIssueType)
+FString UMS_StaffPropertyElementWidget::GetUIIssueName(int32 aUIIssueType) const
 {
 	switch(static_cast<EMS_StaffUIPriorityType>(aUIIssueType))
 	{
