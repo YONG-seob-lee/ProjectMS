@@ -582,8 +582,7 @@ void UMS_IssueTicketContainer::UnregisterIssueTicketStaff(TWeakObjectPtr<UMS_Iss
 	{
 		StaffUnit->OnUnregisteredAsIssueTicketStaff();
 	}
-
-	aTargetTicket->SetIsEnabled(false);
+	
 	aTargetTicket->SetStaffUnit(nullptr);
 }
 
