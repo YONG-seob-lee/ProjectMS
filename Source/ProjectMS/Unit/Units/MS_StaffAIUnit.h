@@ -67,7 +67,7 @@ public:
 	bool PickUpCurrentItems();
 
 protected:
-	virtual void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false) override;
+	virtual void OnChangeCurrentSlotDatas() override;
 
 	
 private:

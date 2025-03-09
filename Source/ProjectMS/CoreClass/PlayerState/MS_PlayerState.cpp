@@ -77,8 +77,11 @@ void AMS_PlayerState::OrganizeItems()
 {
 	for(const auto& OrderItem : OrderItems)
 	{
-		int32& Item = Items.FindOrAdd(OrderItem.Key);
-		Item += OrderItem.Value;
+		if (OrderItem.Value != 0)
+		{
+			int32& Item = Items.FindOrAdd(OrderItem.Key);
+			Item += OrderItem.Value;
+		}
 	}
 	OrderItems.Empty();
 	
@@ -318,9 +321,33 @@ void AMS_PlayerState::InitPlayerData()
 
 	Money = TestDB->Money;
 	gItemMng.UpdateMoney(Money);
+	
 	Items = TestDB->Items;
-	OrderItems = TestDB->OrderItems;
+
+	TArray<int32> ItemKeyArray;
+	Items.GenerateKeyArray(ItemKeyArray);
+	for (auto& Key : ItemKeyArray)
+	{
+		if (*Items.Find(Key) == 0)
+		{
+			Items.Remove(Key);
+		}
+	}
+	
 	gItemMng.UpdateItems(Items);
+	
+	OrderItems = TestDB->OrderItems;
+	
+	TArray<int32> OrderItemKeyArray;
+	OrderItems.GenerateKeyArray(OrderItemKeyArray);
+	for (auto& Key : OrderItemKeyArray)
+	{
+		if (*OrderItems.Find(Key) == 0)
+		{
+			OrderItems.Remove(Key);
+		}
+	}
+	
 	gItemMng.UpdateOrderItems(OrderItems);
 
 	Furnitures = TestDB->Furnitures;

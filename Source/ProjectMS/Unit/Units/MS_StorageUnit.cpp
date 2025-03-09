@@ -140,7 +140,29 @@ int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, b
 	}
 
 	int32 MaxSlotCount = GetZoneType() == EMS_ZoneType::Display ? ItemData->Slot100x100MaxCount : ItemData->BoxMaxCount;
-	
+
+	// CurrentItemTableId과 같을 경우 먼저 처리
+	for (int32 i = 0; i < SlotDatas.Num(); ++i)
+	{
+		if (RemainAddCount <= 0)
+		{
+			break;
+		}
+		
+		// ReqiestItemId가 일치하지 않더라도 이미 가지고 있는 아이템과 같은 종류면 집어 넣기
+		// 유저 인터렉션으로 Staff가 일을 처리하는 중간에 값이 바꼈을 때 더 자연스럽게 연출하기 위함
+		if (SlotDatas[i].CurrentItemTableId == aItemId)
+		{
+			int32 AddCount = FMath::Min(RemainAddCount, MaxSlotCount - SlotDatas[i].CurrentItemCount);
+
+			if (AddCurrentItemCount(i, aItemId, AddCount, bSavePlayerData))
+			{
+				RemainAddCount -= AddCount;
+			}
+		}
+	}
+
+	// CurrentItem을 바꿔야 하는 경우 처리
 	for (int32 i = 0; i < SlotDatas.Num(); ++i)
 	{
 		if (RemainAddCount <= 0)
@@ -148,14 +170,14 @@ int32 UMS_StorageUnit::AddAnySlotCurrentItemCount(int32 aItemId, int32 aCount, b
 			break;
 		}
 
-		if (SlotDatas[i].CurrentItemTableId != aItemId && SlotDatas[i].CurrentItemCount == 0 &&
-			SlotDatas[i].RequestItemTableId == aItemId)
+		if (SlotDatas[i].CurrentItemTableId != aItemId && SlotDatas[i].CurrentItemCount == 0)
 		{
-			SlotDatas[i].CurrentItemTableId = aItemId;
+			if (GetZoneType() == EMS_ZoneType::Pallet || SlotDatas[i].RequestItemTableId == aItemId)
+			{
+				SlotDatas[i].CurrentItemTableId = aItemId;
+			}
 		}
 
-		// ReqiestItemId가 일치하지 않더라도 이미 가지고 있는 아이템과 같은 종류면 집어 넣기
-		// 유저 인터렉션으로 Staff가 일을 처리하는 중간에 값이 바꼈을 때 더 자연스럽게 연출하기 위함
 		if (SlotDatas[i].CurrentItemTableId == aItemId)
 		{
 			int32 AddCount = FMath::Min(RemainAddCount, MaxSlotCount - SlotDatas[i].CurrentItemCount);

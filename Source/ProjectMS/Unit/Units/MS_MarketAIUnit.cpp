@@ -258,7 +258,8 @@ void UMS_MarketAIUnit::ResetSlotDatas()
 		SlotData = FMS_SlotData();
 	}
 	
-	OnChangeCurrentSlotDatas(true);
+	OnChangeCurrentSlotDatas();
+	gItemMng.UpdateNotPlacedItemsToPalletItems();
 }
 
 bool UMS_MarketAIUnit::AddCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount)
@@ -353,17 +354,10 @@ void UMS_MarketAIUnit::ResetChatting() const
 	}
 }
 
-void UMS_MarketAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems /*= false*/)
+void UMS_MarketAIUnit::OnChangeCurrentSlotDatas()
 {
 	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
 	MS_ENSURE (IsValid(MarketAICharacter));
 	
 	MarketAICharacter->OnChangeCurrentSlotDatas(SlotDatas);
-
-	// Not Placed Item이 옮겨질 수 있는 지 업데이트
-	if (bUpdateNotPlacedItems)
-	{
-		TMap<int32, int32> Temp;
-		gItemMng.GetNotPlacedItems(Temp);
-	}
 }

@@ -62,7 +62,7 @@ public:
 	void ResetChatting() const;
 	
 protected:
-	virtual void OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems = false);
+	virtual void OnChangeCurrentSlotDatas();
 
 	
 private:

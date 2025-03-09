@@ -67,27 +67,30 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			TArray<FIntVector2> TargetPositions = {};
 			
 			TWeakObjectPtr<UMS_UnitBase> RequestUnit = AIUnit->GetIssueTicketRequestUnit();
-			
-			if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
-			{
-				const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-					RequestFurnitureUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
 
-				if (PropPurposeSpaceComponents.Num() != 0)
+			if (RequestUnit != nullptr)
+			{
+				if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
 				{
-					for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-					{
-						TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-					}
+					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+						RequestFurnitureUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
 
-					AIUnit->SetTargetPositions(TargetPositions);
-					return EBTNodeResult::Type::Succeeded;
+					if (PropPurposeSpaceComponents.Num() != 0)
+					{
+						for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+						{
+							TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+						}
+
+						AIUnit->SetTargetPositions(TargetPositions);
+						return EBTNodeResult::Type::Succeeded;
+					}
 				}
-			}
-			else
-			{
-				MS_ERROR(TEXT("이 케이스에서는 스태프 유닛이 이슈를 넘겨받지 않으니 무조건 가구 유닛이어야 하는데..?"))
-				MS_ENSURE(false);
+				else
+				{
+					MS_ERROR(TEXT("이 케이스에서는 스태프 유닛이 이슈를 넘겨받지 않으니 무조건 가구 유닛이어야 하는데..?"))
+					MS_ENSURE(false);
+				}
 			}
 			return EBTNodeResult::Type::Failed;
 		}

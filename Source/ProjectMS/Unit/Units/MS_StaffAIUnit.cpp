@@ -648,9 +648,9 @@ bool UMS_StaffAIUnit::PickUpCurrentItems()	// Reture하기 위해 아이템 빼�
 	return false;
 }
 
-void UMS_StaffAIUnit::OnChangeCurrentSlotDatas(bool bUpdateNotPlacedItems)
+void UMS_StaffAIUnit::OnChangeCurrentSlotDatas()
 {
-	Super::OnChangeCurrentSlotDatas(bUpdateNotPlacedItems);
+	Super::OnChangeCurrentSlotDatas();
 
 	if (IssueTicket != nullptr)
 	{

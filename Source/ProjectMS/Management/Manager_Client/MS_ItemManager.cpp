@@ -596,6 +596,18 @@ void UMS_ItemManager::GetNotPlacedItems(TMap<int32, int32>& OutItems)
 		Count -= PalletItem.Value;
 	}
 
+	// 정리
+	TArray<int32> KeyArray;
+	CacheNotPlacedItems.GenerateKeyArray(KeyArray);
+	
+	for (auto& Key : KeyArray)
+	{
+		if (*CacheNotPlacedItems.Find(Key) == 0)
+		{
+			CacheNotPlacedItems.Remove(Key);
+		}
+	}
+
 	OutItems = CacheNotPlacedItems;
 }
 
