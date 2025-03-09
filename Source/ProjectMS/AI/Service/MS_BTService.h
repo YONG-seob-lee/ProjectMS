@@ -13,4 +13,7 @@ UCLASS()
 class PROJECTMS_API UMS_BTService : public UBTService
 {
 	GENERATED_BODY()
+
+public:
+	UMS_BTService(const FObjectInitializer& ObjectInitializer);
 };

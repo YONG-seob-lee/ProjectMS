@@ -47,15 +47,132 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 	}
 
 	EMS_StaffActionType SelectedStaffAction = static_cast<EMS_StaffActionType>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffAction));
+	EMS_StaffActionState ActionState = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
+	
 	if (SelectedStaffAction == EMS_StaffActionType::None)
 	{
-		return EBTNodeResult::Type::Failed;
+		if (ActionState == EMS_StaffActionState::None_SearchRandomCounterUnit)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
+			gUnitMng.GetUnits(EMS_UnitType::Counter, Units);
+
+			TArray<UMS_CounterUnit*> NoneStaffCounterUnits = {};
+			
+			for (auto& Unit : Units)
+			{
+				if (UMS_CounterUnit* CounterUnit = Cast<UMS_CounterUnit>(Unit.Get()))
+				{
+					TWeakObjectPtr<UMS_StaffAIUnit> CounterStaff = CounterUnit->GetStaffUnit(true);
+					if (CounterStaff == nullptr || CounterStaff == AIUnit)
+					{
+						NoneStaffCounterUnits.Emplace(CounterUnit);
+					}
+				}
+			}
+
+			if (NoneStaffCounterUnits.IsEmpty())
+			{
+				return EBTNodeResult::Type::Failed;
+			}
+			
+			int32 RandomId = FMath::RandRange(0, NoneStaffCounterUnits.Num() - 1);
+			
+			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+					NoneStaffCounterUnits[RandomId]->GetPropPurposeSpaceComponents(EMS_PurposeType::Cashier);
+					
+			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+			{
+				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+			}
+			
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+		}
+
+		if (ActionState == EMS_StaffActionState::None_SearchRandomPoint_Display)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
+			gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
+
+			TArray<UMS_StorageUnit*> DisplayUnits = {};
+			
+			for (auto& Unit : Units)
+			{
+				if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
+				{
+					if (StorageUnit->GetZoneType() == EMS_ZoneType::Display)
+					{
+						DisplayUnits.Emplace(StorageUnit);
+					}
+				}
+			}
+
+			if (DisplayUnits.IsEmpty())
+			{
+				return EBTNodeResult::Type::Failed;
+			}
+			
+			int32 RandomId = FMath::RandRange(0, DisplayUnits.Num() - 1);
+			
+			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+					DisplayUnits[RandomId]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+					
+			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+			{
+				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+			}
+			
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+		}
+
+		if (ActionState == EMS_StaffActionState::None_SearchRandomPoint_Shelf)
+		{
+			TArray<FIntVector2> TargetPositions = {};
+			
+			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
+			gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
+
+			TArray<UMS_StorageUnit*> ShelfUnits = {};
+			
+			for (auto& Unit : Units)
+			{
+				if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
+				{
+					if (StorageUnit->GetZoneType() == EMS_ZoneType::Shelf)
+					{
+						ShelfUnits.Emplace(StorageUnit);
+					}
+				}
+			}
+
+			if (ShelfUnits.IsEmpty())
+			{
+				return EBTNodeResult::Type::Failed;
+			}
+			
+			int32 RandomId = FMath::RandRange(0, ShelfUnits.Num() - 1);
+			
+			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+					ShelfUnits[RandomId]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+					
+			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+			{
+				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+			}
+			
+			AIUnit->SetTargetPositions(TargetPositions);
+			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+		}
 	}
 
 	// Issue
 	if (SelectedStaffAction == EMS_StaffActionType::Issue)
 	{
-		EMS_StaffActionState ActionState = static_cast<EMS_StaffActionState>(BlackboardComp->GetValueAsEnum(StaffBoardKeyName::StaffActionState));
 		if (ActionState == EMS_StaffActionState::None)
 		{
 			return EBTNodeResult::Type::Failed;
@@ -149,29 +266,31 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
 
-		if (ActionState == EMS_StaffActionState::Payment_SearchCounterUnit)
+		if (ActionState == EMS_StaffActionState::Payment_SearchRequestCounterUnit)
 		{
 			TArray<FIntVector2> TargetPositions = {};
 			
-			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
-			gUnitMng.GetUnits(EMS_UnitType::Counter, Units);
+			TWeakObjectPtr<UMS_UnitBase> RequestUnit = AIUnit->GetIssueTicketRequestUnit();
 
-			for (auto& Unit : Units)
+			if (RequestUnit != nullptr)
 			{
-				if (UMS_CounterUnit* CounterUnit = Cast<UMS_CounterUnit>(Unit.Get()))
+				if (UMS_FurnitureUnit* RequestFurnitureUnit = Cast<UMS_FurnitureUnit>(RequestUnit))
 				{
 					const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-							CounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::Cashier);
-					
-					for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+						RequestFurnitureUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::Cashier);
+
+					if (PropPurposeSpaceComponents.Num() != 0)
 					{
-						TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+						for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+						{
+							TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+						}
+
+						AIUnit->SetTargetPositions(TargetPositions);
+						return EBTNodeResult::Type::Succeeded;
 					}
 				}
 			}
-
-			AIUnit->SetTargetPositions(TargetPositions);
-			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 		}
 	}
 

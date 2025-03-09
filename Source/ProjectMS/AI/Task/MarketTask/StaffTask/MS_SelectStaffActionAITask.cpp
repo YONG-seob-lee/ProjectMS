@@ -57,7 +57,9 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 
 	if (StaffAction == EMS_StaffActionType::None)
 	{
-		return EBTNodeResult::Type::Succeeded;
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffIssueType, static_cast<uint8>(EMS_StaffIssueType::None));
+		BlackboardComp->SetValueAsEnum(StaffBoardKeyName::StaffActionState, static_cast<uint8>(EMS_StaffActionState::None));
+		return EBTNodeResult::Type::Failed;
 	}
 
 	// Issue Type, Action State
@@ -84,7 +86,7 @@ EBTNodeResult::Type UMS_SelectStaffActionAITask::ExecuteTask(UBehaviorTreeCompon
 
 		else if (IssueType == EMS_StaffIssueType::Payment)
 		{
-			ActionState = EMS_StaffActionState::Payment_SearchCounterUnit;
+			ActionState = EMS_StaffActionState::Payment_SearchRequestCounterUnit;
 		}
 	}
 	

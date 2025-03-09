@@ -2,3 +2,7 @@
 
 
 #include "MS_BTService.h"
+
+UMS_BTService::UMS_BTService(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+}

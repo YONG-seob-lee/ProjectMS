@@ -72,22 +72,28 @@ enum class EMS_StaffActionState : uint8
 	NoStorage_InteractRequestUnit = 17,
 	
 	// Random Point로 이동
-	None_SearchRandomPoint = 18,
-	None_GoToRandomPoint = 19,
+	None_SearchRandomCounterUnit = 18,
+	None_GoToRandomCounterUnit = 19,
+	
+	None_SearchRandomPoint_Display = 20,
+	None_GoToRandomPoint_Display = 21,
+
+	None_SearchRandomPoint_Shelf = 22,
+	None_GoToRandomPoint_Shelf = 23,
 
 	// Idle
-	None_Idle = 20,
-	None_IdleAction = 21,
+	None_Idle = 24,
+	None_IdleAction = 25,
 
 	// Spline으로 이동
-	Spline_GoToWork = 22,
-	Spline_GoHome = 23,
+	Spline_GoToWork = 26,
+	Spline_GoHome = 27,
 
 	// Payment
-	Payment_SearchCounterUnit = 24,
-	Payment_GoToCounterUnit = 25,
-	Payment_Waiting = 26,
-	Payment_Doing = 27,
+	Payment_SearchRequestCounterUnit = 28,
+	Payment_GoToRequestCounterUnit = 29,
+	Payment_Waiting = 30,
+	Payment_Doing = 31,
 };
 
 UENUM(BlueprintType)
