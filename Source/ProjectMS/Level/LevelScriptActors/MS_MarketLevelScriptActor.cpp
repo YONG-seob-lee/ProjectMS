@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "ScriptActorComponent/MS_UnitBehaviorCollectComponent.h"
@@ -61,7 +62,8 @@ void AMS_MarketLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReaso
 		PurchaseCollectComponent->Finalize();
 		MS_DeleteObject(PurchaseCollectComponent);
 	}
-	
+
+	gHISMMng.ClearInstances();
 	gUnitMng.DestroyAllUnits();
 	
 	Super::EndPlay(EndPlayReason);

@@ -11,6 +11,7 @@
 #include "Units/MS_SplineUnit.h"
 #include "Components/LightComponent.h"
 #include "Engine/DirectionalLight.h"
+#include "Manager_Client/MS_HISMManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Prop/NightProp/MS_NightProp.h"
@@ -64,6 +65,7 @@ void AMS_StageLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReason
 	gInputMng.OnPointerDownDelegate.RemoveAll(this);
 	gInputMng.OnPointerUpDelegate.RemoveAll(this);
 
+	gHISMMng.ClearInstances();
 	gUnitMng.DestroyAllUnits();
 	
 	Super::EndPlay(EndPlayReason);
