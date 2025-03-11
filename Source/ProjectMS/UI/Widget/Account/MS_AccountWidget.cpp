@@ -8,6 +8,9 @@
 #include "Button/MS_AccountStartButton.h"
 #include "Manager_Client/MS_SceneManager.h"
 #include "Widget/Lobby/MS_LobbyWidget.h"
+#include "OnlineSubsystem.h"
+#include "OnlineSubsystemUtils.h"
+#include "Interfaces/OnlineIdentityInterface.h"
 
 
 void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
@@ -21,6 +24,34 @@ void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool b
 }
 
 void UMS_AccountWidget::OnClickAccountButton()
+{
+	LoginWithGoogle();
+}
+
+void UMS_AccountWidget::LoginWithGoogle() const
+{
+#if PLATFORM_WINDOWS
+	PlayNextStep();
+#else
+	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("Google"));
+	if(!OnlineSubsystem)
+	{
+		return;
+	}
+	const IOnlineIdentityPtr IdentityInterface = OnlineSubsystem->GetIdentityInterface();
+	if (IdentityInterface.IsValid())
+	{
+		const bool bIsLogin = IdentityInterface->Login(0, FOnlineAccountCredentials());
+
+		if(bIsLogin)
+		{
+			PlayNextStep();
+		}
+	}
+#endif
+}
+
+void UMS_AccountWidget::PlayNextStep() const
 {
 	CPP_AccountButton->GetOnClickedDelegate().RemoveAll(this);
 	CPP_AccountButton->SetVisibility(ESlateVisibility::Collapsed);

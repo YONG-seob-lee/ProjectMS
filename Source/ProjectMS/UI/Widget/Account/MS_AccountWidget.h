@@ -19,6 +19,9 @@ public:
 
 private:
 	void OnClickAccountButton();
+
+	void LoginWithGoogle() const;
+	void PlayNextStep() const;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_AccountButton> CPP_AccountButton = nullptr;

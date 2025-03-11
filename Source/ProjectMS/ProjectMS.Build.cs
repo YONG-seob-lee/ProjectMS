@@ -19,7 +19,7 @@ public class ProjectMS : ModuleRules
 		
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"CommonInput", "CommonUI", "EnhancedInput"
+			"CommonInput", "CommonUI", "EnhancedInput", "OnlineSubsystem", "OnlineSubsystemUtils"
 		});
 
 		PublicIncludePaths.AddRange(new string[] { "ProjectMS", "ProjectMS/Actor", "ProjectMS/CoreClass",
