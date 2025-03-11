@@ -58,6 +58,7 @@ public:
 
 	// Skin
 	void SetSkin(const FName& aCapName, const FName& aTopName);
+	void SetRandomSkin();
 
 	// Chatting
 	void ShowChatting(EMS_ChattingType ChattingType) const;

@@ -42,6 +42,8 @@ void UMS_CustomerAIUnit::PostInitialize()
 	{
 		CustomerAICharacter->PostInitialize(UnitHandle);
 	}
+
+	UpdateSkin();
 }
 
 void UMS_CustomerAIUnit::Tick(float aDeltaTime)
@@ -191,6 +193,14 @@ bool UMS_CustomerAIUnit::IsPickUpAllItems()
 bool UMS_CustomerAIUnit::IsExceptAnyWannaItem()
 {
 	return CustomerData.IsExceptAnyWannaItem();
+}
+
+void UMS_CustomerAIUnit::UpdateSkin() const
+{
+	AMS_CustomerAICharacter* AICharacter = Cast<AMS_CustomerAICharacter>(GetCharacter());
+	MS_ENSURE(AICharacter);
+	
+	AICharacter->SetRandomSkin();
 }
 
 bool UMS_CustomerAIUnit::FindNearestSpline()

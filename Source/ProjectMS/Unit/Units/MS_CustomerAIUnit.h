@@ -45,6 +45,8 @@ public:
 	void Paid();
 	bool IsPickUpAllItems();
 	bool IsExceptAnyWannaItem();
+
+	void UpdateSkin() const;
 	
 	// Spline
 	bool FindNearestSpline();

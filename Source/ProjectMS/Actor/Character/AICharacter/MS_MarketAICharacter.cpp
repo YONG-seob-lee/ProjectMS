@@ -483,6 +483,50 @@ void AMS_MarketAICharacter::SetSkin(const FName& aCapName, const FName& aTopName
 	}
 }
 
+void AMS_MarketAICharacter::SetRandomSkin()
+{
+	TArray<FName> CapName;
+	SkinCaps.GenerateKeyArray(CapName);
+	const int32 RandCap = FMath::RandRange(0, CapName.Num());
+
+	// 아얘 모자를 안 쓴 고객도 존재해야하기에 if문 추가.
+	if(RandCap != CapName.Num())
+	{
+		const TObjectPtr<USkeletalMesh>* CapMesh = SkinCaps.Find(CapName[RandCap]);
+		if (CapMesh != nullptr && *CapMesh != nullptr)
+		{
+			SkinCapMesh->SetSkeletalMesh(*CapMesh);
+			SkinCapMesh->SetVisibility(true);
+			SkinCapMesh->SetLeaderPoseComponent(GetMesh());
+		}
+		else
+		{
+			SkinCapMesh->SetSkeletalMesh(nullptr);
+			SkinCapMesh->SetVisibility(false);
+		}
+	}
+	
+	TArray<FName> TopName;
+	SkinTops.GenerateKeyArray(TopName);
+	const int32 RandTop = FMath::RandRange(0, TopName.Num());	
+
+	if(RandTop != TopName.Num())
+	{
+		const TObjectPtr<USkeletalMesh>* TopMesh = SkinTops.Find(TopName[RandTop]);
+		if (TopMesh != nullptr && *TopMesh != nullptr)
+		{
+			SkinTopMesh->SetSkeletalMesh(*TopMesh);
+			SkinTopMesh->SetVisibility(true);
+			SkinTopMesh->SetLeaderPoseComponent(GetMesh());
+		}
+		else
+		{
+			SkinTopMesh->SetSkeletalMesh(nullptr);
+			SkinTopMesh->SetVisibility(false);
+		}
+	}
+}
+
 void AMS_MarketAICharacter::ShowChatting(EMS_ChattingType ChattingType) const
 {
 	FText Chatting = FText();

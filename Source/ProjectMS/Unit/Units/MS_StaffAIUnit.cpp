@@ -45,12 +45,12 @@ void UMS_StaffAIUnit::PostInitialize()
 
 	if(StaffTableData)
 	{
-		const AMS_StaffAICharacter* AICharacter = Cast<AMS_StaffAICharacter>(GetCharacter());
-		MS_ENSURE(AICharacter);
-
-		if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, StaffTableData->Color))))
+		if(const AMS_StaffAICharacter* AICharacter = Cast<AMS_StaffAICharacter>(GetCharacter()))
 		{
-			AICharacter->SetDuckBodyColor(Material);	
+			if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, StaffTableData->Color))))
+			{
+				AICharacter->SetDuckBodyColor(Material);	
+			}	
 		}
 	}
 }
