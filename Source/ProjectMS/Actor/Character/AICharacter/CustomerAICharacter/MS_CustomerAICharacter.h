@@ -28,6 +28,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 	
+	virtual void PostInitialize(MS_Handle aUnitHandle) override;
+	
 	void PickUp(int32 ItemTableId);
 	void ShowPickUp(bool bShow);
 

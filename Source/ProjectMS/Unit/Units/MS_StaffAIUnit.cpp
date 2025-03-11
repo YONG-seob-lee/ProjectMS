@@ -42,6 +42,17 @@ void UMS_StaffAIUnit::Finalize()
 void UMS_StaffAIUnit::PostInitialize()
 {
 	Super::PostInitialize();
+
+	if(StaffTableData)
+	{
+		const AMS_StaffAICharacter* AICharacter = Cast<AMS_StaffAICharacter>(GetCharacter());
+		MS_ENSURE(AICharacter);
+
+		if(UMaterialInterface* Material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, StaffTableData->Color))))
+		{
+			AICharacter->SetDuckBodyColor(Material);	
+		}
+	}
 }
 
 void UMS_StaffAIUnit::Tick(float aDeltaTime)

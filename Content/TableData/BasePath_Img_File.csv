@@ -67,9 +67,12 @@ Id,Directory_Table_Id,Img_File_Name,Img_File_Local
 1009,1003,Thum_FUR_VS_B,FALSE
 1010,1003,Thum_WH_RACK,FALSE
 1011,1003,Thum_Palette,FALSE
-3001,1005,DuckPortrait_White,FALSE
+3001,1005,DuckPortrait_Pink,FALSE
 3002,1005,DuckPortrait_Red,FALSE
 3003,1005,DuckPortrait_Yellow,FALSE
 3004,1005,DuckPortrait_Green,FALSE
-3005,1005,DuckPortrait_Blue,FALSE
-3006,1005,DuckPortrait_Purple,FALSE
+3005,1005,DuckPortrait_SkyBlue,FALSE
+3006,1005,DuckPortrait_Blue,FALSE
+3007,1005,DuckPortrait_Purple,FALSE
+3008,1005,DuckPortrait_Black,FALSE
+3009,1005,DuckPortrait_White,FALSE

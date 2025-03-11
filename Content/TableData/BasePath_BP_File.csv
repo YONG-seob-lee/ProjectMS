@@ -45,3 +45,12 @@ Id,Directory_Table_Id,BP_File_Name
 7007,7001,BP_SlotActor_5x1_4x1
 9001,9001,BP_StaffAICharacter
 9002,9001,BP_CustomerAICharacter
+10001,10001,MI_Duck_Color_01
+10002,10001,MI_Duck_Color_02
+10003,10001,MI_Duck_Color_03
+10004,10001,MI_Duck_Color_04
+10005,10001,MI_Duck_Color_05
+10006,10001,MI_Duck_Color_06
+10007,10001,MI_Duck_Color_07
+10008,10001,MI_Duck_Color_Black
+10009,10001,MI_Duck_Color_White

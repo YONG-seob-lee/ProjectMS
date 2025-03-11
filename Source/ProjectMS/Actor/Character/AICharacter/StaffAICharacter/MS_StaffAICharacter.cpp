@@ -49,6 +49,14 @@ void AMS_StaffAICharacter::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+void AMS_StaffAICharacter::SetDuckBodyColor(UMaterialInterface* _Material) const
+{
+	if(_Material)
+	{
+		GetMesh()->SetMaterial(0, _Material);
+	}
+}
+
 void AMS_StaffAICharacter::OnChangeCurrentSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
 {
 	int32 TotalItemCount = 0;

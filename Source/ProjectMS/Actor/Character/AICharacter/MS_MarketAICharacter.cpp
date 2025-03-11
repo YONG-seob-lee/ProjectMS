@@ -147,7 +147,7 @@ void AMS_MarketAICharacter::Tick(float aDeltaTime)
 	WidgetComponent->SetWorldLocation(GetActorLocation() + FVector(0.f, -50.f, 0.f));
 }
 
-void AMS_MarketAICharacter::PostInitialize(MS_Handle aUnitHandle) const
+void AMS_MarketAICharacter::PostInitialize(MS_Handle aUnitHandle)
 {
 	if(AIParameterComponent)
 	{

@@ -12,7 +12,9 @@ struct FMS_Staff : public FTableRowBase
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere)
-	FName StaffName = FName();
+	FString StaffNameLocalKey = FString();
+	UPROPERTY(EditAnywhere)
+	int32 Color = 0;
 	UPROPERTY(EditAnywhere)
 	int32 Gender = 0;
 	UPROPERTY(EditAnywhere)

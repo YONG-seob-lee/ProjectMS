@@ -60,7 +60,7 @@ void UMS_StaffPropertyElementWidget::NativeOnListItemObjectSet(UObject* aListIte
 		CPP_StaffIssueBox->OnSelectionChanged.AddUniqueDynamic(this, &UMS_StaffPropertyElementWidget::OnSelectChanged);
 	}
 	
-	CPP_Name->SetText(FText::FromString(FString::Format(TEXT("이름 : {0}"), {StaffData->StaffName.ToString()})));
+	CPP_Name->SetText(FText::FromString(FString::Format(TEXT("이름 : {0}"), { FText::FromStringTable(MS_LocalizedTableId::StringTable, StaffData->StaffNameLocalKey).ToString()})));
 	CPP_HP->SetText(FText::FromString(FString::Format(TEXT("체력 : {0}"), {StaffPropertyData->GetHP()})));
 	CPP_Condition->SetText(FText::FromString(FString::Format(TEXT("컨디션 : {0}"), {StaffPropertyData->GetCondition()})));
 	CPP_Feeling->SetText(FText::FromString(FString::Format(TEXT("기분 : {0}"), {0})));

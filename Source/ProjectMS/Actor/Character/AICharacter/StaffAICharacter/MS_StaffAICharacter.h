@@ -20,8 +20,9 @@ public:
 	
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
-	
 
+	void SetDuckBodyColor(UMaterialInterface* _Material) const;
+	
 	// Slot Datas
 	virtual void OnChangeCurrentSlotDatas(const TArray<struct FMS_SlotData>& aSlotDatas) override;
 };

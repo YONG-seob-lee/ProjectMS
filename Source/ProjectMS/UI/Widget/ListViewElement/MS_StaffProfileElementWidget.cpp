@@ -68,8 +68,8 @@ void UMS_StaffProfileElementWidget::SetProfile(int32 aStaffId, int32 aWorkDay)
 	{
 		CPP_PortraitImage->SetBrushFromTexture(PortraitImage);
 	}
-		
-	CPP_Name->SetText(FText::FromString(FString::Format(TEXT("이름 : {0}"), { StaffData->StaffName.ToString()})));
+	
+	CPP_Name->SetText(FText::FromString(FString::Format(TEXT("이름 : {0}"), { FText::FromStringTable(MS_LocalizedTableId::StringTable, StaffData->StaffNameLocalKey).ToString()})));
 	const FString GenderString = ConvertEnumToString("EMS_Gender", StaffData->Gender);
 	CPP_Gender->SetText(FText::FromString(FString::Format(TEXT("성별 : {0}"), {GenderString})));
 	CPP_Age->SetText(FText::FromString(FString::Format(TEXT("나이 : {0}(오리나이)"), {StaffData->Age})));

@@ -50,6 +50,17 @@ void AMS_CustomerAICharacter::Tick(float aDeltaTime)
 	Super::Tick(aDeltaTime);
 }
 
+void AMS_CustomerAICharacter::PostInitialize(MS_Handle aUnitHandle)
+{
+	Super::PostInitialize(aUnitHandle);
+
+	// 오리 색깔 교체.
+	if(UMaterialInterface* MaterialInterface = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, FMath::RandRange(DuckBodyColor::Pink, DuckBodyColor::White)))))
+	{
+		GetMesh()->SetMaterial(0, MaterialInterface);
+	}
+}
+
 void AMS_CustomerAICharacter::PickUp(int32 ItemTableId)
 {
 	if(PickUpSockets.Find(static_cast<int32>(EMS_PickUpSocketType::Head)) == nullptr)

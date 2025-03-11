@@ -259,3 +259,16 @@ namespace SocketName
 	const FName RightItem = TEXT("RightItem");
 	const FName LeftItem = TEXT("LeftItem");
 }
+
+namespace DuckBodyColor
+{
+	constexpr int32 Pink = 10001;
+	constexpr int32 Red = 10002;
+	constexpr int32 Yellow = 10003;
+	constexpr int32 Green = 10004;
+	constexpr int32 SkyBlue = 10005;
+	constexpr int32 Blue = 10006;
+	constexpr int32 Purple = 10007;
+	constexpr int32 Black = 10008;
+	constexpr int32 White = 10009;
+}

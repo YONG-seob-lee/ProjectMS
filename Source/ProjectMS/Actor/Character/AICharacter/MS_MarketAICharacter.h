@@ -26,7 +26,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float aDeltaTime) override;
 
-	void PostInitialize(MS_Handle aUnitHandle) const;
+	virtual void PostInitialize(MS_Handle aUnitHandle);
 
 	EMS_Direction GetWalkingDirection() const { return WalkingDirection; }
 	const FVector2D& GetPathLocation() const { return PathLocation; }

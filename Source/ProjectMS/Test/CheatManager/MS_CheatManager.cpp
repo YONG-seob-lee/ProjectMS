@@ -30,9 +30,9 @@ void UMS_CheatManager::AIComeInMarket(int32 UnitId)
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
 
-	FName StaffName = FName();
+	FString StaffName = FString();
 	StaffTable->GetStaffName(UnitId, StaffName);
-	const FString Behavior = TEXT("\"") + StaffName.ToString() + TEXT("\" 이(가) 마켓에 입장했습니다.");
+	const FString Behavior = TEXT("\"") + StaffName + TEXT("\" 이(가) 마켓에 입장했습니다.");
 
 	if(const TObjectPtr<AMS_MarketLevelScriptActor> MarketLevelScriptActor = Cast<AMS_MarketLevelScriptActor>(gSceneMng.GetCurrentLevelScriptActor()))
 	{
@@ -53,11 +53,11 @@ void UMS_CheatManager::AIExitMarket(int32 UnitId)
 	const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 	MS_ENSURE(StaffTable);
 
-	FName StaffName = FName();
+	FString StaffName = FString();
 	StaffTable->GetStaffName(UnitId, StaffName);
 
 	const int32 CurrentMinute = gScheduleMng.GetMinute();
-	const FString Behavior = TEXT("\"") + StaffName.ToString() + TEXT("\" 이(가) 마켓에 퇴장했습니다.");
+	const FString Behavior = TEXT("\"") + StaffName + TEXT("\" 이(가) 마켓에 퇴장했습니다.");
 
 	gUnitMng.OnBehaviorDelegate.Broadcast(FMS_BehaviorParameter(UnitId, CurrentMinute, FText::FromString(Behavior)));
 	
@@ -76,9 +76,9 @@ void UMS_CheatManager::AIChatting(int32 UnitId, const FString& Chatting)
 			const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 			MS_ENSURE(StaffTable);
 
-			FName StaffName = FName();
+			FString StaffName = FString();
 			StaffTable->GetStaffName(UnitId, StaffName);
-			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName.ToString() + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
 			return;
 		}
 	}
@@ -94,10 +94,10 @@ void UMS_CheatManager::AIBehavior(int32 UnitId, const FString& Behavior)
 			const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 			MS_ENSURE(StaffTable);
 
-			FName StaffName = FName();
+			FString StaffName = FString();
 			StaffTable->GetStaffName(UnitId, StaffName);
 
-			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName.ToString() + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
 			return;
 		}
 	}
@@ -113,9 +113,9 @@ void UMS_CheatManager::AIPurchase(int32 UnitId, int32 ItemId, int32 ItemCount)
 			const TObjectPtr<UMS_StaffCacheTable> StaffTable = Cast<UMS_StaffCacheTable>(gTableMng.GetCacheTable(EMS_TableDataType::Staff));
 			MS_ENSURE(StaffTable);
 
-			FName StaffName = FName();
+			FString StaffName = FString();
 			StaffTable->GetStaffName(UnitId, StaffName);
-			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName.ToString() + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
+			gWidgetMng.ShowToastMessage(TEXT("\"") + StaffName + TEXT("\"") + TEXT(" 해당 유닛은 마켓안에 없습니다."));
 			return;
 		}
 	}
