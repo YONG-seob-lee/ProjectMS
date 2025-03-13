@@ -33,8 +33,6 @@ void UMS_StorageStatusWidget::NativeConstruct()
 		CPP_SkipButton->SetVisibility(ESlateVisibility::Visible);
 		CPP_SkipButton->GetOnClickedDelegate().AddUObject(this, &UMS_StorageStatusWidget::OnClickedCloseButton);
 	}
-
-	CPP_BgSwitcher->SetActiveWidgetIndex(0);
 }
 
 void UMS_StorageStatusWidget::NativeDestruct()
@@ -91,6 +89,8 @@ void UMS_StorageStatusWidget::InitializeStorageDatas(EMS_ZoneType aOwnerZoneType
 		
 		StorageItemElementDatas.Emplace(Data);
 	}
+
+	CPP_BgSwitcher->SetActiveWidgetIndex(0);
 }
 
 void UMS_StorageStatusWidget::UpdateSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
