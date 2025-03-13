@@ -14,8 +14,10 @@ class PROJECTMS_API UMS_DefaultLoadingWidget : public UMS_Widget
 {
 	GENERATED_BODY()
 public:
-
+	void UpdateLoadingImage() const;
 private:
+	UPROPERTY()
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_LoadingSwitch = nullptr;
 	UPROPERTY()
 	TObjectPtr<class UMS_LoadingTutorialWidget> CPP_LoadingTutorialWidget = nullptr;
 };

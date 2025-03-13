@@ -54,5 +54,8 @@ public:
 
 	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
 	void Money(int32 aCount);
+
+	UFUNCTION(exec,BlueprintCallable,Category="MS Cheat Manager")
+	void PictureMode(bool bPicture);
 #endif
 };

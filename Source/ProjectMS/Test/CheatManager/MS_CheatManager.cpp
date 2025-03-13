@@ -197,4 +197,9 @@ void UMS_CheatManager::Money(int32 aCount)
 	PlayerState->SettleMoney(aCount);
 	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
 }
+
+void UMS_CheatManager::PictureMode(bool bPicture)
+{
+	gWidgetMng.GetRootWidget()->SetVisibility(bPicture ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+}
 #endif
