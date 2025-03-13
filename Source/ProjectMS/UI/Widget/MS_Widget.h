@@ -40,7 +40,7 @@ enum class EMS_TutorialDirection
 namespace Tutorial
 {
 	const FName SlotName = TEXT("TutorialSlot");
-	const FVector2D DefaultSize = FVector2D(1000.f, 400.f);
+	const FVector2D DefaultSize = FVector2D(800.f, 320.f);
 }
 
 /**
