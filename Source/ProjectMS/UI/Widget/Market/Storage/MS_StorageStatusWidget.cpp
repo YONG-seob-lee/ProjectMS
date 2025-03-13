@@ -9,6 +9,7 @@
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/ListViewElement/ElementData/MS_StorageSlotElementData.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
+#include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 
 void UMS_StorageStatusWidget::NativeConstruct()
@@ -56,7 +57,8 @@ void UMS_StorageStatusWidget::OnClickedStorageSlotButton(int32 aSlotIndex)
 	if (!CPP_SelectRequestedItemWidget->IsVisible())
 	{
 		CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Visible);
-		CPP_SelectRequestedItemWidget->SetTileView(TemperatureType);	
+		CPP_SelectRequestedItemWidget->SetTileView(TemperatureType);
+		CPP_BgSwitcher->SetActiveWidgetIndex(1);
 	}
 }
 
@@ -87,6 +89,8 @@ void UMS_StorageStatusWidget::InitializeStorageDatas(EMS_ZoneType aOwnerZoneType
 		
 		StorageItemElementDatas.Emplace(Data);
 	}
+
+	CPP_BgSwitcher->SetActiveWidgetIndex(0);
 }
 
 void UMS_StorageStatusWidget::UpdateSlotDatas(const TArray<FMS_SlotData>& aSlotDatas)
@@ -108,4 +112,5 @@ void UMS_StorageStatusWidget::UpdateSlotDatas(const TArray<FMS_SlotData>& aSlotD
 	CPP_TileView->SetListItems(StorageItemElementDatas);
 	CPP_TileView->RegenerateAllEntries();
 	CPP_SelectRequestedItemWidget->SetVisibility(ESlateVisibility::Hidden);
+	CPP_BgSwitcher->SetActiveWidgetIndex(0);
 }
