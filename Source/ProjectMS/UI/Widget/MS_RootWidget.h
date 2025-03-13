@@ -32,7 +32,6 @@ public:
 	void ActivatePreventionCover(bool bShow) const;
 	void SetContentWidgetRender(EMS_TransitionStyle aTransitionStyle) const;
 	void SetContentWidgetTransition(EMS_TransitionStyle aTransitionStyle, EMS_FadeAnimationCurveType aFadeAnimationCurveType, float aFadeProgressRate) const;
-	void UpdateLoadingImage() const;
 	void ResetCanvasZOrder() const;
 
 	void ResetToastPanel() const;
@@ -54,9 +53,7 @@ public:
 private:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<UMS_CanvasPanel> CPP_LoadingPanel = nullptr;
-	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_DefaultLoadingWidget> CPP_LoadingWidget = nullptr;
-	
+
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<UMS_CanvasPanel> CPP_MessagePanel = nullptr;
 	UPROPERTY(Meta = (BindWidget))

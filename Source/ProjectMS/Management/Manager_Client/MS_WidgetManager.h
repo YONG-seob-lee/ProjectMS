@@ -53,7 +53,6 @@ public:
 
 	void SetCustomPositionWidget(UMS_Widget* aWidget, const FVector2D& aPosition);
 
-	void UpdateLoadingImage() const;
 	void RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const;
 
 	FMS_CreateWidget OnCreateWidget;

@@ -173,14 +173,6 @@ void UMS_RootWidget::SetContentWidgetTransition(EMS_TransitionStyle aTransitionS
 	}
 }
 
-void UMS_RootWidget::UpdateLoadingImage() const
-{
-	if(CPP_LoadingWidget)
-	{
-		CPP_LoadingWidget->UpdateLoadingImage();
-	}
-}
-
 void UMS_RootWidget::ResetCanvasZOrder() const
 {
 	const TObjectPtr<UCanvasPanelSlot> ContentSlot = Cast<UCanvasPanelSlot>(CPP_ContentFrameCanvasPanel->Slot);

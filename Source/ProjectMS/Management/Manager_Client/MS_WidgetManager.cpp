@@ -259,11 +259,6 @@ void UMS_WidgetManager::SetCustomPositionWidget(UMS_Widget* aWidget, const FVect
 	RequestCustomPosition(aWidget, aPosition);
 }
 
-void UMS_WidgetManager::UpdateLoadingImage() const
-{
-	RootWidget->UpdateLoadingImage();
-}
-
 void UMS_WidgetManager::RequestDialog(const TArray<FMS_DialogParameter>& aDialogParameters) const
 {
 	RootWidget->RequestDialog(aDialogParameters);

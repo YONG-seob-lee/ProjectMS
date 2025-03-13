@@ -110,5 +110,6 @@ TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(UClass* aCl
 	}
 	
 	MS_LOG_VERBOSITY(Error, TEXT("[%s] Character not created"), *MS_FUNC_STRING);
+	MS_ENSURE(false);
 	return nullptr;
 }
