@@ -30,8 +30,8 @@ void UMS_AccountWidget::OnClickAccountButton()
 
 void UMS_AccountWidget::LoginWithGoogle() const
 {
-#if PLATFORM_WINDOWS
 	PlayNextStep();
+#if PLATFORM_WINDOWS
 #else
 	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("Google"));
 	if(!OnlineSubsystem)
