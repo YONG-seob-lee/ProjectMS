@@ -63,6 +63,8 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 		return;
 	}
 
+	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 0.f);
+
 	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 	{
 		bSetBlendCamera = Parameter.bSetBlendCamera; 
@@ -112,6 +114,8 @@ void UMS_SequenceManager::StopSequence()
 	{
 		gCameraMng.ReturnTarget();
 	}
+
+	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
 	
 	if(OnFinishedSequenceCallback)
 	{
@@ -199,6 +203,8 @@ void UMS_SequenceManager::OnFinishedSequence()
 		OnFinishedSequenceCallback();
 		OnFinishedSequenceCallback = nullptr;
 	}
+
+	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
 	
 	if(bSetBlendCamera)
 	{
