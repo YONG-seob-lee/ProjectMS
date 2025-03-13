@@ -4,7 +4,9 @@
 #include "MS_MarketLevelScriptActor.h"
 
 #include "MS_Define.h"
+#include "Components/LightComponent.h"
 #include "Controller/MS_PlayerController.h"
+#include "Engine/DirectionalLight.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_HISMManager.h"
 #include "Manager_Client/MS_ItemManager.h"
@@ -17,12 +19,14 @@
 
 AMS_MarketLevelScriptActor::AMS_MarketLevelScriptActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AMS_MarketLevelScriptActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	gScheduleMng.OnUpdateMinuteDelegate.AddUObject(this, &AMS_MarketLevelScriptActor::UpdateMinute);
 	
 	ChattingCollectComponent = MS_NewObject<UMS_UnitChattingCollectComponent>(this);
 	if(ChattingCollectComponent)
@@ -40,6 +44,16 @@ void AMS_MarketLevelScriptActor::BeginPlay()
 		PurchaseCollectComponent->Initialize();
 	}
 
+	const FMS_GameDate& GameDate = gScheduleMng.GetGameDate();
+	if(FMS_GameDate::IsNight(GameDate.DailyTimeZone))
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(45.f, 45.f, 45.f));
+	}
+	else
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(255.f, 255.f, 255.f));
+	}
+	
 	InitializePlayerDataFurnitures();
 }
 
@@ -63,10 +77,19 @@ void AMS_MarketLevelScriptActor::EndPlay(const EEndPlayReason::Type EndPlayReaso
 		MS_DeleteObject(PurchaseCollectComponent);
 	}
 
+	gScheduleMng.OnUpdateMinuteDelegate.RemoveAll(this);
+	
 	gHISMMng.ClearInstances();
 	gUnitMng.DestroyAllUnits();
 	
 	Super::EndPlay(EndPlayReason);
+}
+
+void AMS_MarketLevelScriptActor::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	CashingDirectionalLight();
 }
 
 void AMS_MarketLevelScriptActor::Tick(float DeltaTime)
@@ -218,5 +241,23 @@ void AMS_MarketLevelScriptActor::InitializePlayerDataFurnitures()
 		{
 			StorageUnit->SetSlotDatas(FurnitureData.SlotDatas);
 		}
+	}
+}
+
+void AMS_MarketLevelScriptActor::UpdateMinute(int32 _Minute)
+{
+	// Bright 255 to 45
+	// Minute 0 to 820
+	// 820 나누기 210 = 3.9
+	// Minute / 3.9 만큼을 뺀다면?
+
+	UpdateDirectionalLight(255.f - _Minute / 3.9);
+}
+
+void AMS_MarketLevelScriptActor::UpdateDirectionalLight(float _BrightValue) const
+{
+	if(DirectionalLight)
+	{
+		DirectionalLight->GetLightComponent()->SetLightColor(FColor(_BrightValue, _BrightValue, _BrightValue));
 	}
 }

@@ -21,6 +21,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void PostInitializeComponents() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -49,7 +50,8 @@ public:
 private:
 	void InitializePlayerDataFurnitures();
 	
-
+	void UpdateMinute(int32 _Minute);
+	void UpdateDirectionalLight(float _BrightValue) const;
 private:
 	UPROPERTY()
 	TObjectPtr<class UMS_UnitChattingCollectComponent> ChattingCollectComponent = nullptr;

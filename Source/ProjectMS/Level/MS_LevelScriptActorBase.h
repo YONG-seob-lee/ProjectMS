@@ -34,9 +34,14 @@ public:
 #endif
 
 protected:
+	void CashingDirectionalLight();
+	
 	virtual TObjectPtr<class AMS_SpawnPoint> GetSpawnPoint(const FName& aCharacterName) const;
 	virtual TObjectPtr<class UMS_UnitBase> CreatePlayer(const TObjectPtr<class AMS_SpawnPoint> aSpawnPoint);
 
+	UPROPERTY()
+	TObjectPtr<class ADirectionalLight> DirectionalLight = nullptr;
+	
 public:
 	
 	// Property

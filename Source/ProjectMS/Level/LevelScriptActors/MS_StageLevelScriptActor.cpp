@@ -188,23 +188,6 @@ void AMS_StageLevelScriptActor::CollectOutsideDuckSpawnPoint() const
 	}
 }
 
-void AMS_StageLevelScriptActor::CashingDirectionalLight()
-{
-	TArray<AActor*> DirectionalLightActors;
-	
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), DirectionalLightActors);
-	
-	if(DirectionalLightActors.Num() > 1)
-	{
-		MS_ENSURE(false);
-	}
-
-	if(DirectionalLightActors.IsValidIndex(0))
-	{
-		DirectionalLight = Cast<ADirectionalLight>(DirectionalLightActors[0]);
-	}
-}
-
 void AMS_StageLevelScriptActor::CashingNightPropActors()
 {
 	TArray<AActor*> Props;

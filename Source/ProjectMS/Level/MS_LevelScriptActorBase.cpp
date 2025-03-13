@@ -8,6 +8,8 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Character/MS_CharacterBase.h"
 #include "CoreClass/Controller/MS_PlayerController.h"
+#include "Engine/DirectionalLight.h"
+#include "Kismet/GameplayStatics.h"
 #include "LevelInstance/LevelInstanceActor.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Units/MS_BasePlayerUnit.h"
@@ -173,6 +175,23 @@ void AMS_LevelScriptActorBase::OnBaseLayerLevelCollectionSwitchClick()
 	}
 }
 #endif
+
+void AMS_LevelScriptActorBase::CashingDirectionalLight()
+{
+	TArray<AActor*> DirectionalLightActors;
+	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADirectionalLight::StaticClass(), DirectionalLightActors);
+	
+	if(DirectionalLightActors.Num() > 1)
+	{
+		MS_ENSURE(false);
+	}
+
+	if(DirectionalLightActors.IsValidIndex(0))
+	{
+		DirectionalLight = Cast<ADirectionalLight>(DirectionalLightActors[0]);
+	}
+}
 
 TObjectPtr<AMS_SpawnPoint> AMS_LevelScriptActorBase::GetSpawnPoint(const FName& aCharacterName) const
 {

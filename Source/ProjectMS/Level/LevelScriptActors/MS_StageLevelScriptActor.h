@@ -37,7 +37,6 @@ private:
 	
 	void CollectOutsideDuckSpawnPoint() const;
 	
-	void CashingDirectionalLight();
 	void CashingNightPropActors();
 	void CashingNightCarActors();
 	
@@ -55,9 +54,6 @@ private:
 	
 	float DirectionalLightColorVolume = 0.f;
 	bool bStartNightToDayTrigger = false;
-	
-	UPROPERTY()
-	TObjectPtr<class ADirectionalLight> DirectionalLight = nullptr;
 	
 	UPROPERTY()
 	TArray<class AMS_NightProp*> NightProps = {};
