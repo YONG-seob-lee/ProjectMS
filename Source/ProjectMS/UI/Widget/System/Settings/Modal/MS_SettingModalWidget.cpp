@@ -4,7 +4,12 @@
 #include "MS_SettingModalWidget.h"
 
 #include "MS_Define.h"
+#include "../../../../../../../../../../AppData/Local/Temp/SandboxFiles/Vyjawox/Dajiwit.h"
+#include "Button/MS_Button.h"
+#include "Kismet/GameplayStatics.h"
+#include "Manager_Client/MS_WidgetManager.h"
 #include "Widget/ListViewElement/ElementData/MS_SliderSystemElementData.h"
+#include "Widget/System/Settings/MS_PauseWidget.h"
 #include "Widget/WidgetComponent/MS_ListView.h"
 
 void UMS_SettingModalWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot)
@@ -30,6 +35,8 @@ void UMS_SettingModalWidget::InitWidget(const FName& aTypeName, bool bManaged, b
 	}
 	
 	CPP_SoundListView->SetListItems(SoundSliderDatas);
+
+	CPP_PauseButton->GetOnClickedDelegate().AddUObject(this, &UMS_SettingModalWidget::OnClickedPauseButton);
 }
 
 void UMS_SettingModalWidget::FinishWidget()
@@ -42,6 +49,13 @@ void UMS_SettingModalWidget::FinishWidget()
 	SoundSliderDatas.Empty();
 	
 	Super::FinishWidget();
+}
+
+void UMS_SettingModalWidget::OnClickedPauseButton()
+{
+	FMS_ModalParameter ModalParameter;
+	ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_PauseWidget::GetWidgetPath());
+	gWidgetMng.ShowModalWidget(ModalParameter);
 }
 
 FString UMS_SettingModalWidget::GetSoundName(EMS_SoundClassType aSoundType)

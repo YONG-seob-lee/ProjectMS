@@ -21,10 +21,15 @@ public:
 	virtual void FinishWidget() override;
 	
 private:
+	void OnClickedPauseButton();
+	
 	FString GetSoundName(EMS_SoundClassType aSoundType);
 	
 	TArray<class UMS_SliderSystemElementData*> SoundSliderDatas = {};
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ListView> CPP_SoundListView = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_PauseButton = nullptr;
 };
