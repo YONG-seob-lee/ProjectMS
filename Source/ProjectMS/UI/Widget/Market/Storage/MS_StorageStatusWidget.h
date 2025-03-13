@@ -54,6 +54,9 @@ protected:
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_SkipButton = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_BgSwitcher= nullptr;
+
 public:
 	// Delegate
 	FMS_OnClickRequestSlotDelegate OnClickRequestSlotDelegate;
