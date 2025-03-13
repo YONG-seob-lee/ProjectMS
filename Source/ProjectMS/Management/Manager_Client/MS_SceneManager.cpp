@@ -90,7 +90,10 @@ void UMS_SceneManager::RequestChangeScene(const TObjectPtr<UMS_SceneCommand>& aC
 	RootWidget->ActivatePreventionCover(true);
 	gInputMng.SetAllowInteractActor(false);
 	gCameraMng.RestrictCameraMovement(true);
-	
+
+	// 로딩 위젯 갱신
+	gWidgetMng.UpdateLoadingImage();
+
 	// Start Fade Out
 	LevelChangeStep = EMS_FadeStep::EnterFadeOut;
 	RootWidget->ShowContentsWidget(false);
