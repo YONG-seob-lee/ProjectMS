@@ -31,6 +31,17 @@ void UMS_StaffCacheTable::GetStaffDatas(TMap<int32, FMS_Staff*>& aStaffDatas)
 {
 	aStaffDatas.Empty();
 	aStaffDatas = StaffDatas;
+
+	int32 UglyStaffId = -1;
+	for(const auto& StaffData : StaffDatas)
+	{
+		if(StaffData.Value->PreSpawned == true)
+		{
+			UglyStaffId = StaffData.Key;
+			break;
+		}
+	}
+	aStaffDatas.Remove(UglyStaffId);
 }
 
 void UMS_StaffCacheTable::GetStaffName(int32 aStaffId, FString& aStaffName)
