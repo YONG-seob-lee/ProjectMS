@@ -63,7 +63,33 @@ void UMS_WidgetManager::Tick(float aDeltaTime)
 		
 		const FVector2D DesiredSize = CustomPositionWidget->GetDesiredSize();
 		const FVector2D ScaleSize = FVector2D(DesiredSize.X * Scale, DesiredSize.Y * Scale);
-		CustomPositionWidget->SetPositionInViewport(CustomPosition - ScaleSize);
+
+		FVector2D ResultPosition = FVector2D::ZeroVector;
+		// 위젯이 왼쪽으로 벗어날 때 -> 오른쪽으로 이동
+		if(CustomPosition.X < ScaleSize.X || CustomPosition.Y < ScaleSize.Y)
+		{
+			// 위젯이 윗쪽으로 벗어날 때 -> 아래로 이동
+			if(CustomPosition.X < ScaleSize.X && CustomPosition.Y < ScaleSize.Y)
+			{
+				ResultPosition = CustomPosition;
+			}
+			else if(CustomPosition.X < ScaleSize.X && CustomPosition.Y > ScaleSize.Y)
+			{
+				ResultPosition.X = CustomPosition.X;
+				ResultPosition.Y = CustomPosition.Y - ScaleSize.Y;
+			}
+			else if(CustomPosition.X > ScaleSize.X && CustomPosition.Y < ScaleSize.Y)
+			{
+				ResultPosition.X = CustomPosition.X - ScaleSize.X;
+				ResultPosition.Y = CustomPosition.Y;
+			}
+		}
+		else
+		{
+			ResultPosition = CustomPosition - ScaleSize;
+		}
+		
+		CustomPositionWidget->SetPositionInViewport(ResultPosition);
 		CustomPositionWidget->SetRenderOpacity(1.f);
 		CustomPositionWidget = nullptr;
 		CustomPosition = FVector2D::ZeroVector;

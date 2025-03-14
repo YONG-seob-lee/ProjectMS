@@ -5,6 +5,7 @@
 
 #include "Components/TextBlock.h"
 #include "ElementData/MS_ScheduleDayElementData.h"
+#include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
 #include "Slate/SceneViewport.h"
@@ -33,14 +34,11 @@ void UMS_ScheduleDayElementWidget::NativeOnItemSelectionChanged(bool bIsSelected
 {
 	IUserObjectListEntry::NativeOnItemSelectionChanged(bIsSelected);
 	
-	//const FGeometry CachedGeometry = GEngine->GameViewport->GetGameViewport()->GetCachedGeometry();
-	//const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(InMouseEvent.GetScreenSpacePosition());
-
-	if(UMS_ScheduleDetailWidget* DetailWidget = Cast<UMS_ScheduleDetailWidget>(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName())))
+	if(UMS_ScheduleDetailWidget* DetailWidget = Cast<UMS_ScheduleDetailWidget>(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false)))
 	{
 		FMS_SettlementSheet Sheet;
 		gScheduleMng.GetSettlementSheet(Date, Sheet);
 		DetailWidget->SetDetail(Sheet);
+		gWidgetMng.SetCustomPositionWidget(DetailWidget, gInputMng.AcquirePointerPositionOnViewport());
 	}
-	//gWidgetMng.SetCustomPositionWidget(, false), AbsoluteScreenPosition);
 }
