@@ -11,7 +11,6 @@
 #include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
 #include "Widget/ListViewElement/ElementData/MS_MonthFinancialElementData.h"
-#include "Widget/ListViewElement/ElementData/MS_StaffPropertyElementData.h"
 
 
 void FMS_TimeSchedule::PassTheDay()
@@ -51,22 +50,6 @@ void UMS_ScheduleManager::Initialize()
 	MS_CHECK(CommonTable);
 
 	IntervalSecondReal = CommonTable->GetParameter01(CommonContents::INTERVAL_SECOND);
-
-	
-	// for test
-	for(int32 i = 1 ; i <=6 ; i++)
-	{
-		UMS_MonthFinancialElementData* Data = MS_NewObject<UMS_MonthFinancialElementData>(this);
-		Data->SetMonth(i);
-		Data->SetCostBuildingStorage(1000 + i * 200);
-		Data->SetMaintenanceCostMart(300 + i * 50);
-		Data->SetLandPurchaseNumber(i + 1);
-		Data->SetAverageAmount(30 + i * 2);
-		Data->SetShelfCapacity(60 + 5 * i);
-		Data->SetStaffSalary(800 + i * 100);
-		Data->SetLoanInterest(600 + i * 100);
-		MonthFinancialElementDatas.Emplace(Data);
-	}
 }
 
 void UMS_ScheduleManager::PostInitialize()
@@ -83,7 +66,7 @@ void UMS_ScheduleManager::Finalize()
 {
 	for(const auto& Data : MonthFinancialElementDatas)
 	{
-		MS_DeleteObject(Data);
+		MS_DeleteObject(Data.Value);
 	}
 	MonthFinancialElementDatas.Empty();
 	
@@ -113,6 +96,8 @@ void UMS_ScheduleManager::BeginPlay()
 
 	OnUpdateGameDateDelegate.Broadcast(TimeSchedule.GetGameDate());
 	OnUpdateMinuteDelegate.Broadcast(TimeSchedule.GetMinute());
+
+	CollectMonthDiarySheet();
 }
 
 void UMS_ScheduleManager::Tick(float aDeltaTime)
@@ -125,7 +110,7 @@ const FMS_GameDate& UMS_ScheduleManager::GetGameDate() const
 	return TimeSchedule.GetGameDate();
 }
 
-const EMS_DailyTimeZone UMS_ScheduleManager::GetDailyTimeZone() const
+EMS_DailyTimeZone UMS_ScheduleManager::GetDailyTimeZone() const
 {
 	return TimeSchedule.GetGameDate().DailyTimeZone;
 }
@@ -213,7 +198,7 @@ void UMS_ScheduleManager::SetMultiplyIntervalSecondReal(int32 aMultiply)
 void UMS_ScheduleManager::GetFinancialData(TArray<UMS_MonthFinancialElementData*>& aMonthFinancialElementDatas) const
 {
 	aMonthFinancialElementDatas.Empty();
-	aMonthFinancialElementDatas = MonthFinancialElementDatas;
+	MonthFinancialElementDatas.GenerateValueArray(aMonthFinancialElementDatas);
 }
 
 bool UMS_ScheduleManager::IsOverTime(EMS_MarketScheduleEvent ScheduleEvent)
@@ -284,6 +269,31 @@ void UMS_ScheduleManager::GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_
 		{
 			Sheet = Note;
 		}
+	}
+}
+
+void UMS_ScheduleManager::CollectMonthDiarySheet()
+{
+	for(const auto& Sheet : Diary)
+	{
+		if(Sheet.Date.Day == 0 || Sheet.Date.Month == 0 || Sheet.Date.Year == 0)
+		{
+			continue;
+		}
+		UMS_MonthFinancialElementData*& Data = MonthFinancialElementDatas.FindOrAdd(Sheet.Date.Month);
+		if(Data == nullptr)
+		{
+			Data = MS_NewObject<UMS_MonthFinancialElementData>(this);
+			Data->SetMonth(Sheet.Date.Month);
+		}
+		
+		Data->AddCostBuildingStorage(Sheet.OrderFurnitures);
+		Data->AddMaintenanceCostMart(Sheet.ElectricityBill);
+		Data->AddLandPurchaseNumber(Sheet.PurchaseZone);
+		Data->AddAverageAmount(Sheet.OrderItems, Sheet.Date.Day);
+		Data->AddShelfCapacity(0);
+		Data->AddStaffSalary(Sheet.PersonalExpanses);
+		Data->AddLoanInterest(Sheet.LoanInterest);
 	}
 }
 

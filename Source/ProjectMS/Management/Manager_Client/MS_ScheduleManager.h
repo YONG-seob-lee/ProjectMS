@@ -35,6 +35,8 @@ public:
 	UPROPERTY()
 	int32 ElectricityBill = 0;
 	UPROPERTY()
+	int32 PurchaseZone = 0;
+	UPROPERTY()
 	int32 PersonalExpanses = 0;
 	UPROPERTY()
 	int32 LoanInterest = 0;
@@ -106,7 +108,7 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 	
 	const FMS_GameDate& GetGameDate() const;
-	const EMS_DailyTimeZone GetDailyTimeZone() const;
+	EMS_DailyTimeZone GetDailyTimeZone() const;
 	void SetDailyTimeZone(EMS_DailyTimeZone aDailyTimeZone);
 	void PassTheDay();
 	int32 GetMinute() const;
@@ -129,6 +131,7 @@ public:
 	void WriteDiary() const;
 	void SetupNewDiary() const;
 	void GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet);
+	void CollectMonthDiarySheet();
 	
 	FORCEINLINE FMS_SettlementSheet& GetDailySheet() { return DailySheet; }
 private:
@@ -150,7 +153,7 @@ private:
 	int32 MultiplyIntervalSecondReal = 1;
 	
 	UPROPERTY()
-	TArray<class UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
+	TMap<int32, class UMS_MonthFinancialElementData*> MonthFinancialElementDatas;
 
 	UPROPERTY()
 	TMap<int32, int32> MinuteToScheduleEvent;
