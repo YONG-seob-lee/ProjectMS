@@ -18,7 +18,7 @@ public:
 	static FName GetWidgetName() { return TEXT("ScheduleDetail"); }
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bAttachToRoot) override;
 
-	void SetDetail(const FMS_SettlementSheet& aDailySheet);
+	void SetDetail(const FMS_SettlementSheet& aDailySheet) const;
 private:
 	void OnClickedBlankButton();
 	
@@ -30,4 +30,7 @@ private:
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_FinancialDetailWidget> CPP_FinancialDetailWidget = nullptr;
+	
+	UPROPERTY(Meta = (BindWdiget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_WidgetSwitcher = nullptr;
 };

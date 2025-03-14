@@ -130,7 +130,7 @@ public:
 	void UpdateDailySheet();
 	void WriteDiary() const;
 	void SetupNewDiary() const;
-	void GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet);
+	bool GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet);
 	void CollectMonthDiarySheet();
 	
 	FORCEINLINE FMS_SettlementSheet& GetDailySheet() { return DailySheet; }

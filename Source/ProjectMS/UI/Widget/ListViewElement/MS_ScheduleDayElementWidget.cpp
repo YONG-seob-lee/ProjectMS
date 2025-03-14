@@ -8,7 +8,6 @@
 #include "Manager_Client/MS_InputManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
-#include "Slate/SceneViewport.h"
 #include "Widget/Schedule/MS_ScheduleDetailWidget.h"
 
 void UMS_ScheduleDayElementWidget::NativeOnListItemObjectSet(UObject* aListItemObject)
@@ -37,7 +36,11 @@ void UMS_ScheduleDayElementWidget::NativeOnItemSelectionChanged(bool bIsSelected
 	if(UMS_ScheduleDetailWidget* DetailWidget = Cast<UMS_ScheduleDetailWidget>(gWidgetMng.Create_Widget(UMS_ScheduleDetailWidget::GetWidgetName(), false)))
 	{
 		FMS_SettlementSheet Sheet;
-		gScheduleMng.GetSettlementSheet(Date, Sheet);
+		if(gScheduleMng.GetSettlementSheet(Date, Sheet) == false)
+		{
+			return;
+		}
+
 		DetailWidget->SetDetail(Sheet);
 		gWidgetMng.SetCustomPositionWidget(DetailWidget, gInputMng.AcquirePointerPositionOnViewport());
 	}

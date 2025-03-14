@@ -45,7 +45,7 @@ void UMS_ScheduleModalWidget::UpdateSchedule()
 		for(int32 i = 1 ; i <= 28; i++)
 		{
 			UMS_ScheduleDayElementData* Data = MS_NewObject<UMS_ScheduleDayElementData>(this);
-			Data->SetDate(FMS_GameDate(0, CurrentMonth, i));
+			Data->SetDate(FMS_GameDate(1, CurrentMonth, i, EMS_DailyTimeZone::Morning));
 			if( i % 7 == 6)
 			{
 				Data->SetColor(FLinearColor::Blue);

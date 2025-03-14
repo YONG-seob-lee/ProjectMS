@@ -227,8 +227,9 @@ void UMS_ScheduleManager::UpdateDailySheet()
 	{
 		return;
 	}
-	
-	DailySheet = FMS_SettlementSheet(GetGameDate(), *EarnMoney, *OrderFurniturePrice
+	FMS_GameDate Date = GetGameDate();
+	Date.DailyTimeZone = EMS_DailyTimeZone::Morning; 
+	DailySheet = FMS_SettlementSheet(Date, *EarnMoney, *OrderFurniturePrice
 									, *OrderItemPrice, *ElectricityBill
 									, *PersonalExpanses, 0);
 }
@@ -261,15 +262,17 @@ void UMS_ScheduleManager::SetupNewDiary() const
 	PlayerState->WriteDiary(FMS_SettlementSheet(GetGameDate()));
 }
 
-void UMS_ScheduleManager::GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet)
+bool UMS_ScheduleManager::GetSettlementSheet(const FMS_GameDate& aGameDate, FMS_SettlementSheet& Sheet)
 {
 	for(auto& Note : Diary)
 	{
 		if(Note.Date == aGameDate)
 		{
 			Sheet = Note;
+			return true;
 		}
 	}
+	return false;
 }
 
 void UMS_ScheduleManager::CollectMonthDiarySheet()
