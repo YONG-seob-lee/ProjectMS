@@ -80,7 +80,7 @@ void AMS_Market::OnAutoDoorTrigger(UPrimitiveComponent* PrimitiveComponent, AAct
 {
 	if(TObjectPtr<AMS_AICharacter> DuckAI = Cast<AMS_AICharacter>(Actor))
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorTown, FMS_SequencePlayParameter(false, false, false));
+		gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorTown, FMS_SequencePlayParameter(false, false, false, false));
 	}
 }
 
@@ -88,7 +88,7 @@ void AMS_Market::OnAutoDoorOutTrigger(UPrimitiveComponent* PrimitiveComponent, A
 {
 	if(TObjectPtr<AMS_AICharacter> DuckAI = Cast<AMS_AICharacter>(Actor))
 	{
-		gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorTown, FMS_SequencePlayParameter(false, false, false));
+		gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorTown, FMS_SequencePlayParameter(false, false, false, false));
 	}
 }
 

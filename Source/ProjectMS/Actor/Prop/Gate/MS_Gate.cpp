@@ -67,7 +67,7 @@ void AMS_Gate::OnAutoDoorTrigger(UPrimitiveComponent* OverlappedComponent, AActo
 		if(Cast<AMS_AICharacter>(OtherActor))
 		{
 			gSoundMng.PlaySound(EMS_SoundClassType::UserInterface, EMS_SoundWaveType::DoorBell);
-			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false));
+			gSequenceMng.PlaySequence(EMS_SequenceType::OpenDoorMarket, FMS_SequencePlayParameter(false, false, false, false));
 			bOpen = true;
 		}	
 	}
@@ -86,7 +86,7 @@ void AMS_Gate::OnAutoDoorOutTrigger(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		if(Cast<AMS_AICharacter>(OtherActor))
 		{
-			gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false));
+			gSequenceMng.PlaySequence(EMS_SequenceType::CloseDoorMarket, FMS_SequencePlayParameter(false, false, false, false));
 			bOpen = false;
 		}	
 	}

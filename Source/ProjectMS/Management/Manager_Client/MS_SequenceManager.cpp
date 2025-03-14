@@ -63,11 +63,10 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 		return;
 	}
 
-	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 0.f);
-
+	RequestParameter = Parameter;
+	
 	if (const TObjectPtr<ULevelSequencePlayer> LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), Sequence, FMovieSceneSequencePlaybackSettings(), SequenceActor))
 	{
-		bSetBlendCamera = Parameter.bSetBlendCamera; 
 		if(Parameter.bSetBlendCamera)
 		{
 			gCameraMng.SetViewTarget(SequenceActor);
@@ -88,6 +87,11 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 		if(Parameter.bHideWidget)
 		{
 			gWidgetMng.HideAllWidget(true);
+		}
+
+		if(Parameter.bMute)
+		{
+			gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 0.f);
 		}
 	}
 	else
@@ -110,12 +114,15 @@ void UMS_SequenceManager::StopSequence()
 
 	gWidgetMng.HideAllWidget(false);
 
-	if(bSetBlendCamera)
+	if(RequestParameter.bSetBlendCamera)
 	{
 		gCameraMng.ReturnTarget();
 	}
 
-	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+	if(RequestParameter.bMute)
+	{
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+	}
 	
 	if(OnFinishedSequenceCallback)
 	{
@@ -123,6 +130,7 @@ void UMS_SequenceManager::StopSequence()
 		OnFinishedSequenceCallback = nullptr;
 	}
 
+	RequestParameter = FMS_SequencePlayParameter();
 	GetWorld()->DestroyActor(SequenceActor);
 	SequenceActor = nullptr;
 }
@@ -204,13 +212,17 @@ void UMS_SequenceManager::OnFinishedSequence()
 		OnFinishedSequenceCallback = nullptr;
 	}
 
-	gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+	if(RequestParameter.bMute)
+	{
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+	}
 	
-	if(bSetBlendCamera)
+	if(RequestParameter.bSetBlendCamera)
 	{
 		gCameraMng.ReturnTarget(2.f);
 	}
 
+	RequestParameter = FMS_SequencePlayParameter();
 	GetWorld()->DestroyActor(SequenceActor);
 }
 

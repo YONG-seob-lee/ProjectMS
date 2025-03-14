@@ -41,10 +41,11 @@ struct FMS_SequencePlayParameter
 public:
 	FMS_SequencePlayParameter() { bCheckedSequencePlay = true; bHideWidget = true; bSetBlendCamera = true; OnFinishedSequenceCallback = nullptr; }
 	FMS_SequencePlayParameter(bool _bCheckedSequencePlay, bool _bSetBlendCamera,  bool _bHideWidget, TFunction<void()> _OnFinishedSequenceCallback = nullptr) : bCheckedSequencePlay(_bCheckedSequencePlay), bSetBlendCamera(_bSetBlendCamera), bHideWidget(_bHideWidget), OnFinishedSequenceCallback(_OnFinishedSequenceCallback) {}
-	
+	FMS_SequencePlayParameter(bool _bCheckedSequencePlay, bool _bSetBlendCamera, bool _bMute,  bool _bHideWidget, TFunction<void()> _OnFinishedSequenceCallback = nullptr) : bCheckedSequencePlay(_bCheckedSequencePlay), bSetBlendCamera(_bSetBlendCamera), bHideWidget(_bHideWidget), bMute(_bMute), OnFinishedSequenceCallback(_OnFinishedSequenceCallback) {}
 	bool bCheckedSequencePlay = true;
 	bool bSetBlendCamera = true;
 	bool bHideWidget = true;
+	bool bMute = true;
 	TFunction<void()> OnFinishedSequenceCallback = nullptr;
 };
 /**
@@ -75,8 +76,8 @@ private:
 	UFUNCTION()
 	void OnFinishedSequence();
 
-	bool bSetBlendCamera = true;
-
+	FMS_SequencePlayParameter RequestParameter = FMS_SequencePlayParameter();
+	
 	UPROPERTY()
 	ALevelSequenceActor* SequenceActor = nullptr;
 
