@@ -405,6 +405,11 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 	}
 }
 
+bool UMS_ModeState_RunMarketBase::GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const
+{
+	return PathFinder->GetRandomPosition(aZoneType, aOutPosition);
+}
+
 void UMS_ModeState_RunMarketBase::UpdateAllFurnitureIssueTickets()
 {
 	TArray<TWeakObjectPtr<UMS_UnitBase>> Units;

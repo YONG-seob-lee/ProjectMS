@@ -7,6 +7,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
+#include "Manager_Client/MS_ModeManager.h"
+#include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Units/MS_CounterUnit.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_StaffAIUnit.h"
@@ -93,80 +95,42 @@ EBTNodeResult::Type UMS_SearchStaffActionTargetsAITask::ExecuteTask(UBehaviorTre
 
 		if (ActionState == EMS_StaffActionState::None_SearchRandomPoint_Display)
 		{
-			TArray<FIntVector2> TargetPositions = {};
-			
-			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
-			gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
-
-			TArray<UMS_StorageUnit*> DisplayUnits = {};
-			
-			for (auto& Unit : Units)
-			{
-				if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
-				{
-					if (StorageUnit->GetZoneType() == EMS_ZoneType::Display)
-					{
-						DisplayUnits.Emplace(StorageUnit);
-					}
-				}
-			}
-
-			if (DisplayUnits.IsEmpty())
+			TObjectPtr<UMS_ModeStateBase> ModeState = gModeMng.GetCurrentModeState();
+			if (ModeState == nullptr)
 			{
 				return EBTNodeResult::Type::Failed;
 			}
-			
-			int32 RandomId = FMath::RandRange(0, DisplayUnits.Num() - 1);
-			
-			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-					DisplayUnits[RandomId]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
-					
-			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+
+			FIntVector2 RandomPosition;
+			if (ModeState->GetRandomPosition(EMS_ZoneType::Display, RandomPosition))
 			{
-				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+				TArray<FIntVector2> TargetPositions = {};
+				TargetPositions.Emplace(RandomPosition);
+				AIUnit->SetTargetPositions(TargetPositions);
+				return EBTNodeResult::Type::Succeeded;
 			}
 			
-			AIUnit->SetTargetPositions(TargetPositions);
-			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+			return EBTNodeResult::Type::Failed;
 		}
 
 		if (ActionState == EMS_StaffActionState::None_SearchRandomPoint_Shelf)
 		{
-			TArray<FIntVector2> TargetPositions = {};
-			
-			TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
-			gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
-
-			TArray<UMS_StorageUnit*> ShelfUnits = {};
-			
-			for (auto& Unit : Units)
-			{
-				if (UMS_StorageUnit* StorageUnit = Cast<UMS_StorageUnit>(Unit.Get()))
-				{
-					if (StorageUnit->GetZoneType() == EMS_ZoneType::Shelf)
-					{
-						ShelfUnits.Emplace(StorageUnit);
-					}
-				}
-			}
-
-			if (ShelfUnits.IsEmpty())
+			TObjectPtr<UMS_ModeStateBase> ModeState = gModeMng.GetCurrentModeState();
+			if (ModeState == nullptr)
 			{
 				return EBTNodeResult::Type::Failed;
 			}
-			
-			int32 RandomId = FMath::RandRange(0, ShelfUnits.Num() - 1);
-			
-			const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-					ShelfUnits[RandomId]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
-					
-			for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+
+			FIntVector2 RandomPosition;
+			if (ModeState->GetRandomPosition(EMS_ZoneType::Shelf, RandomPosition))
 			{
-				TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+				TArray<FIntVector2> TargetPositions = {};
+				TargetPositions.Emplace(RandomPosition);
+				AIUnit->SetTargetPositions(TargetPositions);
+				return EBTNodeResult::Type::Succeeded;
 			}
 			
-			AIUnit->SetTargetPositions(TargetPositions);
-			return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
+			return EBTNodeResult::Type::Failed;
 		}
 	}
 

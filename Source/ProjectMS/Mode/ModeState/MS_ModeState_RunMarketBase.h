@@ -42,6 +42,8 @@ public:
 	
 	// aTargetPoints가 다른 존에 있을 경우 첫번째 타겟의 게이트를 찾아감
 	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints = {}) const override;
+
+	virtual bool GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const override;
 	
 	TObjectPtr<class UMS_StaffSupervisor> GetStaffSupervisor() const { return StaffSupervisor; }
 	TObjectPtr<class UMS_CustomerSupervisor> GetCustomerSupervisor() const { return CustomerSupervisor; }

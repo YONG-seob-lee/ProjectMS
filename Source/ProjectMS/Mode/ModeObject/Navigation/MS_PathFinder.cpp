@@ -204,3 +204,62 @@ void UMS_PathFinder::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZ
 		}
 	}
 }
+
+bool UMS_PathFinder::GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const
+{
+	TArray<FIntVector2> FreeMovableWalkingPoints;
+	switch (aZoneType)
+	{
+	case EMS_ZoneType::Display :
+		{
+			if (DisplayFreeMovableWalkingPoints.Num() > 0)
+			{
+				int32 Random = FMath::RandRange(0, DisplayFreeMovableWalkingPoints.Num() - 1);
+				aOutPosition = DisplayFreeMovableWalkingPoints[Random];
+				return true;
+			}
+			break;
+		}
+
+	case EMS_ZoneType::Shelf :
+		{
+			if (ShelfFreeMovableWalkingPoints.Num() > 0)
+			{
+				int32 Random = FMath::RandRange(0, ShelfFreeMovableWalkingPoints.Num() - 1);
+				aOutPosition = ShelfFreeMovableWalkingPoints[Random];
+				return true;
+			}
+			break;
+		}
+
+	case EMS_ZoneType::Pallet :
+		{
+			if (PalletFreeMovableWalkingPoints.Num() > 0)
+			{
+				int32 Random = FMath::RandRange(0, PalletFreeMovableWalkingPoints.Num() - 1);
+				aOutPosition = PalletFreeMovableWalkingPoints[Random];
+				return true;
+			}
+			break;
+		}
+
+	case EMS_ZoneType::Outside :
+		{
+			if (OutsideFreeMovableWalkingPoints.Num() > 0)
+			{
+				int32 Random = FMath::RandRange(0, OutsideFreeMovableWalkingPoints.Num() - 1);
+				aOutPosition = OutsideFreeMovableWalkingPoints[Random];
+				return true;
+			}
+			break;
+		}
+		
+	default:
+		{
+			MS_ENSURE(false);
+			return false;
+		}
+	}
+	
+	return false;
+}

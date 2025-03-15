@@ -1,5 +1,6 @@
 ﻿#include "MS_ModeStateBase.h"
 
+#include "MS_Define.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -86,3 +87,11 @@ void UMS_ModeStateBase::SearchPathToTarget(TArray<FIntVector2>& aOutPath, const 
 	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints) const
 {
 }
+
+bool UMS_ModeStateBase::GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const
+{
+	MS_ENSURE(false);
+	return false;
+}
+
+

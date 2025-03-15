@@ -60,4 +60,7 @@ public:
 public:
 	UFUNCTION()
 	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints = {}) const;
+
+	UFUNCTION()
+	virtual bool GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const;
 };
