@@ -4,12 +4,16 @@
 #include "MS_MarketAIUnit.h"
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
+#include "MS_CustomerAIUnit.h"
 #include "MS_FurnitureUnit.h"
+#include "MS_StaffAIUnit.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Manager_Client/MS_ItemManager.h"
+#include "Manager_Client/MS_ModeManager.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Prop/Furniture/MS_Furniture.h"
 
 
@@ -55,6 +59,31 @@ FIntVector2 UMS_MarketAIUnit::GetActorGridPosition() const
 	return FIntVector2::ZeroValue;
 }
 
+TArray<FIntVector2> UMS_MarketAIUnit::GetFullActorGridPositions() const
+{
+	TArray<FIntVector2> Positions = {};
+
+	if (GetCharacter())
+	{
+		FVector CharacterLocation = GetCharacter()->GetActorLocation();
+		
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(-60.f, -60.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(0.f, -60.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(60.f, -60.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(-60.f, 0.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(60.f, 0.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(-60.f, 60.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(0.f, 60.f, 0.f)));
+		Positions.AddUnique(FMS_GridData::ConvertLocationToGridPosition(CharacterLocation - FVector(60.f, 60.f, 0.f)));
+		
+		return Positions;
+	}
+
+	MS_ENSURE(false);
+	return Positions;
+}
+
 FVector UMS_MarketAIUnit::GetActorLocation() const
 {
 	if (GetCharacter())
@@ -85,9 +114,11 @@ void UMS_MarketAIUnit::ResetPath()
 	
 	CacheTargetPositions.Empty();
 	CachePath.Empty();
+
+	RemainStopTime = 0.f;
 }
 
-EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
+EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath(float aDeltaSeconds)
 {
 	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
 	if (!IsValid(MarketAICharacter))
@@ -100,6 +131,22 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath()
 		return EBTNodeResult::Succeeded;
 	}
 
+	if (RemainStopTime > 0.f)
+	{
+		RemainStopTime -= aDeltaSeconds;
+
+		if (RemainStopTime <= 0.f)
+		{
+			RemainStopTime = 0.f;
+		}
+		
+		else
+		{
+			MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, FVector2D::Zero(), true);
+			return EBTNodeResult::InProgress;
+		}
+	}
+	
 	const FVector2D CurrentLocationXY = FVector2D(GetActorLocation().X, GetActorLocation().Y);
 	const FRotator CurrentRotator = GetActorRotator();
 	
@@ -239,6 +286,127 @@ TWeakObjectPtr<UMS_PropSpaceComponent> UMS_MarketAIUnit::GetInteractionPropSpace
 	}
 	
 	return nullptr;
+}
+
+bool UMS_MarketAIUnit::GetPathPoint(int32 aIndex, FIntVector2& OutPathPoint) const
+{
+	if (CachePath.IsValidIndex(aIndex))
+	{
+		OutPathPoint = CachePath[aIndex];
+		return true;
+	}
+
+	return false;
+}
+
+void UMS_MarketAIUnit::SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints) const
+{
+	TObjectPtr<UMS_ModeStateBase> ModeState = gModeMng.GetCurrentModeState();
+	if (ModeState == nullptr)
+	{
+		return;
+	}
+	
+	ModeState->SearchPathToTarget(aOutPath, GetActorGridPosition(), GetTargetPositions(), NotMovablePoints);
+}
+
+void UMS_MarketAIUnit::NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit)
+{
+	if (!CachePath.IsValidIndex(0))
+	{
+		return;
+	}
+	
+	// UnitDirection
+	const FVector2D UnitLocationXY = FVector2D(GetActorLocation().X, GetActorLocation().Y);
+	
+	FVector2D PathLocationXY = FMS_GridData::ConvertGridPositionToLocation(CachePath[0],
+			IsGridSizeXOdd(), IsGridSizeYOdd());
+		
+	EMS_Direction UnitDirection = UMS_MathUtility::GetDirection(UnitLocationXY, PathLocationXY);
+
+	// OtherUnitDirection
+	EMS_Direction OtherUnitDirection = EMS_Direction::None;
+
+	const FVector2D OtherUnitLocationXY = FVector2D(aOtherUnit->GetActorLocation().X, aOtherUnit->GetActorLocation().Y);
+
+	FIntVector2 FirstOtherUnitPathPoint;
+	if (aOtherUnit->GetPathPoint(0, FirstOtherUnitPathPoint))
+	{
+		FVector2D OtherPathLocationXY = FMS_GridData::ConvertGridPositionToLocation(FirstOtherUnitPathPoint,
+				aOtherUnit->IsGridSizeXOdd(), aOtherUnit->IsGridSizeYOdd());
+	
+		OtherUnitDirection = UMS_MathUtility::GetDirection(OtherUnitLocationXY, OtherPathLocationXY);
+	}
+
+	// 행동
+	if (UnitDirection == EMS_Direction::None /*|| IsStopped()*/)
+	{
+		return;
+	}
+
+	if (OtherUnitDirection == EMS_Direction::None /*|| IsStopped()*/)
+	{
+		FIntVector2 OtherUnitGridPosition = aOtherUnit->GetActorGridPosition();
+		if (aOtherUnit->GetActorGridPosition() == CachePath.Last())
+		{
+			StopMove(5.f);
+		}
+		else
+		{
+			TArray<FIntVector2> NewPath;
+			SearchPathToTarget(NewPath, GetActorGridPosition(), CacheTargetPositions, aOtherUnit->GetFullActorGridPositions());
+
+			if (NewPath.Num() > 1)
+			{
+				CachePath = NewPath;
+			}
+		}
+		
+		return;
+	}
+
+	if (UnitDirection == OtherUnitDirection)
+	{
+		FVector DirectionVector = UMS_MathUtility::ConvertDirectionToVector(UnitDirection);
+		FVector LocationDiff = aOtherUnit->GetActorLocation() - GetActorLocation();
+
+		float DotProduct = DirectionVector.X * LocationDiff.X + DirectionVector.Y * LocationDiff.Y;
+
+		if (DotProduct > 0.f) // UnitDirection 기준으로 내가 더 뒤쪽에 있음
+		{
+			StopMove(5.f);
+		}
+	}
+	else
+	{
+		if (IsA(UMS_CustomerAIUnit::StaticClass()) && aOtherUnit->IsA(UMS_StaffAIUnit::StaticClass()))
+		{
+			return;
+		}
+		
+		if ((IsA(UMS_StaffAIUnit::StaticClass()) && aOtherUnit->IsA(UMS_CustomerAIUnit::StaticClass()))
+			|| UnitHandle > aOtherUnit->GetUnitHandle())
+		{
+			TArray<FIntVector2> NewPath;
+			SearchPathToTarget(NewPath, GetActorGridPosition(), CacheTargetPositions, aOtherUnit->GetFullActorGridPositions());
+
+			if (NewPath.Num() > 1)
+			{
+				CachePath = NewPath;
+			}
+			else
+			{
+				StopMove(2.f);
+			}
+		}
+	}
+}
+
+void UMS_MarketAIUnit::StopMove(float aTime)
+{
+	RemainStopTime = aTime;
 }
 
 FMS_SlotData UMS_MarketAIUnit::GetSlotData(int32 aSlotId) const

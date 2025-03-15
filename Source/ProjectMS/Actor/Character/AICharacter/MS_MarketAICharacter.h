@@ -27,7 +27,9 @@ public:
 	virtual void Tick(float aDeltaTime) override;
 
 	virtual void PostInitialize(MS_Handle aUnitHandle);
-
+	
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
 	EMS_Direction GetWalkingDirection() const { return WalkingDirection; }
 	const FVector2D& GetPathLocation() const { return PathLocation; }
 	

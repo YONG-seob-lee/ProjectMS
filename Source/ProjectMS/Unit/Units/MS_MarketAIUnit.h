@@ -23,6 +23,7 @@ public:
 	virtual bool SetUnitCharacter(TObjectPtr<class AMS_CharacterBase> aUnitCharacter, bool bForced = false);
 	
 	FIntVector2 GetActorGridPosition() const;
+	TArray<FIntVector2> GetFullActorGridPositions() const;
 	FVector GetActorLocation() const;
 	FRotator GetActorRotator() const;
 	
@@ -37,12 +38,22 @@ public:
 	// Location
 	bool IsGridSizeXOdd() const { return false; }
 	bool IsGridSizeYOdd() const { return false; }
+
+	bool IsStopped() const { return RemainStopTime > 0.f; }
 	
-	EBTNodeResult::Type UpdateActorLocationByPath();
+	EBTNodeResult::Type UpdateActorLocationByPath(float aDeltaSeconds);
 	void OnReachPathLocation(const FVector2D& aReachedLocation);
 
 	TWeakObjectPtr<class UMS_FurnitureUnit> GetInteractableFurnitureUnit() const;
 	TWeakObjectPtr<class UMS_PropSpaceComponent> GetInteractionPropSpaceComponent() const;
+
+	bool GetPathPoint(int32 aIndex, FIntVector2& OutPathPoint) const;
+
+	virtual void SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints = {}) const;
+	
+	void NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit);
+
+	void StopMove(float aTime);
 	
 	// Slot
 	FORCEINLINE void GetSlotDatas(TArray<FMS_SlotData>& aOutSlotDatas) const { aOutSlotDatas = SlotDatas; }
@@ -72,6 +83,8 @@ private:
 
 	EMS_Direction CacheDirection = EMS_Direction::None; 
 	EMS_Direction CacheNextDirection = EMS_Direction::None;
+
+	float RemainStopTime = 0.f;
 
 protected:
 	// Slot

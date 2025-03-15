@@ -66,7 +66,7 @@ void UMS_MoveToTargetAITask::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 		return;
 	}
 
-	EBTNodeResult::Type Result = AIUnit->UpdateActorLocationByPath();
+	EBTNodeResult::Type Result = AIUnit->UpdateActorLocationByPath(DeltaSeconds);
 	if (Result != EBTNodeResult::Type::InProgress)
 	{
 		AIUnit->ResetPath();

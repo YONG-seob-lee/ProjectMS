@@ -1,14 +1,14 @@
-﻿#include "MS_GridBFS_2x2.h"
+﻿#include "MS_PathFinder.h"
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "Manager_Client/MS_SceneManager.h"
 
 
-UMS_GridBFS_2x2::UMS_GridBFS_2x2()
+UMS_PathFinder::UMS_PathFinder()
 {
 }
 
-void UMS_GridBFS_2x2::CollectAllZoneTypeMovingPoints()
+void UMS_PathFinder::CollectAllZoneTypeMovingPoints()
 {
 	CollectMovingPoints(EMS_ZoneType::Display);
 	CollectMovingPoints(EMS_ZoneType::Shelf);
@@ -16,7 +16,7 @@ void UMS_GridBFS_2x2::CollectAllZoneTypeMovingPoints()
 	CollectMovingPoints(EMS_ZoneType::Outside);
 }
 
-void UMS_GridBFS_2x2::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
+void UMS_PathFinder::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 {
 	TArray<FIntVector2> FreeMovableGridPositions;
 	FreeMovableGridPositions.Empty();
@@ -83,8 +83,8 @@ void UMS_GridBFS_2x2::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 	}
 }
 
-void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition,
-	const TArray<FIntVector2>& aTargetPositions) const
+void UMS_PathFinder::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints /*= {}*/) const
 {
 	// 다른 타입의 존일때 Gate까지만 계산해서 계산량을 줄임
 	// ToDo : 같은 존 타입 사이에 Gate를 두게 됐을때 aSearchZoneType 인자를 더 구체적으로 받을 것
@@ -122,6 +122,15 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearch
 		}
 	}
 
+	// NotMovablePoint
+	for (const FIntVector2& NotMovablePoint : aNotMovablePoints)
+	{
+		if (FreeMovableWalkingPoints.Contains(NotMovablePoint))
+		{
+			FreeMovableWalkingPoints.RemoveSingle(NotMovablePoint);
+		}
+	}
+	
 	// Search
 	TQueue<FIntVector2> Queue;
 	TMap<FIntVector2, FIntVector2> VisitedPointToPreviousPoints;
@@ -150,14 +159,14 @@ void UMS_GridBFS_2x2::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearch
 					{
 						Queue.Enqueue(EnqueuePoint);
 						VisitedPointToPreviousPoints.Emplace(EnqueuePoint, TestPoint);
-					}
-				}
 
-				if (aTargetPositions.Contains(EnqueuePoint))
-				{
-					bSucceed = true;
-					SucceedTarget = EnqueuePoint;
-					break;
+						if (aTargetPositions.Contains(EnqueuePoint))
+						{
+							bSucceed = true;
+							SucceedTarget = EnqueuePoint;
+							break;
+						}
+					}
 				}
 			}	
 		}

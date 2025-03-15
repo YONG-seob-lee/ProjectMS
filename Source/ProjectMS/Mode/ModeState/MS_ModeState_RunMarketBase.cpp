@@ -16,7 +16,7 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Manager_Client/MS_SequenceManager.h"
 #include "Mode/ModeObject/Container/MS_IssueTicketContainer.h"
-#include "Mode/ModeObject/Navigation/MS_GridBFS_2x2.h"
+#include "Mode/ModeObject/Navigation/MS_PathFinder.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Units/MS_StorageUnit.h"
 #include "Units/MS_GateUnit.h"
@@ -51,7 +51,7 @@ void UMS_ModeState_RunMarketBase::Initialize(uint8 aIndex, const FName& aName)
 		CustomerSupervisor->Initialize();
 	}
 
-	GridBFS_2x2 = MS_NewObject<UMS_GridBFS_2x2>(this);
+	PathFinder = MS_NewObject<UMS_PathFinder>(this);
 }
 
 void UMS_ModeState_RunMarketBase::Finalize()
@@ -112,9 +112,9 @@ void UMS_ModeState_RunMarketBase::Begin()
 		CustomerSupervisor->Begin();
 	}
 
-	if (IsValid(GridBFS_2x2))
+	if (IsValid(PathFinder))
 	{
-		GridBFS_2x2->CollectAllZoneTypeMovingPoints();
+		PathFinder->CollectAllZoneTypeMovingPoints();
 	}
 
 	// Item Manager
@@ -233,7 +233,7 @@ void UMS_ModeState_RunMarketBase::UpdateScheduleEvent(int32 aScheduleEvent)
 }
 
 void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPath, const FIntVector2& aStartPosition,
-	const TArray<FIntVector2>& aTargetPositions) const
+	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& NotMovablePoints /*= {}*/) const
 {
 	aOutPath.Empty();
 	
@@ -263,7 +263,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 		// Search
 		if (StartZoneType == TargetZoneType)
 		{
-			GridBFS_2x2->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions);
+			PathFinder->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions, NotMovablePoints);
 		}
 
 		// ===== ToDo : 더 보편적인 코드로 수정 ===== //
@@ -285,7 +285,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 				}
 			}
 			
-			GridBFS_2x2->Search(PathToFirstGate, StartZoneType, aStartPosition, GatePositions);
+			PathFinder->Search(PathToFirstGate, StartZoneType, aStartPosition, GatePositions, NotMovablePoints);
 
 			// Linked First Gate에서 Second Gate까지
 			TArray<FIntVector2> PathToSecondGate = {};
@@ -315,7 +315,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					}
 				}
 
-				GridBFS_2x2->Search(PathToSecondGate, EMS_ZoneType::Shelf, FirstGateUnit->GetLinkedGridPosition(), SecondGatePositions);
+				PathFinder->Search(PathToSecondGate, EMS_ZoneType::Shelf, FirstGateUnit->GetLinkedGridPosition(), SecondGatePositions, NotMovablePoints);
 			
 				// Linked Second Gate에서 타겟까지
 				if (PathToSecondGate.Num() != 0)
@@ -334,7 +334,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 						}
 					}
 
-					GridBFS_2x2->Search(PathToTarget, TargetZoneType, SecondGateUnit->GetLinkedGridPosition(), aTargetPositions);
+					PathFinder->Search(PathToTarget, TargetZoneType, SecondGateUnit->GetLinkedGridPosition(), aTargetPositions, NotMovablePoints);
 
 					if (PathToTarget.Num() != 0)
 					{
@@ -364,7 +364,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 				}
 			}
 			
-			GridBFS_2x2->Search(PathToGate, StartZoneType, aStartPosition, GatePositions);
+			PathFinder->Search(PathToGate, StartZoneType, aStartPosition, GatePositions);
 
 			
 			// Linked Gate에서 타겟까지
@@ -384,7 +384,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					}
 				}
 
-				GridBFS_2x2->Search(PathToTarget, TargetZoneType, TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
+				PathFinder->Search(PathToTarget, TargetZoneType, TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
 
 				if (PathToTarget.Num() != 0)
 				{
@@ -396,6 +396,11 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					// ToDo : 다른 Gate를 통하면 목표에 갈 수 있나
 				}
 			}
+		}
+
+		if (aOutPath.Num() > 1)
+		{
+			aOutPath.RemoveAt(0); // 자연스러운 이동을 위해 첫 위치(시작위치와 가장 가까운 위치)는 없앰
 		}
 	}
 }

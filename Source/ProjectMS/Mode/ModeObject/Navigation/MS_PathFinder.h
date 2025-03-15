@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
-#include "MS_GridBFS_2x2.generated.h"
+#include "MS_PathFinder.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_GridBFS_2x2 : public UObject
+class PROJECTMS_API UMS_PathFinder : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	UMS_GridBFS_2x2();
+	UMS_PathFinder();
 	
 	void CollectAllZoneTypeMovingPoints();
 
@@ -23,7 +23,7 @@ private:
 	void CollectMovingPoints(EMS_ZoneType aCollectZoneType);
 
 public:
-	void Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions) const;
+	void Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints = {}) const;
 	
 private:
 	TArray<FIntVector2> DisplayFreeMovableWalkingPoints = {};

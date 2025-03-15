@@ -12,6 +12,7 @@
 #include "Components/WidgetComponent.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Units/MS_MarketAIUnit.h"
 
 
 AMS_MarketAICharacter::AMS_MarketAICharacter()
@@ -155,8 +156,24 @@ void AMS_MarketAICharacter::PostInitialize(MS_Handle aUnitHandle)
 	}
 }
 
+void AMS_MarketAICharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if (AMS_MarketAICharacter* OtherCharacter = Cast<AMS_MarketAICharacter>(OtherActor))
+	{
+		UMS_MarketAIUnit* OwnerCharacterUnit = Cast<UMS_MarketAIUnit>(GetOwnerUnitBase());
+		UMS_MarketAIUnit* OtherCharacterUnit = Cast<UMS_MarketAIUnit>(OtherCharacter->GetOwnerUnitBase());
+		if (OwnerCharacterUnit && OtherCharacterUnit)
+		{
+			
+			OwnerCharacterUnit->NotifyActorBeginOverlap(OtherCharacterUnit);
+		}
+	}
+}
+
 void AMS_MarketAICharacter::SetWalkingDirectionAndPathLocation(EMS_Direction aWalkingDirection,
-																FVector2D aPathLocation, bool aStopInPathLocation)
+                                                               FVector2D aPathLocation, bool aStopInPathLocation)
 {
 	if (PathLocation != aPathLocation)
 	{
@@ -188,14 +205,14 @@ void AMS_MarketAICharacter::UpdateLocation(float aDeltaTime)
 
 	// 프레임 드랍으로 경로를 벗어났을때 위치 이동
 	// ToDo : 보완 및 버그로 인해 PathLocation이 유효하지 않을 때 검사 필요
-	if (FMath::Abs((PathLocation - FVector2D(NewLocation.X, NewLocation.Y)).Length()) >
+	/*if (FMath::Abs((PathLocation - FVector2D(NewLocation.X, NewLocation.Y)).Length()) >
 		FMath::Max(MS_GridSize.X, FMath::Abs((PathLocation - PreviousPathLocation).Length())) * 4.f)
 	{
 
 		SetActorLocation(FVector(PathLocation.X, PathLocation.Y, NewLocation.Z));
 		bool bBound = OnReachPathLocationDelegate.ExecuteIfBound(PathLocation);
 		return;
-	}
+	}*/
 	
 	switch (WalkingDirection)
 	{

@@ -5,8 +5,6 @@
 
 #include "AI/AIController/MS_AIController.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
-#include "Manager_Client/MS_ModeManager.h"
-#include "Mode/ModeState/MS_ModeStateBase.h"
 #include "Units/MS_MarketAIUnit.h"
 
 
@@ -35,15 +33,9 @@ EBTNodeResult::Type UMS_SearchPathAITask::ExecuteTask(UBehaviorTreeComponent& Ow
 	{
 		return EBTNodeResult::Type::Failed;
 	}
-	
-	TObjectPtr<UMS_ModeStateBase> ModeState = gModeMng.GetCurrentModeState();
-	if (ModeState == nullptr)
-	{
-		return EBTNodeResult::Type::Failed;
-	}
 
 	TArray<FIntVector2> Path = {};
-	ModeState->SearchPathToTarget(Path, AIUnit->GetActorGridPosition(), AIUnit->GetTargetPositions());
+	AIUnit->SearchPathToTarget(Path, AIUnit->GetActorGridPosition(), AIUnit->GetTargetPositions());
 
 	if (Path.IsEmpty())
 	{
