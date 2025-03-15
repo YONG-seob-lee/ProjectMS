@@ -39,6 +39,7 @@ void UMS_StaffActionWidget::InitStaffActionBox()
 	
 	if(CPP_StaffIssueBox)
 	{
+		CPP_StaffIssueBox->ClearOptions();
 		int32 SelectedIndex = INDEX_NONE;
 		
 		for(int32 i = 0 ; i < static_cast<int32>(EMS_StaffUIPriorityType::EMS_StaffUIPriorityType_Max); ++i)
