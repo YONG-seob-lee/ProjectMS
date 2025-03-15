@@ -355,12 +355,12 @@ void UMS_MarketAIUnit::NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit)
 	}
 
 	// 행동
-	if (UnitDirection == EMS_Direction::None /*|| IsStopped()*/)
+	if (UnitDirection == EMS_Direction::None)
 	{
 		return;
 	}
 
-	if (OtherUnitDirection == EMS_Direction::None /*|| IsStopped()*/)
+	if (OtherUnitDirection == EMS_Direction::None)
 	{
 		FIntVector2 OtherUnitGridPosition = aOtherUnit->GetActorGridPosition();
 		if (aOtherUnit->GetActorGridPosition() == CachePath.Last())
@@ -390,7 +390,7 @@ void UMS_MarketAIUnit::NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit)
 
 		if (DotProduct > 0.f) // UnitDirection 기준으로 내가 더 뒤쪽에 있음
 		{
-			StopMove(5.f);
+			StopMove(3.f);
 		}
 	}
 	else
@@ -412,7 +412,7 @@ void UMS_MarketAIUnit::NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit)
 			}
 			else
 			{
-				StopMove(2.f);
+				StopMove(1.5f);
 			}
 		}
 	}
