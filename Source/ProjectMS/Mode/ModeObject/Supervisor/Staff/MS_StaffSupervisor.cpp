@@ -228,6 +228,12 @@ void UMS_StaffSupervisor::InitStaffSpawnPoint()
 		{
 			continue;
 		}
+
+		const FMS_GameDate GameDate = gScheduleMng.GetGameDate();
+		if(GameDate < StaffData.FirstDateOfWork)
+		{
+			continue;
+		}
 		
 		const int32 TargetSpawnIndex = FMath::RandRange(0, StaffSpawnPoints.Num() - 1);
 		
