@@ -15,9 +15,14 @@ void UMS_StaffActionWidget::InitWidget(const FName& aTypeName, bool bManaged, bo
 {
 	Super::InitWidget(aTypeName, bManaged, bAttachToRoot);
 
-	if(CPP_Button)
+	if(CPP_ConfirmButton)
 	{
-		CPP_Button->GetOnClickedDelegate().AddUObject(this, &UMS_StaffActionWidget::OnClickedCancelButton);
+		CPP_ConfirmButton->GetOnClickedDelegate().AddUObject(this, &UMS_StaffActionWidget::OnClickedCancelButton);
+	}
+
+	if(CPP_CancelButton)
+	{
+		CPP_CancelButton->GetOnClickedDelegate().AddUObject(this, &UMS_StaffActionWidget::OnClickedCancelButton);
 	}
 }
 

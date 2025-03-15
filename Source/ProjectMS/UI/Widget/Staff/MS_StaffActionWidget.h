@@ -34,7 +34,10 @@ private:
 	TObjectPtr<class UComboBoxString> CPP_StaffIssueBox = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
-	TObjectPtr<class UMS_Button> CPP_Button = nullptr;
+	TObjectPtr<class UMS_Button> CPP_ConfirmButton = nullptr;
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_Button> CPP_CancelButton = nullptr;
 
 	UPROPERTY()
 	TWeakObjectPtr<class UMS_StaffAIUnit> OwnerUnit;

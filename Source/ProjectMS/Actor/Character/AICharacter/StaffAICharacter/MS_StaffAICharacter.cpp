@@ -25,7 +25,7 @@ void AMS_StaffAICharacter::ShowStaffStatusWidget(const FVector2D& _ClickPosition
 				StaffActionWidget->InitStaffActionWidget(AIUnit);
 			}
 		}
-		gWidgetMng.SetCustomPositionWidget(Widget, _ClickPosition);
+		//gWidgetMng.SetCustomPositionWidget(Widget, _ClickPosition);
 	}
 }
 
