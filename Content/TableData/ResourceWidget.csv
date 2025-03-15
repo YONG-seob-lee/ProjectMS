@@ -23,3 +23,4 @@ Id,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 22,BuyFurniture,100,22,FALSE,0
 23,Dialog,100,23,FALSE,0
 24,StaffAction,100,24,FALSE,0
+25,SystemMessage,100,25,FALSE,0

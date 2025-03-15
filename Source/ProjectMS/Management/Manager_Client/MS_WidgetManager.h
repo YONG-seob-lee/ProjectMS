@@ -11,6 +11,28 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_CreateWidget, const FName&);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMS_DestroyWidget, const FName&);
 
+UENUM()
+enum class EMS_InteractButtonType
+{
+	None = 0,
+	OnlyConfirm = 1,
+	OnlyCancel = 2,
+	Both = 3
+};
+
+struct FMS_SystemParameter
+{
+	bool bUseBlurButton = false;
+	bool bShowExitButton = false;
+	FString Title = FString();
+	FString SubTitle = FString();
+	FString Desc = FString();
+	FString Deny = FString();
+	EMS_InteractButtonType InteractButtonType = EMS_InteractButtonType::None;
+	TFunction<void(bool&)> OnClickedConfirmButtonCallback = nullptr;
+	TFunction<void()> OnClickedCancelButtonCallback = nullptr;
+};
+
 /**
  * 
  */
@@ -44,7 +66,7 @@ public:
 	void ActivatePreventionCover(bool bActivate) const;
 	void ShowMessageOnScreen(const FString& aMessage, bool bNewerOnTop = true, float aElapsedTime = 3.f, FColor aDisplayColor = FColor::Green);
 	void ShowToastMessage(const FString& aMessage) const;
-	
+	void ShowSystemMessage(const FMS_SystemParameter& SystemParameter);
 	void ShowRotateWidget() const;
 	void HideRotateWidget() const;
 

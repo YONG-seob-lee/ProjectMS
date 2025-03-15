@@ -20,13 +20,18 @@ class PROJECTMS_API UMS_ZoneOpenWidget : public UMS_Widget
 public:
 	virtual void NativeOnInitialized() override;
 	
+	void SetPrice(int32 _Price);
 	void OnClickZoneOpenButton();
 
 	
 protected:
+	int32 ZonePrice = 0;
+	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_Button> CPP_ZoneOpenButton = nullptr;
 
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_ZonePrice = nullptr;
 	
 public:
 	FMS_OnClickZoneOpenButtonDelegate OnClickZoneOpenButtonDelegate;

@@ -194,6 +194,17 @@ bool UMS_ItemManager::IsHaveEnoughMoney(const TMap<int32, int32>& aOrderItems, b
 	return *GoldMoney >= TotalPrice;
 }
 
+bool UMS_ItemManager::IsHaveEnoughMoney(int32 _RequiredMoney)
+{
+	const int32* GoldMoney = Moneys.Find(static_cast<int32>(EMS_MoneyType::Gold));
+	if(!GoldMoney)
+	{
+		return false;
+	}
+	
+	return *GoldMoney >= _RequiredMoney;
+}
+
 void UMS_ItemManager::GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType) const
 {
 	TMap<int32, int32> TestItems = Items;

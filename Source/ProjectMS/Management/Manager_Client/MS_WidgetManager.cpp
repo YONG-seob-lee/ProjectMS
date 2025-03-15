@@ -13,6 +13,7 @@
 #include "UI/Widget/MS_Widget.h"
 #include "Utility/MS_Define.h"
 #include "Widget/MS_RootWidget.h"
+#include "Widget/System/MS_SystemMessageWidget.h"
 
 UMS_WidgetManager::UMS_WidgetManager()
 {
@@ -244,6 +245,14 @@ void UMS_WidgetManager::ShowToastMessage(const FString& aMessage) const
 	if(RootWidget)
 	{
 		RootWidget->ShowToastMessage(aMessage);
+	}
+}
+
+void UMS_WidgetManager::ShowSystemMessage(const FMS_SystemParameter& SystemParameter)
+{
+	if(const TObjectPtr<UMS_SystemMessageWidget> SystemMessageWidget = Cast<UMS_SystemMessageWidget>(gWidgetMng.Create_Widget(UMS_SystemMessageWidget::GetWidgetName())))
+	{
+		SystemMessageWidget->InitSystemMessage(SystemParameter);
 	}
 }
 

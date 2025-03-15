@@ -55,25 +55,25 @@ public:
 
 	
 	// Getter
-	int32 GetZoneIndex() const { return ZoneIndex; }
+	FORCEINLINE int32 GetZoneIndex() const { return ZoneIndex; }
+	FORCEINLINE int32 GetZonePrice() const { return ZonePrice; }
+	FORCEINLINE EMS_ZoneType GetZoneType() const { return ZoneType; }
 
-	EMS_ZoneType GetZoneType() const { return ZoneType; }
-
-	const TArray<int32>& GetTestConditionZoneIds() const { return TestConditionZoneIds; }
+	FORCEINLINE const TArray<int32>& GetTestConditionZoneIds() const { return TestConditionZoneIds; }
 	
-	const FVector& GetZoneLocation() const { return ZoneLocation; }
+	FORCEINLINE const FVector& GetZoneLocation() const { return ZoneLocation; }
 	
-	const FIntVector2& GetZoneGridNum() const { return ZoneGridNum; }
+	FORCEINLINE const FIntVector2& GetZoneGridNum() const { return ZoneGridNum; }
 	
-	const FIntVector2& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
+	FORCEINLINE const FIntVector2& GetZoneWorldGridPosition() const { return ZoneWorldGridPosition; }
 
-	const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
+	FORCEINLINE const TMap<FIntVector2, FMS_GridData>& GetGrids() const { return Grids; }
 
-	bool IsOpened() const { return bOpened; }
+	FORCEINLINE bool IsOpened() const { return bOpened; }
 	
 	const FMS_GridData* GetGrid(const FIntVector2& aGridPosition) const;
 
-	void GetGateUnits(TArray<class UMS_GateUnit*>& aOutGateUnits) const
+	FORCEINLINE void GetGateUnits(TArray<class UMS_GateUnit*>& aOutGateUnits) const
 	{
 		aOutGateUnits = GateUnits;
 	}
@@ -102,37 +102,40 @@ protected:
 private:
 	// Zone Data
 	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
-	int32 ZoneIndex;
-	
-	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
-	EMS_ZoneType ZoneType;
+	int32 ZoneIndex = 0;
 
 	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
-	TArray<int32> TestConditionZoneIds;
+	int32 ZonePrice = 0;
+	
+	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
+	EMS_ZoneType ZoneType = EMS_ZoneType::None;
+
+	UPROPERTY(EditInstanceOnly, Category=MS_ZoneInfo)
+	TArray<int32> TestConditionZoneIds = {};
 	
 	UPROPERTY()
-	FVector ZoneLocation;
+	FVector ZoneLocation = FVector::ZeroVector;
 
 	UPROPERTY()
-	FVector ZoneSize;
+	FVector ZoneSize = FVector::ZeroVector;
 	
 	UPROPERTY()
-	FIntVector2 ZoneGridNum;
+	FIntVector2 ZoneGridNum = FIntVector2::NoneValue;
 
 	UPROPERTY()
-	FIntVector2 ZoneWorldGridPosition;
+	FIntVector2 ZoneWorldGridPosition = FIntVector2::NoneValue;
 
 	UPROPERTY()
-	bool bOpened;
+	bool bOpened = false;
 	
 	UPROPERTY()
-	TMap<FIntVector2, FMS_GridData> Grids;
+	TMap<FIntVector2, FMS_GridData> Grids = {};
 
 	UPROPERTY()
-	TMap<FVector, FMS_WallData> LocationToWallDatas;
+	TMap<FVector, FMS_WallData> LocationToWallDatas = {};
 
 	UPROPERTY()
-	TArray<TObjectPtr<class UMS_GateUnit>> GateUnits;
+	TArray<TObjectPtr<class UMS_GateUnit>> GateUnits = {};
 
 public:
 	FMS_RequestOpenZoneDelegate RequestOpenZoneDelegate;

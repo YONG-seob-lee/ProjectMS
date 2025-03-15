@@ -49,6 +49,7 @@ public:
 	void EarnMoney(const TMap<int32, int32>& SellItems);
 	int32 GetTotalGoldMoney();
 	bool IsHaveEnoughMoney(const TMap<int32, int32>& aOrderItems, bool bItemTypeIsFurniture = false, EMS_MoneyType aMoneyType = EMS_MoneyType::Gold);
+	bool IsHaveEnoughMoney(int32 _RequiredMoney);
 	
 	// Items
 	void GetDeployableItems(TMap<int32, int32>& OutItems, EMS_TemperatureType aTemperatureType = EMS_TemperatureType::Undefined) const;

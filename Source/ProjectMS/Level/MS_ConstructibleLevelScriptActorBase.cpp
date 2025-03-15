@@ -10,6 +10,7 @@
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
 #include "Controller/MS_PlayerController.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "Table/RowBase/MS_FurnitureData.h"
@@ -461,6 +462,8 @@ void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
 			|| Zone->GetZoneType() == EMS_ZoneType::Shelf)
 		{
 			PlayerState->AddOpenedZoneId(aZoneIndex);
+			PlayerState->SettleMoney((-1) * Zone->GetZonePrice());
+			gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(true);
 			PlayerState->SavePlayerData();
 		}
 		

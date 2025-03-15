@@ -71,6 +71,7 @@ void AMS_Zone::BeginPlay()
 		if (UMS_ZoneOpenWidget* ZoneOpenWidget = Cast<UMS_ZoneOpenWidget>(ZoneOpenWidgetComponent->GetWidget()))
 		{
 			ZoneOpenWidget->OnClickZoneOpenButtonDelegate.BindUObject(this, &AMS_Zone::OnClickZoneOpenWidget);
+			ZoneOpenWidget->SetPrice(ZonePrice);
 		}
 	}
 	
