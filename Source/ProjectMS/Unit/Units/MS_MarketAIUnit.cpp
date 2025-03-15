@@ -7,6 +7,7 @@
 #include "MS_CustomerAIUnit.h"
 #include "MS_FurnitureUnit.h"
 #include "MS_StaffAIUnit.h"
+#include "Animation/Market/MS_MarketAIAnimInstance.h"
 #include "Character/MS_CharacterBase.h"
 #include "Character/AICharacter/MS_MarketAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
@@ -106,16 +107,21 @@ FRotator UMS_MarketAIUnit::GetActorRotator() const
 
 void UMS_MarketAIUnit::ResetPath()
 {
-	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
-	if (IsValid(MarketAICharacter))
-	{
-		MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, FVector2D::ZeroVector, true);
-	}
-	
 	CacheTargetPositions.Empty();
 	CachePath.Empty();
 
 	RemainStopTime = 0.f;
+	
+	AMS_MarketAICharacter* MarketAICharacter = Cast<AMS_MarketAICharacter>(GetCharacter());
+	if (IsValid(MarketAICharacter))
+	{
+		MarketAICharacter->SetWalkingDirectionAndPathLocation(EMS_Direction::None, FVector2D::ZeroVector, true);
+		
+		if (const TObjectPtr<UMS_MarketAIAnimInstance> AIAnimInstance = Cast<UMS_MarketAIAnimInstance>(MarketAICharacter->GetAIAnimInstance()))
+		{
+			AIAnimInstance->SetIsStopped(false);
+		}
+	}
 }
 
 EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath(float aDeltaSeconds)
@@ -138,6 +144,14 @@ EBTNodeResult::Type UMS_MarketAIUnit::UpdateActorLocationByPath(float aDeltaSeco
 		if (RemainStopTime <= 0.f)
 		{
 			RemainStopTime = 0.f;
+
+			if (const TObjectPtr<AMS_MarketAICharacter> AICharacter = Cast<AMS_MarketAICharacter>(GetCharacter()))
+			{
+				if (const TObjectPtr<UMS_MarketAIAnimInstance> AIAnimInstance = Cast<UMS_MarketAIAnimInstance>(AICharacter->GetAIAnimInstance()))
+				{
+					AIAnimInstance->SetIsStopped(false);
+				}
+			}
 		}
 		
 		else
@@ -407,6 +421,17 @@ void UMS_MarketAIUnit::NotifyActorBeginOverlap(UMS_MarketAIUnit* aOtherUnit)
 void UMS_MarketAIUnit::StopMove(float aTime)
 {
 	RemainStopTime = aTime;
+
+	if (aTime > 0.f)
+	{
+		if (const TObjectPtr<AMS_MarketAICharacter> AICharacter = Cast<AMS_MarketAICharacter>(GetCharacter()))
+		{
+			if (const TObjectPtr<UMS_MarketAIAnimInstance> AIAnimInstance = Cast<UMS_MarketAIAnimInstance>(AICharacter->GetAIAnimInstance()))
+			{
+				AIAnimInstance->SetIsStopped(true);
+			}
+		}
+	}
 }
 
 FMS_SlotData UMS_MarketAIUnit::GetSlotData(int32 aSlotId) const

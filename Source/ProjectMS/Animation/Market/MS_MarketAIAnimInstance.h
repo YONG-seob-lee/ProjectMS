@@ -20,6 +20,9 @@ class PROJECTMS_API UMS_MarketAIAnimInstance : public UMS_AIAnimInstance
 public:
 	UFUNCTION(BlueprintCallable, Meta = (BlueprintThreadSafe))
 	void SetInAction(bool aInAction);
+
+	UFUNCTION()
+	void SetIsStopped(bool aIsStopped);
 	
 	FORCEINLINE bool IsInAction() const { return bInAction; }
 
@@ -31,6 +34,9 @@ private:
 	bool bInAction = false;
 
 protected:
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsStopped = false;
+	
 	UPROPERTY(BlueprintReadOnly)
 	FName EquipmentName;
 
