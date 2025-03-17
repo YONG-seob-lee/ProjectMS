@@ -144,6 +144,8 @@ private:
 public:
 	inline static TObjectPtr<UMS_TableManager> TableManager = nullptr;
 	static UMS_TableManager* GetInstance();
+
+	static UClass* GetClassByTablePathId(int32 aPathId);
 	
 #define gTableMng (*UMS_TableManager::GetInstance())
 };

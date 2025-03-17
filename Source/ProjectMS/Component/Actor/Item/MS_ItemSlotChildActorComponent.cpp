@@ -4,7 +4,6 @@
 #include "MS_ItemSlotChildActorComponent.h"
 
 #include "MS_Define.h"
-#include "UtilityFunctions.h"
 #include "Item/MS_SlotActor.h"
 #include "Manager_Both/MS_TableManager.h"
 #include "Table/RowBase/MS_ItemData.h"
@@ -76,7 +75,7 @@ void UMS_ItemSlotChildActorComponent::OnChangeCurrentSlotData(const FMS_SlotData
 	// Slot Kind
 	if (bChangeItemTableId)
 	{
-		UClass* SlotClass = UUtilityFunctions::GetClassByTablePathId(ItemData->SlotPath100x100);
+		UClass* SlotClass = UMS_TableManager::GetClassByTablePathId(ItemData->SlotPath100x100);
 
 		if (IsValid(SlotClass))
 		{

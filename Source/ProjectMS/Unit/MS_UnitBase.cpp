@@ -3,8 +3,8 @@
 
 #include "MS_UnitBase.h"
 
-#include "UtilityFunctions.h"
 #include "Controller/MS_PlayerController.h"
+#include "Manager_Both/MS_TableManager.h"
 #include "PlayerState/MS_PlayerState.h"
 #include "UnitState/MS_UnitStateBase.h"
 #include "CoreClass/StateMachine/MS_StateMachine.h"
@@ -86,7 +86,7 @@ UClass* UMS_UnitBase::GetBlueprintClass() const
 		return nullptr;
 	}
 
-	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
+	return UMS_TableManager::GetClassByTablePathId(BPPathId);
 }
 
 TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Pos, const FRotator& Rot,

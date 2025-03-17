@@ -309,3 +309,19 @@ UMS_TableManager* UMS_TableManager::GetInstance()
 {
 	return TableManager;
 }
+
+UClass* UMS_TableManager::GetClassByTablePathId(int32 aPathId)
+{
+	const FString Path = gTableMng.GetPath(EMS_TableDataType::BasePathBPFile, aPathId, true);
+	
+	UClass* Class = StaticLoadClass(UObject::StaticClass(), nullptr, *Path);
+	if(!IsValid(Class))
+	{
+		MS_LOG_VERBOSITY(Error, TEXT("[%s] Class is invalid [PathId : %d] [Path : %s]"), *MS_FUNC_STRING, aPathId, *Path);
+		MS_ENSURE(false);
+
+		return nullptr;
+	}
+
+	return Class;
+}

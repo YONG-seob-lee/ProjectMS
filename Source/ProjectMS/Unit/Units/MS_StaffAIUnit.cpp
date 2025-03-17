@@ -5,8 +5,8 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "MS_StorageUnit.h"
-#include "UtilityFunctions.h"
 #include "Character/MS_CharacterBase.h"
+#include "Manager_Both/MS_TableManager.h"
 #include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -95,7 +95,7 @@ UClass* UMS_StaffAIUnit::GetBlueprintClass() const
 		return nullptr;
 	}
 
-	return UUtilityFunctions::GetClassByTablePathId(BPPathId);
+	return UMS_TableManager::GetClassByTablePathId(BPPathId);
 }
 
 bool UMS_StaffAIUnit::FindNearestSpline()
