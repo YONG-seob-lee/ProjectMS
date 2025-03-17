@@ -256,7 +256,7 @@ UWidgetComponent* AMS_Prop::GetArrangementWidgetComponent() const
 {
 	if (!bIsPreviewProp)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
 	
 	return ArrangementWidgetComponent;
@@ -266,7 +266,7 @@ UMS_ArrangementWidget* AMS_Prop::GetArrangementWidget() const
 {
 	if (!bIsPreviewProp)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 	}
 	
 	if (IsValid(ArrangementWidgetComponent))
@@ -286,7 +286,7 @@ void AMS_Prop::ShowArrangementWidget(bool bShow) const
 	{
 		if (!bIsPreviewProp)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] ArrangementWidget can't attach to this prop"), *MS_FUNC_STRING);
 		}
 	}
 

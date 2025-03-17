@@ -222,7 +222,7 @@ void UMS_ModeState_Construct::OnClickWidgetConstructItem(int32 aFurnitureId, int
 		FMS_FurnitureData* FurnitureData = gTableMng.GetTableRowData<FMS_FurnitureData>(EMS_TableDataType::Furniture, aFurnitureId);
 		if(FurnitureData == nullptr)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Furniture Data is invalid"));
+			MS_ERROR(TEXT("[%s] Furniture Data is invalid"), *MS_FUNC_STRING);
 			return;
 		}
 		

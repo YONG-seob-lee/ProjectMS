@@ -18,7 +18,7 @@ void UMS_UnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int
 	UnitType = aUnitType;
 	if (UnitHandle == InvalidUnitHandle)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] Unit Handle is invalid"), *MS_FUNC_STRING);
 		MS_ENSURE(false);
 
 		return;
@@ -58,7 +58,7 @@ bool UMS_UnitBase::CreateUnitActor(const FVector& aPosition, const FRotator& aRo
 {
 	if (TableId == INDEX_NONE)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] UnitTableId is invalid"), *MS_FUNC_STRING);
 		MS_ENSURE(false);
 
 		return false;
@@ -72,7 +72,7 @@ void UMS_UnitBase::DestroyUnitActor()
 
 int32 UMS_UnitBase::GetBlueprintPathId() const
 {
-	MS_LOG_VERBOSITY(Error, TEXT("[%s] Please Override this Function."), *MS_FUNC_STRING);
+	MS_ERROR(TEXT("[%s] Please Override this Function."), *MS_FUNC_STRING);
 	MS_ENSURE(false);
 	
 	return INDEX_NONE;
@@ -94,7 +94,7 @@ TObjectPtr<AActor> UMS_UnitBase::MS_SpawnActor(UClass* aClass, const FVector& Po
 {
 	if (!IsValid(aClass))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Class is not valid."), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] Class is not valid."), *MS_FUNC_STRING);
 		MS_ENSURE(false);
 		
 		return nullptr;

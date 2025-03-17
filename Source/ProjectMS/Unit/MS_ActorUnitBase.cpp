@@ -30,7 +30,7 @@ bool UMS_ActorUnitBase::CreateUnitActor(const FVector& aPosition, const FRotator
 {
 	if (Actor != nullptr)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
 		MS_ENSURE(false);
 	}
 	
@@ -67,7 +67,7 @@ bool UMS_ActorUnitBase::SetUnitActor(TObjectPtr<AMS_Actor> aUnitActor, bool bFor
 	{
 		if (!bForced)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] Actor already exist"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 
 			return false;
@@ -112,7 +112,7 @@ TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(const FVector& aVector, con
 		}
 	}
 
-	MS_LOG_VERBOSITY(Error, TEXT("[%s] Actor not created"), *MS_FUNC_STRING);
+	MS_ERROR(TEXT("[%s] Actor is not created"), *MS_FUNC_STRING);
 	MS_ENSURE(false);
 	return nullptr;	
 }

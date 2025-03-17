@@ -30,7 +30,7 @@ bool UMS_CharacterUnitBase::CreateUnitActor(const FVector& aPosition, const FRot
 {
 	if (Character != nullptr)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
 		MS_ENSURE(false);
 	}
 	
@@ -67,7 +67,7 @@ bool UMS_CharacterUnitBase::SetUnitCharacter(TObjectPtr<AMS_CharacterBase> aUnit
 	{
 		if (!bForced)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] Character already exist"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 
 			return false;
@@ -108,6 +108,6 @@ TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(UClass* aCl
 		return NewCharacter;
 	}
 	
-	MS_LOG_VERBOSITY(Error, TEXT("[%s] Character not created"), *MS_FUNC_STRING);
+	MS_ERROR(TEXT("[%s] Character not created"), *MS_FUNC_STRING);
 	return nullptr;
 }

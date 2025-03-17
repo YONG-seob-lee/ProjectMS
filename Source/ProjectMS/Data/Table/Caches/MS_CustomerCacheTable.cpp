@@ -60,14 +60,14 @@ void FMS_CustomerData::PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCou
 		if(*WannaItemCount < BeforePickUpItemCount + _PickUpItemCount)
 		{
 			MS_ENSURE(false);
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] I bought more than I wanted. Something Is Wrong."), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] I bought more than I wanted. Something Is Wrong."), *MS_FUNC_STRING);
 		}
 		BeforePickUpItemCount += _PickUpItemCount;
 	}
 	else
 	{
+		MS_ERROR(TEXT("[%s] Wrong Wanna To Buy Items Data. Please Check CustomerSupervisor Class."), *MS_FUNC_STRING);
 		MS_ENSURE(false);
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Wrong Wanna To Buy Items Data. Please Check CustomerSupervisor Class."), *MS_FUNC_STRING);
 	}
 }
 

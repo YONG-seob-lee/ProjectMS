@@ -96,7 +96,7 @@ MS_Handle UMS_CustomerManagementWidget::InitComboBox()
 		TObjectPtr<UMS_CustomerAIUnit> CustomerUnit = Cast<UMS_CustomerAIUnit>(gUnitMng.GetUnit(UnitHandle));
 		if(!CustomerUnit)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Warning!"));
+			MS_ERROR(TEXT("Warning!"));
 			continue;
 		}
 		UnitsName.Emplace(CustomerUnit->GetCustomerName(), UnitHandle);

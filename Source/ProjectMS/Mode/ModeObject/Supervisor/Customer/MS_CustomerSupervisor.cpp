@@ -129,7 +129,7 @@ void UMS_CustomerSupervisor::GetRandomSpawnPoint(FVector& SpawnLocation, FRotato
 	if(CustomerSpawnPoints.Num() < 1)
 	{
 		MS_ENSURE(false);
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Has No CustomerSpawnPoints. Please Check \'Customer Spawn Point\' In Market Level."), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] Has No CustomerSpawnPoints. Please Check \'Customer Spawn Point\' In Market Level."), *MS_FUNC_STRING);
 		return;
 	}
 
@@ -168,7 +168,7 @@ void UMS_CustomerSupervisor::CashingDuckSplineActors() const
 		AMS_CustomerSplineActor* SplineActor = Cast<AMS_CustomerSplineActor>(Spline);
 		if(!SplineActor)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));
+			MS_ERROR(TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));
 			return;
 		}
 		TObjectPtr<UMS_SplineUnit> SplineUnit = Cast<UMS_SplineUnit>(gUnitMng.CreateUnit(EMS_UnitType::CustomerSpline, INDEX_NONE, false));
@@ -177,13 +177,13 @@ void UMS_CustomerSupervisor::CashingDuckSplineActors() const
 			// Set Unit Actor
 			if (!SplineUnit->SetUnitActor(SplineActor))
 			{
-				MS_LOG_VERBOSITY(Error, TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
+				MS_ERROR(TEXT("[%s] Set Unit Actor Fail"), *MS_FUNC_STRING);
 				MS_ENSURE(false);
 			}
 		}
 		else
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] Create Unit Fail"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 		}
 	}

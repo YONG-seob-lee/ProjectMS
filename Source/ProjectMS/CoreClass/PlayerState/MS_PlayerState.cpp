@@ -60,7 +60,7 @@ void AMS_PlayerState::OrderItem(TMap<int32, int32>& aOrderItems)
 	if(!ItemTable)
 	{
 		MS_ENSURE(false);
-		MS_LOG_VERBOSITY(Error, TEXT("Please Check Item Table."));
+		MS_ERROR(TEXT("Please Check Item Table."));
 	}
 
 	int32& GoldMoney = Money.FindOrAdd((static_cast<int32>(EMS_MoneyType::Gold)));
@@ -102,7 +102,7 @@ void AMS_PlayerState::OrderFurniture(const TMap<int32, int32>& aOrderFurnitures)
 	if(!FurnitureTable)
 	{
 		MS_ENSURE(false);
-		MS_LOG_VERBOSITY(Error, TEXT("Please Check Item Table."));
+		MS_ERROR(TEXT("Please Check Item Table."));
 	}
 	
 	int32& GoldMoney = Money.FindOrAdd((static_cast<int32>(EMS_MoneyType::Gold)));
@@ -132,7 +132,7 @@ void AMS_PlayerState::SetFurnitureSlotDatas(const FIntVector2& aGridPosition, co
 	// ToDo: 슬롯정보가 무결한지 체크
 	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
+		MS_ERROR(TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
 			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
 		MS_ENSURE(false);
 	}
@@ -311,7 +311,7 @@ void AMS_PlayerState::InitPlayerData()
 	{
 		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurnitureData.GridPosition))
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
+			MS_ERROR(TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
 				, *MS_FUNC_STRING, MarketFurnitureData.GridPosition.X, MarketFurnitureData.GridPosition.Y);
 			MS_CHECK(false);
 		}
@@ -410,7 +410,7 @@ void AMS_PlayerState::SavePlayerData()
 	
 	if (!UGameplayStatics::SaveGameToSlot(NewPlayerData, SaveSlotName, 0))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("SaveGameError"));
+		MS_ERROR(TEXT("SaveGameError"));
 		MS_ENSURE(false);
 	}
 }

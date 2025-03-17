@@ -55,7 +55,7 @@ void AMS_ConstructibleLevelScriptActorBase::InitializeZones()
 		{
 			if (Zones.Contains(Zone->GetZoneIndex()))
 			{
-				MS_LOG_VERBOSITY(Error, TEXT("[%s] ZoneId is alreay exist [Id : %d]"), *MS_FUNC_STRING, Zone->GetZoneIndex());
+				MS_ERROR(TEXT("[%s] ZoneId is alreay exist [Id : %d]"), *MS_FUNC_STRING, Zone->GetZoneIndex());
 				MS_CHECK(false);
 			}
 			
@@ -436,14 +436,14 @@ void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
 	
 	if (!Zones.Contains(aZoneIndex))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Requested ZoneIndex is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
+		MS_ERROR(TEXT("[%s] Requested ZoneIndex is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
 		MS_ENSURE (false);
 	}
 
 	AMS_Zone* Zone = *Zones.Find(aZoneIndex);
 	if (!IsValid(Zone))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Zone is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
+		MS_ERROR(TEXT("[%s] Zone is invalid [Id : %d]"), *MS_FUNC_STRING, aZoneIndex);
 		MS_ENSURE (false);
 	}
 	

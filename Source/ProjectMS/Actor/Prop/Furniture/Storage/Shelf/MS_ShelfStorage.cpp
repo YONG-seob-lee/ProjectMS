@@ -23,7 +23,7 @@ void AMS_ShelfStorage::PostInitializeComponents()
 	{
 		if (SlotComponent->GetSlotId() == INDEX_NONE)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Please set slot components order"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] Please set slot components order"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 		}
 		

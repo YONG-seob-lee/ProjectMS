@@ -9,7 +9,7 @@ const FVector FMS_GridData::GetGridLocation() const
 	
 	if (OwnerZone == nullptr)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] OwnerZone is null"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] OwnerZone is null"), *MS_FUNC_STRING);
 		return FVector(GridPositionXY.X, GridPositionXY.Y,0.f);
 	}
 
@@ -22,7 +22,7 @@ const FVector FMS_GridData::GetGridCenterLocation() const
 	
 	if (OwnerZone == nullptr)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] OwnerZone is null"), *MS_FUNC_STRING);
+		MS_ERROR(TEXT("[%s] OwnerZone is null"), *MS_FUNC_STRING);
 		return FVector(GridPositionXY.X, GridPositionXY.Y,0.f);
 	}
 

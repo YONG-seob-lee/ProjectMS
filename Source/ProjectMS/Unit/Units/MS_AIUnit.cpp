@@ -52,7 +52,7 @@ UClass* UMS_AIUnit::GetBlueprintClass() const
 	UClass* BPClass = StaticLoadClass(UObject::StaticClass(), nullptr, *AIBlueprintPath::OutsideAI);
 	if(!IsValid(BPClass))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] BPClass is invalid (BPPath : %s)"), *MS_FUNC_STRING, *AIBlueprintPath::OutsideAI);
+		MS_ERROR(TEXT("[%s] BPClass is invalid (BPPath : %s)"), *MS_FUNC_STRING, *AIBlueprintPath::OutsideAI);
 
 		return nullptr;
 	}

@@ -317,7 +317,7 @@ UClass* UMS_TableManager::GetClassByTablePathId(int32 aPathId)
 	UClass* Class = StaticLoadClass(UObject::StaticClass(), nullptr, *Path);
 	if(!IsValid(Class))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] Class is invalid [PathId : %d] [Path : %s]"), *MS_FUNC_STRING, aPathId, *Path);
+		MS_ERROR(TEXT("[%s] Class is invalid [PathId : %d] [Path : %s]"), *MS_FUNC_STRING, aPathId, *Path);
 		MS_ENSURE(false);
 
 		return nullptr;

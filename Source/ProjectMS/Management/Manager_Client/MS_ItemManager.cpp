@@ -894,7 +894,7 @@ void UMS_ItemManager::AddFurnitureData(int32 aFurnitureTableId, const FIntVector
 {
 	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
+		MS_ERROR(TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
 			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
 		MS_CHECK(false);
 	}
@@ -906,7 +906,7 @@ void UMS_ItemManager::AddFurnitureData(FMS_FurniturePositionData aFurnitureData)
 {
 	if (GridPositionToMarketFurnitureDatas.Contains(aFurnitureData.GridPosition))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
+		MS_ERROR(TEXT("[%s] There is alreay Furniture at this grid position. [Grid Position : %d, %d]")
 			, *MS_FUNC_STRING, aFurnitureData.GridPosition.X, aFurnitureData.GridPosition.Y);
 		MS_CHECK(false);
 	}
@@ -918,7 +918,7 @@ void UMS_ItemManager::RemoveFurnitureData(FIntVector2 aGridPosition)
 {
 	if (!GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
+		MS_ERROR(TEXT("[%s] There isn't Furniture at this grid position. [Grid Position : %d, %d]")
 			, *MS_FUNC_STRING, aGridPosition.X, aGridPosition.Y);
 		MS_ENSURE(false);
 	}

@@ -43,7 +43,7 @@ void AMS_SlotActor::PostInitializeComponents()
 	{
 		if (ItemComponent->GetOrder() == INDEX_NONE)
 		{
-			MS_LOG_VERBOSITY(Error, TEXT("[%s] Please set item components order"), *MS_FUNC_STRING);
+			MS_ERROR(TEXT("[%s] Please set item components order"), *MS_FUNC_STRING);
 			MS_ENSURE(false);
 		}
 		

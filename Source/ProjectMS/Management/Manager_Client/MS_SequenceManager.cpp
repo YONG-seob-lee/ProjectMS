@@ -59,7 +59,7 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 	const TObjectPtr<ULevelSequence> Sequence = LoadSequence(SequenceType);
 	if(!Sequence)
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("Sequence Is Null. Please Check Sequence Path [ MS_SequenceManager.h Namespace : SequencePath ]"));
+		MS_ERROR(TEXT("Sequence Is Null. Please Check Sequence Path [ MS_SequenceManager.h Namespace : SequencePath ]"));
 		return;
 	}
 
@@ -96,7 +96,7 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 	}
 	else
 	{
-		MS_LOG_VERBOSITY(Error, TEXT("Unable to create level sequence player"));
+		MS_ERROR(TEXT("Unable to create level sequence player"));
 	}
 }
 

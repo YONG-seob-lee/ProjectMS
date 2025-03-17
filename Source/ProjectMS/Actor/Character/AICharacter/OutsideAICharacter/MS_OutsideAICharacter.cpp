@@ -30,7 +30,7 @@ void AMS_OutsideAICharacter::PostInitializeComponents()
 
 	// if(FrontDoorActors.Num() != 1)
 	// {
-	// 	MS_LOG_VERBOSITY(Error, TEXT("MarketFrontActor has more than one. [ Confirmed number of actors : %d"), FrontDoorActors.Num());
+	// 	MS_ERROR(TEXT("MarketFrontActor has more than one. [ Confirmed number of actors : %d"), FrontDoorActors.Num());
 	// 	MS_ENSURE(false);
 	// }
 
