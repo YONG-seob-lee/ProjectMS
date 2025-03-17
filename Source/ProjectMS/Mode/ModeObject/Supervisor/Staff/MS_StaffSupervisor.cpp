@@ -252,7 +252,7 @@ void UMS_StaffSupervisor::CashingDuckSplineActors() const
 	
 	for (AActor* Spline : SplineActors)
 	{
-		TObjectPtr<AMS_Actor> SplineActor = Cast<AMS_DuckSplineActor>(Spline);
+		TObjectPtr<AMS_ActorBase> SplineActor = Cast<AMS_DuckSplineActor>(Spline);
 		if(!SplineActor)
 		{
 			MS_ERROR(TEXT("Error Spline Actor Casting. Check AMS_DuckSplineActor"));

@@ -1,4 +1,4 @@
-#include "Actor/Character/AICharacter/MS_AICharacter.h"
+#include "Character/AICharacter/MS_AICharacter.h"
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"

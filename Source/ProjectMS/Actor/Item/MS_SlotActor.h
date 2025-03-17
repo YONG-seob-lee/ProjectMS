@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "ContentsUtilities/MS_ItemDefine.h"
 #include "MS_SlotActor.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_SlotActor : public AMS_Actor
+class PROJECTMS_API AMS_SlotActor : public AMS_ActorBase
 {
 	GENERATED_BODY()
 

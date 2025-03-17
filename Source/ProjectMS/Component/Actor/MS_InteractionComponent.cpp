@@ -3,7 +3,7 @@
 
 #include "MS_InteractionComponent.h"
 
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "MS_Define.h"
 
 
@@ -58,7 +58,7 @@ void UMS_InteractionComponent::OnReleasedEvent()
 
 	GetWorld()->GetTimerManager().SetTimer(OnReleasedFinishedHandle, this, &UMS_InteractionComponent::SetOnReleasedFinished, 0.5f, false);
 
-	if(const TObjectPtr<AMS_Actor> MSActor = Cast<AMS_Actor>(Actor))
+	if(const TObjectPtr<AMS_ActorBase> MSActor = Cast<AMS_ActorBase>(Actor))
 	{
 		MSActor->LaunchEvent();
 	}

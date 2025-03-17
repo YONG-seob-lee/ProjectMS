@@ -110,3 +110,7 @@ private:
 	
 	FString CreateFileLine = FString();
 };
+
+#define CREATE_SCENE_COMMAND(CommandName) \
+TObjectPtr<class UMS_SceneCommand> CommandName = MS_NewObject<UMS_SceneCommand>(); \
+CommandName->SetCreateFrom(__FILE__, __LINE__);

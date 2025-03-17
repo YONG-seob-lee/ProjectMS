@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "MS_SplineActor.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_SplineActor : public AMS_Actor
+class PROJECTMS_API AMS_SplineActor : public AMS_ActorBase
 {
 	GENERATED_BODY()
 

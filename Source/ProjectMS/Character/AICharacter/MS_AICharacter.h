@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Character/MS_CharacterBase.h"
+#include "Character/MS_CharacterBase.h"
 #include "MS_AICharacter.generated.h"
 
 

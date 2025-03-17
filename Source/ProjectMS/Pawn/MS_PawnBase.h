@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "MS_Pawn.generated.h"
+#include "MS_PawnBase.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Pawn : public APawn
+class PROJECTMS_API AMS_PawnBase : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	AMS_Pawn();
+	AMS_PawnBase();
 
 protected:
 	virtual void BeginPlay() override;

@@ -3,7 +3,7 @@
 
 #include "MS_StageLevelScriptActor.h"
 
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InputManager.h"
@@ -285,7 +285,7 @@ void AMS_StageLevelScriptActor::OnPressDownEvent(FVector2D aPointerDownPosition,
 	AActor* PointerDownActor = aInteractableHitResult.GetActor();
 	if(IsValid(PointerDownActor))
 	{
-		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(PointerDownActor))
+		if(const TObjectPtr<AMS_ActorBase> TargetActor = Cast<AMS_ActorBase>(PointerDownActor))
 		{
 			if(TargetActor->HasInteractionComponent())
 			{
@@ -300,7 +300,7 @@ void AMS_StageLevelScriptActor::OnPressUpEvent(FVector2D aPointerUpPosition, con
 	AActor* PointerUpActor = aInteractableHitResult.GetActor();
 	if(IsValid(PointerUpActor))
 	{
-		if(const TObjectPtr<AMS_Actor> TargetActor = Cast<AMS_Actor>(PointerUpActor))
+		if(const TObjectPtr<AMS_ActorBase> TargetActor = Cast<AMS_ActorBase>(PointerUpActor))
 		{
 			if(TargetActor->HasInteractionComponent())
 			{

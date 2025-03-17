@@ -6,15 +6,15 @@
 #include "MS_Define.h"
 #include "MS_UnitBase.h"
 
-#include "MS_Actor.generated.h"
+#include "MS_ActorBase.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_Actor : public AActor
+class PROJECTMS_API AMS_ActorBase : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	AMS_Actor(const FObjectInitializer& aObjectInitializer);
+	AMS_ActorBase(const FObjectInitializer& aObjectInitializer);
 	
 protected:
 	virtual void BeginPlay() override;

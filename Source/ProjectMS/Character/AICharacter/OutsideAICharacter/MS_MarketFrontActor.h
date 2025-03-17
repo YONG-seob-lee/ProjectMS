@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "MS_MarketFrontActor.generated.h"
 
 UCLASS()
-class PROJECTMS_API AMS_MarketFrontActor : public AMS_Actor
+class PROJECTMS_API AMS_MarketFrontActor : public AMS_ActorBase
 {
 	GENERATED_BODY()
 

@@ -3,7 +3,7 @@
 
 #include "MS_StorageUnit.h"
 
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ModeManager.h"

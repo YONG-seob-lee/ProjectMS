@@ -1,10 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 
 
-AMS_Actor::AMS_Actor(const FObjectInitializer& aObjectInitializer)
+AMS_ActorBase::AMS_ActorBase(const FObjectInitializer& aObjectInitializer)
 	: Super(aObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,20 +17,20 @@ AMS_Actor::AMS_Actor(const FObjectInitializer& aObjectInitializer)
 	}
 }
 
-void AMS_Actor::BeginPlay()
+void AMS_ActorBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void AMS_Actor::Create(const FString& aLabelName)
+void AMS_ActorBase::Create(const FString& aLabelName)
 {
 	Initialize();
 }
 
-void AMS_Actor::Initialize()
+void AMS_ActorBase::Initialize()
 {
 }
 
-void AMS_Actor::Finalize()
+void AMS_ActorBase::Finalize()
 {
 }

@@ -14,6 +14,8 @@
 #include "System/Rotate/MS_RotateWidget.h"
 #include "WidgetComponent/MS_CanvasPanel.h"
 #include "WidgetComponent/MS_WidgetSwitcher.h"
+#include "ContentsUtilities/MS_WidgetDefine.h"
+
 
 namespace MessageType
 {

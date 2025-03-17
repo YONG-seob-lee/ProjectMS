@@ -1,4 +1,4 @@
-#include "Actor/Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
+#include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
 #include "Engine/SkeletalMeshSocket.h"

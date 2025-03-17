@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "MS_Zone.generated.h"
 
@@ -11,7 +11,7 @@
 DECLARE_DELEGATE_OneParam(FMS_RequestOpenZoneDelegate, int32);
 
 UCLASS()
-class PROJECTMS_API AMS_Zone : public AMS_Actor
+class PROJECTMS_API AMS_Zone : public AMS_ActorBase
 {
 	GENERATED_BODY()
 

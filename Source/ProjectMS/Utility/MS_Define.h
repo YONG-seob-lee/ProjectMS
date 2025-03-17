@@ -3,18 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Command/SceneCommand/MS_SceneCommand.h"
 #include "Management/Manager_Both/MS_TableManager.h"
-//#include "MS_Define.generated.h"
-
-/**
- * 
- */
 
 
-typedef uint32 MS_Handle;
-constexpr uint32 InvalidUnitHandle = 0;
-
+// Log
 DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 
 #define MS_LOG(InFormat, ...) UE_LOG(My_Log, Log, InFormat, ##__VA_ARGS__)
@@ -27,6 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
 #define MS_FUNC_TEXT __FUNCTION__
 #define MS_FUNC_STRING FString(__FUNCTION__)
 
+
 // Object
 #define MS_NewObject NewObject
 
@@ -38,7 +31,7 @@ Object->ConditionalBeginDestroy();	\
 template<typename TEnum>
 static FString ConvertEnumToString(const FString& aEnumString, TEnum aEnumType)
 {
- const UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, *aEnumString);
+ const UEnum* pEnum = FindFirstObjectSafe<UEnum>(*aEnumString);
  if (!pEnum)
  {
   return FString("");
@@ -90,7 +83,11 @@ static FString GetBPNameFromFullPath(const FString& FullPath)
  return FullPath.Mid(LastSlash + 1, LastPoint - LastSlash - 1);
 }
 
+
 // Unit
+typedef uint32 MS_Handle;
+constexpr uint32 InvalidUnitHandle = 0;
+
 UENUM()
 enum class EMS_UnitType : int32
 {
@@ -107,27 +104,3 @@ enum class EMS_UnitType : int32
  CustomerAI = 11,
  Counter = 12
 };
-
-// Widget
-
-static double ConvertFadeAnimationCurveValue(double aProgressRate, EMS_FadeAnimationCurveType aFadeAnimationCurveType)
-{
- if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::Linear)
- {
-  return aProgressRate;
- }
- if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::EaseIn)
- {
-  return -FMath::Sqrt(1 - FMath::Pow(aProgressRate, 2)) + 1;
- }
- if (aFadeAnimationCurveType == EMS_FadeAnimationCurveType::EaseOut)
- {
-  return FMath::Sqrt(1 - FMath::Pow(aProgressRate - 1, 2));
- }
-	
- return 0.0;
-}
-
-#define CREATE_SCENE_COMMAND(CommandName) \
-TObjectPtr<class UMS_SceneCommand> CommandName = MS_NewObject<UMS_SceneCommand>(); \
-CommandName->SetCreateFrom(__FILE__, __LINE__);

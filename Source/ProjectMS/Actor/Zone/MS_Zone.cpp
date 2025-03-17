@@ -291,7 +291,7 @@ void AMS_Zone::OnZoneOpened()
 			// Gate
 			for(TObjectPtr<class UMS_GateUnit> GateUnit : GateUnits)
 			{
-				if (AMS_Actor* Actor = GateUnit->GetActor())
+				if (AMS_ActorBase* Actor = GateUnit->GetActor())
 				{
 					Actor->SetActorHiddenInGame(false);
 				}

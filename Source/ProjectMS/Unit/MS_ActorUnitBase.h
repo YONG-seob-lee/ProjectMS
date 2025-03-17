@@ -23,16 +23,16 @@ public:
 	virtual bool CreateUnitActor(const FVector& aPosition, const FRotator& aRotator) override;
 	virtual void DestroyUnitActor() override;
 
-	virtual bool SetUnitActor(TObjectPtr<class AMS_Actor> aUnitActor, bool bForced = false);
+	virtual bool SetUnitActor(TObjectPtr<class AMS_ActorBase> aUnitActor, bool bForced = false);
 
 	FVector GetUnitPosition() const;
 	
 	
 protected:
-	TObjectPtr<class AMS_Actor> CreateActor(const FVector& aVector, const FRotator& aRotator);
+	TObjectPtr<class AMS_ActorBase> CreateActor(const FVector& aVector, const FRotator& aRotator);
 	
 public:
-	FORCEINLINE TObjectPtr<AMS_Actor> GetActor() const { return Actor; }
+	FORCEINLINE TObjectPtr<AMS_ActorBase> GetActor() const { return Actor; }
 
 	template<class T>
 	TObjectPtr<T> GetActor() const
@@ -42,5 +42,5 @@ public:
 	
 private:
 	UPROPERTY()
-	TObjectPtr<class AMS_Actor> Actor = nullptr;
+	TObjectPtr<class AMS_ActorBase> Actor = nullptr;
 };

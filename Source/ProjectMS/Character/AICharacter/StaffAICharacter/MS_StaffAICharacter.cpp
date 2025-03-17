@@ -1,4 +1,4 @@
-#include "Actor/Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
+#include "Character/AICharacter/StaffAICharacter/MS_StaffAICharacter.h"
 
 #include "AI/AIController/StaffAIController/MS_StaffAIController.h"
 #include "ContentsUtilities/MS_ItemDefine.h"

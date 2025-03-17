@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
 #include "MS_Prop.generated.h"
@@ -10,7 +10,7 @@
 DECLARE_DELEGATE_OneParam(FMS_CancelSelectedDelegate, TWeakObjectPtr<AMS_Prop>);
 
 UCLASS()
-class PROJECTMS_API AMS_Prop : public AMS_Actor
+class PROJECTMS_API AMS_Prop : public AMS_ActorBase
 {
 	GENERATED_BODY()
 

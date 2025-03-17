@@ -3,7 +3,7 @@
 
 #include "MS_ActorUnitBase.h"
 
-#include "MS_Actor.h"
+#include "MS_ActorBase.h"
 
 
 void UMS_ActorUnitBase::Initialize(MS_Handle aUnitHandle, EMS_UnitType aUnitType, int32 aUnitTableId)
@@ -61,7 +61,7 @@ void UMS_ActorUnitBase::DestroyUnitActor()
 	Super::DestroyUnitActor();
 }
 
-bool UMS_ActorUnitBase::SetUnitActor(TObjectPtr<AMS_Actor> aUnitActor, bool bForced)
+bool UMS_ActorUnitBase::SetUnitActor(TObjectPtr<AMS_ActorBase> aUnitActor, bool bForced)
 {
 	if (Actor != nullptr)
 	{
@@ -98,11 +98,11 @@ FVector UMS_ActorUnitBase::GetUnitPosition() const
 	return FVector();
 }
 
-TObjectPtr<AMS_Actor> UMS_ActorUnitBase::CreateActor(const FVector& aVector, const FRotator& aRotator)
+TObjectPtr<AMS_ActorBase> UMS_ActorUnitBase::CreateActor(const FVector& aVector, const FRotator& aRotator)
 {
 	if (UClass* BPClass = GetBlueprintClass())
 	{
-		TObjectPtr<AMS_Actor> NewActor = Cast<AMS_Actor>(MS_SpawnActor(BPClass, aVector, aRotator));
+		TObjectPtr<AMS_ActorBase> NewActor = Cast<AMS_ActorBase>(MS_SpawnActor(BPClass, aVector, aRotator));
 		if(IsValid(NewActor))
 		{
 			FVector Test = NewActor->GetActorLocation();
