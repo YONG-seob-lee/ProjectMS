@@ -1,9 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MS_TestDB.h"
+#include "MS_PlayerData.h"
 
-UMS_TestDB::UMS_TestDB()
+UMS_PlayerData::UMS_PlayerData()
 {
 	bInitDefaultData = false;
 	GameDate = FMS_GameDate();

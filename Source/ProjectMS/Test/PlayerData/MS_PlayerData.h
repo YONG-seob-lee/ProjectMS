@@ -8,18 +8,18 @@
 #include "ContentsUtilities/MS_LevelDefine.h"
 #include "ContentsUtilities/MS_AIDefine.h"
 #include "Manager_Client/MS_ScheduleManager.h"
-#include "MS_TestDB.generated.h"
+#include "MS_PlayerData.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTMS_API UMS_TestDB : public USaveGame
+class PROJECTMS_API UMS_PlayerData : public USaveGame
 {
 	GENERATED_BODY()
 
 public:
-	UMS_TestDB();
+	UMS_PlayerData();
 
 	UPROPERTY()
 	bool bInitDefaultData;

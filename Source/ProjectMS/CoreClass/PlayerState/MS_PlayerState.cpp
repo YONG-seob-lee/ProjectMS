@@ -9,12 +9,12 @@
 #include "Manager_Client/MS_ScheduleManager.h"
 #include "Table/Caches/MS_FurnitureCacheTable.h"
 #include "Table/Caches/MS_ItemCacheTable.h"
-#include "Test/TestServer/MS_TestDB.h"
+#include "Test/PlayerData/MS_PlayerData.h"
 
 
 AMS_PlayerState::AMS_PlayerState()
 {
-	SaveSlotName = FString("TestDB");
+	SaveSlotName = FString("MS_PlayerData");
 }
 
 void AMS_PlayerState::PreInitializeComponents()
@@ -294,20 +294,20 @@ void AMS_PlayerState::InitDefaultPlayerData()
 
 void AMS_PlayerState::InitPlayerData()
 {
-	UMS_TestDB* TestDB = Cast<UMS_TestDB>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
-	if (TestDB == nullptr)
+	UMS_PlayerData* PlayerData = Cast<UMS_PlayerData>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	if (PlayerData == nullptr)
 	{
-		TestDB = GetMutableDefault<UMS_TestDB>();
+		PlayerData = GetMutableDefault<UMS_PlayerData>();
 	}
 
-	bInitDefaultData = TestDB->bInitDefaultData;
+	bInitDefaultData = PlayerData->bInitDefaultData;
 
-	GameDate = TestDB->GameDate;
+	GameDate = PlayerData->GameDate;
 	
-	OpenedZoneIds = TestDB->OpenedZoneIds;
+	OpenedZoneIds = PlayerData->OpenedZoneIds;
 
 	GridPositionToMarketFurnitureDatas.Empty();
-	for (const auto& MarketFurnitureData : TestDB->MarketFurnitureDatas)
+	for (const auto& MarketFurnitureData : PlayerData->MarketFurnitureDatas)
 	{
 		if (GridPositionToMarketFurnitureDatas.Contains(MarketFurnitureData.GridPosition))
 		{
@@ -319,10 +319,10 @@ void AMS_PlayerState::InitPlayerData()
 		GridPositionToMarketFurnitureDatas.Emplace(MarketFurnitureData.GridPosition, MarketFurnitureData);
 	}
 
-	Money = TestDB->Money;
+	Money = PlayerData->Money;
 	gItemMng.UpdateMoney(Money);
 	
-	Items = TestDB->Items;
+	Items = PlayerData->Items;
 
 	TArray<int32> ItemKeyArray;
 	Items.GenerateKeyArray(ItemKeyArray);
@@ -336,7 +336,7 @@ void AMS_PlayerState::InitPlayerData()
 	
 	gItemMng.UpdateItems(Items);
 	
-	OrderItems = TestDB->OrderItems;
+	OrderItems = PlayerData->OrderItems;
 	
 	TArray<int32> OrderItemKeyArray;
 	OrderItems.GenerateKeyArray(OrderItemKeyArray);
@@ -350,15 +350,15 @@ void AMS_PlayerState::InitPlayerData()
 	
 	gItemMng.UpdateOrderItems(OrderItems);
 
-	Furnitures = TestDB->Furnitures;
-	OrderFurnitures = TestDB->OrderFurnitures;
+	Furnitures = PlayerData->Furnitures;
+	OrderFurnitures = PlayerData->OrderFurnitures;
 	gItemMng.UpdateFurnitures(Furnitures);
 	gItemMng.UpdateOrderFurnitures(OrderFurnitures);
 	
-	StaffDatas = TestDB->StaffDatas;
+	StaffDatas = PlayerData->StaffDatas;
 	gItemMng.UpdateStaffProperty(StaffDatas);
 
-	Diary = TestDB->Diary;
+	Diary = PlayerData->Diary;
 	if(Diary.Num() == 1)
 	{
 		Diary[0].Date = gScheduleMng.GetGameDate();
@@ -375,9 +375,9 @@ void AMS_PlayerState::InitPlayerData()
 
 void AMS_PlayerState::SavePlayerData()
 {
-	UMS_TestDB* NewTestDBData = NewObject<UMS_TestDB>();
+	UMS_PlayerData* NewPlayerData = NewObject<UMS_PlayerData>();
 	
-	NewTestDBData->bInitDefaultData = bInitDefaultData;
+	NewPlayerData->bInitDefaultData = bInitDefaultData;
 
 	FMS_GameDate SaveGameDate = GameDate;
 	if (GameDate.DailyTimeZone == EMS_DailyTimeZone::DayTimeWork)
@@ -388,27 +388,27 @@ void AMS_PlayerState::SavePlayerData()
 	{
 		SaveGameDate.DailyTimeZone = EMS_DailyTimeZone::Evening;
 	}
-	NewTestDBData->GameDate = SaveGameDate;
+	NewPlayerData->GameDate = SaveGameDate;
 
-	NewTestDBData->OpenedZoneIds = OpenedZoneIds;
+	NewPlayerData->OpenedZoneIds = OpenedZoneIds;
 	
 	for (auto MarketFurnitureData : GridPositionToMarketFurnitureDatas)
 	{
-		NewTestDBData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
+		NewPlayerData->MarketFurnitureDatas.Emplace(MarketFurnitureData.Value);
 	}
 
-	NewTestDBData->Money = Money;
-	NewTestDBData->OrderItems = OrderItems;
-	NewTestDBData->Items = Items;
+	NewPlayerData->Money = Money;
+	NewPlayerData->OrderItems = OrderItems;
+	NewPlayerData->Items = Items;
 
-	NewTestDBData->OrderFurnitures = OrderFurnitures;
-	NewTestDBData->Furnitures = Furnitures;
+	NewPlayerData->OrderFurnitures = OrderFurnitures;
+	NewPlayerData->Furnitures = Furnitures;
 	
-	NewTestDBData->StaffDatas = StaffDatas;
+	NewPlayerData->StaffDatas = StaffDatas;
 
-	NewTestDBData->Diary = Diary;
+	NewPlayerData->Diary = Diary;
 	
-	if (!UGameplayStatics::SaveGameToSlot(NewTestDBData, SaveSlotName, 0))
+	if (!UGameplayStatics::SaveGameToSlot(NewPlayerData, SaveSlotName, 0))
 	{
 		MS_LOG_VERBOSITY(Error, TEXT("SaveGameError"));
 		MS_ENSURE(false);

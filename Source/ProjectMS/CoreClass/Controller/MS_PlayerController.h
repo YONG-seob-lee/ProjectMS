@@ -44,7 +44,4 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<class UMS_LevelModeHelper> LevelModeHelper;
-
-	UPROPERTY()
-	TObjectPtr<class UMS_TestServer> TestServer = nullptr;
 };

@@ -12,7 +12,7 @@
  */
 
 
-typedef uint32 MS_Handle; // ToDo : 장시간 접속 시 StackOverflow 대비
+typedef uint32 MS_Handle;
 constexpr uint32 InvalidUnitHandle = 0;
 
 DECLARE_LOG_CATEGORY_EXTERN(My_Log, Log, All);
