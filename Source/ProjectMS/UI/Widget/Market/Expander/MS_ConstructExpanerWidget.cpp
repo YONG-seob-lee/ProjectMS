@@ -10,6 +10,7 @@
 #include "Widget/ListViewElement/ElementData/MS_ConstructItemElement.h"
 #include "Widget/WidgetComponent/MS_ListView.h"
 #include "Widget/WidgetComponent/MS_TileView.h"
+#include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
 void UMS_ConstructExpanerWidget::NativeConstruct()
 {
@@ -81,8 +82,16 @@ void UMS_ConstructExpanerWidget::RefreshConstructListItems(EMS_ZoneType aZoneTyp
 		});
 		FurnitureItems.Emplace(ConstructItem);
 	}
-	
-	CPP_ExpanderItemListView->SetListItems(FurnitureItems);
+
+	if(FurnitureItems.Num() == 0)
+	{
+		CPP_ItemExistSwitcher->SetActiveWidgetIndex(0);
+	}
+	else
+	{
+		CPP_ItemExistSwitcher->SetActiveWidgetIndex(1);
+		CPP_ExpanderItemListView->SetListItems(FurnitureItems);	
+	}
 	CPP_ExpanderCategoryListView->SetSelectedIndex(static_cast<int32>(aZoneType) - 1);
 }
 
@@ -96,7 +105,7 @@ void UMS_ConstructExpanerWidget::OnClickedCategoryButton(UObject* Object)
 	
 	if(OnClickedCategoryButtonCallback)
 	{
-		OnClickedCategoryButtonCallback();
+		OnClickedCategoryButtonCallback(Data->GetZoneType());
 	}	
 }
 

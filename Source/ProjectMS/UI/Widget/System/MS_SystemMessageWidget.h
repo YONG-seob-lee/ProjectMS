@@ -24,7 +24,8 @@ public:
 	static FName GetWidgetName() { return TEXT("SystemMessage"); }
 
 	virtual void NativeConstruct() override;
-
+	virtual void OnAnimFinished(const FName& aAnimName) override;
+	
 	void InitSystemMessage(const FMS_SystemParameter& SystemParameter);
 	
 private:

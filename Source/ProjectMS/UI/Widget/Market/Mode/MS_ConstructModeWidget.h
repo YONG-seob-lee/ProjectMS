@@ -26,6 +26,8 @@ public:
 	void OnClickedExitButton();
 	
 	virtual void OnChangeMode(EMS_ModeState aModeState) override;
+
+	void OnCloseArrow() const;
 	
 private:
 	UPROPERTY(Meta = (BindWidget))

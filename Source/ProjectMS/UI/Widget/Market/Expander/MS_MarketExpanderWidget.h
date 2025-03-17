@@ -19,9 +19,11 @@ public:
 	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
-	void OpenExpander();
 
+	void OpenArrow(bool bOpenArrow = true);
+	void OpenExpander(int32 ZoneType = 0);
+
+	void ResetVariable();
 private:
 	void OnClickedArrowButton();
 	

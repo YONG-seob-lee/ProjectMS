@@ -3,10 +3,12 @@
 
 #include "MS_ZoneOpenWidget.h"
 
+#include "MS_MarketWidget.h"
 #include "Button/MS_Button.h"
 #include "Components/TextBlock.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_WidgetManager.h"
+#include "Mode/MS_ConstructModeWidget.h"
 
 void UMS_ZoneOpenWidget::NativeOnInitialized()
 {
@@ -43,5 +45,10 @@ void UMS_ZoneOpenWidget::OnClickZoneOpenButton()
 			bExceptConfirm = false;
 		}
 	};
+
+	if(const TObjectPtr<UMS_MarketWidget> ModeWidget = Cast<UMS_MarketWidget>(gWidgetMng.GetWidget(UMS_MarketWidget::GetWidgetName())))
+	{
+		ModeWidget->CloseArrow();
+	}
 	gWidgetMng.ShowSystemMessage(SystemParameter);
 }

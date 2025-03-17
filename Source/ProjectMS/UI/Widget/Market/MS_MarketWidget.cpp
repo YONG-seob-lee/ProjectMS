@@ -2,6 +2,7 @@
 
 #include "Expander/MS_MarketExpanderWidget.h"
 #include "Manager_Client/MS_ModeManager.h"
+#include "Mode/MS_ConstructModeWidget.h"
 #include "Mode/MS_ModeWidget.h"
 #include "Widget/WidgetComponent/MS_WidgetSwitcher.h"
 
@@ -32,6 +33,15 @@ void UMS_MarketWidget::OnChangeMode(EMS_ModeState aModeState, EMS_ControllerMode
 	SetActiveModeSwitcherIndex(aModeState);
 }
 
+void UMS_MarketWidget::CloseArrow() const
+{
+	UWidget* Widget = CPP_ModeWidgetSwitcher->GetActiveWidget();
+	if (const UMS_ConstructModeWidget* ModeWidget = Cast<UMS_ConstructModeWidget>(Widget))
+	{
+		ModeWidget->OnCloseArrow();
+	}
+}
+
 void UMS_MarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
 {
 	if (ModeStateToWidgetSwitcherId.Contains(aModeState))
@@ -40,10 +50,12 @@ void UMS_MarketWidget::SetActiveModeSwitcherIndex(EMS_ModeState aModeState)
 		int32 Id = *ModeStateToWidgetSwitcherId.Find(aModeState);
 		CPP_ModeWidgetSwitcher->SetActiveWidgetIndex(Id);
 
-		UWidget* Widget = CPP_ModeWidgetSwitcher->GetActiveWidget();
-		if (UMS_ModeWidget* ModeWidget = Cast<UMS_ModeWidget>(Widget))
+		for(const auto& Widget : CPP_ModeWidgetSwitcher->GetAllChildren())
 		{
-			ModeWidget->OnChangeMode(aModeState);
+			if (UMS_ModeWidget* ModeWidget = Cast<UMS_ModeWidget>(Widget))
+			{
+				ModeWidget->OnChangeMode(aModeState);
+			}	
 		}
 	}
 	else

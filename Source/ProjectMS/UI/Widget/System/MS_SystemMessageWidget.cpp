@@ -13,6 +13,16 @@ void UMS_SystemMessageWidget::NativeConstruct()
 	CPP_Desc->SetAutoWrapText(true);
 }
 
+void UMS_SystemMessageWidget::OnAnimFinished(const FName& aAnimName)
+{
+	Super::OnAnimFinished(aAnimName);
+
+	if(aAnimName == DefaultWidgetAnimation::DisAppearance)
+	{
+		gWidgetMng.DestroyWidget(this);
+	}
+}
+
 void UMS_SystemMessageWidget::InitSystemMessage(const FMS_SystemParameter& SystemParameter)
 {
 	if(SystemParameter.bUseBlurButton)
@@ -61,7 +71,7 @@ void UMS_SystemMessageWidget::InitSystemMessage(const FMS_SystemParameter& Syste
 
 void UMS_SystemMessageWidget::CloseWidget()
 {
-	gWidgetMng.DestroyWidget(this);
+	PlayAnimationByName(DefaultWidgetAnimation::DisAppearance);
 }
 
 void UMS_SystemMessageWidget::OnClickedConfirmButton()
@@ -73,7 +83,7 @@ void UMS_SystemMessageWidget::OnClickedConfirmButton()
 		if(bExceptConfirm)
 		{
 			OnClickedConfirmButtonCallback = nullptr;
-			gWidgetMng.DestroyWidget(this);
+			PlayAnimationByName(DefaultWidgetAnimation::DisAppearance);
 		}
 		else
 		{
@@ -94,5 +104,6 @@ void UMS_SystemMessageWidget::OnClickedCancelButton()
 		OnClickedCancelButtonCallback();
 		OnClickedCancelButtonCallback = nullptr;
 	}
-	gWidgetMng.DestroyWidget(this);
+
+	PlayAnimationByName(DefaultWidgetAnimation::DisAppearance);
 }

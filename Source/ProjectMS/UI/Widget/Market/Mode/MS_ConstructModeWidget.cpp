@@ -38,9 +38,24 @@ void UMS_ConstructModeWidget::OnClickedExitButton()
 void UMS_ConstructModeWidget::OnChangeMode(EMS_ModeState aModeState)
 {
 	Super::OnChangeMode(aModeState);
-
+	
 	if (CPP_ExpanderWidget)
 	{
-		CPP_ExpanderWidget->OpenExpander();
+		if(aModeState == EMS_ModeState::Construct)
+		{
+			CPP_ExpanderWidget->OpenArrow();
+		}
+		else
+		{
+			CPP_ExpanderWidget->ResetVariable();
+		}
+	}
+}
+
+void UMS_ConstructModeWidget::OnCloseArrow() const
+{
+	if (CPP_ExpanderWidget)
+	{
+		CPP_ExpanderWidget->OpenArrow(false);
 	}
 }

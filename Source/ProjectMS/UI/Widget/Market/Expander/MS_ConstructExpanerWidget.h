@@ -17,7 +17,7 @@ class PROJECTMS_API UMS_ConstructExpanerWidget : public UMS_Widget
 
 public:
 	virtual void NativeConstruct() override;
-	FORCEINLINE void SetOnClickedCategoryButtonFunc(const TFunction<void()>& aFunc) { OnClickedCategoryButtonCallback = aFunc; }
+	FORCEINLINE void SetOnClickedCategoryButtonFunc(const TFunction<void(int32)>& aFunc) { OnClickedCategoryButtonCallback = aFunc; }
 	FORCEINLINE void SetOnClickedConstructItemFunc(const TFunction<void()>& aFunc) { OnClickedConstructItemCallback = aFunc; }
 
 	void InitCategory() const;
@@ -30,11 +30,14 @@ private:
 
 
 private:
-	TFunction<void()> OnClickedCategoryButtonCallback = nullptr;
+	TFunction<void(int32)> OnClickedCategoryButtonCallback = nullptr;
 	TFunction<void()> OnClickedConstructItemCallback = nullptr;
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ListView> CPP_ExpanderCategoryListView = nullptr;
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_ItemExistSwitcher = nullptr;
 	
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<class UMS_ListView> CPP_ExpanderItemListView = nullptr;
