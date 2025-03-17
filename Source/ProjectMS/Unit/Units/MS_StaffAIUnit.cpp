@@ -75,7 +75,7 @@ void UMS_StaffAIUnit::DestroyUnitActor()
 		if(IsValid(Character))
 		{
 			Character->Destroy();
-			Character->SetHidden(true);
+			Character->SetActorHiddenInGame(true);
 			// GetWorld()->DestroyActor(Character);
 			Character = nullptr;
 		}

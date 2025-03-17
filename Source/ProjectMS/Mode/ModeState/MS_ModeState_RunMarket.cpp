@@ -5,6 +5,7 @@
 
 #include "Character/MS_CharacterBase.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "Manager_Both/MS_UnitManager.h"
 #include "Manager_Client/MS_InteractionManager.h"
 #include "Manager_Client/MS_ItemManager.h"
 #include "Manager_Client/MS_ScheduleManager.h"
@@ -113,6 +114,8 @@ void UMS_ModeState_RunMarket::UpdateScheduleEvent(int32 aScheduleEvent)
 			// 무조건 기록이 먼저
 			gScheduleMng.UpdateDailySheet();
 			gScheduleMng.WriteDiary();
+			gUnitMng.DestroyAllUnits(EMS_UnitType::CustomerAI);
+			gUnitMng.DestroyAllUnits(EMS_UnitType::StaffAI);
 			gWidgetMng.ShowToastMessage(TEXT("매장 문 닫겠습니다~!"));
 			FMS_ModalParameter ModalParameter;
 			ModalParameter.InModalWidget = gWidgetMng.Create_Widget_NotManaging(UMS_MarketEndModal::GetWidgetPath());
