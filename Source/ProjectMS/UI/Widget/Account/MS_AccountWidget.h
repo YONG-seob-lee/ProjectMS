@@ -20,7 +20,8 @@ public:
 private:
 	void OnClickAccountButton();
 
-	void LoginWithGoogle() const;
+	void OnGoogleLoginComplete(int32 LocalUserNum, bool bWasSuccessful, const FUniqueNetId& UserId, const FString& ErrorStr);
+	void LoginWithGoogle();
 	void PlayNextStep() const;
 	
 	UPROPERTY(Meta = (BindWidget))

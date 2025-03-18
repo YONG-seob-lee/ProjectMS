@@ -22,11 +22,17 @@ public class ProjectMS : ModuleRules
 			"CommonInput", "CommonUI", "EnhancedInput", "OnlineSubsystem", "OnlineSubsystemUtils"
 		});
 
+		if (Target.Platform == UnrealTargetPlatform.Android)
+		{
+			PublicDependencyModuleNames.Add("OnlineSubsystemGooglePlay");
+		}
+
 		PublicIncludePaths.AddRange(new string[] { "ProjectMS", "ProjectMS/Actor", "ProjectMS/CoreClass",
 			"ProjectMS/Data", "ProjectMS/Level", "ProjectMS/Management", "ProjectMS/UI", "ProjectMS/Unit", 
 			"ProjectMS/Utility" });
 		PrivateIncludePaths.AddRange(new string[] { "ProjectMS" });
 
+		PublicDefinitions.Add("UE_BUILD_SHIPPING_WITH_LOGGING=1");
 		// if (Target.Platform == UnrealTargetPlatform.Android)
 		// {
 		// 	var manifestFile = Path.Combine(ModuleDirectory, "AndroidSanitizePermissions_UPL.xml");
