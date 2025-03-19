@@ -112,7 +112,7 @@ void FMS_PointerData::HandlePointerClick(const FVector2D& AbsoluteScreenPosition
 		gInputMng.OnPointerClickDelegate.Broadcast(PointerClickPosition, InteractableHitResult);
 	}
 
-	PlayParticle();
+	//PlayParticle();
 }
 
 void FMS_PointerData::HandlePointerGlide()
