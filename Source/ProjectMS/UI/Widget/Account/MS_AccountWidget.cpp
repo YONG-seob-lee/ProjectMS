@@ -10,6 +10,7 @@
 #include "Widget/Lobby/MS_LobbyWidget.h"
 #include "OnlineSubsystem.h"
 #include "Interfaces/OnlineIdentityInterface.h"
+#include "Manager_Client/MS_WidgetManager.h"
 
 
 void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
@@ -49,6 +50,7 @@ void UMS_AccountWidget::OnGoogleLoginComplete(int32 LocalUserNum, bool bWasSucce
 	// 로그인 성공 여부 확인
 	if (bWasSuccessful)
 	{
+		gWidgetMng.ShowToastMessage(TEXT("로그인에 성공했습니다~"));
 		UE_LOG(LogTemp, Log, TEXT("Google Play Login Success! UserID: %s"), *UserId.ToString());
 		PlayNextStep(); // 로그인 성공 후 다음 단계 실행
 	}
@@ -71,6 +73,12 @@ void UMS_AccountWidget::LoginWithGoogle()
 	if (!IdentityInterface.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GooglePlay IdentityInterface is NULL"));
+		return;
+	}
+
+	if(IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
+	{
+		PlayNextStep();
 		return;
 	}
 
