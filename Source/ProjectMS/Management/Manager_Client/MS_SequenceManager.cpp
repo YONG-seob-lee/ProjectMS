@@ -91,7 +91,13 @@ void UMS_SequenceManager::PlaySequence(EMS_SequenceType SequenceType, const FMS_
 
 		if(Parameter.bMute)
 		{
+			MasterVolume = gSoundMng.GetSoundVolume(EMS_SoundClassType::Master);
 			gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 0.f);
+			if(MasterVolume <= 0.f)
+			{
+				SequenceVolume = gSoundMng.GetSequenceVolume();
+				gSoundMng.AdjustSequenceVolume(0.f);
+			}
 		}
 	}
 	else
@@ -121,7 +127,8 @@ void UMS_SequenceManager::StopSequence()
 
 	if(RequestParameter.bMute)
 	{
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, MasterVolume);
+		gSoundMng.AdjustSequenceVolume(SequenceVolume);
 	}
 	
 	if(OnFinishedSequenceCallback)

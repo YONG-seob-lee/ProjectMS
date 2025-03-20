@@ -111,6 +111,32 @@ void UMS_SoundManager::AdjustSoundVolume(EMS_SoundClassType aSoundClassType, flo
 	}
 }
 
+void UMS_SoundManager::AdjustSequenceVolume(float _Volume) const
+{
+	if(!SoundMix)
+	{
+		return;
+	}
+
+	const FSoundClassAdjuster SoundClassAdjuster = SoundMix->SoundClassEffects[1];
+		
+	USoundClass* MasterSoundClass = SoundClassAdjuster.SoundClassObject;
+	MasterSoundClass->Properties.Volume = _Volume;
+}
+
+float UMS_SoundManager::GetSequenceVolume() const
+{
+	if(!SoundMix)
+	{
+		return 0.f;
+	}
+
+	const FSoundClassAdjuster SoundClassAdjuster = SoundMix->SoundClassEffects[1];
+
+	const USoundClass* MasterSoundClass = SoundClassAdjuster.SoundClassObject;
+	return MasterSoundClass->Properties.Volume;
+}
+
 void UMS_SoundManager::PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelType aLevelType)
 {
 	TObjectPtr<USoundWave> MarketBGM = nullptr;

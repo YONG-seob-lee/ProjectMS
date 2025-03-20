@@ -77,6 +77,8 @@ private:
 	void OnFinishedSequence();
 
 	FMS_SequencePlayParameter RequestParameter = FMS_SequencePlayParameter();
+	float MasterVolume = 0.f;
+	float SequenceVolume = 0.f;
 	
 	UPROPERTY()
 	ALevelSequenceActor* SequenceActor = nullptr;

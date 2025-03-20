@@ -39,7 +39,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void AdjustSoundVolume(EMS_SoundClassType aSoundClassType, float aSoundVolume = -1.f);
-
+	void AdjustSequenceVolume(float _Volume) const;
+	float GetSequenceVolume() const;
 	void PlaySound(EMS_SoundClassType aSoundClassType, EMS_LevelType aLevelType);
 	void PlaySound(EMS_SoundClassType aSoundClassType, EMS_SoundWaveType aSoundWaveType);
 	
