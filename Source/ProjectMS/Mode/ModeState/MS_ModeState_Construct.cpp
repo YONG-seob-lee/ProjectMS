@@ -472,6 +472,7 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 			if (LevelScriptActor->CreateProp(PropType, TableId, GridPosition, Rotation) != nullptr)
 			{
 				gItemMng.AddFurnitureData(TableId, GridPosition, Rotation);
+				gItemMng.SaveFurniturePosition();
 			}
 		}
 
@@ -483,11 +484,28 @@ void UMS_ModeState_Construct::ApplyPreviewProp()
 			const FIntVector2 OldGridPosition = LinkedProp->GetGridPosition();
 			const FIntVector2 GridPosition = FMS_GridData::ConvertLocationToGridPosition(PreviewProp->GetActorLocation());
 			const EMS_Rotation Rotation = UMS_MathUtility::ConvertRotation(PreviewProp->GetActorRotation().Yaw);
-			
+			//TArray<FMS_SlotData> SlotDatas = LinkedProp->GetOwnerUnitBase()->Get
 			if (LevelScriptActor->MoveAndRotateProp(LinkedProp, GridPosition, Rotation))
 			{
-				gItemMng.RemoveFurnitureData(OldGridPosition);
-				gItemMng.AddFurnitureData(TableId, GridPosition, Rotation);
+				FMS_FurniturePositionData OldData;
+				if (gItemMng.GetFurnitureData(OldGridPosition,OldData))
+				{
+					FMS_FurniturePositionData NewData = OldData;
+					NewData.GridPosition = GridPosition;
+					NewData.Rotation = Rotation;
+					
+					gItemMng.RemoveFurnitureData(OldGridPosition);
+					gItemMng.AddFurnitureData(NewData);
+					gItemMng.SaveFurniturePosition();
+				}
+				else
+				{
+					gItemMng.RemoveFurnitureData(OldGridPosition);
+					gItemMng.AddFurnitureData(TableId, GridPosition, Rotation);
+					gItemMng.SaveFurniturePosition();
+
+					MS_ENSURE(false);
+				}
 			}
 		}
 	}

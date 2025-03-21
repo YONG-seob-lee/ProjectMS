@@ -890,6 +890,17 @@ void UMS_ItemManager::GetNotDeployFurniture(TMap<int32, int32>& aNotDeployFurnit
 	}
 }
 
+bool UMS_ItemManager::GetFurnitureData(const FIntVector2& aGridPosition, FMS_FurniturePositionData& aOutData) const
+{
+	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))
+	{
+		aOutData = *GridPositionToMarketFurnitureDatas.Find(aGridPosition);
+		return true;
+	}
+
+	return false;
+}
+
 void UMS_ItemManager::AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation)
 {
 	if (GridPositionToMarketFurnitureDatas.Contains(aGridPosition))

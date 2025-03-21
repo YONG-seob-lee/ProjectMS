@@ -98,6 +98,8 @@ public:
 	{
 		aOutFurnitureDatas = GridPositionToMarketFurnitureDatas;
 	}
+
+	bool GetFurnitureData(const FIntVector2& aGridPosition, FMS_FurniturePositionData& aOutData) const; 
 	
 	void AddFurnitureData(int32 aFurnitureTableId, const FIntVector2& aGridPosition, EMS_Rotation aRotation);
 	void AddFurnitureData(FMS_FurniturePositionData aFurnitureData);
