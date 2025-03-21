@@ -205,8 +205,30 @@ void AMS_PlayerState::WriteDiary(const FMS_SettlementSheet& Sheet)
 	gScheduleMng.UpdateDiary(Diary);
 }
 
+void AMS_PlayerState::ResetPlayerData()
+{
+	bInitDefaultData = false;
+	
+	OpenedZoneIds.Reset();
+
+	Money.Reset();
+
+	Items.Reset();
+	OrderItems.Reset();
+	
+	GridPositionToMarketFurnitureDatas.Reset();
+	Furnitures.Reset();
+	OrderFurnitures.Reset();
+
+	StaffDatas.Reset();
+	
+	Diary.Reset();
+}
+
 void AMS_PlayerState::InitDefaultPlayerData()
 {
+	bInitDefaultData = true;
+	
 	// GameData
 	GameDate = FMS_GameDate(1, 1, 1, EMS_DailyTimeZone::Morning);
 	
@@ -285,11 +307,558 @@ void AMS_PlayerState::InitDefaultPlayerData()
 		int32& FurnitureCount = Furnitures.FindOrAdd(GridPositionToMarketFurnitureData.Value.FurnitureTableId);
 		FurnitureCount++;
 	}
+	
 	// Staff
 	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
 
 	// Diary
 	Diary.Emplace(FMS_SettlementSheet());
+}
+
+void AMS_PlayerState::InitDesignedPlayerData1()
+{
+#if WITH_EDITOR
+	bInitDefaultData = true;
+
+	
+	// GameData
+	GameDate = FMS_GameDate(1, 1, 1, EMS_DailyTimeZone::Morning);
+	
+	// OpenedZoneIds
+	OpenedZoneIds.AddUnique(1);
+	OpenedZoneIds.AddUnique(2);
+	OpenedZoneIds.AddUnique(3);
+	OpenedZoneIds.AddUnique(4);
+	OpenedZoneIds.AddUnique(5);
+	OpenedZoneIds.AddUnique(6);
+	OpenedZoneIds.AddUnique(7);
+	OpenedZoneIds.AddUnique(8);
+	OpenedZoneIds.AddUnique(9);
+	OpenedZoneIds.AddUnique(10);
+	OpenedZoneIds.AddUnique(11);
+	OpenedZoneIds.AddUnique(12);
+	OpenedZoneIds.AddUnique(13);
+
+	// Money
+	Money.Emplace(1, 150000);
+	Money.Emplace(2, 0);
+	Money.Emplace(3, 0);
+	gItemMng.UpdateMoney(Money);
+	
+	// Items
+	Items.Emplace(4, 300);
+	Items.Emplace(5, 300);
+	Items.Emplace(6, 300);
+	Items.Emplace(7, 300);
+	Items.Emplace(8, 300);
+	Items.Emplace(9, 300);
+	Items.Emplace(10, 300);
+	Items.Emplace(11, 300);
+	Items.Emplace(12, 100);
+	Items.Emplace(13, 100);
+	Items.Emplace(14, 100);
+	Items.Emplace(15, 100);
+	Items.Emplace(16, 100);
+	Items.Emplace(17, 100);
+	Items.Emplace(18, 100);
+	Items.Emplace(19, 100);
+	Items.Emplace(20, 100);
+	Items.Emplace(21, 100);
+	Items.Emplace(22, 100);
+	Items.Emplace(23, 100);
+	Items.Emplace(24, 100);
+	Items.Emplace(25, 100);
+	Items.Emplace(26, 100);
+	Items.Emplace(27, 100);
+	Items.Emplace(28, 100);
+	Items.Emplace(29, 100);
+	Items.Emplace(30, 100);
+	Items.Emplace(31, 100);
+	Items.Emplace(32, 100);
+	Items.Emplace(33, 100);
+	Items.Emplace(34, 200);
+	Items.Emplace(35, 200);
+	Items.Emplace(36, 200);
+	Items.Emplace(37, 200);
+	Items.Emplace(38, 200);
+	Items.Emplace(39, 200);
+	Items.Emplace(40, 200);
+	Items.Emplace(41, 200);
+	Items.Emplace(42, 200);
+	Items.Emplace(43, 200);
+	Items.Emplace(44, 200);
+	Items.Emplace(45, 200);
+	Items.Emplace(46, 200);
+	
+	//Furniture
+	FMS_FurniturePositionData Counter1 = FMS_FurniturePositionData(2, FIntVector2(18, 15), EMS_Rotation::Rot90);
+	GridPositionToMarketFurnitureDatas.Emplace(Counter1.GridPosition, Counter1);
+
+	FMS_FurniturePositionData Counter2 = FMS_FurniturePositionData(1, FIntVector2(24, 15), EMS_Rotation::Rot270);
+	GridPositionToMarketFurnitureDatas.Emplace(Counter2.GridPosition, Counter2);
+	
+	FMS_FurniturePositionData Counter3 = FMS_FurniturePositionData(2, FIntVector2(30, 15), EMS_Rotation::Rot90);
+	GridPositionToMarketFurnitureDatas.Emplace(Counter3.GridPosition, Counter3);
+
+	FMS_FurniturePositionData Counter4 = FMS_FurniturePositionData(1, FIntVector2(36, 15), EMS_Rotation::Rot270);
+	GridPositionToMarketFurnitureDatas.Emplace(Counter4.GridPosition, Counter4);
+	
+
+	FMS_FurniturePositionData RoomTemperature1 = FMS_FurniturePositionData(7, FIntVector2(17, -3), EMS_Rotation::Rot90);
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature1.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature1.GridPosition, RoomTemperature1);
+
+	FMS_FurniturePositionData RoomTemperature2 = FMS_FurniturePositionData(7, FIntVector2(19, -3), EMS_Rotation::Rot180);
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature2.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature2.GridPosition, RoomTemperature2);
+
+	FMS_FurniturePositionData RoomTemperature3 = FMS_FurniturePositionData(7, FIntVector2(21, -3), EMS_Rotation::Rot180);
+	RoomTemperature3.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature3.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature3.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature3.GridPosition, RoomTemperature3);
+
+	FMS_FurniturePositionData RoomTemperature4 = FMS_FurniturePositionData(7, FIntVector2(23, -3), EMS_Rotation::Rot270);
+	RoomTemperature4.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature4.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature4.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature4.GridPosition, RoomTemperature4);
+
+	FMS_FurniturePositionData RoomTemperature5 = FMS_FurniturePositionData(7, FIntVector2(17, -1), EMS_Rotation::Rot90);
+	RoomTemperature5.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature5.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature5.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature5.GridPosition, RoomTemperature5);
+
+	FMS_FurniturePositionData RoomTemperature6 = FMS_FurniturePositionData(7, FIntVector2(19, -1), EMS_Rotation::Rot0);
+	RoomTemperature6.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature6.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature6.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature6.GridPosition, RoomTemperature6);
+
+	FMS_FurniturePositionData RoomTemperature7 = FMS_FurniturePositionData(7, FIntVector2(21, -1), EMS_Rotation::Rot0);
+	RoomTemperature7.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature7.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature7.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature7.GridPosition, RoomTemperature7);
+
+	FMS_FurniturePositionData RoomTemperature8 = FMS_FurniturePositionData(7, FIntVector2(23, -1), EMS_Rotation::Rot270);
+	RoomTemperature8.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature8.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature8.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature8.GridPosition, RoomTemperature8);
+
+	FMS_FurniturePositionData RoomTemperature9 = FMS_FurniturePositionData(7, FIntVector2(29, -3), EMS_Rotation::Rot90);
+	RoomTemperature9.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature9.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature9.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature9.GridPosition, RoomTemperature9);
+
+	FMS_FurniturePositionData RoomTemperature10 = FMS_FurniturePositionData(7, FIntVector2(31, -3), EMS_Rotation::Rot180);
+	RoomTemperature10.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature10.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature10.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature10.GridPosition, RoomTemperature10);
+
+	FMS_FurniturePositionData RoomTemperature11 = FMS_FurniturePositionData(7, FIntVector2(33, -3), EMS_Rotation::Rot180);
+	RoomTemperature11.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature11.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature11.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature11.GridPosition, RoomTemperature11);
+
+	FMS_FurniturePositionData RoomTemperature12 = FMS_FurniturePositionData(7, FIntVector2(35, -3), EMS_Rotation::Rot270);
+	RoomTemperature12.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature12.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature12.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature12.GridPosition, RoomTemperature12);
+
+	FMS_FurniturePositionData RoomTemperature13 = FMS_FurniturePositionData(7, FIntVector2(29, -1), EMS_Rotation::Rot90);
+	RoomTemperature13.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature13.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature13.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature13.GridPosition, RoomTemperature13);
+
+	FMS_FurniturePositionData RoomTemperature14 = FMS_FurniturePositionData(7, FIntVector2(31, -1), EMS_Rotation::Rot0);
+	RoomTemperature14.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature14.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature14.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature14.GridPosition, RoomTemperature14);
+
+	FMS_FurniturePositionData RoomTemperature15 = FMS_FurniturePositionData(7, FIntVector2(33, -1), EMS_Rotation::Rot0);
+	RoomTemperature15.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature15.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature15.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature15.GridPosition, RoomTemperature15);
+
+	FMS_FurniturePositionData RoomTemperature16 = FMS_FurniturePositionData(7, FIntVector2(35, -1), EMS_Rotation::Rot270);
+	RoomTemperature16.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature16.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature16.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature16.GridPosition, RoomTemperature16);
+
+	FMS_FurniturePositionData RoomTemperature17 = FMS_FurniturePositionData(7, FIntVector2(17, 5), EMS_Rotation::Rot90);
+	RoomTemperature17.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature17.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature17.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature17.GridPosition, RoomTemperature17);
+
+	FMS_FurniturePositionData RoomTemperature18 = FMS_FurniturePositionData(7, FIntVector2(19, 5), EMS_Rotation::Rot180);
+	RoomTemperature18.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature18.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature18.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature18.GridPosition, RoomTemperature18);
+
+	FMS_FurniturePositionData RoomTemperature19 = FMS_FurniturePositionData(7, FIntVector2(21, 5), EMS_Rotation::Rot180);
+	RoomTemperature19.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature19.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature19.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature19.GridPosition, RoomTemperature19);
+
+	FMS_FurniturePositionData RoomTemperature20 = FMS_FurniturePositionData(7, FIntVector2(23, 5), EMS_Rotation::Rot270);
+	RoomTemperature20.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature20.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature20.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature20.GridPosition, RoomTemperature20);
+
+	FMS_FurniturePositionData RoomTemperature21 = FMS_FurniturePositionData(7, FIntVector2(17, 7), EMS_Rotation::Rot90);
+	RoomTemperature21.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature21.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature21.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature21.GridPosition, RoomTemperature21);
+
+	FMS_FurniturePositionData RoomTemperature22 = FMS_FurniturePositionData(7, FIntVector2(19, 7), EMS_Rotation::Rot0);
+	RoomTemperature22.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature22.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature22.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature22.GridPosition, RoomTemperature22);
+
+	FMS_FurniturePositionData RoomTemperature23 = FMS_FurniturePositionData(7, FIntVector2(21, 7), EMS_Rotation::Rot0);
+	RoomTemperature23.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature23.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature23.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature23.GridPosition, RoomTemperature23);
+
+	FMS_FurniturePositionData RoomTemperature24 = FMS_FurniturePositionData(7, FIntVector2(23, 7), EMS_Rotation::Rot270);
+	RoomTemperature24.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature24.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature24.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature24.GridPosition, RoomTemperature24);
+
+	FMS_FurniturePositionData RoomTemperature25 = FMS_FurniturePositionData(7, FIntVector2(29, 5), EMS_Rotation::Rot90);
+	RoomTemperature25.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature25.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature25.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature25.GridPosition, RoomTemperature25);
+
+	FMS_FurniturePositionData RoomTemperature26 = FMS_FurniturePositionData(7, FIntVector2(31, 5), EMS_Rotation::Rot180);
+	RoomTemperature26.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature26.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature26.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature26.GridPosition, RoomTemperature26);
+
+	FMS_FurniturePositionData RoomTemperature27 = FMS_FurniturePositionData(7, FIntVector2(33, 5), EMS_Rotation::Rot180);
+	RoomTemperature27.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	RoomTemperature27.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	RoomTemperature27.SlotDatas.Emplace(FMS_SlotData(7, 7, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature27.GridPosition, RoomTemperature27);
+
+	FMS_FurniturePositionData RoomTemperature28 = FMS_FurniturePositionData(7, FIntVector2(35, 5), EMS_Rotation::Rot270);
+	RoomTemperature28.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	RoomTemperature28.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	RoomTemperature28.SlotDatas.Emplace(FMS_SlotData(6, 6, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature28.GridPosition, RoomTemperature28);
+
+	FMS_FurniturePositionData RoomTemperature29 = FMS_FurniturePositionData(7, FIntVector2(29, 7), EMS_Rotation::Rot90);
+	RoomTemperature29.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature29.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature29.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature29.GridPosition, RoomTemperature29);
+
+	FMS_FurniturePositionData RoomTemperature30 = FMS_FurniturePositionData(7, FIntVector2(31, 7), EMS_Rotation::Rot0);
+	RoomTemperature30.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature30.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature30.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature30.GridPosition, RoomTemperature30);
+
+	FMS_FurniturePositionData RoomTemperature31 = FMS_FurniturePositionData(7, FIntVector2(33, 7), EMS_Rotation::Rot0);
+	RoomTemperature31.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	RoomTemperature31.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	RoomTemperature31.SlotDatas.Emplace(FMS_SlotData(11, 11, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature31.GridPosition, RoomTemperature31);
+
+	FMS_FurniturePositionData RoomTemperature32 = FMS_FurniturePositionData(7, FIntVector2(35, 7), EMS_Rotation::Rot270);
+	RoomTemperature32.SlotDatas.Emplace(FMS_SlotData(8, 8, 16));
+	RoomTemperature32.SlotDatas.Emplace(FMS_SlotData(9, 9, 16));
+	RoomTemperature32.SlotDatas.Emplace(FMS_SlotData(10, 10, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(RoomTemperature32.GridPosition, RoomTemperature32);
+	
+	
+	FMS_FurniturePositionData VeggieStand1 = FMS_FurniturePositionData(12, FIntVector2(2, -2), EMS_Rotation::Rot270);
+	VeggieStand1.SlotDatas.Emplace(FMS_SlotData(21, 21, 16));
+	VeggieStand1.SlotDatas.Emplace(FMS_SlotData(22, 22, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand1.GridPosition, VeggieStand1);
+
+	FMS_FurniturePositionData VeggieStand2 = FMS_FurniturePositionData(12, FIntVector2(2, 0), EMS_Rotation::Rot270);
+	VeggieStand2.SlotDatas.Emplace(FMS_SlotData(21, 21, 16));
+	VeggieStand2.SlotDatas.Emplace(FMS_SlotData(22, 22, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand2.GridPosition, VeggieStand2);
+
+	FMS_FurniturePositionData VeggieStand3 = FMS_FurniturePositionData(12, FIntVector2(2, 2), EMS_Rotation::Rot270);
+	VeggieStand3.SlotDatas.Emplace(FMS_SlotData(21, 21, 16));
+	VeggieStand3.SlotDatas.Emplace(FMS_SlotData(22, 22, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand3.GridPosition, VeggieStand3);
+
+	FMS_FurniturePositionData VeggieStand4 = FMS_FurniturePositionData(12, FIntVector2(2, 4), EMS_Rotation::Rot270);
+	VeggieStand4.SlotDatas.Emplace(FMS_SlotData(21, 21, 16));
+	VeggieStand4.SlotDatas.Emplace(FMS_SlotData(22, 22, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand4.GridPosition, VeggieStand4);
+
+	FMS_FurniturePositionData VeggieStand5 = FMS_FurniturePositionData(8, FIntVector2(9, -2), EMS_Rotation::Rot90);
+	VeggieStand5.SlotDatas.Emplace(FMS_SlotData(23, 23, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand5.GridPosition, VeggieStand5);
+
+	FMS_FurniturePositionData VeggieStand6 = FMS_FurniturePositionData(8, FIntVector2(9, 0), EMS_Rotation::Rot90);
+	VeggieStand6.SlotDatas.Emplace(FMS_SlotData(24, 24, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand6.GridPosition, VeggieStand6);
+
+	FMS_FurniturePositionData VeggieStand7 = FMS_FurniturePositionData(8, FIntVector2(9, 2), EMS_Rotation::Rot90);
+	VeggieStand7.SlotDatas.Emplace(FMS_SlotData(25, 25, 10));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand7.GridPosition, VeggieStand7);
+
+	FMS_FurniturePositionData VeggieStand8 = FMS_FurniturePositionData(8, FIntVector2(9, 4), EMS_Rotation::Rot90);
+	VeggieStand8.SlotDatas.Emplace(FMS_SlotData(25, 25, 10));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand8.GridPosition, VeggieStand8);
+	
+	FMS_FurniturePositionData VeggieStand9 = FMS_FurniturePositionData(8, FIntVector2(11, -2), EMS_Rotation::Rot270);
+	VeggieStand9.SlotDatas.Emplace(FMS_SlotData(23, 23, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand9.GridPosition, VeggieStand9);
+
+	FMS_FurniturePositionData VeggieStand10 = FMS_FurniturePositionData(8, FIntVector2(11, 0), EMS_Rotation::Rot270);
+	VeggieStand10.SlotDatas.Emplace(FMS_SlotData(24, 24, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand10.GridPosition, VeggieStand10);
+
+	FMS_FurniturePositionData VeggieStand11 = FMS_FurniturePositionData(8, FIntVector2(11, 2), EMS_Rotation::Rot270);
+	VeggieStand11.SlotDatas.Emplace(FMS_SlotData(25, 25, 10));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand11.GridPosition, VeggieStand11);
+
+	FMS_FurniturePositionData VeggieStand12 = FMS_FurniturePositionData(8, FIntVector2(11, 4), EMS_Rotation::Rot270);
+	VeggieStand12.SlotDatas.Emplace(FMS_SlotData(25, 25, 10));
+	GridPositionToMarketFurnitureDatas.Emplace(VeggieStand12.GridPosition, VeggieStand12);
+
+
+	FMS_FurniturePositionData Discount1 = FMS_FurniturePositionData(3, FIntVector2(1, 10), EMS_Rotation::Rot270);
+	Discount1.SlotDatas.Emplace(FMS_SlotData(4, 4, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Discount1.GridPosition, Discount1);
+
+	FMS_FurniturePositionData Discount2 = FMS_FurniturePositionData(3, FIntVector2(1, 12), EMS_Rotation::Rot270);
+	Discount2.SlotDatas.Emplace(FMS_SlotData(5, 5, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Discount2.GridPosition, Discount2);
+
+	
+	FMS_FurniturePositionData FridgerSmall1 = FMS_FurniturePositionData(5, FIntVector2(9, 10), EMS_Rotation::Rot90);
+	FridgerSmall1.SlotDatas.Emplace(FMS_SlotData(26, 26, 9));
+	GridPositionToMarketFurnitureDatas.Emplace(FridgerSmall1.GridPosition, FridgerSmall1);
+
+	FMS_FurniturePositionData FridgerSmall2 = FMS_FurniturePositionData(5, FIntVector2(9, 12), EMS_Rotation::Rot90);
+	FridgerSmall2.SlotDatas.Emplace(FMS_SlotData(27, 27, 9));
+	GridPositionToMarketFurnitureDatas.Emplace(FridgerSmall2.GridPosition, FridgerSmall2);
+
+	FMS_FurniturePositionData FridgerSmall3 = FMS_FurniturePositionData(5, FIntVector2(11, 10), EMS_Rotation::Rot270);
+	FridgerSmall3.SlotDatas.Emplace(FMS_SlotData(28, 28, 9));
+	GridPositionToMarketFurnitureDatas.Emplace(FridgerSmall3.GridPosition, FridgerSmall3);
+
+	FMS_FurniturePositionData FridgerSmall4 = FMS_FurniturePositionData(5, FIntVector2(11, 12), EMS_Rotation::Rot270);
+	FridgerSmall4.SlotDatas.Emplace(FMS_SlotData(30, 30, 9));
+	GridPositionToMarketFurnitureDatas.Emplace(FridgerSmall4.GridPosition, FridgerSmall4);
+
+	
+	FMS_FurniturePositionData Fridger1 = FMS_FurniturePositionData(4, FIntVector2(3, -9), EMS_Rotation::Rot0);
+	Fridger1.SlotDatas.Emplace(FMS_SlotData(34, 34, 16));
+	Fridger1.SlotDatas.Emplace(FMS_SlotData(34, 34, 16));
+	Fridger1.SlotDatas.Emplace(FMS_SlotData(35, 35, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger1.GridPosition, Fridger1);
+	
+	FMS_FurniturePositionData Fridger2 = FMS_FurniturePositionData(4, FIntVector2(5, -9), EMS_Rotation::Rot0);
+	Fridger2.SlotDatas.Emplace(FMS_SlotData(34, 34, 16));
+	Fridger2.SlotDatas.Emplace(FMS_SlotData(34, 34, 16));
+	Fridger2.SlotDatas.Emplace(FMS_SlotData(35, 35, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger2.GridPosition, Fridger2);
+	
+	FMS_FurniturePositionData Fridger3 = FMS_FurniturePositionData(4, FIntVector2(7, -9), EMS_Rotation::Rot0);
+	Fridger3.SlotDatas.Emplace(FMS_SlotData(36, 36, 16));
+	Fridger3.SlotDatas.Emplace(FMS_SlotData(36, 36, 16));
+	Fridger3.SlotDatas.Emplace(FMS_SlotData(35, 35, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger3.GridPosition, Fridger3);
+
+	FMS_FurniturePositionData Fridger4 = FMS_FurniturePositionData(4, FIntVector2(9, -9), EMS_Rotation::Rot0);
+	Fridger4.SlotDatas.Emplace(FMS_SlotData(36, 36, 16));
+	Fridger4.SlotDatas.Emplace(FMS_SlotData(36, 36, 16));
+	Fridger4.SlotDatas.Emplace(FMS_SlotData(35, 35, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger4.GridPosition, Fridger4);
+
+	FMS_FurniturePositionData Fridger5 = FMS_FurniturePositionData(4, FIntVector2(11, -9), EMS_Rotation::Rot0);
+	Fridger5.SlotDatas.Emplace(FMS_SlotData(37, 37, 16));
+	Fridger5.SlotDatas.Emplace(FMS_SlotData(37, 37, 16));
+	Fridger5.SlotDatas.Emplace(FMS_SlotData(38, 38, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger5.GridPosition, Fridger5);
+
+	FMS_FurniturePositionData Fridger6 = FMS_FurniturePositionData(4, FIntVector2(13, -9), EMS_Rotation::Rot0);
+	Fridger6.SlotDatas.Emplace(FMS_SlotData(37, 37, 16));
+	Fridger6.SlotDatas.Emplace(FMS_SlotData(37, 37, 16));
+	Fridger6.SlotDatas.Emplace(FMS_SlotData(38, 38, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger6.GridPosition, Fridger6);
+
+	FMS_FurniturePositionData Fridger7 = FMS_FurniturePositionData(4, FIntVector2(15, -9), EMS_Rotation::Rot0);
+	Fridger7.SlotDatas.Emplace(FMS_SlotData(39, 39, 16));
+	Fridger7.SlotDatas.Emplace(FMS_SlotData(39, 39, 16));
+	Fridger7.SlotDatas.Emplace(FMS_SlotData(39, 39, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger7.GridPosition, Fridger7);
+
+	FMS_FurniturePositionData Fridger8 = FMS_FurniturePositionData(4, FIntVector2(17, -9), EMS_Rotation::Rot0);
+	Fridger8.SlotDatas.Emplace(FMS_SlotData(41, 41, 16));
+	Fridger8.SlotDatas.Emplace(FMS_SlotData(42, 42, 16));
+	Fridger8.SlotDatas.Emplace(FMS_SlotData(43, 43, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger8.GridPosition, Fridger8);
+
+	FMS_FurniturePositionData Fridger9 = FMS_FurniturePositionData(4, FIntVector2(19, -9), EMS_Rotation::Rot0);
+	Fridger9.SlotDatas.Emplace(FMS_SlotData(44, 44, 16));
+	Fridger9.SlotDatas.Emplace(FMS_SlotData(45, 45, 16));
+	Fridger9.SlotDatas.Emplace(FMS_SlotData(46, 46, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger9.GridPosition, Fridger9);
+
+	FMS_FurniturePositionData Fridger10 = FMS_FurniturePositionData(4, FIntVector2(21, -9), EMS_Rotation::Rot0);
+	Fridger10.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger10.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger10.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger10.GridPosition, Fridger10);
+
+	FMS_FurniturePositionData Fridger11 = FMS_FurniturePositionData(4, FIntVector2(23, -9), EMS_Rotation::Rot0);
+	Fridger11.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger11.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger11.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger11.GridPosition, Fridger11);
+
+	FMS_FurniturePositionData Fridger12 = FMS_FurniturePositionData(4, FIntVector2(25, -9), EMS_Rotation::Rot0);
+	Fridger12.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger12.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	Fridger12.SlotDatas.Emplace(FMS_SlotData(40, 40, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Fridger12.GridPosition, Fridger12);
+	
+	
+	FMS_FurniturePositionData Freezer1 = FMS_FurniturePositionData(6, FIntVector2(27, -9), EMS_Rotation::Rot0);
+	Freezer1.SlotDatas.Emplace(FMS_SlotData(12, 12, 6));
+	Freezer1.SlotDatas.Emplace(FMS_SlotData(13, 13, 6));
+	Freezer1.SlotDatas.Emplace(FMS_SlotData(14, 14, 6));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer1.GridPosition, Freezer1);
+
+	FMS_FurniturePositionData Freezer2 = FMS_FurniturePositionData(6, FIntVector2(29, -9), EMS_Rotation::Rot0);
+	Freezer2.SlotDatas.Emplace(FMS_SlotData(15, 15, 6));
+	Freezer2.SlotDatas.Emplace(FMS_SlotData(16, 16, 12));
+	Freezer2.SlotDatas.Emplace(FMS_SlotData(17, 17, 12));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer2.GridPosition, Freezer2);
+	
+	FMS_FurniturePositionData Freezer3 = FMS_FurniturePositionData(6, FIntVector2(31, -9), EMS_Rotation::Rot0);
+	Freezer3.SlotDatas.Emplace(FMS_SlotData(18, 18, 12));
+	Freezer3.SlotDatas.Emplace(FMS_SlotData(19, 19, 12));
+	Freezer3.SlotDatas.Emplace(FMS_SlotData(20, 20, 12));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer3.GridPosition, Freezer3);
+
+	FMS_FurniturePositionData Freezer4 = FMS_FurniturePositionData(6, FIntVector2(33, -9), EMS_Rotation::Rot0);
+	Freezer4.SlotDatas.Emplace(FMS_SlotData(32, 32, 12));
+	Freezer4.SlotDatas.Emplace(FMS_SlotData(32, 32, 12));
+	Freezer4.SlotDatas.Emplace(FMS_SlotData(31, 31, 6));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer4.GridPosition, Freezer4);
+
+	FMS_FurniturePositionData Freezer5 = FMS_FurniturePositionData(6, FIntVector2(35, -9), EMS_Rotation::Rot0);
+	Freezer5.SlotDatas.Emplace(FMS_SlotData(32, 32, 12));
+	Freezer5.SlotDatas.Emplace(FMS_SlotData(32, 32, 12));
+	Freezer5.SlotDatas.Emplace(FMS_SlotData(31, 31, 6));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer5.GridPosition, Freezer5);
+	
+	FMS_FurniturePositionData Freezer6 = FMS_FurniturePositionData(6, FIntVector2(37, -9), EMS_Rotation::Rot0);
+	Freezer6.SlotDatas.Emplace(FMS_SlotData(33, 33, 16));
+	Freezer6.SlotDatas.Emplace(FMS_SlotData(33, 33, 16));
+	Freezer6.SlotDatas.Emplace(FMS_SlotData(33, 33, 16));
+	GridPositionToMarketFurnitureDatas.Emplace(Freezer6.GridPosition, Freezer6);
+
+	
+	FMS_FurniturePositionData Rack1 = FMS_FurniturePositionData(11, FIntVector2(-18, 2), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack1.GridPosition, Rack1);
+
+	FMS_FurniturePositionData Rack2 = FMS_FurniturePositionData(11, FIntVector2(-14, 2), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack2.GridPosition, Rack2);
+	
+	FMS_FurniturePositionData Rack3 = FMS_FurniturePositionData(11, FIntVector2(-10, 2), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack3.GridPosition, Rack3);
+
+	FMS_FurniturePositionData Rack4 = FMS_FurniturePositionData(11, FIntVector2(-6, 2), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack4.GridPosition, Rack4);
+
+	FMS_FurniturePositionData Rack5 = FMS_FurniturePositionData(11, FIntVector2(-18, 7), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack5.GridPosition, Rack5);
+
+	FMS_FurniturePositionData Rack6 = FMS_FurniturePositionData(11, FIntVector2(-14, 7), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack6.GridPosition, Rack6);
+	
+	FMS_FurniturePositionData Rack7 = FMS_FurniturePositionData(11, FIntVector2(-10, 7), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack7.GridPosition, Rack7);
+
+	FMS_FurniturePositionData Rack8 = FMS_FurniturePositionData(11, FIntVector2(-6, 7), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack8.GridPosition, Rack8);
+	
+	FMS_FurniturePositionData Rack9 = FMS_FurniturePositionData(11, FIntVector2(-18, 12), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack9.GridPosition, Rack9);
+
+	FMS_FurniturePositionData Rack10 = FMS_FurniturePositionData(11, FIntVector2(-14, 12), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack10.GridPosition, Rack10);
+	
+	FMS_FurniturePositionData Rack11 = FMS_FurniturePositionData(11, FIntVector2(-10, 12), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack11.GridPosition, Rack11);
+
+	FMS_FurniturePositionData Rack12 = FMS_FurniturePositionData(11, FIntVector2(-6, 12), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack12.GridPosition, Rack12);
+
+	FMS_FurniturePositionData Rack13 = FMS_FurniturePositionData(11, FIntVector2(-18, 17), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack13.GridPosition, Rack13);
+
+	FMS_FurniturePositionData Rack14 = FMS_FurniturePositionData(11, FIntVector2(-14, 17), EMS_Rotation::Rot0);
+	GridPositionToMarketFurnitureDatas.Emplace(Rack14.GridPosition, Rack14);
+	
+	
+	FMS_FurniturePositionData Pallet1 = FMS_FurniturePositionData(10, FIntVector2(-4, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet1.GridPosition, Pallet1);
+
+	FMS_FurniturePositionData Pallet2 = FMS_FurniturePositionData(10, FIntVector2(-6, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet2.GridPosition, Pallet2);
+	
+	FMS_FurniturePositionData Pallet3 = FMS_FurniturePositionData(10, FIntVector2(-8, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet3.GridPosition, Pallet3);
+
+	FMS_FurniturePositionData Pallet4 = FMS_FurniturePositionData(10, FIntVector2(-10, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet4.GridPosition, Pallet4);
+	
+	FMS_FurniturePositionData Pallet5 = FMS_FurniturePositionData(10, FIntVector2(-12, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet5.GridPosition, Pallet5);
+
+	FMS_FurniturePositionData Pallet6 = FMS_FurniturePositionData(10, FIntVector2(-14, 28), EMS_Rotation::Rot180);
+	GridPositionToMarketFurnitureDatas.Emplace(Pallet6.GridPosition, Pallet6);
+
+	for(const auto& GridPositionToMarketFurnitureData : GridPositionToMarketFurnitureDatas)
+	{
+		int32& FurnitureCount = Furnitures.FindOrAdd(GridPositionToMarketFurnitureData.Value.FurnitureTableId);
+		FurnitureCount++;
+	}
+	
+	// Staff
+	StaffDatas.Emplace(FMS_PlayerStaffData(1, 1, FMS_GameDate(1, 1, 1)));
+
+	// Diary
+	Diary.Emplace(FMS_SettlementSheet());
+#endif
 }
 
 void AMS_PlayerState::InitPlayerData()
@@ -367,7 +936,7 @@ void AMS_PlayerState::InitPlayerData()
 	
 	if (!bInitDefaultData)
 	{
-		bInitDefaultData = true;
+		ResetPlayerData();
 		InitDefaultPlayerData();
 		SavePlayerData();
 	}

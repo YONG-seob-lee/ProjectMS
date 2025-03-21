@@ -63,8 +63,10 @@ public:
 
 	void WriteDiary(const FMS_SettlementSheet& Sheet);
 	FORCEINLINE TArray<FMS_SettlementSheet>& GetDiary() { return Diary; }
-	
+
+	void ResetPlayerData();
 	void InitDefaultPlayerData();
+	void InitDesignedPlayerData1();
 	
 	void InitPlayerData();
 	void SavePlayerData();

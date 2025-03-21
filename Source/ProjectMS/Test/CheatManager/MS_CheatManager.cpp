@@ -5,6 +5,7 @@
 
 #include "Controller/MS_PlayerController.h"
 #include "GameUserSettings/MS_GameUserSettings.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "LevelScriptActors/MS_MarketLevelScriptActor.h"
 #include "LevelScriptActors/MS_StageLevelScriptActor.h"
 #include "Manager_Both/MS_UnitManager.h"
@@ -196,6 +197,34 @@ void UMS_CheatManager::Money(int32 aCount)
 
 	PlayerState->SettleMoney(aCount);
 	gItemMng.OnUpdateEarnMoneyDelegate.Broadcast(false);
+}
+
+void UMS_CheatManager::PlayerData(int32 aPreset)
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	MS_CHECK(World);
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	MS_CHECK(PlayerController);
+	
+	AMS_PlayerState* PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	MS_CHECK(PlayerState);
+
+	if (aPreset == 0)
+	{
+		PlayerState->ResetPlayerData();
+		PlayerState->InitDefaultPlayerData();
+		PlayerState->SavePlayerData();
+	}
+
+	else if (aPreset == 1)
+	{
+		PlayerState->ResetPlayerData();
+		PlayerState->InitDesignedPlayerData1();
+		PlayerState->SavePlayerData();
+	}
+
+	UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, false);
 }
 
 void UMS_CheatManager::PictureMode(bool bPicture)
