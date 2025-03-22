@@ -107,7 +107,7 @@ TObjectPtr<AMS_ActorBase> UMS_ActorUnitBase::CreateActor(const FVector& aVector,
 		{
 			FVector Test = NewActor->GetActorLocation();
 			
-			NewActor->Create();
+			NewActor->Create(BPClass->GetName());
 			return NewActor;
 		}
 	}

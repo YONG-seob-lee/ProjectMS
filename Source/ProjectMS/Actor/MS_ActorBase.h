@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "MS_Define.h"
+#include "MS_UnitBase.h"
+
 #include "MS_ActorBase.generated.h"
 
 UCLASS()
@@ -18,43 +20,28 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void Create();
+	void Create(const FString& aLabelName);
 	
 	void Initialize();
 	void Finalize();
-
-	// Unit
+	
 	FORCEINLINE void SetOwnerUnitBase(class UMS_UnitBase* aOwnerUnit) { OwnerUnit = aOwnerUnit; }
 	FORCEINLINE TWeakObjectPtr<class UMS_UnitBase> GetOwnerUnitBase() const { return OwnerUnit; }
-
-	template <typename T>
-	TWeakObjectPtr<T> GetOwnerUnitBase() const
-	{
-		if (GetOwnerUnitBase() == nullptr)
-		{
-			return nullptr;
-		}
-		
-		return Cast<T>(GetOwnerUnitBase());
-	};
-
-	FORCEINLINE MS_Handle GetUnitHandleId() const { return UnitHandleId; }
-
 	
-	// Interaction
 	virtual bool HasInteractionComponent() { return false; }
 	virtual void OnPressDownEvent() {}
 	virtual void OnPressUpEvent() {}
 	virtual void LaunchEvent() {}
 
+	FORCEINLINE MS_Handle GetUnitHandleId() const { return UnitHandleId; }
+
 	
 protected:
-	// Unit
 	MS_Handle UnitHandleId = InvalidUnitHandle;
 	
 	TWeakObjectPtr<class UMS_UnitBase> OwnerUnit = nullptr;
 
-	
+protected:
 	// Component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class USceneComponent> SceneRootComponent;
