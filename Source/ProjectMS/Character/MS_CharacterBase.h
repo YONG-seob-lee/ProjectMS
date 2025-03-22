@@ -47,7 +47,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* aPlayerInputComponent) override;
 
-	void Create(const FString& aLabelName);
+	void Create();
 	void Destroy();
 
 	void Initialize();
@@ -56,6 +56,17 @@ public:
 	FORCEINLINE TObjectPtr<USceneComponent> GetCharacterRootComponent() const { return RootComponent; }
 	FORCEINLINE void SetOwnerUnitBase(const TObjectPtr<UObject>& aOwner) { UnitOwner = aOwner; }
 	FORCEINLINE TWeakObjectPtr<UObject> GetOwnerUnitBase() const { return UnitOwner; }
+
+	template <typename T>
+	TWeakObjectPtr<T> GetOwnerUnitBase() const
+	{
+		if (GetOwnerUnitBase() == nullptr)
+		{
+			return nullptr;
+		}
+		
+		return Cast<T>(GetOwnerUnitBase());
+	};
 	
 	void SetLodScaleValues(float aCullDistanceScale, float aOutLineCullDistanceScale, bool bVisibleOutLine);
 

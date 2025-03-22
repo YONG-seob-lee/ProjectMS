@@ -104,7 +104,7 @@ TObjectPtr<AMS_CharacterBase> UMS_CharacterUnitBase::CreateCharacter(UClass* aCl
 	TObjectPtr<AMS_CharacterBase> NewCharacter = Cast<AMS_CharacterBase>(MS_SpawnActor(aClass, aPosition, aRotator));
 	if(IsValid(NewCharacter))
 	{
-		NewCharacter->Create(aClass->GetName());
+		NewCharacter->Create();
 		return NewCharacter;
 	}
 	

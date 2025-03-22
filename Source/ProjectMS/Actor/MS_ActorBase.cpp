@@ -22,7 +22,7 @@ void AMS_ActorBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMS_ActorBase::Create(const FString& aLabelName)
+void AMS_ActorBase::Create()
 {
 	Initialize();
 }

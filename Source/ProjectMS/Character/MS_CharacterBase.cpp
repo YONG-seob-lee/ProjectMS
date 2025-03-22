@@ -32,10 +32,8 @@ void AMS_CharacterBase::SetupPlayerInputComponent(UInputComponent* aPlayerInputC
 	MS_CHECK(UnitStateBase);
 }
 
-void AMS_CharacterBase::Create(const FString& aLabelName)
+void AMS_CharacterBase::Create()
 {
-	//SetActorLabel(aLabelName);
-
 	Initialize();
 }
 
