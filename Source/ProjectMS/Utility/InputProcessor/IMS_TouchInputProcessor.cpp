@@ -98,7 +98,7 @@ bool IMS_TouchInputProcessor::HandleMouseButtonUpEvent(FSlateApplication& aSlate
 	TargetPointerData->ResetElapsedHoldTime();
 	TargetPointerData->CalculateIntervalTime();
 	TargetPointerData->HandlePointerClick(AbsoluteScreenPosition);
-	//TargetPointerData->PlayParticle();
+	TargetPointerData->PlayParticle();
 	
 	DestroyPointer(TargetPointerData);
 	FingerCount--;
