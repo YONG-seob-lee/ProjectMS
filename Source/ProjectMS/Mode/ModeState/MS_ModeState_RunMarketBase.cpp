@@ -263,7 +263,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 		// Search
 		if (StartZoneType == TargetZoneType)
 		{
-			PathFinder->Search(aOutPath, StartZoneType, aStartPosition, aTargetPositions, NotMovablePoints);
+			PathFinder->SearchAStar(aOutPath, StartZoneType, aStartPosition, aTargetPositions, NotMovablePoints);
 		}
 
 		// ===== ToDo : 더 보편적인 코드로 수정 ===== //
@@ -285,7 +285,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 				}
 			}
 			
-			PathFinder->Search(PathToFirstGate, StartZoneType, aStartPosition, GatePositions, NotMovablePoints);
+			PathFinder->SearchAStar(PathToFirstGate, StartZoneType, aStartPosition, GatePositions, NotMovablePoints);
 
 			// Linked First Gate에서 Second Gate까지
 			TArray<FIntVector2> PathToSecondGate = {};
@@ -315,7 +315,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					}
 				}
 
-				PathFinder->Search(PathToSecondGate, EMS_ZoneType::Shelf, FirstGateUnit->GetLinkedGridPosition(), SecondGatePositions, NotMovablePoints);
+				PathFinder->SearchAStar(PathToSecondGate, EMS_ZoneType::Shelf, FirstGateUnit->GetLinkedGridPosition(), SecondGatePositions, NotMovablePoints);
 			
 				// Linked Second Gate에서 타겟까지
 				if (PathToSecondGate.Num() != 0)
@@ -334,7 +334,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 						}
 					}
 
-					PathFinder->Search(PathToTarget, TargetZoneType, SecondGateUnit->GetLinkedGridPosition(), aTargetPositions, NotMovablePoints);
+					PathFinder->SearchAStar(PathToTarget, TargetZoneType, SecondGateUnit->GetLinkedGridPosition(), aTargetPositions, NotMovablePoints);
 
 					if (PathToTarget.Num() != 0)
 					{
@@ -364,7 +364,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 				}
 			}
 			
-			PathFinder->Search(PathToGate, StartZoneType, aStartPosition, GatePositions);
+			PathFinder->SearchAStar(PathToGate, StartZoneType, aStartPosition, GatePositions);
 
 			
 			// Linked Gate에서 타겟까지
@@ -384,7 +384,7 @@ void UMS_ModeState_RunMarketBase::SearchPathToTarget(TArray<FIntVector2>& aOutPa
 					}
 				}
 
-				PathFinder->Search(PathToTarget, TargetZoneType, TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
+				PathFinder->SearchAStar(PathToTarget, TargetZoneType, TargetGateUnit->GetLinkedGridPosition(), aTargetPositions);
 
 				if (PathToTarget.Num() != 0)
 				{

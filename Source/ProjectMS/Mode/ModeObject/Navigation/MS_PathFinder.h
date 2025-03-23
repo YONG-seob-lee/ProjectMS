@@ -23,8 +23,14 @@ private:
 	void CollectMovingPoints(EMS_ZoneType aCollectZoneType);
 
 public:
-	void Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints = {}) const;
+	void SearchBFS(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints = {}) const;
+	void SearchAStar(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints = {}) const;
 
+	void GetTargetZoneMovablePoints(TArray<FIntVector2>& aOutPoints, EMS_ZoneType aSearchZoneType, const TArray<FIntVector2>& aNotMovablePoints = {}) const;
+	
+	FIntVector2 SelectHeuristicTarget(const TArray<FIntVector2>& aTargetPositions) const;
+	void GetHeuristicCosts(const TArray<FIntVector2>& aPoints, const FIntVector2& aStartPosition, const FIntVector2& aHeuristicTarget, TArray<int32>& aOutCosts) const;
+	
 	bool GetRandomPosition(EMS_ZoneType aZoneType, FIntVector2& aOutPosition) const;
 	
 private:

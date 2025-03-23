@@ -2,6 +2,8 @@
 
 #include "MS_ConstructibleLevelScriptActorBase.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "MathUtility/MS_PriorityQueue.h"
+#include "Util/IndexPriorityQueue.h"
 
 
 UMS_PathFinder::UMS_PathFinder()
@@ -83,53 +85,17 @@ void UMS_PathFinder::CollectMovingPoints(EMS_ZoneType aCollectZoneType)
 	}
 }
 
-void UMS_PathFinder::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition,
-	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints /*= {}*/) const
+
+void UMS_PathFinder::SearchBFS(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType,
+	const FIntVector2& aStartPosition, const TArray<FIntVector2>& aTargetPositions,
+	const TArray<FIntVector2>& aNotMovablePoints) const
 {
 	// 다른 타입의 존일때 Gate까지만 계산해서 계산량을 줄임
+	// 따라서 인자로 같은 존의 값이 넘어오게 됨
 	// ToDo : 같은 존 타입 사이에 Gate를 두게 됐을때 aSearchZoneType 인자를 더 구체적으로 받을 것
 	TArray<FIntVector2> FreeMovableWalkingPoints;
-	switch (aSearchZoneType)
-	{
-	case EMS_ZoneType::Display :
-		{
-			FreeMovableWalkingPoints = DisplayFreeMovableWalkingPoints;
-			break;
-		}
-
-	case EMS_ZoneType::Shelf :
-		{
-			FreeMovableWalkingPoints = ShelfFreeMovableWalkingPoints;
-			break;
-		}
-
-	case EMS_ZoneType::Pallet :
-		{
-			FreeMovableWalkingPoints = PalletFreeMovableWalkingPoints;
-			break;
-		}
-
-	case EMS_ZoneType::Outside :
-		{
-			FreeMovableWalkingPoints = OutsideFreeMovableWalkingPoints;
-			break;
-		}
-		
-	default:
-		{
-			MS_ENSURE(false);
-			return;
-		}
-	}
-
-	// NotMovablePoint
-	for (const FIntVector2& NotMovablePoint : aNotMovablePoints)
-	{
-		if (FreeMovableWalkingPoints.Contains(NotMovablePoint))
-		{
-			FreeMovableWalkingPoints.RemoveSingle(NotMovablePoint);
-		}
-	}
+	GetTargetZoneMovablePoints(FreeMovableWalkingPoints, aSearchZoneType, aNotMovablePoints);
+	
 	
 	// Search
 	TQueue<FIntVector2> Queue;
@@ -202,6 +168,177 @@ void UMS_PathFinder::Search(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZ
 		{
 			aOutPath.Emplace(PathBackwards[i]);
 		}
+	}
+}
+
+void UMS_PathFinder::SearchAStar(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSearchZoneType, const FIntVector2& aStartPosition,
+	const TArray<FIntVector2>& aTargetPositions, const TArray<FIntVector2>& aNotMovablePoints /*= {}*/) const
+{
+	// Target
+	FIntVector2 HeuristicTargetPosition = SelectHeuristicTarget(aTargetPositions);
+	
+	// 다른 타입의 존일때 Gate까지만 계산해서 계산량을 줄임
+	// 따라서 인자로 같은 존의 값이 넘어오게 됨
+	// ToDo : 같은 존 타입 사이에 Gate를 두게 됐을때 aSearchZoneType 인자를 더 구체적으로 받을 것
+	TArray<FIntVector2> FreeMovableWalkingPoints;
+	GetTargetZoneMovablePoints(FreeMovableWalkingPoints, aSearchZoneType, aNotMovablePoints);
+
+	TArray<int32> HeuristicCosts;
+	GetHeuristicCosts(FreeMovableWalkingPoints, aStartPosition, HeuristicTargetPosition, HeuristicCosts);
+	
+	// Search
+	TMS_PriorityQueue<FIntVector2> PriorityQueue;
+	
+	TMap<FIntVector2, FIntVector2> VisitedPointToPreviousPoints;
+	aOutPath.Empty();
+
+	int32 StartPositionIndex = FreeMovableWalkingPoints.Find(aStartPosition);
+	if (StartPositionIndex == INDEX_NONE)
+	{
+		MS_ENSURE(false);
+		return;
+	}
+	
+	PriorityQueue.Enqueue(aStartPosition, HeuristicCosts[StartPositionIndex]);
+
+	VisitedPointToPreviousPoints.Emplace(aStartPosition, FIntVector2::ZeroValue);
+
+	bool bSucceed = false;
+	FIntVector2 SucceedTarget = FIntVector2::ZeroValue;
+	
+	while(!bSucceed && !PriorityQueue.IsEmpty())
+	{
+		FIntVector2 TestPoint;
+		
+		if (PriorityQueue.Dequeue(TestPoint))
+		{
+			for (const FIntVector2& TestAddedPoint : TestAddedPoints)
+			{
+				FIntVector2 EnqueuePoint = TestPoint + TestAddedPoint;
+
+				int32 EnqueuePointIndex = FreeMovableWalkingPoints.Find(EnqueuePoint);
+				if (EnqueuePointIndex != INDEX_NONE)
+				{
+					if (!VisitedPointToPreviousPoints.Contains(EnqueuePoint))
+					{
+						PriorityQueue.Enqueue(EnqueuePoint, HeuristicCosts[StartPositionIndex]);
+						VisitedPointToPreviousPoints.Emplace(EnqueuePoint, TestPoint);
+
+						if (aTargetPositions.Contains(EnqueuePoint))
+						{
+							bSucceed = true;
+							SucceedTarget = EnqueuePoint;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if (bSucceed)
+		{
+			break;
+		}
+	}
+
+	if (bSucceed)
+	{
+		TArray<FIntVector2> PathBackwards;
+		PathBackwards.Empty();
+
+		FIntVector2 PreviousPoint = SucceedTarget;
+		PathBackwards.Emplace(PreviousPoint);
+
+		while (PreviousPoint != aStartPosition)
+		{
+			FIntVector2* pPreviousPoint = VisitedPointToPreviousPoints.Find(PreviousPoint);
+			if (pPreviousPoint == nullptr)
+			{
+				MS_ENSURE(false);
+				return;
+			}
+			
+			PreviousPoint = *pPreviousPoint;
+			PathBackwards.Emplace(PreviousPoint);
+		}
+
+		for (int32 i = PathBackwards.Num() - 1; i >= 0; --i)
+		{
+			aOutPath.Emplace(PathBackwards[i]);
+		}
+	}
+}
+
+void UMS_PathFinder::GetTargetZoneMovablePoints(TArray<FIntVector2>& aOutPoints, EMS_ZoneType aSearchZoneType,
+	const TArray<FIntVector2>& aNotMovablePoints) const
+{
+	switch (aSearchZoneType)
+	{
+	case EMS_ZoneType::Display :
+		{
+			aOutPoints = DisplayFreeMovableWalkingPoints;
+			break;
+		}
+
+	case EMS_ZoneType::Shelf :
+		{
+			aOutPoints = ShelfFreeMovableWalkingPoints;
+			break;
+		}
+
+	case EMS_ZoneType::Pallet :
+		{
+			aOutPoints = PalletFreeMovableWalkingPoints;
+			break;
+		}
+
+	case EMS_ZoneType::Outside :
+		{
+			aOutPoints = OutsideFreeMovableWalkingPoints;
+			break;
+		}
+		
+	default:
+		{
+			MS_ENSURE(false);
+			return;
+		}
+	}
+
+	// NotMovablePoint
+	for (const FIntVector2& NotMovablePoint : aNotMovablePoints)
+	{
+		if (aOutPoints.Contains(NotMovablePoint))
+		{
+			aOutPoints.RemoveSingle(NotMovablePoint);
+		}
+	}
+}
+
+FIntVector2 UMS_PathFinder::SelectHeuristicTarget(const TArray<FIntVector2>& aTargetPositions) const
+{
+	int32 MinDistance = INT_MAX;
+	FIntVector2 HeuristicTargetPosition;
+	
+	for (const FIntVector2& TargetPosition : aTargetPositions)
+	{
+		int32 TargetDistance = TargetPosition.X + TargetPosition.Y;
+		if (TargetDistance < MinDistance)
+		{
+			HeuristicTargetPosition = TargetPosition;
+			MinDistance = TargetDistance;
+		}
+	}
+
+	return HeuristicTargetPosition;
+}
+
+void UMS_PathFinder::GetHeuristicCosts(const TArray<FIntVector2>& aPoints, const FIntVector2& aStartPosition, const FIntVector2& aHeuristicTarget,
+	TArray<int32>& aOutCosts) const
+{
+	for (const FIntVector2& Point : aPoints)
+	{
+		aOutCosts.Emplace(FMath::Abs(Point.X - aStartPosition.X) + FMath::Abs(Point.Y - aStartPosition.Y) + FMath::Abs(aHeuristicTarget.X - Point.X) + FMath::Abs(aHeuristicTarget.Y - Point.Y));
 	}
 }
 
