@@ -209,7 +209,7 @@ public:
 
 	FORCEINLINE const FElementType* Peek() const
 	{
-		return const_cast<TQueue*>(this)->Peek();
+		return const_cast<TMS_PriorityQueue*>(this)->Peek();
 	}
 
 	/**
