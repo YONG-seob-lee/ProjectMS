@@ -259,6 +259,19 @@ int32 UMS_StorageUnit::SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCou
 	return aCount - RemainSubtractCount;
 }
 
+bool UMS_StorageUnit::HasItemInStorage(const TArray<int32>& _ItemIds)
+{
+	for(const auto& SlotData : SlotDatas)
+	{
+		if(_ItemIds.Contains(SlotData.CurrentItemTableId))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void UMS_StorageUnit::SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData)
 {
 	if (AMS_PlayerState* PlayerState = GetPlayerState())

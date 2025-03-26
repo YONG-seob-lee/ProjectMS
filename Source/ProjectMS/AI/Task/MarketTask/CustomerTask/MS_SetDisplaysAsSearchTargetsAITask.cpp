@@ -4,6 +4,7 @@
 #include "MS_SetDisplaysAsSearchTargetsAITask.h"
 
 #include "AI/AIController/CustomerAIController/MS_CustomerAIController.h"
+#include "Algo/RandomShuffle.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/AICharacter/CustomerAICharacter/MS_CustomerAICharacter.h"
 #include "Component/Actor/Prop/MS_PropSpaceComponent.h"
@@ -52,8 +53,10 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 	gUnitMng.GetUnits(EMS_UnitType::Storage, Units);
 
 	TArray<FIntVector2> TargetPositions = {};
-
+		
 	TArray<TWeakObjectPtr<UMS_StorageUnit>> DisplayUnits = {};
+	TArray<TWeakObjectPtr<UMS_StorageUnit>> IncludeWannaItemDisplayUnits = {};
+	
 	for (const TWeakObjectPtr<UMS_UnitBase>& Unit : Units)
 	{
 		const TWeakObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit);
@@ -72,27 +75,80 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 		{
 			continue;
 		}
+
+		// 손님이 원하는 아이템 목록
+		TMap<int32, int32> RemainItems;
+		AIUnit->GetRemainItems(RemainItems);
+		TArray<int32> RemainItemIds;
+		RemainItems.GenerateKeyArray(RemainItemIds);
+
+		// 손님이 원하는 아이템이 들어있는 스토리지 따로 저장.
+		if(StorageUnit->HasItemInStorage(RemainItemIds))
+		{
+			IncludeWannaItemDisplayUnits.Emplace(StorageUnit);
+		}
 		
 		DisplayUnits.Emplace(StorageUnit);
 	}
 
-	const int32 RandomDisplayUnitIndex = FMath::RandRange(0, DisplayUnits.Num() - 1);
-	if(DisplayUnits.IsValidIndex(RandomDisplayUnitIndex))
+	// 이번 테스크때 원하는 아이템을 구해야할지 말아야 할 지
+	const bool bIsCustomerPickUpWannaItem = BlackboardComp->GetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpWannaItem);
+
+	// 선정할 매대 인덱스 ( 손님이 원하는 종류의 아이템이 포함되어있는 매대만 표시 )
+
+	TWeakObjectPtr<UMS_StorageUnit> TargetStorage = nullptr;
+	if(bIsCustomerPickUpWannaItem)
 	{
-		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = DisplayUnits[RandomDisplayUnitIndex]->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
-
-		if (PropPurposeSpaceComponents.Num() == 0)
+		if(IncludeWannaItemDisplayUnits.IsValidIndex(0))
 		{
-			return EBTNodeResult::Type::Failed;
+			TargetStorage = IncludeWannaItemDisplayUnits[0];
 		}
-			
-		for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-		{
-			TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-		}
-
-		AIUnit->AddVisitStorageUnitHandle(DisplayUnits[RandomDisplayUnitIndex]->GetUnitHandle());
 	}
+	else
+	{
+		
+		TArray<int32> RandomNum;
+
+		for(int32 i = 0 ; i < DisplayUnits.Num(); i++)
+		{
+			RandomNum.Emplace(i);
+		}
+		Algo::RandomShuffle(RandomNum);
+
+		int32 TargetNumber = 0;
+		for(int32 i = 0 ; i < RandomNum.Num(); i++)
+		{
+			if(IncludeWannaItemDisplayUnits.Contains(DisplayUnits[i]) == false)
+			{
+				TargetNumber = i;
+				break;
+			}
+		}
+		
+		if(RandomNum.IsValidIndex(TargetNumber))
+		{
+			if(DisplayUnits.IsValidIndex(RandomNum[TargetNumber]))
+			{
+				TargetStorage = DisplayUnits[RandomNum[TargetNumber]];
+			}	
+		}
+	}
+	
+
+	// 해당 매대를 찾는 구간.
+	const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = TargetStorage->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+	if (PropPurposeSpaceComponents.Num() == 0)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
+			
+	for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+	{
+		TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+	}
+
+	AIUnit->AddVisitStorageUnitHandle(TargetStorage->GetUnitHandle());
 	
 	AIUnit->SetTargetPositions(TargetPositions);
 	return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;

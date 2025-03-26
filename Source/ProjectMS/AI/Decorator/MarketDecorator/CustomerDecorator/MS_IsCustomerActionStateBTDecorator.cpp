@@ -21,7 +21,7 @@ bool UMS_IsCustomerActionStateBTDecorator::CalculateRawConditionValue(UBehaviorT
 	{
 		return EBTNodeResult::Type::Failed;
 	}
-
+	
 	const EMS_CustomerActionState CurrentActionState = static_cast<EMS_CustomerActionState>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerActionState));
 	return ActionStates.Contains(CurrentActionState);
 }

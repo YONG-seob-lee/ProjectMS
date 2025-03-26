@@ -33,8 +33,6 @@ void AMS_CustomerAIController::Initialize()
 			UseBlackboard(CustomerBlackboardData, BlackboardComponent);
 		}
 	}
-
-	ReadyToMarket();
 }
 
 void AMS_CustomerAIController::PostInitializeComponents()
@@ -70,10 +68,4 @@ void AMS_CustomerAIController::BeginPlay()
 void AMS_CustomerAIController::EndPlay(const EEndPlayReason::Type aEndPlayReason)
 {
 	Super::EndPlay(aEndPlayReason);
-}
-
-void AMS_CustomerAIController::ReadyToMarket() const
-{
-	// 블랙보드 초기화
-	Blackboard->SetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpAllItem, false);
 }

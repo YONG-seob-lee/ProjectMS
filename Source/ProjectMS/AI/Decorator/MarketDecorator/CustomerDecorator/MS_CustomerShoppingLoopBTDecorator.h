@@ -18,13 +18,20 @@ public:
 	
 protected:
 	virtual void OnNodeActivation(FBehaviorTreeSearchData& SearchData) override;
+	virtual void OnNodeDeactivation(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type NodeResult) override;
 	virtual FString GetStaticDescription() const override;
 	virtual void DescribeRuntimeValues(const UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTDescriptionVerbosity::Type Verbosity, TArray<FString>& Values) const override;
 	virtual void InitializeMemory(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTMemoryInit::Type InitType) const override;
 	virtual void CleanupMemory(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, EBTMemoryClear::Type CleanupType) const override;
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 	virtual uint16 GetInstanceMemorySize() const override;
-	
+
 	UPROPERTY(Category=Decorator, BlueprintReadOnly);
-	int32 ShoppingNumLoops = 3;
+	int32 ShoppingNumLoops = 0;
+	
+private:
+	int32 GetShoppingNumLoops();
+	
+	bool bInitialize = false;
+	TArray<int32> RealFindItemIndex = {};
 };

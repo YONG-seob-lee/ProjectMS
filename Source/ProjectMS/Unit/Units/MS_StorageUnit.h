@@ -38,6 +38,8 @@ public:
 	bool SubtractCurrentItemCount(int32 aSlotId, int32 aItemId, int32 aCount, bool bSavePlayerData = false);
 	int32 SubtractAnySlotCurrentItemCount(int32 aItemId, int32 aCount, bool bSavePlayerData = false);
 
+	bool HasItemInStorage(const TArray<int32>& _ItemIds);
+	
 	UFUNCTION()
 	virtual void SetRequestItem(int32 aSlotId, int32 aItemId, bool bSavePlayerData = true);
 

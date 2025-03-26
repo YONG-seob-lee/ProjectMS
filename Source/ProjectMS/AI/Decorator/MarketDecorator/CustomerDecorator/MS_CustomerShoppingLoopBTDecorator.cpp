@@ -5,6 +5,7 @@
 
 #include "MS_UnitBase.h"
 #include "AI/AIController/MS_AIController.h"
+#include "Algo/RandomShuffle.h"
 #include "Animation/Market/Customer/MS_CustomerAIAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BTCompositeNode.h"
@@ -26,24 +27,9 @@ UMS_CustomerShoppingLoopBTDecorator::UMS_CustomerShoppingLoopBTDecorator(const F
 	NodeName = "Customer Shopping Loop";
 	INIT_DECORATOR_NODE_NOTIFY_FLAGS();
 
-
-	if(const TObjectPtr UnitManager = gUnitMng)
-	{
-		ShoppingNumLoops = 0;
-		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
-		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
-
-		for(const auto& Unit : Units)
-		{
-			if(const TObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit))
-			{
-				if(StorageUnit->GetZoneType() == EMS_ZoneType::Display)
-				{
-					++ShoppingNumLoops;
-				}
-			}
-		}
-	}
+	bInitialize = false;
+	ShoppingNumLoops = 0;
+	RealFindItemIndex.Empty();
 }
 
 void UMS_CustomerShoppingLoopBTDecorator::OnNodeActivation(FBehaviorTreeSearchData& SearchData)
@@ -56,13 +42,30 @@ void UMS_CustomerShoppingLoopBTDecorator::OnNodeActivation(FBehaviorTreeSearchDa
 		(!bIsSpecialNode && ParentMemory->CurrentChild != ChildIndex))
 	{
 		// initialize counter if it's first activation
-		DecoratorMemory->RemainingExecutions = IntCastChecked<uint8>(ShoppingNumLoops);
-		DecoratorMemory->TimeStarted = GetWorld()->GetTimeSeconds();
+		if(bInitialize == false)
+		{
+			const int32 TotalShoppingNumLoops = GetShoppingNumLoops();
+			SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsInt(CustomerBoardKeyName::CustomerLoopCount, TotalShoppingNumLoops);
+			DecoratorMemory->RemainingExecutions = IntCastChecked<uint8>(TotalShoppingNumLoops);
+			DecoratorMemory->TimeStarted = GetWorld()->GetTimeSeconds();
+			bInitialize = true;
+		}
 	}
 
 	bool bShouldLoop = false;
 	if (DecoratorMemory->RemainingExecutions > 0)
 	{
+		SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsInt(CustomerBoardKeyName::CustomerLoopCount, DecoratorMemory->RemainingExecutions);
+		
+		if(RealFindItemIndex.Contains(DecoratorMemory->RemainingExecutions))
+		{
+			SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpWannaItem, true);
+		}
+		else
+		{
+			SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpWannaItem, false);
+		}
+		
 		DecoratorMemory->RemainingExecutions--;
 	}
 	bShouldLoop = DecoratorMemory->RemainingExecutions > 0;
@@ -72,6 +75,15 @@ void UMS_CustomerShoppingLoopBTDecorator::OnNodeActivation(FBehaviorTreeSearchDa
 	{
 		GetParentNode()->SetChildOverride(SearchData, ChildIndex);
 	}
+}
+
+void UMS_CustomerShoppingLoopBTDecorator::OnNodeDeactivation(FBehaviorTreeSearchData& SearchData, EBTNodeResult::Type NodeResult)
+{
+	Super::OnNodeDeactivation(SearchData, NodeResult);
+
+	bInitialize = false;
+	ShoppingNumLoops = 0;
+	RealFindItemIndex.Empty();
 }
 
 FString UMS_CustomerShoppingLoopBTDecorator::GetStaticDescription() const
@@ -136,20 +148,22 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 		return true;
 	}
 	
-	if(DecoratorMemory->RemainingExecutions <= 0)
+	if(AIUnit->IsPickUpAllItems() || DecoratorMemory->RemainingExecutions <= 0)
 	{
-		if(BlackboardComp->GetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpAllItem) == true)
+		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
+
+		if(CustomerActionType == EMS_CustomerActionType::Payment)
 		{
 			return false;
 		}
-
-		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
+		
 		AIUnit->UnregisterCustomerAction(CustomerActionType);
 
-		BlackboardComp->SetValueAsBool(CustomerBoardKeyName::IsCustomerPickUpAllItem, true);
 		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerAction, static_cast<uint8>(EMS_CustomerActionType::None));
 		BlackboardComp->SetValueAsEnum(CustomerBoardKeyName::CustomerActionState, static_cast<uint8>(EMS_CustomerActionState::None));
 		AIAnimInstance->SetActionState(EMS_CustomerActionState::None);
+		
+		return EBTNodeResult::Type::Failed;
 	}
 	
 	return true;
@@ -158,4 +172,60 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 uint16 UMS_CustomerShoppingLoopBTDecorator::GetInstanceMemorySize() const
 {
 	return sizeof(FMS_BTLoopDecoratorMemory);
+}
+
+int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
+{
+	ShoppingNumLoops = 0;
+	if(const TObjectPtr UnitManager = gUnitMng)
+	{
+		TArray<TWeakObjectPtr<UMS_UnitBase>> Units;
+		UnitManager->GetUnits(EMS_UnitType::Storage, Units);
+
+		for(const auto& Unit : Units)
+		{
+			if(const TObjectPtr<UMS_StorageUnit> StorageUnit = Cast<UMS_StorageUnit>(Unit))
+			{
+				if(StorageUnit->GetZoneType() == EMS_ZoneType::Display)
+				{
+					++ShoppingNumLoops;
+				}
+			}
+		}
+	}
+
+	constexpr int32 MinLoop = 3;
+
+	// 루프 횟수 정하기.
+	if(ShoppingNumLoops > 9)
+	{
+		ShoppingNumLoops = FMath::RandRange(MinLoop, 9);
+	}
+	else
+	{
+		ShoppingNumLoops = FMath::RandRange(MinLoop, ShoppingNumLoops);
+	}
+
+	// 셔플
+	TArray<int32> Numbers;
+	for(int32 i = 0; i <= ShoppingNumLoops; i++)
+	{
+		Numbers.Add(i);
+	}
+
+	Algo::RandomShuffle(Numbers);
+	if(Numbers.IsValidIndex(0))
+	{
+		RealFindItemIndex.Emplace(Numbers[0]);
+	}
+	if(Numbers.IsValidIndex(1))
+	{
+		RealFindItemIndex.Emplace(Numbers[1]);
+	}
+	if(Numbers.IsValidIndex(2))
+    {
+    	RealFindItemIndex.Emplace(Numbers[2]);
+    }
+	
+	return ShoppingNumLoops;
 }

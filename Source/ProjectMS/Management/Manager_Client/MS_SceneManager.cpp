@@ -140,9 +140,6 @@ void UMS_SceneManager::ProcessFade()
 		RootWidget->SetContentWidgetTransition(NewCommand->GetFadeOutTransitionStyle() , FadeAnimationCurveType, FadeProgressRate);
 		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::BGM);
 		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::BGM, DefaultVolume * (1.f - FadeProgressRate));
-#if WITH_EDITOR
-		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::BGM));
-#endif
 	}
 	else
 	{
@@ -150,9 +147,6 @@ void UMS_SceneManager::ProcessFade()
 
 		const float DefaultVolume = gSoundMng.GetDefaultVolume(EMS_SoundClassType::BGM);
 		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::BGM, DefaultVolume * FadeProgressRate);
-#if WITH_EDITOR
-		MS_LOG(TEXT("SoundVolume : %f"), gSoundMng.GetSoundVolume(EMS_SoundClassType::BGM));
-#endif
 	}
 		
 	if (FadeProgressRate > 1.f)
