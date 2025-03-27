@@ -81,9 +81,13 @@ void UMS_CustomerShoppingLoopBTDecorator::OnNodeDeactivation(FBehaviorTreeSearch
 {
 	Super::OnNodeDeactivation(SearchData, NodeResult);
 
-	bInitialize = false;
-	ShoppingNumLoops = 0;
-	RealFindItemIndex.Empty();
+	FMS_BTLoopDecoratorMemory* DecoratorMemory = GetNodeMemory<FMS_BTLoopDecoratorMemory>(SearchData);
+	if(DecoratorMemory->RemainingExecutions <= 0)
+	{
+		bInitialize = false;
+		ShoppingNumLoops = 0;
+		RealFindItemIndex.Empty();
+	}
 }
 
 FString UMS_CustomerShoppingLoopBTDecorator::GetStaticDescription() const
