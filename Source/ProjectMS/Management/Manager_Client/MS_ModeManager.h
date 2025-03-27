@@ -11,7 +11,7 @@
 enum class EMS_UnitState : uint8;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FMS_OnChangeModeDelegate, EMS_ModeState, EMS_ControllerModeType);
-
+DECLARE_MULTICAST_DELEGATE(FMS_OnUpdateZoneDelegate)
 /**
  * 
  */
@@ -71,6 +71,7 @@ private:
 	
 public:
 	FMS_OnChangeModeDelegate OnChangeModeDelegate;
+	FMS_OnUpdateZoneDelegate OnUpdateZoneDelegate;
 	
 #define gModeMng (*UMS_ModeManager::GetInstance())
 };

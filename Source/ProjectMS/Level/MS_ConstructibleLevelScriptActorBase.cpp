@@ -469,6 +469,8 @@ void AMS_ConstructibleLevelScriptActorBase::RequestOpenZone(int32 aZoneIndex)
 		
 		OnZoneOpened(Zone);
 	}
+
+	gModeMng.OnUpdateZoneDelegate.Broadcast();
 }
 
 void AMS_ConstructibleLevelScriptActorBase::OnZoneOpened(AMS_Zone* aZone)

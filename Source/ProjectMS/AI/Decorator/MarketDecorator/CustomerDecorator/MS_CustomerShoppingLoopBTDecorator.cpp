@@ -156,7 +156,8 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 	{
 		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
 
-		if(CustomerActionType == EMS_CustomerActionType::Payment)
+		if(CustomerActionType == EMS_CustomerActionType::Payment || CustomerActionType == EMS_CustomerActionType::GoHome ||
+			CustomerActionType == EMS_CustomerActionType::AngryAndGoHome)
 		{
 			return false;
 		}

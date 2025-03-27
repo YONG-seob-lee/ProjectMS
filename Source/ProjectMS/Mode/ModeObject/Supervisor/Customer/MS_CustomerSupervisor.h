@@ -8,7 +8,7 @@
 
 namespace Customer
 {
-	constexpr int32 SpawnMaxUnitCount = 1;
+	constexpr int32 DefaultCustomerUnitCount = 1;
 	constexpr int32 SpawnMaxTime = 15.f;
 }
 /**
@@ -21,7 +21,7 @@ class PROJECTMS_API UMS_CustomerSupervisor : public UMS_AISupervisor
 
 public:
 	UMS_CustomerSupervisor();
-	
+
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 
@@ -46,9 +46,11 @@ protected:
 private:
 	void InitCustomerSpawnPoint();
 	void CashingDuckSplineActors() const;
+	void OnUpdateZone();
 	
 	bool bStartCustomerSpawn = false;
-	float SpawnIntervalDelayTime = 0.f; 
+	float SpawnIntervalDelayTime = 0.f;
+	int32 SpawnMaxUnitCount = 0;
 
 	TArray<TWeakObjectPtr<class UMS_CustomerAIUnit>> CustomerAIUnits;
 	TArray<TWeakObjectPtr<class AMS_CustomerSpawnPoint>> CustomerSpawnPoints;

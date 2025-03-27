@@ -136,20 +136,24 @@ EBTNodeResult::Type UMS_SetDisplaysAsSearchTargetsAITask::ExecuteTask(UBehaviorT
 	
 
 	// 해당 매대를 찾는 구간.
-	const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = TargetStorage->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
-
-	if (PropPurposeSpaceComponents.Num() == 0)
+	if(TargetStorage.IsValid())
 	{
-		return EBTNodeResult::Type::Failed;
-	}
+		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents = TargetStorage->GetPropPurposeSpaceComponents(EMS_PurposeType::UseStorage);
+
+		if (PropPurposeSpaceComponents.Num() == 0)
+		{
+			return EBTNodeResult::Type::Failed;
+		}
 			
-	for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-	{
-		TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+		for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+		{
+			TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+		}
+
+		AIUnit->AddVisitStorageUnitHandle(TargetStorage->GetUnitHandle());
+	
+		AIUnit->SetTargetPositions(TargetPositions);
 	}
 
-	AIUnit->AddVisitStorageUnitHandle(TargetStorage->GetUnitHandle());
-	
-	AIUnit->SetTargetPositions(TargetPositions);
 	return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 }

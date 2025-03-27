@@ -5,8 +5,11 @@
 
 #include "MS_UnitBase.h"
 #include "ContentsUtilities/MS_GameProcessDefine.h"
+#include "Controller/MS_PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager_Both/MS_UnitManager.h"
+#include "Manager_Client/MS_ModeManager.h"
+#include "PlayerState/MS_PlayerState.h"
 #include "Prop/Spline/MS_CustomerSplineActor.h"
 #include "SpawnPoint/MS_CustomerSpawnPoint.h"
 #include "Units/MS_CustomerAIUnit.h"
@@ -20,6 +23,10 @@ UMS_CustomerSupervisor::UMS_CustomerSupervisor()
 void UMS_CustomerSupervisor::Initialize()
 {
 	Super::Initialize();
+
+	gModeMng.OnUpdateZoneDelegate.AddUObject(this, &UMS_CustomerSupervisor::OnUpdateZone);
+
+	OnUpdateZone();
 }
 
 void UMS_CustomerSupervisor::Finalize()
@@ -33,7 +40,7 @@ void UMS_CustomerSupervisor::Tick(float aDeltaTime)
 
 	if(bStartCustomerSpawn)
 	{
-		if(CustomerAIUnits.Num() >= Customer::SpawnMaxUnitCount)
+		if(CustomerAIUnits.Num() >= SpawnMaxUnitCount)
 		{
 			return;
 		}
@@ -187,4 +194,30 @@ void UMS_CustomerSupervisor::CashingDuckSplineActors() const
 			MS_ENSURE(false);
 		}
 	}
+}
+
+void UMS_CustomerSupervisor::OnUpdateZone()
+{
+	const TObjectPtr<UWorld> World = GetWorld();
+	if (!IsValid(World))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerController> PlayerController = World->GetFirstPlayerController<AMS_PlayerController>();
+	if (!IsValid(PlayerController))
+	{
+		return;
+	}
+
+	const TObjectPtr<AMS_PlayerState> PlayerState = PlayerController->GetPlayerState<AMS_PlayerState>();
+	if (!IsValid(PlayerState))
+	{
+		return;
+	}
+	
+	SpawnMaxUnitCount = PlayerState->GetOpenedZoneCount() + Customer::DefaultCustomerUnitCount;
+#if WITH_EDITOR
+	MS_LOG(TEXT("SpawnMaxUnitCount : %d"), SpawnMaxUnitCount);
+#endif
 }
