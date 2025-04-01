@@ -13,4 +13,9 @@ UCLASS()
 class PROJECTMS_API UMS_AccountButton : public UMS_Button
 {
 	GENERATED_BODY()
+public:
+	void SetAccountButton(bool bAlreadyLogin) const;
+private:
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<class UMS_WidgetSwitcher> CPP_AccountButtonSwitcher = nullptr;
 };

@@ -23,6 +23,39 @@ void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool b
 	}
 }
 
+void UMS_AccountWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	
+#if PLATFORM_ANDROID
+	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("GooglePlay"));
+	if (!OnlineSubsystem)
+	{
+		gWidgetMng.ShowToastMessage(TEXT("Not OnlineSubSystem"));
+		return;
+	}
+
+	const IOnlineIdentityPtr IdentityInterface = OnlineSubsystem->GetIdentityInterface();
+	if (!IdentityInterface.IsValid())
+	{
+		gWidgetMng.ShowToastMessage(TEXT("Not IdentityInterface"));
+		return;
+	}
+	
+	if(IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
+	{
+		CPP_AccountButton->SetAccountButton(true);
+	}
+	else
+	{
+		CPP_AccountButton->SetAccountButton(false);
+	}
+#else
+	CPP_AccountButton->SetAccountButton(true);
+#endif
+}
+
+
 void UMS_AccountWidget::OnClickAccountButton()
 {
 #if PLATFORM_ANDROID
@@ -79,14 +112,15 @@ void UMS_AccountWidget::LoginWithGoogle()
 	if(IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
 	{
 		PlayNextStep();
-		return;
 	}
+	else
+	{
+		// 로그인 콜백 바인딩
+		IdentityInterface->OnLoginCompleteDelegates->AddUObject(this, &UMS_AccountWidget::OnGoogleLoginComplete);
 
-	// 로그인 콜백 바인딩
-	IdentityInterface->OnLoginCompleteDelegates->AddUObject(this, &UMS_AccountWidget::OnGoogleLoginComplete);
-
-	// 로그인 요청
-	IdentityInterface->Login(0, FOnlineAccountCredentials());
+		// 로그인 요청
+		IdentityInterface->Login(0, FOnlineAccountCredentials());
+	}
 }
 
 void UMS_AccountWidget::PlayNextStep() const

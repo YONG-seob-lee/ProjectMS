@@ -16,7 +16,8 @@ class PROJECTMS_API UMS_AccountWidget : public UMS_Widget
 public:
 	static FName GetWidgetName() { return TEXT("Account"); }
 	virtual void InitWidget(const FName& aTypeName, bool bManaged, bool bActivate) override;
-
+	virtual void NativeConstruct() override;
+	
 private:
 	void OnClickAccountButton();
 
