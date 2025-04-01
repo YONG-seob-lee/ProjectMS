@@ -55,7 +55,9 @@ EBTNodeResult::Type UMS_PositionBeforePaymentAITask::ExecuteTask(UBehaviorTreeCo
 	gUnitMng.GetUnits(EMS_UnitType::Counter, Units);
 
 	TArray<FIntVector2> TargetPositions = {};
-	
+
+	TWeakObjectPtr<UMS_CounterUnit> TargetCounterUnit = nullptr;
+	// CounterUnit이 여러개일 때 그 중 한개를 선택하는 반복문.
 	for (const TWeakObjectPtr<UMS_UnitBase>& Unit : Units)
 	{
 		UMS_CounterUnit* CounterUnit = Cast<UMS_CounterUnit>(Unit);
@@ -64,19 +66,25 @@ EBTNodeResult::Type UMS_PositionBeforePaymentAITask::ExecuteTask(UBehaviorTreeCo
 			MS_ENSURE(false);
 			continue;
 		}
-		
-		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-				CounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::BeforePayment);
 
-		if (PropPurposeSpaceComponents.Num() == 0)
+		if(CounterUnit->GetStaffUnit().IsValid())
 		{
-			continue;
+			TargetCounterUnit = CounterUnit;
+			break;
 		}
+	}
+	
+	const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+			TargetCounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::BeforePayment);
+
+	if (PropPurposeSpaceComponents.Num() == 0)
+	{
+		return EBTNodeResult::Type::Failed;
+	}
 			
-		for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-		{
-			TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-		}
+	for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+	{
+		TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
 	}
 
 	AIUnit->SetTargetPositions(TargetPositions);
