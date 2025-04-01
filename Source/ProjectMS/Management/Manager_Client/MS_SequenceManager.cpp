@@ -221,7 +221,8 @@ void UMS_SequenceManager::OnFinishedSequence()
 
 	if(RequestParameter.bMute)
 	{
-		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, 1.f);
+		gSoundMng.AdjustSoundVolume(EMS_SoundClassType::Master, MasterVolume);
+		gSoundMng.AdjustSequenceVolume(SequenceVolume);
 	}
 	
 	if(RequestParameter.bSetBlendCamera)
