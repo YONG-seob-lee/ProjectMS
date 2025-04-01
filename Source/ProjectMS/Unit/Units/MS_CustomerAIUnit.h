@@ -64,6 +64,9 @@ public:
 	// Purchase
 	void EventPurchase(TMap<int32, int32>& PickUpItems) const;
 
+	UPROPERTY(BlueprintReadOnly)
+	float CustomerSplineVelocity = 5.f;
+	
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();
 	

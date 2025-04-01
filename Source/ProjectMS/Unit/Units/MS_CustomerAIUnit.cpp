@@ -291,7 +291,7 @@ void UMS_CustomerAIUnit::GoingToMarket() const
 		const FVector ClosetLocation = CustomerSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
 		if(const TObjectPtr<AMS_CharacterBase> CustomerCharacter = GetCharacter())
 		{
-			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * CustomerSplineVelocity);
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
@@ -308,7 +308,7 @@ void UMS_CustomerAIUnit::GoingToHome() const
 		const FVector ClosetLocation = CustomerSplineActor->FindLocationClosestToWorldLocation(CurrentVehicleLocation);
 		if(const TObjectPtr<AMS_CharacterBase> CustomerCharacter = GetCharacter())
 		{
-			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * 5.f);
+			CustomerCharacter->SetActorLocation(ClosetLocation + TangentLocation.GetSafeNormal() * CustomerSplineVelocity);
 			CustomerCharacter->SetActorRotation(MoveNextRotation);
 		}
 	}
