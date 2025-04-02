@@ -180,8 +180,11 @@ void UMS_PathFinder::SearchAStar(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSe
 	// 다른 타입의 존일때 Gate까지만 계산해서 계산량을 줄임
 	// 따라서 인자로 같은 존의 값이 넘어오게 됨
 	// ToDo : 같은 존 타입 사이에 Gate를 두게 됐을때 aSearchZoneType 인자를 더 구체적으로 받을 것
+	TArray<FIntVector2> NotMovablePoints = aNotMovablePoints;
+	NotMovablePoints.Remove(aStartPosition);
+	
 	TArray<FIntVector2> FreeMovableWalkingPoints;
-	GetTargetZoneMovablePoints(FreeMovableWalkingPoints, aSearchZoneType, aNotMovablePoints);
+	GetTargetZoneMovablePoints(FreeMovableWalkingPoints, aSearchZoneType, NotMovablePoints);
 
 	TArray<int32> HeuristicCosts;
 	GetHeuristicCosts(FreeMovableWalkingPoints, aStartPosition, HeuristicTargetPosition, HeuristicCosts);
@@ -195,7 +198,6 @@ void UMS_PathFinder::SearchAStar(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSe
 	int32 StartPositionIndex = FreeMovableWalkingPoints.Find(aStartPosition);
 	if (StartPositionIndex == INDEX_NONE)
 	{
-		MS_ENSURE(false);
 		return;
 	}
 	
@@ -205,6 +207,12 @@ void UMS_PathFinder::SearchAStar(TArray<FIntVector2>& aOutPath, EMS_ZoneType aSe
 
 	bool bSucceed = false;
 	FIntVector2 SucceedTarget = FIntVector2::ZeroValue;
+
+	if (aTargetPositions.Contains(aStartPosition))
+	{
+		bSucceed = true;
+		SucceedTarget = aStartPosition;
+	}
 	
 	while(!bSucceed && !PriorityQueue.IsEmpty())
 	{
