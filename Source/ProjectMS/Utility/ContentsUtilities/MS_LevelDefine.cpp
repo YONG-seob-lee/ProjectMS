@@ -31,7 +31,7 @@ const FVector FMS_GridData::GetGridCenterLocation() const
 
 FIntVector2 FMS_GridData::ConvertLocationToGridPosition(const FVector& aLocation)
 {
-	int32 GridPositionX = FMath::RoundToInt32(aLocation.X) / MS_GridSizeInt.X;
+	int32 GridPositionX = FMath::RoundToInt32(aLocation.X / MS_GridSizeInt.X);
 	
 	if (aLocation.X < 0)
 	{
@@ -41,7 +41,7 @@ FIntVector2 FMS_GridData::ConvertLocationToGridPosition(const FVector& aLocation
 		}
 	}
 
-	int32 GridPositionY = FMath::RoundToInt32(aLocation.Y) / MS_GridSizeInt.Y;
+	int32 GridPositionY = FMath::RoundToInt32(aLocation.Y / MS_GridSizeInt.Y);
 	
 	if (aLocation.Y < 0)
 	{
