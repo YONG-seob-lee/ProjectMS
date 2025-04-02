@@ -202,7 +202,7 @@ int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
 		}
 	}
 
-	constexpr int32 MinLoop = 3;
+	constexpr int32 MinLoop = 4;
 
 	// 루프 횟수 정하기.
 	if(ShoppingNumLoops > 9)
@@ -216,7 +216,7 @@ int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
 
 	// 셔플
 	TArray<int32> Numbers;
-	for(int32 i = 1; i <= ShoppingNumLoops; i++)
+	for(int32 i = 1; i <= ShoppingNumLoops - 1; i++)
 	{
 		Numbers.Add(i);
 	}
