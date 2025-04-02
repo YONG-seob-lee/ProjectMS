@@ -28,6 +28,7 @@ UMS_CustomerShoppingLoopBTDecorator::UMS_CustomerShoppingLoopBTDecorator(const F
 	INIT_DECORATOR_NODE_NOTIFY_FLAGS();
 
 	bInitialize = false;
+	bCreateNodeInstance = true;
 	ShoppingNumLoops = 0;
 	RealFindItemIndex.Empty();
 }
@@ -42,14 +43,11 @@ void UMS_CustomerShoppingLoopBTDecorator::OnNodeActivation(FBehaviorTreeSearchDa
 		(!bIsSpecialNode && ParentMemory->CurrentChild != ChildIndex))
 	{
 		// initialize counter if it's first activation
-		if(bInitialize == false)
-		{
-			const int32 TotalShoppingNumLoops = GetShoppingNumLoops();
-			SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsInt(CustomerBoardKeyName::CustomerLoopCount, TotalShoppingNumLoops);
-			DecoratorMemory->RemainingExecutions = IntCastChecked<uint8>(TotalShoppingNumLoops);
-			DecoratorMemory->TimeStarted = GetWorld()->GetTimeSeconds();
-			bInitialize = true;
-		}
+		const int32 TotalShoppingNumLoops = GetShoppingNumLoops();
+		SearchData.OwnerComp.GetBlackboardComponent()->SetValueAsInt(CustomerBoardKeyName::CustomerLoopCount, TotalShoppingNumLoops);
+		DecoratorMemory->RemainingExecutions = IntCastChecked<uint8>(TotalShoppingNumLoops);
+		DecoratorMemory->TimeStarted = GetWorld()->GetTimeSeconds();
+		bInitialize = true;
 	}
 
 	bool bShouldLoop = false;
@@ -202,7 +200,7 @@ int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
 		}
 	}
 
-	constexpr int32 MinLoop = 4;
+	constexpr int32 MinLoop = 3;
 
 	// 루프 횟수 정하기.
 	if(ShoppingNumLoops > 9)
@@ -216,7 +214,7 @@ int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
 
 	// 셔플
 	TArray<int32> Numbers;
-	for(int32 i = 1; i <= ShoppingNumLoops - 1; i++)
+	for(int32 i = 1; i <= ShoppingNumLoops; i++)
 	{
 		Numbers.Add(i);
 	}
