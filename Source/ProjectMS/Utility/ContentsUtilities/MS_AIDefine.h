@@ -251,6 +251,8 @@ namespace CustomerBoardKeyName
 	const FName IsCustomerPutDownAllItems = TEXT("IsCustomerPutDownAllItems");
 	const FName IsCustomerPickUpWannaItem = TEXT("IsCustomerPickUpWannaItem");
 	const FName CustomerLoopCount = TEXT("CustomerLoopCount");
+	const FName WannaItemCount = TEXT("WannaItemCount");
+	const FName PickUpItemCount = TEXT("PickUpItemCount");
 }
 
 namespace SocketName

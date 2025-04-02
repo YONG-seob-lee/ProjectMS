@@ -24,6 +24,7 @@ public:
 	void PickUpItem(int32 _PickUpItemTableId, int32 _PickUpItemCount);
 	
 	void GetAllPickUpItem(TMap<int32, int32>& aPickUpItems) const { aPickUpItems = PickUpItems; }
+	void GetWannaItem(TMap<int32, int32>& _WannaItems) const { _WannaItems = WannaBuyItems; }
 	bool IsPickUpAllItems();
 	bool IsExceptAnyWannaItem();
 	bool IsAnyPickUpItemsNotHave() const;

@@ -152,6 +152,9 @@ bool UMS_CustomerShoppingLoopBTDecorator::CalculateRawConditionValue(UBehaviorTr
 		return true;
 	}
 	
+	BlackboardComp->SetValueAsInt(CustomerBoardKeyName::WannaItemCount, AIUnit->GetWannaItemCount());
+	BlackboardComp->SetValueAsInt(CustomerBoardKeyName::PickUpItemCount, AIUnit->GetPickUpItemCount());
+	
 	if(AIUnit->IsPickUpAllItems() || DecoratorMemory->RemainingExecutions <= 0)
 	{
 		const EMS_CustomerActionType CustomerActionType = static_cast<EMS_CustomerActionType>(BlackboardComp->GetValueAsEnum(CustomerBoardKeyName::CustomerAction));
@@ -213,7 +216,7 @@ int32 UMS_CustomerShoppingLoopBTDecorator::GetShoppingNumLoops()
 
 	// 셔플
 	TArray<int32> Numbers;
-	for(int32 i = 0; i <= ShoppingNumLoops; i++)
+	for(int32 i = 1; i <= ShoppingNumLoops; i++)
 	{
 		Numbers.Add(i);
 	}

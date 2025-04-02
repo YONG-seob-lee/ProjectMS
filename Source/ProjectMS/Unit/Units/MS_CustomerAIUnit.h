@@ -66,6 +66,10 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	float CustomerSplineVelocity = 5.f;
+
+	//Debug
+	int32 GetWannaItemCount() const;
+	int32 GetPickUpItemCount() const;
 	
 private:
 	FMS_CustomerData CustomerData = FMS_CustomerData();

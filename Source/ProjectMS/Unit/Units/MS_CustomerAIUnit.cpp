@@ -330,3 +330,19 @@ void UMS_CustomerAIUnit::EventPurchase(TMap<int32, int32>& PickUpItems) const
 		CustomerAICharacter->EventPurchase(PickUpItems);
 	}
 }
+
+int32 UMS_CustomerAIUnit::GetWannaItemCount() const
+{
+	TMap<int32, int32> WannaItems;
+	CustomerData.GetWannaItem(WannaItems);
+
+	return WannaItems.Num();
+}
+
+int32 UMS_CustomerAIUnit::GetPickUpItemCount() const
+{
+	TMap<int32, int32> PickUpItem;
+	CustomerData.GetAllPickUpItem(PickUpItem);
+
+	return PickUpItem.Num();
+}

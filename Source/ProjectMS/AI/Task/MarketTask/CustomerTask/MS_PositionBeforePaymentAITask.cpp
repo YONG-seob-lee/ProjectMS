@@ -73,20 +73,24 @@ EBTNodeResult::Type UMS_PositionBeforePaymentAITask::ExecuteTask(UBehaviorTreeCo
 			break;
 		}
 	}
-	
-	const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
-			TargetCounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::BeforePayment);
 
-	if (PropPurposeSpaceComponents.Num() == 0)
+	if(TargetCounterUnit.IsValid())
 	{
-		return EBTNodeResult::Type::Failed;
-	}
+		const TArray<UMS_PropSpaceComponent*>& PropPurposeSpaceComponents =
+				TargetCounterUnit->GetPropPurposeSpaceComponents(EMS_PurposeType::BeforePayment);
+
+		if (PropPurposeSpaceComponents.Num() == 0)
+		{
+			return EBTNodeResult::Type::Failed;
+		}
 			
-	for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
-	{
-		TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
-	}
+		for (const UMS_PropSpaceComponent* PurposeSpaceComponent : PropPurposeSpaceComponents)
+		{
+			TargetPositions.Emplace(PurposeSpaceComponent->GetCenterGridPosition());
+		}
 
-	AIUnit->SetTargetPositions(TargetPositions);
+		AIUnit->SetTargetPositions(TargetPositions);	
+	}
+	
 	return TargetPositions.IsEmpty() ? EBTNodeResult::Type::Failed : EBTNodeResult::Type::Succeeded;
 }
