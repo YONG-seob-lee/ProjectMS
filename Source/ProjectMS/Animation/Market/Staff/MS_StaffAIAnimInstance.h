@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/Market/MS_MarketAIAnimInstance.h"
+#include "ContentsUtilities/MS_AIDefine.h"
 #include "MS_StaffAIAnimInstance.generated.h"
 
 /**
