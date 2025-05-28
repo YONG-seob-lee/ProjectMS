@@ -4,13 +4,12 @@
 #include "MS_AccountWidget.h"
 
 #include "MS_Define.h"
+#include "Auth/MS_AuthenticationInterface.h"
 #include "Button/MS_AccountButton.h"
 #include "Button/MS_AccountStartButton.h"
 #include "Manager_Client/MS_SceneManager.h"
+#include "Subsystem/MS_LoginSubSystem.h"
 #include "Widget/Lobby/MS_LobbyWidget.h"
-#include "OnlineSubsystem.h"
-#include "Interfaces/OnlineIdentityInterface.h"
-#include "Manager_Client/MS_WidgetManager.h"
 
 
 void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool bActivate)
@@ -23,108 +22,48 @@ void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool b
 	}
 }
 
-void UMS_AccountWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-	
-#if PLATFORM_ANDROID
-	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("GooglePlay"));
-	if (!OnlineSubsystem)
-	{
-		gWidgetMng.ShowToastMessage(TEXT("Not OnlineSubSystem"));
-		return;
-	}
-
-	const IOnlineIdentityPtr IdentityInterface = OnlineSubsystem->GetIdentityInterface();
-	if (!IdentityInterface.IsValid())
-	{
-		gWidgetMng.ShowToastMessage(TEXT("Not IdentityInterface"));
-		return;
-	}
-	
-	if(IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
-	{
-		CPP_AccountButton->SetAccountButton(true);
-	}
-	else
-	{
-		CPP_AccountButton->SetAccountButton(false);
-	}
-#else
-	CPP_AccountButton->SetAccountButton(true);
-#endif
-}
-
-
 void UMS_AccountWidget::OnClickAccountButton()
 {
-#if PLATFORM_ANDROID
-	LoginWithGoogle();
-#else
-	PlayNextStep();
-#endif
-}
-
-void UMS_AccountWidget::OnGoogleLoginComplete(int32 LocalUserNum, bool bWasSuccessful, const FUniqueNetId& UserId,
-	const FString& ErrorStr)
-{
-	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("GooglePlay"));
-	if (!OnlineSubsystem)
+	ULocalPlayer* LP = GetWorld()->GetFirstLocalPlayerFromController();
+	if (!LP)
 	{
 		return;
 	}
 
-	const IOnlineIdentityPtr IdentityInterface = OnlineSubsystem->GetIdentityInterface();
-	if (!IdentityInterface.IsValid())
+	UMS_LoginSubSystem* LoginSS = LP->GetSubsystem<UMS_LoginSubSystem>();
+	if (!LoginSS)
 	{
 		return;
 	}
 
-	// 로그인 성공 여부 확인
-	if (bWasSuccessful)
+	TWeakPtr<FMS_GoogleLoginManager> GoogleLoginManager = StaticCastSharedPtr<FMS_GoogleLoginManager>(LoginSS->GetAuthManager());
+	if (GoogleLoginManager.IsValid())
 	{
-		gWidgetMng.ShowToastMessage(TEXT("로그인에 성공했습니다~"));
-		UE_LOG(LogTemp, Log, TEXT("Google Play Login Success! UserID: %s"), *UserId.ToString());
-		PlayNextStep(); // 로그인 성공 후 다음 단계 실행
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Google Play Login Failed: %s"), *ErrorStr);
-	}
-}
-
-void UMS_AccountWidget::LoginWithGoogle()
-{
-	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get(TEXT("GooglePlay"));
-	if (!OnlineSubsystem)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("GooglePlay OnlineSubsystem is NULL"));
-		return;
-	}
-
-	const IOnlineIdentityPtr IdentityInterface = OnlineSubsystem->GetIdentityInterface();
-	if (!IdentityInterface.IsValid())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("GooglePlay IdentityInterface is NULL"));
-		return;
-	}
-
-	if(IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
-	{
-		PlayNextStep();
-	}
-	else
-	{
-		// 로그인 콜백 바인딩
-		IdentityInterface->OnLoginCompleteDelegates->AddUObject(this, &UMS_AccountWidget::OnGoogleLoginComplete);
-
-		// 로그인 요청
-		IdentityInterface->Login(0, FOnlineAccountCredentials());
+		GoogleLoginManager.Pin().Get()->SetOnGoogleLoginFunc([this]() { PlayNextStep(); });
+		GoogleLoginManager.Pin().Get()->Login();
 	}
 }
 
 void UMS_AccountWidget::PlayNextStep() const
 {
+	ULocalPlayer* LP = GetWorld()->GetFirstLocalPlayerFromController();
+	if (!LP)
+	{
+		return;
+	}
+
+	UMS_LoginSubSystem* LoginSS = LP->GetSubsystem<UMS_LoginSubSystem>();
+	if (!LoginSS)
+	{
+		return;
+	}
+
+	TWeakPtr<FMS_GoogleLoginManager> GoogleLoginManager = StaticCastSharedPtr<FMS_GoogleLoginManager>(LoginSS->GetAuthManager());
+	if (GoogleLoginManager.IsValid())
+	{
+		GoogleLoginManager.Pin().Get()->SetOnGoogleLoginFunc(nullptr );
+	}
+	
 	CPP_AccountButton->GetOnClickedDelegate().RemoveAll(this);
 	CPP_AccountButton->SetVisibility(ESlateVisibility::Collapsed);
 	
