@@ -10,12 +10,12 @@ void UMS_TutorialSkipSettingWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(!CPP_TutorialSkipCheckBox)
+	if(!CPP_CheckBox)
 	{
 		return;
 	}
 	
-	CPP_TutorialSkipCheckBox->OnCheckStateChanged.AddUniqueDynamic(this, &UMS_TutorialSkipSettingWidget::OnCheckChanged);
+	CPP_CheckBox->OnCheckStateChanged.AddUniqueDynamic(this, &UMS_TutorialSkipSettingWidget::OnCheckChanged);
 	
 	const TObjectPtr<UMS_GameUserSettings> GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
 	if(!GameUserSettings)
@@ -24,11 +24,11 @@ void UMS_TutorialSkipSettingWidget::NativeConstruct()
 	}
 	if(GameUserSettings->IsAllProcessTutorialFinished())
 	{
-		CPP_TutorialSkipCheckBox->SetCheckedState(ECheckBoxState::Checked);
+		CPP_CheckBox->SetCheckedState(ECheckBoxState::Checked);
 	}
 	else
 	{
-		CPP_TutorialSkipCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+		CPP_CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 	}
 }
 

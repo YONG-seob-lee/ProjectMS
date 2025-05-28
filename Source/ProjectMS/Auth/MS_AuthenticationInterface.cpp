@@ -6,6 +6,7 @@
 #include "MS_Define.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
+#include "GameUserSettings/MS_GameUserSettings.h"
 #include "Interfaces/OnlineIdentityInterface.h"
 
 void FMS_GoogleLoginManager::Login()
@@ -22,14 +23,31 @@ void FMS_GoogleLoginManager::Login()
 		MS_ERROR(TEXT("OnlineIdentityInterface not valid"));
 		return;
 	}
-
+	
 	if (IdentityInterface->GetLoginStatus(0) == ELoginStatus::LoggedIn)
 	{
-		IdentityInterface->OnLogoutCompleteDelegates->AddRaw(this, &FMS_GoogleLoginManager::OnGoogleLogoutComplete);
+		UMS_GameUserSettings* GameUserSettings = Cast<UMS_GameUserSettings>(GEngine->GetGameUserSettings());
+		if (!GameUserSettings)
+		{
+			MS_ERROR(TEXT("GameUserSettings not found"));
+			return;
+		}
+		if (GameUserSettings->IsContinuousLogin())
+		{
+			IdentityInterface->OnLoginCompleteDelegates->AddRaw(this, &FMS_GoogleLoginManager::OnGoogleLoginComplete);
+			IdentityInterface->Login(0, FOnlineAccountCredentials());
+		}
+		else
+		{
+			IdentityInterface->OnLogoutCompleteDelegates->AddRaw(this, &FMS_GoogleLoginManager::OnGoogleLogoutComplete);
+			IdentityInterface->Logout(0);
+		}
 	}
-
-	IdentityInterface->OnLoginCompleteDelegates->AddRaw(this, &FMS_GoogleLoginManager::OnGoogleLoginComplete);
-	IdentityInterface->Login(0, FOnlineAccountCredentials());
+	else
+	{
+		IdentityInterface->OnLoginCompleteDelegates->AddRaw(this, &FMS_GoogleLoginManager::OnGoogleLoginComplete);
+		IdentityInterface->Login(0, FOnlineAccountCredentials());
+	}
 }
 
 void FMS_GoogleLoginManager::Logout()

@@ -24,6 +24,7 @@ void UMS_AccountWidget::InitWidget(const FName& aTypeName, bool bManaged, bool b
 
 void UMS_AccountWidget::OnClickAccountButton()
 {
+#if PLATFORM_ANDROID
 	ULocalPlayer* LP = GetWorld()->GetFirstLocalPlayerFromController();
 	if (!LP)
 	{
@@ -42,6 +43,9 @@ void UMS_AccountWidget::OnClickAccountButton()
 		GoogleLoginManager.Pin().Get()->SetOnGoogleLoginFunc([this]() { PlayNextStep(); });
 		GoogleLoginManager.Pin().Get()->Login();
 	}
+#else
+	PlayNextStep();
+#endif
 }
 
 void UMS_AccountWidget::PlayNextStep() const

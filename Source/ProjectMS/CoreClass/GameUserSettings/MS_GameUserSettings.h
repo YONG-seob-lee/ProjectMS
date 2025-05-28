@@ -35,6 +35,9 @@ public:
 	void UpdateTiltType(EMS_TiltType aTilt);
 	FORCEINLINE EMS_TiltType GetQuarterViewCameraTiltType() const { return QuarterViewCameraTilt; }
 
+	FORCEINLINE void UpdateIsContinuousLogin(bool _bContinuousLogin) { bContinuousLogin = _bContinuousLogin; }
+	FORCEINLINE bool IsContinuousLogin() const { return bContinuousLogin; }
+	
 	// Process Tutorial
 	void ResetProcessTutorial();
 	void AllSkipProcessTutorial();
@@ -56,4 +59,7 @@ private:
 
 	UPROPERTY(config)
 	bool bPlaySequence = true;
+
+	UPROPERTY(config)
+	bool bContinuousLogin = true;
 };
